@@ -7,29 +7,29 @@ texfile="dissertation"
 rm -f $texfile.{aux,bbl,blg,dvi,glg,glo,gls,idx,ist,fff,nlo,nls,ilg}
 rm -f $texfile.{lof,log,lot,out,toc,pdf,ps,ttt,xdy}
 
-latex $texfile
+pdflatex $texfile
 
 makeindx $texfile.idx
 #makeindex $texfile.glo -s $texfile.ist -t $texfile.glg -o $texfile.gls
 
 bibtex $texfile
 
-latex $texfile
+pdflatex $texfile
 
-latex $texfile
+pdflatex $texfile
 
-latex $texfile
+pdflatex $texfile
 
 #  this chokes on big dvi
 #dvipdf $texfile
 
 #  create ps from dvi. Works for large files
-dvips $texfile.dvi
+#dvips $texfile.dvi
 
 sleep 3
 
 #  ps2pdf chokes on big files
-ps2pdf $texfile.ps 
+#ps2pdf $texfile.ps 
 
 #pdflatex $texfile.tex
 
@@ -37,4 +37,4 @@ ps2pdf $texfile.ps
 sleep 3
 
 #evince $texfile.ps
-evince $texfile.pdf
+zathura $texfile.pdf

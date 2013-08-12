@@ -31,6 +31,9 @@
 \usepackage{comment} % multi-line comments
 \usepackage{graphicx} % necessary for inclusion of .eps for figures
 
+%Find the pictures
+\graphicspath{ {./images/} {../images/} }
+
 % the following is for published chapters to note where they were published
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 % http://help-csli.stanford.edu/tex/latex-footnotes.shtml
@@ -251,6 +254,9 @@ pdfkeywords={exam dissertation anderson localization random media gain}
 %Here is dissertation body
 \input{chapters/introduction}
 
+\input{chapters/prevwork.tex}
+\input{chapters/methodology.tex}
+\input{chapters/results.tex}
 
 \input{chapters/conclusion}
 %\lipsum[1-20]% to test page spacing
