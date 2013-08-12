@@ -1,0 +1,47 @@
+ We have included its psuedo code for clarity below:
+
+\begin{algorithmic}
+
+\State $inseqno \gets 0$
+\State $outseqno \gets 0$
+\State $outqueue \gets []$
+
+\Function{Recieve}{msg}
+    \If {$msg.type = MSG$}
+        \If {$msg.seqno > inseqno$}
+            \State $SendAck(msg.seqno)$
+            \State $inseqno \gets msg.seqno$
+        \Else
+            \State $SendAck(inseqno)$
+        \EndIf
+    \ElsIf {$msg.type = ACK$}
+        \State $popped \gets 0$
+        \If {$msg.seqno \leq outqueue.front.seqno$}
+            \State $outqueue.pop()$
+            \State $popped \gets popped+1$
+        \EndIf
+        \For{$i = WindowSize-popped \to min(WindowSize-1,outqueue.size)$}
+            \State $Write(outqueue[i])$
+        \EndFor
+    \EndIf
+\EndFunction
+
+\Function{Send}{msg}
+    \State $msg.seqno \gets outseqno$
+    \State $outseqno \gets outseqno+1$
+    \State $outqueue.push(msg)$
+    \If {$outqueue.size \leq WindowSize$}
+        \State $Write(msg)$
+    \EndIf
+\EndFunction
+
+\Function{Resend}{}
+    \For{$i = 0 \to min(WindowSize-1,outqueue.size)$}
+        \State $Write(outqueue[i])$
+    \EndFor
+\EndFunction
+
+\end{algorithmic}
+
+Note that WindowSize is a predefined constant which specifies how many messages may be in the channel at the same time, and the $Resend()$ function is called periodically to resend lost messages.
+

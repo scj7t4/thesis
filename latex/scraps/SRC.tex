@@ -1,0 +1,55 @@
+ To explain the characteristics of the protocol, we've included its psuedocode below:
+
+\begin{algorithmic}
+
+\State $inseqno \gets 0$
+\State $outseqno \gets 1$
+\State $outqueue \gets []$
+\State $kill \gets null$
+\State $lastack \gets 0$
+
+\Function{Recieve}{msg}
+    \If {$msg.type = MSG$}
+        \If {$msg.seqno = inseqno+1$}
+            \State $SendAck(msg.seqno)$
+            \State $inseqno \gets inseqno + 1$
+        \ElsIf {$msg.seqno > inseqno$ and $msg.kill \neq null$ and $msg.kill \leq inseqno$}
+            \State $SendAck(msg.seqno)$
+            \State $inseqno \gets msg.seqno + 1$
+        \Else
+            \State $SendAck(inseqno)$
+        \EndIf
+    \ElsIf {$msg.type = ACK$}
+        \If {$msg.seqno = outqueue.front.seqno$}
+            \State $outqueue.pop()$
+            \State $kill \gets null$
+            \State $lastack \gets msg.seqno$
+            \State $Write(outqueue.front,kill)$
+        \Else
+            \State $Write(outqueue.front,kill)$
+        \EndIf
+    \EndIf
+\EndFunction
+
+\Function{Send}{msg}
+    \State $msg.seqno \gets outseqno$
+    \State $outseqno \gets outseqno+1$
+    \State $outqueue.push(msg)$
+    \If {$outqueue.size = 0$}
+        \State $Write(outqueue.front,kill)$
+    \EndIf
+\EndFunction
+
+\Function{Resend}{}
+    \While{$outqueue.size \geq 0$ and $outqueue.front.expired$}
+        \State $outqueue.pop()$
+        \State $kill \gets lastack$
+    \EndWhile
+    \If {$outqueue.size \geq 0$}
+        \State $Write(outqueue.front,kill)$    
+    \EndIf
+\EndFunction
+
+\end{algorithmic}
+
+Note that the $Resend()$ function is periodically called to attempt to redeliver lost messages to the reciever. This is, of course, a version with unbounded sequence numbers. The implementation available with the FREEDM source code is modified to allow for bounded sequence numbers.

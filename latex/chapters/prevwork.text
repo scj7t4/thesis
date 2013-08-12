@@ -1,0 +1,80 @@
+\section{Background Theory}
+\subsection{FREEDM DGI}
+The FREEDM DGI is a smart grid operating system that organizes and coordinates power electronics and negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their own need.
+
+To accomplish this, the DGI software consists of a central component, the broker, which is responsible for presenting a communication interface and furnishing any common functionality needed by any algorithms used by the system. These algorithms are grouped into modules.
+
+This work uses a version of the FREEDM DGI software with only one module: group management. Group management implements a leader election algorithm to discover which nodes are reachable in the cyber domain.
+
+\subsection{Broker Architecture}
+
+The DGI software is designed around the broker architecture specification. Each core functionality of the system is implemented within a self contained module which is provided access to core interfaces which deliver functionality such as scheduling requests, message passing, and a framework to manipulate physical devices, including those which exist only in simulation environments such as PSCAD\cite{PSCAD} and RSCAD\cite{RSCAD}.
+
+The Broker provides a common message passing interface which all modules are allowed access to. This interface also provides the inter-module communication which delivers messages between software modules, effectively decoupling them outside of the requirement for them to be able to recognize messages addressed to them from other modules.
+
+Several of the distributed algorithms used in the software require the use of ordered communication channels. To achieve this, FREEDM provides a reliable ordered communication protocol (The sequenced reliable connection or SRC) to the modules, as well as a ``best effort'' protocol (The sequenced unreliable connection or SUC) which is also FIFO (first in, first out), but provides limited delivery guarantees.
+
+We elected to design and implement our own simple message delivery schemes in order to avoid complexities introduced by using TCP in our system. During development, we noticed that constructing a TCP connection to a node that had failed or was unreachable took a considerable amount of time. We elected to use UDP packets which do not have those issues, since the protocol is connectionless. From there, we were able to implement and develop our lightweight protocols which are very best effort oriented to deliver messages as quickly as possible within the following requirements.
+
+\subsubsection{Sequenced Reliable Connection.}
+
+The sequenced reliable connection is a modified send and wait protocol with the ability to stop resending messages and move on to the next one in the queue if the message delivery time is too long. When designing this scheme we wanted to achieve several criteria:
+
+\begin{itemize}
+\item Messages must be accepted in order - Some distributed algorithm rely on the assumption that the underlying message channel is FIFO.
+\item Messages can become irrelevant - Some messages may only have a short period in which they are worth sending. Outside of that time period, they should be considered inconsequential and should be skipped. To achieve this, we have added message expiration times. After a certain amount of time has passed, the sender will no longer attempt to write that message to the channel. Instead, he will proceed to the next unexpired message and attach a ``kill'' value to the message being sent, with the number of the last message the sender knows the receiver accepted.
+\item As much effort as possible should be applied to deliver a message while it is still relevant.
+\end{itemize}
+
+There one adjustable parameter, the resend time, which controls how often the system would attempt to deliver a message it hadn't yet received an acknowledgment for.
+
+\subsubsection{Sequenced Unreliable Connection.}
+
+The SUC protocol is simply a best effort protocol: it employs a sliding window to try to deliver messages as quickly as possible. A window size is decided, and then at any given time, the sender can have up to that many messages in the channel, awaiting acknowledgment. The receiver will look for increasing sequence numbers, and disregard any message that is of a lower sequence number than is expected. The purpose of this protocol is to implement a bare minimum: messages are accepted in the order they are sent.
+
+Like the SRC protocol, the SUC protocol's resend time can be adjusted. Additionally, the window size is also configurable, but was left unchanged for the tests presented in this work.
+
+\subsection{Group Management Algorithm}
+
+Our software uses a leader election algorithm, ``Invitation Election Algorithm'' written by Garcia-Molina and listed in \cite{INVITATIONELECTION}. His algorithm provides a robust election procedure which allows for transient partitions. Transient partitions are formed when a faulty link between two or more clusters of DGIs causes the groups to temporarily divide. These transient  partitions merge when the link is more reliable. The election algorithm allows for failures that disconnect two distinct sub-networks. These sub networks are fully connected, but connectivity between the two sub-networks is limited by an unreliable link.  We have included the timeout we have set (the names are taken directly from \cite{INVITATIONELECTION}) in our tests in Table \ref{Table:Timeouts}.
+
+
+%\begin{wraptable}{l}{0.5\textwidth}
+\begin{table}
+% increase table row spacing, adjust to taste
+\caption{Group Management Timeouts}
+\label{Table:Timeouts}
+\centering
+% Some packages, such as MDW tools, offer better commands for making tables
+% than the plain LaTeX2e tabular which is used here.
+\begin{tabular}{ c c }
+\hline
+Timeout & Duration \\ \hline \hline
+Proportional Timeout & 10 - 30 seconds \\ \hline
+Ready Timeout & 10 seconds \\ \hline
+Invite Timeout & 5 seconds \\ \hline
+Check Timeout & 15 seconds \\ \hline
+Timeout Timeout & 10 seconds \\ \hline
+\end{tabular}
+%\end{wraptable}
+\end{table}
+
+% Check Timeout 10
+% Timeout Timeout 10
+% Global Timeout 5
+
+The elected leader is responsible for making work assignments and identifying and merging with other coordinators when they are found, as well as maintaining a up-to-date list of peers for the members of his group.  Likewise, members of the group can detect the failure of the group leader by periodically checking if the group leader is still alive by sending a message. If the leader fails to respond, the querying node will enter a recovery state and operate alone until they can identify another coordinator to join with.
+\subsection{Network Simulation}
+
+Network unreliability is simulated by dropping datagrams from specific sources on the receiver side. Each receiver was given an XML file describing the  prescribed reliability of messages arriving from a specific source. The network settings were loaded at run time and could be polled if necessary for changes in the link reliability.
+
+On receipt of a message, the broker's communication layer examine the source and select randomly based on the reliability prescribed in the XML file whether or not to drop a message. A dropped message was not delivered to any of the sub-modules and was not acknowledged by the receiver. Using this method we were able to emulate a lossy network link but not one with message delays.
+
+\subsection{System Implementation}
+
+The FREEDM DGI software uses a Broker Architectural pattern. This design is realized in C++ using the Boost Library\cite{BOOST}. We have also make use of other languages such as Python to provide bootstrapping and start-up routines for the software.
+
+\subsection{How the Network Reliability Simulator Fits Into the Communication Stack}
+
+Because the DGI's network communication is implemented using UDP, there is a listener class which is responsible for accepting all incoming messages on the socket the system is listening on. This component is responsible for querying the appropriate protocol's class to determine
+if a message should be accepted. To do this, when a message is received, the message is parsed by the listener. At this point the network simulation will halt processing the  message if it should be discarded based on the defined random chance in the configuration file. Otherwise, it is delivered to the addressed module.
