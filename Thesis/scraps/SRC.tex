@@ -1,4 +1,4 @@
- To explain the characteristics of the protocol, we've included its psuedocode below:
+To explain the characteristics of the protocol, the psuedocode is included below:
 
 \begin{algorithmic}
 
@@ -52,4 +52,7 @@
 
 \end{algorithmic}
 
-Note that the $Resend()$ function is periodically called to attempt to redeliver lost messages to the reciever. This is, of course, a version with unbounded sequence numbers. The implementation available with the FREEDM source code is modified to allow for bounded sequence numbers.
+Note that the $Resend()$ function is periodically called to attempt to redeliver
+lost messages to the reciever. This is, of course, a version with unbounded
+sequence numbers. The implementation available with the FREEDM source code is
+modified to allow for bounded sequence numbers.

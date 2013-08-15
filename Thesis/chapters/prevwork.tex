@@ -1,80 +1,417 @@
 \section{Background Theory}
 \subsection{FREEDM DGI}
-The FREEDM DGI is a smart grid operating system that organizes and coordinates power electronics and negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their own need.
+The FREEDM DGI is a smart grid operating system that organizes and coordinates 
+power electronics and negotiates contracts to deliver power to devices and 
+regions that cannot effectively facilitate their own need.
 
-To accomplish this, the DGI software consists of a central component, the broker, which is responsible for presenting a communication interface and furnishing any common functionality needed by any algorithms used by the system. These algorithms are grouped into modules.
+To accomplish this, the DGI software consists of a central component, the 
+broker, which is responsible for presenting a communication interface and 
+furnishing any common functionality needed by any algorithms used by the 
+system. These algorithms are grouped into modules.
 
-This work uses a version of the FREEDM DGI software with only one module: group management. Group management implements a leader election algorithm to discover which nodes are reachable in the cyber domain.
+The intial work this document uses a version of the FREEDM DGI software with 
+only one module: group management. Group management implements a leader
+election algorithm to discover which nodes are reachable in the cyber domain.
 
 \subsection{Broker Architecture}
 
-The DGI software is designed around the broker architecture specification. Each core functionality of the system is implemented within a self contained module which is provided access to core interfaces which deliver functionality such as scheduling requests, message passing, and a framework to manipulate physical devices, including those which exist only in simulation environments such as PSCAD\cite{PSCAD} and RSCAD\cite{RSCAD}.
+The DGI software is designed around the broker architecture specification. Each 
+core functionality of the system is implemented within a self contained module 
+which is provided access to core interfaces which deliver functionality such as 
+scheduling requests, message passing, and a framework to manipulate physical 
+devices, including those which exist only in simulation environments such as 
+PSCAD\cite{PSCAD} and RSCAD\cite{RSCAD}.
 
-The Broker provides a common message passing interface which all modules are allowed access to. This interface also provides the inter-module communication which delivers messages between software modules, effectively decoupling them outside of the requirement for them to be able to recognize messages addressed to them from other modules.
+The Broker provides a common message passing interface which all modules are 
+allowed access to. This interface also provides the inter-module communication 
+which delivers messages between software modules, effectively decoupling them 
+outside of the requirement for them to be able to recognize messages addressed 
+to them from other modules.
 
-Several of the distributed algorithms used in the software require the use of ordered communication channels. To achieve this, FREEDM provides a reliable ordered communication protocol (The sequenced reliable connection or SRC) to the modules, as well as a ``best effort'' protocol (The sequenced unreliable connection or SUC) which is also FIFO (first in, first out), but provides limited delivery guarantees.
+Several of the distributed algorithms used in the software require the use of 
+ordered communication channels. To achieve this, FREEDM provides a reliable 
+ordered communication protocol (The sequenced reliable connection or SRC) to 
+the modules, as well as a ``best effort'' protocol (The sequenced unreliable 
+connection or SUC) which is also FIFO (first in, first out), but provides 
+limited delivery guarantees.
 
-We elected to design and implement our own simple message delivery schemes in order to avoid complexities introduced by using TCP in our system. During development, we noticed that constructing a TCP connection to a node that had failed or was unreachable took a considerable amount of time. We elected to use UDP packets which do not have those issues, since the protocol is connectionless. From there, we were able to implement and develop our lightweight protocols which are very best effort oriented to deliver messages as quickly as possible within the following requirements.
+We elected to design and implement our own simple message delivery schemes in 
+order to avoid complexities introduced by using TCP in our system. During 
+development, we noticed that constructing a TCP connection to a node that had 
+failed or was unreachable took a considerable amount of time. We elected to use 
+UDP packets which do not have those issues, since the protocol is 
+connectionless. From there, we were able to implement and develop our 
+lightweight protocols which are very best effort oriented to deliver messages 
+as quickly as possible within the following requirements.
 
 \subsubsection{Sequenced Reliable Connection.}
 
-The sequenced reliable connection is a modified send and wait protocol with the ability to stop resending messages and move on to the next one in the queue if the message delivery time is too long. When designing this scheme we wanted to achieve several criteria:
+The sequenced reliable connection is a modified send and wait protocol with the 
+ability to stop resending messages and move on to the next one in the queue if 
+the message delivery time is too long. When designing this scheme we wanted to 
+achieve several criteria:
 
 \begin{itemize}
-\item Messages must be accepted in order - Some distributed algorithm rely on the assumption that the underlying message channel is FIFO.
-\item Messages can become irrelevant - Some messages may only have a short period in which they are worth sending. Outside of that time period, they should be considered inconsequential and should be skipped. To achieve this, we have added message expiration times. After a certain amount of time has passed, the sender will no longer attempt to write that message to the channel. Instead, he will proceed to the next unexpired message and attach a ``kill'' value to the message being sent, with the number of the last message the sender knows the receiver accepted.
-\item As much effort as possible should be applied to deliver a message while it is still relevant.
+\item Messages must be accepted in order - Some distributed algorithm rely on 
+the assumption that the underlying message channel is FIFO.
+\item Messages can become irrelevant - Some messages may only have a short 
+period in which they are worth sending. Outside of that time period, they 
+should be considered inconsequential and should be skipped. To achieve this, we 
+have added message expiration times. After a certain amount of time has passed, 
+the sender will no longer attempt to write that message to the channel. 
+Instead, he will proceed to the next unexpired message and attach a ``kill'' 
+value to the message being sent, with the number of the last message the sender 
+knows the receiver accepted.
+\item As much effort as possible should be applied to deliver a message while 
+it is still relevant.
 \end{itemize}
 
-There one adjustable parameter, the resend time, which controls how often the system would attempt to deliver a message it hadn't yet received an acknowledgment for.
+There one adjustable parameter, the resend time, which controls how often the 
+system would attempt to deliver a message it hadn't yet received an 
+acknowledgment for.
+
+To further explain the characteristics of the protocol, the psuedocode is included below:
+
+\begin{algorithmic}
+
+\State $inseqno \gets 0$
+\State $outseqno \gets 1$
+\State $outqueue \gets []$
+\State $kill \gets null$
+\State $lastack \gets 0$
+
+\Function{Receive}{msg}
+    \If {$msg.type = MSG$}
+        \If {$msg.seqno = inseqno+1$}
+            \State $SendAck(msg.seqno)$
+            \State $inseqno \gets inseqno + 1$
+        \ElsIf {$msg.seqno > inseqno$ and $msg.kill \neq null$ and $msg.kill \leq inseqno$}
+            \State $SendAck(msg.seqno)$
+            \State $inseqno \gets msg.seqno + 1$
+        \Else
+            \State $SendAck(inseqno)$
+        \EndIf
+    \ElsIf {$msg.type = ACK$}
+        \If {$msg.seqno = outqueue.front.seqno$}
+            \State $outqueue.pop()$
+            \State $kill \gets null$
+            \State $lastack \gets msg.seqno$
+            \State $Write(outqueue.front,kill)$
+        \Else
+            \State $Write(outqueue.front,kill)$
+        \EndIf
+    \EndIf
+\EndFunction
+
+\Function{Send}{msg}
+    \State $msg.seqno \gets outseqno$
+    \State $outseqno \gets outseqno+1$
+    \State $outqueue.push(msg)$
+    \If {$outqueue.size = 0$}
+        \State $Write(outqueue.front,kill)$
+    \EndIf
+\EndFunction
+
+\Function{Resend}{}
+    \While{$outqueue.size \geq 0$ and $outqueue.front.expired$}
+        \State $outqueue.pop()$
+        \State $kill \gets lastack$
+    \EndWhile
+    \If {$outqueue.size \geq 0$}
+        \State $Write(outqueue.front,kill)$    
+    \EndIf
+\EndFunction
+
+\end{algorithmic}
+
+Note that the $Resend()$ function is periodically called to attempt to redeliver
+lost messages to the reciever. This is, of course, a version with unbounded
+sequence numbers. The implementation available with the FREEDM source code is
+modified to allow for bounded sequence numbers.
 
 \subsubsection{Sequenced Unreliable Connection.}
 
-The SUC protocol is simply a best effort protocol: it employs a sliding window to try to deliver messages as quickly as possible. A window size is decided, and then at any given time, the sender can have up to that many messages in the channel, awaiting acknowledgment. The receiver will look for increasing sequence numbers, and disregard any message that is of a lower sequence number than is expected. The purpose of this protocol is to implement a bare minimum: messages are accepted in the order they are sent.
+The SUC protocol is simply a best effort protocol: it employs a sliding window 
+to try to deliver messages as quickly as possible. A window size is decided, 
+and then at any given time, the sender can have up to that many messages in the 
+channel, awaiting acknowledgment. The receiver will look for increasing 
+sequence numbers, and disregard any message that is of a lower sequence number 
+than is expected. The purpose of this protocol is to implement a bare minimum: 
+messages are accepted in the order they are sent.
 
-Like the SRC protocol, the SUC protocol's resend time can be adjusted. Additionally, the window size is also configurable, but was left unchanged for the tests presented in this work.
+Like the SRC protocol, the SUC protocol's resend time can be adjusted. 
+Additionally, the window size is also configurable, but was left unchanged for 
+the tests presented in this work.
+
+The psuedocode is included for clarity below:
+
+\begin{algorithmic}
+
+\State $inseqno \gets 0$
+\State $outseqno \gets 0$
+\State $outqueue \gets []$
+
+\Function{Receive}{msg}
+    \If {$msg.type = MSG$}
+        \If {$msg.seqno > inseqno$}
+            \State $SendAck(msg.seqno)$
+            \State $inseqno \gets msg.seqno$
+        \Else
+            \State $SendAck(inseqno)$
+        \EndIf
+    \ElsIf {$msg.type = ACK$}
+        \State $popped \gets 0$
+        \If {$msg.seqno \leq outqueue.front.seqno$}
+            \State $outqueue.pop()$
+            \State $popped \gets popped+1$
+        \EndIf
+        \For{$i = WindowSize-popped \to min(WindowSize-1,outqueue.size)$}
+            \State $Write(outqueue[i])$
+        \EndFor
+    \EndIf
+\EndFunction
+
+\Function{Send}{msg}
+    \State $msg.seqno \gets outseqno$
+    \State $outseqno \gets outseqno+1$
+    \State $outqueue.push(msg)$
+    \If {$outqueue.size \leq WindowSize$}
+        \State $Write(msg)$
+    \EndIf
+\EndFunction
+
+\Function{Resend}{}
+    \For{$i = 0 \to min(WindowSize-1,outqueue.size)$}
+        \State $Write(outqueue[i])$
+    \EndFor
+\EndFunction
+
+\end{algorithmic}
 
 \subsection{Group Management Algorithm}
 
-Our software uses a leader election algorithm, ``Invitation Election Algorithm'' written by Garcia-Molina and listed in \cite{INVITATIONELECTION}. His algorithm provides a robust election procedure which allows for transient partitions. Transient partitions are formed when a faulty link between two or more clusters of DGIs causes the groups to temporarily divide. These transient  partitions merge when the link is more reliable. The election algorithm allows for failures that disconnect two distinct sub-networks. These sub networks are fully connected, but connectivity between the two sub-networks is limited by an unreliable link.  We have included the timeout we have set (the names are taken directly from \cite{INVITATIONELECTION}) in our tests in Table \ref{Table:Timeouts}.
+Our software uses a leader election algorithm, ``Invitation Election 
+Algorithm'' written by Garcia-Molina and listed in \cite{INVITATIONELECTION}. 
+His algorithm provides a robust election procedure which allows for transient 
+partitions. Transient partitions are formed when a faulty link between two or 
+more clusters of DGIs causes the groups to temporarily divide. These transient 
+partitions merge when the link is more reliable. The election algorithm 
+allows for failures that disconnect two distinct sub-networks. These sub 
+networks are fully connected, but connectivity between the two sub-networks is 
+limited by an unreliable link.
+
+\begin{algorithmic}
+
+\State $AllNodes \gets \{ 1, 2, ..., N \}$
+\State $Coordinators \gets \emptyset$
+\State $UpNodes \gets { Me }$
+\State $State \gets Normal$
+\State $Coordinator \gets Me$
+\State $Responses \gets \emptyset$
+\State $Counter \gets$ A random initial identifier
+\State $GroupID \gets (Me,Counter)$
+
+\State
+
+\Function{Check}{}
+    \State This function is called periodically by the leader
+    \If {$State = Normal$ and $Coordinator \gets Me$}
+        \State $Responses \gets \emptyset$
+        \State $TempSet \gets \emptyset$
+        \For {$j = (AllNodes - \{Me\})$}
+            \State $AreYouCoordinator(j)$
+            \State $TempSet \gets TempSet \cup j$
+        \EndFor
+        \State Nodes which respond "Yes" to $AreYouCoordinator$ are put into the $Responses$ set. When all nodes have responded or after $Timeout(CheckTimeout)$, Nodes that do not respond are removed from UpNodes and execution continues
+        \State $UpNodes \gets (TempSet-Responses) \cup {Me}$
+        \If {$Responses = \emptyset$}
+            \Return
+        \EndIf
+        \State $p \gets \max(Responses)$
+        \If $Me < P$
+            \State Wait time proportional to p-i
+        \EndIf
+        \Call{Merge}{Responses}
+    \EndIf
+    \State The next call to this is after Timeout(CheckTimeout)
+\EndFunction
+
+\State
+
+\Function{Timeout}{}
+    \State This function is called periodically by the group members
+    \If {$Coordinator = Me$}
+        \Return
+    \Else
+        \Call{AreYouThere}{Coordinator,GroupID,Me}
+        \If{Response is No or after $Timeout(TimeoutTimeout)$}
+            \Call{Recovery}{}
+        \EndIf
+    \EndIf
+    \State The next call to this is after Timeout(TimeoutTimeout)
+\EndFunction
+
+\State
+
+\Function{Merge}{Coordinators}
+    \State This function invites all coordinators in Coordinators to join a group led by Me
+    \State $State \gets Election$
+    \State Stop work
+    \State $Counter \gets Counter+1$
+    \State $GroupID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $TempSet \gets UpNodes - {Me}$
+    \State $UpNodes \gets \emptyset$
+    \For {$j \in Coordinators$}
+        \Call{Invite}{j,Coordinator,GroupID}
+    \EndFor
+    \For {$j \in TempSet$}
+        \Call{Invite}{j,Coordinator,GroupID}
+    \EndFor
+    \State Wait for $Timeout(InviteTimeout)$, Nodes that accept the invite are added to UpNodes
+    \State $State \gets Reorganization$
+    \For {$j \in UpNodes$}
+        \Call{Ready}{j,Coordinator,GroupID,UpNodes}
+    \EndFor
+    \State $State \gets Normal$
+\EndFunction
+
+\State
+
+\Function{ReceiveReady}{Sender,Leader, Identifier, Peers}
+    \If {$State = Reorganization$ and $GroupID = Identifier$}
+        \State $UpNodes \gets Peers$
+        \State $State \gets Normal$      
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouCoordinator}{Sender}
+    \If {$State = Normal$ and $Coordinator = Me$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouThere}{Sender, Identifier}
+    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpNodes$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveInvitation}{Sender,Leader,Identifier}
+    \If {$State \neq Normal$}
+        \Return
+    \EndIf
+    \State Stop Work
+    \State $Temp \gets Coordinator$
+    \State $TempSet \gets UpNodes$
+    \State $State \gets Election$
+    \State $Coordinator \gets Leader$
+    \State $GroupID \gets Identifier$
+    \If {$Temp = Me$}
+        \State Forward invite to old group members
+        \For $j \in TempSet$
+            \State $Invite(j,Coordinator,GroupID)$
+        \EndFor
+    \EndIf
+    \State $Accept(Coordinator,GroupID)$
+    \State $State \gets Reorganization$
+    \If {$Timeout(ReadyTimeout)$ expires before $Ready$ is recieved}
+        \State $Recovery()$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAccept}{Sender,Leader,Identifier}
+    \If {$State \gets Election$ and $GroupID = Identifier$ and $Coordinator = Leader$}
+        \State $UpNodes \gets UpNodes \cup {Sender}$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{Recovery}{}
+    \State $State \gets Election$
+    \State Stop Work
+    \State $Counter \gets Counter + 1$
+    \State $GroupID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $UpNodes \gets {Me}$
+    \State $State \gets Reorganization$
+    \State $State \gets Normal$
+\EndFunction
+
+\end{algorithmic}
 
 
-%\begin{wraptable}{l}{0.5\textwidth}
-\begin{table}
-% increase table row spacing, adjust to taste
-\caption{Group Management Timeouts}
-\label{Table:Timeouts}
-\centering
-% Some packages, such as MDW tools, offer better commands for making tables
-% than the plain LaTeX2e tabular which is used here.
-\begin{tabular}{ c c }
-\hline
-Timeout & Duration \\ \hline \hline
-Proportional Timeout & 10 - 30 seconds \\ \hline
-Ready Timeout & 10 seconds \\ \hline
-Invite Timeout & 5 seconds \\ \hline
-Check Timeout & 15 seconds \\ \hline
-Timeout Timeout & 10 seconds \\ \hline
-\end{tabular}
-%\end{wraptable}
-\end{table}
+The elected leader is responsible for making work assignments and identifying 
+and merging with other coordinators when they are found, as well as maintaining 
+a up-to-date list of peers for the members of his group.  Likewise, members of 
+the group can detect the failure of the group leader by periodically checking 
+if the group leader is still alive by sending a message. If the leader fails to 
+respond, the querying node will enter a recovery state and operate alone until 
+they can identify another coordinator to join with. Therefore, a leader and each
+of the members maintains a set of processes which are currently reachable, which
+is a subset of all known processes in the system.
 
-% Check Timeout 10
-% Timeout Timeout 10
-% Global Timeout 5
+This Leader election can also be classified as a sort of failure detector (CITE).
+Failure detectors are algorithms which detect the failure of processes in a system.
+A failure detector algorithm maintains a list of processes that it suspects have
+crashed. This informal description gives the failure detector strong ties to the
+Leader Election process. The Group Management module maintains a list of suspected
+processes in the form of the difference between the active group and all processes
+in the system.
 
-The elected leader is responsible for making work assignments and identifying and merging with other coordinators when they are found, as well as maintaining a up-to-date list of peers for the members of his group.  Likewise, members of the group can detect the failure of the group leader by periodically checking if the group leader is still alive by sending a message. If the leader fails to respond, the querying node will enter a recovery state and operate alone until they can identify another coordinator to join with.
+The leader and members have seperate roles to play in the failure detection
+process. The leader, using the $Check()$ function will constantly search for other
+leaders to join groups with. This serves as a ping / response query for detecting
+failures in the system. It is also capable of detecting a change in state either
+by network issue or crash failure that causes the process being queried to no longer
+consider itself part of the leaders group.
+
+
+
+
 \subsection{Network Simulation}
 
-Network unreliability is simulated by dropping datagrams from specific sources on the receiver side. Each receiver was given an XML file describing the  prescribed reliability of messages arriving from a specific source. The network settings were loaded at run time and could be polled if necessary for changes in the link reliability.
+Network unreliability is simulated by dropping datagrams from specific sources 
+on the receiver side. Each receiver was given an XML file describing the 
+ prescribed reliability of messages arriving from a specific source. The 
+network settings were loaded at run time and could be polled if necessary for 
+changes in the link reliability.
 
-On receipt of a message, the broker's communication layer examine the source and select randomly based on the reliability prescribed in the XML file whether or not to drop a message. A dropped message was not delivered to any of the sub-modules and was not acknowledged by the receiver. Using this method we were able to emulate a lossy network link but not one with message delays.
+On receipt of a message, the broker's communication layer examine the source 
+and select randomly based on the reliability prescribed in the XML file whether 
+or not to drop a message. A dropped message was not delivered to any of the 
+sub-modules and was not acknowledged by the receiver. Using this method we were 
+able to emulate a lossy network link but not one with message delays.
 
 \subsection{System Implementation}
 
-The FREEDM DGI software uses a Broker Architectural pattern. This design is realized in C++ using the Boost Library\cite{BOOST}. We have also make use of other languages such as Python to provide bootstrapping and start-up routines for the software.
+The FREEDM DGI software uses a Broker Architectural pattern. This design is 
+realized in C++ using the Boost Library\cite{BOOST}. We have also make use of 
+other languages such as Python to provide bootstrapping and start-up routines 
+for the software.
 
-\subsection{How the Network Reliability Simulator Fits Into the Communication Stack}
+\subsection{How the Network Reliability Simulator Fits Into the Communication 
+Stack}
 
-Because the DGI's network communication is implemented using UDP, there is a listener class which is responsible for accepting all incoming messages on the socket the system is listening on. This component is responsible for querying the appropriate protocol's class to determine
-if a message should be accepted. To do this, when a message is received, the message is parsed by the listener. At this point the network simulation will halt processing the  message if it should be discarded based on the defined random chance in the configuration file. Otherwise, it is delivered to the addressed module.
+Because the DGI's network communication is implemented using UDP, there is a 
+listener class which is responsible for accepting all incoming messages on the 
+socket the system is listening on. This component is responsible for querying 
+the appropriate protocol's class to determine
+if a message should be accepted. To do this, when a message is received, the 
+message is parsed by the listener. At this point the network simulation will 
+halt processing the  message if it should be discarded based on the defined 
+random chance in the configuration file. Otherwise, it is delivered to the 
+addressed module.
