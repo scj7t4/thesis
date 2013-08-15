@@ -16,7 +16,7 @@ election algorithm to discover which nodes are reachable in the cyber domain.
 \subsection{Broker Architecture}
 
 The DGI software is designed around the broker architecture specification. Each 
-core functionality of the system is implemented within a self contained module 
+core functionality of the system is implemented within a module 
 which is provided access to core interfaces which deliver functionality such as 
 scheduling requests, message passing, and a framework to manipulate physical 
 devices, including those which exist only in simulation environments such as 
@@ -37,22 +37,23 @@ limited delivery guarantees.
 
 We elected to design and implement our own simple message delivery schemes in 
 order to avoid complexities introduced by using TCP in our system. During 
-development, we noticed that constructing a TCP connection to a node that had 
+development, it was observed that constructing a TCP connection to a node that 
+had 
 failed or was unreachable took a considerable amount of time. We elected to use 
 UDP packets which do not have those issues, since the protocol is 
-connectionless. From there, we were able to implement and develop our 
-lightweight protocols which are very best effort oriented to deliver messages 
-as quickly as possible within the following requirements.
+connectionless. To accomplish this lightweight protocols which are best effort 
+oriented were implemented to deliver messages as quickly as possible within
+the following requirements.
 
 \subsubsection{Sequenced Reliable Connection.}
 
 The sequenced reliable connection is a modified send and wait protocol with the 
 ability to stop resending messages and move on to the next one in the queue if 
-the message delivery time is too long. When designing this scheme we wanted to 
-achieve several criteria:
+the message delivery time exceeds some timeout. When designing this scheme we
+wanted to achieve several criteria:
 
 \begin{itemize}
-\item Messages must be accepted in order - Some distributed algorithm rely on 
+\item Messages must be accepted in order - Some distributed algorithms rely on 
 the assumption that the underlying message channel is FIFO.
 \item Messages can become irrelevant - Some messages may only have a short 
 period in which they are worth sending. Outside of that time period, they 
@@ -70,7 +71,8 @@ There one adjustable parameter, the resend time, which controls how often the
 system would attempt to deliver a message it hadn't yet received an 
 acknowledgment for.
 
-To further explain the characteristics of the protocol, the psuedocode is included below:
+To further explain the characteristics of the protocol, the psuedocode is 
+included below:
 
 \begin{algorithmic}
 
@@ -85,7 +87,8 @@ To further explain the characteristics of the protocol, the psuedocode is includ
         \If {$msg.seqno = inseqno+1$}
             \State $SendAck(msg.seqno)$
             \State $inseqno \gets inseqno + 1$
-        \ElsIf {$msg.seqno > inseqno$ and $msg.kill \neq null$ and $msg.kill \leq inseqno$}
+        \ElsIf {$msg.seqno > inseqno$ and $msg.kill \neq null$ and $msg.kill 
+\leq inseqno$}
             \State $SendAck(msg.seqno)$
             \State $inseqno \gets msg.seqno + 1$
         \Else
@@ -222,7 +225,10 @@ limited by an unreliable link.
             \State $AreYouCoordinator(j)$
             \State $TempSet \gets TempSet \cup j$
         \EndFor
-        \State Nodes which respond "Yes" to $AreYouCoordinator$ are put into the $Responses$ set. When all nodes have responded or after $Timeout(CheckTimeout)$, Nodes that do not respond are removed from UpNodes and execution continues
+        \State Nodes which respond "Yes" to $AreYouCoordinator$ are put into 
+the $Responses$ set. When all nodes have responded or after 
+$Timeout(CheckTimeout)$, Nodes that do not respond are removed from UpNodes and 
+execution continues
         \State $UpNodes \gets (TempSet-Responses) \cup {Me}$
         \If {$Responses = \emptyset$}
             \Return
@@ -254,7 +260,8 @@ limited by an unreliable link.
 \State
 
 \Function{Merge}{Coordinators}
-    \State This function invites all coordinators in Coordinators to join a group led by Me
+    \State This function invites all coordinators in Coordinators to join a 
+group led by Me
     \State $State \gets Election$
     \State Stop work
     \State $Counter \gets Counter+1$
@@ -268,7 +275,8 @@ limited by an unreliable link.
     \For {$j \in TempSet$}
         \Call{Invite}{j,Coordinator,GroupID}
     \EndFor
-    \State Wait for $Timeout(InviteTimeout)$, Nodes that accept the invite are added to UpNodes
+    \State Wait for $Timeout(InviteTimeout)$, Nodes that accept the invite are 
+added to UpNodes
     \State $State \gets Reorganization$
     \For {$j \in UpNodes$}
         \Call{Ready}{j,Coordinator,GroupID,UpNodes}
@@ -333,7 +341,8 @@ limited by an unreliable link.
 \State
 
 \Function{ReceiveAccept}{Sender,Leader,Identifier}
-    \If {$State \gets Election$ and $GroupID = Identifier$ and $Coordinator = Leader$}
+    \If {$State \gets Election$ and $GroupID = Identifier$ and $Coordinator = 
+Leader$}
         \State $UpNodes \gets UpNodes \cup {Sender}$
     \EndIf
 \EndFunction
@@ -364,22 +373,33 @@ they can identify another coordinator to join with. Therefore, a leader and each
 of the members maintains a set of processes which are currently reachable, which
 is a subset of all known processes in the system.
 
-This Leader election can also be classified as a sort of failure detector (CITE).
-Failure detectors are algorithms which detect the failure of processes in a system.
+This Leader election can also be classified as a sort of failure detector 
+(CITE).
+Failure detectors are algorithms which detect the failure of processes in a 
+system.
 A failure detector algorithm maintains a list of processes that it suspects have
 crashed. This informal description gives the failure detector strong ties to the
-Leader Election process. The Group Management module maintains a list of suspected
-processes in the form of the difference between the active group and all processes
-in the system.
+Leader Election process. The Group Management module maintains a list of 
+suspected
+processes which can be determined from the set of all processes and the current
+membership. 
 
 The leader and members have seperate roles to play in the failure detection
-process. The leader, using the $Check()$ function will constantly search for other
-leaders to join groups with. This serves as a ping / response query for detecting
+process. The leader, using the $Check()$ function will constantly search for 
+other
+leaders to join groups with. This serves as a ping / response query for 
+detecting
 failures in the system. It is also capable of detecting a change in state either
-by network issue or crash failure that causes the process being queried to no longer
-consider itself part of the leaders group.
+by network issue or crash failure that causes the process being queried to no 
+longer
+consider itself part of the leaders group. The member on the other hand, as the
+algorithm is written will only suspect the leader, and not the other processes.
+Of course, simple modifications could allow the member to suspect other members
+by use of a heart beat or query-reply system, it is not implemented in DGI code.
 
-
+In this work it is assumed that a leader does not span two partitoned networks:
+if a group is able to form all members have some chance of communicating with
+each other.
 
 
 \subsection{Network Simulation}
@@ -415,3 +435,119 @@ message is parsed by the listener. At this point the network simulation will
 halt processing the  message if it should be discarded based on the defined 
 random chance in the configuration file. Otherwise, it is delivered to the 
 addressed module.
+
+\subsection{Real Time}
+The DGI's specifications also call for real time reaction to events in the
+system. The DGI's real-time requirements are designed to enforce a tight
+upper bound on the amount of time used creating groups, discovering peers,
+collecting the global state, and performing migrations.
+
+To enforce these bounds, The real-time DGI has distinct phases which modules
+are allowed to use for all processing. Each module is given a phase which
+grants it a specific amount of processor time to complete any tasks it has
+prepared. When the allotted time is up the scheduler changes context to the
+next module.
+
+Modules inform the scheduler of tasks it wishes to perform by either submitting
+them to be performed at some point in the future, or informing the scheduler of
+a tasks that is ready to be executed immediately.
+
+Tasks that have become ready, either by being inserted as ready, or the time
+period that specified when it should be executed after has passed. The prepared
+task is inserted into a ready queue for the module that the task has been
+scheduled for.
+
+When that modules phase is active, the task is pulled from the ready queue and
+executed. When the phase is complete, the scheduler will stop pulling tasks
+from the previous modules queue and begin pulling from the next modules queue.
+
+This allows enforcement upper bound message delay. The modules have a specific
+amount of processing time allotted. Modules with messages that invoke responses
+(or a series of queries and responses) typically are required to be received
+within the same phase, using round numbers which enforce that the message was
+sent within the same phase.
+
+Modules are designed and allotted time to allow for parameters such as maximum
+query-response time (based on the latency between communicating processes). 
+This implies that a module which engages in these activities has an
+upper-bound in latency before messages are considered lost.
+
+\subsection{Markov Models}
+Understanding how the dynamics of group formation is captured in a Markov Model 
+is critical for both assessing its applicability and accuracy in this 
+application. First, however, the dynamics of group membership must be 
+understood as part of the distributed system.
+
+Consider a set of processes, which are linked by some packet based network 
+protocol. In our experiments we provide two protocols, each with different 
+delivery characteristics. Under ideal conditions a packet sent by one process 
+will always be delivered to its destination. Without a delivery protocol, as 
+soon as packets are lost by the communication network, the message that it 
+contained is lost forever. Therefore to compensate for the network losing 
+packets, a large variety of delivery protocols have been adapted. Each protocol 
+has a different set of goals and objectives, depending on the application.
+
+Keeping in mind that a single lost packet does not necessitate the message it 
+contained is forever lost, different protocols allow for different levels of 
+reliability despite packet loss.
+
+The leader election algorithm is centered around two critical events: checking, 
+and elections. The check system is used to detect both failures and the 
+availability of nodes for election.
+
+Consider a set of processes which have already formed a group. These processes 
+occasionally exchange messages to determine if the other processes have 
+crashed. These processes can be classified into two sets: Leaders and Members.
+
+When a leader sends its check messages, the nodes that receive it either 
+respond in the positive, indicating that they are also leaders, or in the 
+negative indicating that they have already joined a group. This message is sent 
+to all known nodes in the system. If a process replies that it is also a 
+leader, the original sender will enter and election mode and attempt to combine 
+groups with the first process. Nodes that fail to respond are removed from the 
+leaders group, if they were members.
+
+The member on the other hand will only direct its check message to the leader 
+of its current group. As with the leader's check message, the response can 
+either be positive or negative. A yes response indicates that the leader is 
+still available and considers the member a part of its group. A no response 
+indicates that either the leader has failed and recovered, or it has suspected 
+the member process of being unreachable (either due to crash or network issue) 
+and has removed them from the group. In this event the member will enter a 
+recovery state and reset itself to an initial configuration where it is in a 
+group by itself.
+
+On any membership change, either due to recovery, or a suspected failure, the 
+list of members for a group is pushed to every member of that group by the 
+leader. Members cannot suspect other processes of being crashed, only the 
+leader can identify failed group members.
+
+During elections, a highest priority leader (identified by its process id) will 
+send invites to the other leaders it has identified. If those leaders accept 
+the highest priority leader's invites, they will reply with an accept message 
+and forward the invite to their members, if their are any. If the highest 
+priority process fails to become the leader the next highest will send invites 
+after a specified interval has passed.
+
+Therefore, the membership of the system can be affected in two ways: election 
+events which change the size of groups and failure suspicion (via checks) which 
+decreases the size of groups. Note that elections can decrease the size of 
+groups as well as increase them: If a round of forwarding invites fails by the 
+new leader to his original group, the group size could decrease.
+
+When a process is initialized it begins in the "solo" state: it is in a group 
+with itself as the only member. As nodes are discovered by checks, the 
+processes combine into groups. Groups are not limited by increasing one a time; 
+they can increase by combined size of the groups of the leader processes.
+
+The result is similar to a life death process with more complex skips forward 
+or backward across the population.
+
+We define a metric to assess the performance of the system under duress, we 
+first consider that the distributed can only perform meaningful work when the 
+processes can work together to perform physical migration. This means that 
+there are two networks that affect the system's ability to do work: the 
+physical and the cyber.
+
+Nodes may be separated into distinct partitions. The cyber and physical systems 
+can span different nodes 

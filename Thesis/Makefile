@@ -1,22 +1,22 @@
 #Specify the file to work on
 SOURCE=dissertation
 
-all: base special
+all: $(SOURCE).pdf
 
-bibliography: $(SOURCE).aux latex_bibliography.bib
+bibliography: base $(SOURCE).aux latex_bibliography.bib
 	bibtex $(SOURCE).aux 
 
-index: $(SOURCE).idx
+index: base $(SOURCE).idx
 	makeindex $(SOURCE).idx
 
 base: $(SOURCE).tex
 	pdflatex $(SOURCE).tex
 
-special: $(SOURCE).tex bibliography index
+$(SOURCE).pdf: bibliography index
 	pdflatex $(SOURCE).tex
 	pdflatex $(SOURCE).tex
 
-view: base special
+view: all
 	zathura $(SOURCE).pdf
 
 clean:
