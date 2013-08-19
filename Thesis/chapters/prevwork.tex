@@ -446,7 +446,31 @@ To enforce these bounds, The real-time DGI has distinct phases which modules
 are allowed to use for all processing. Each module is given a phase which
 grants it a specific amount of processor time to complete any tasks it has
 prepared. When the allotted time is up the scheduler changes context to the
-next module.
+next module. This interaction is shown in Figure \ref{fig:REALTIMESCHEDULER}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.0\textwidth]{RealTimeScheduler.pdf}
+\captionsetup{singlelinecheck=off}
+\caption[Real Time Scheduler]{The realtime scheduler uses a round robin approach to allot execution time to modules. 
+\begin{enumerate}
+    \item Modules request that a task be executed by specifying a time in the
+          future to execute a task. A timer is set to count down to the
+          specified moment. Modules may also place tasks immediately into the
+          ready queue if the task may be executed immediately.
+    \item When the timer expires the task is placed into the ready queue for
+          the module that requested the task be executed.
+    \item Modules are assigned periods of execution (called phases) which are
+          a predetermined length. After the specificed amount of time has
+          passed, the module's phase ends and the next module in the schedule's
+          tasks begin to execute.
+    \item The worker selects the next ready task for the active module from the
+          ready queue and executes it. These tasks may also schedule other tasks
+          to be run in the future.
+\end{enumerate}
+}
+\label{fig:REALTIMESCHEDULER}
+\end{figure}
 
 Modules inform the scheduler of tasks it wishes to perform by either submitting
 them to be performed at some point in the future, or informing the scheduler of
