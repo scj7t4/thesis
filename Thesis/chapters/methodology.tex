@@ -1,8 +1,8 @@
-\section{Experimental Design}
+\chapter{Experimental Design}
 
 Tests were the system were completed by applying network settings and then running the nodes in the prescribed configuration for ten minutes (using the UNIX timeout command). At this point the test was terminated and the group management system appends statistics to an output file. New settings were applied and the next test was begun.
 
-\subsection{Tools Used, Systems Used}
+\section{Tools Used, Systems Used}
 
 The application of settings and the initiation of tests was completed using a custom script written in Python. This script used a library, Fabric \cite{FABRIC}, to start runs of the system by the secure shell (SSH). This was run on one of the machine and monitored the I/O of all nodes to ensure everything was behaving correctly.
 
@@ -16,7 +16,7 @@ The testing software was responsible for initializing instances, allowing them t
 Each node recorded its own state information, which was appended to a log file at termination of the run. This data was then coupled with the experimental procedure data to create the tables and charts in the results.
 
 For each run of the system, the first 60 seconds of the system were not logged to filter out transients. This leads to a maximum recordable in-group time of nine minutes.
-\subsection{Tests Performed}
+\section{Tests Performed}
 
 Our experiments considered two configurations of the system which can be considered highly characteristic of most other scenarios. The first, a two node configuration was intended to observe a slice of the behavior of the system when two nodes (a leader and a group member) struggle to communicate with one another.
 

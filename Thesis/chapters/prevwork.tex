@@ -1,5 +1,5 @@
-\section{Background Theory}
-\subsection{FREEDM DGI}
+\chapter{Background Theory}
+\section{FREEDM DGI}
 The FREEDM DGI is a smart grid operating system that organizes and coordinates 
 power electronics and negotiates contracts to deliver power to devices and 
 regions that cannot effectively facilitate their own need.
@@ -13,7 +13,7 @@ The intial work this document uses a version of the FREEDM DGI software with
 only one module: group management. Group management implements a leader
 election algorithm to discover which nodes are reachable in the cyber domain.
 
-\subsection{Broker Architecture}
+\section{Broker Architecture}
 
 The DGI software is designed around the broker architecture specification. Each 
 core functionality of the system is implemented within a module 
@@ -45,7 +45,7 @@ connectionless. To accomplish this lightweight protocols which are best effort
 oriented were implemented to deliver messages as quickly as possible within
 the following requirements.
 
-\subsubsection{Sequenced Reliable Connection.}
+\subsection{Sequenced Reliable Connection.}
 
 The sequenced reliable connection is a modified send and wait protocol with the 
 ability to stop resending messages and move on to the next one in the queue if 
@@ -132,7 +132,7 @@ lost messages to the reciever. This is, of course, a version with unbounded
 sequence numbers. The implementation available with the FREEDM source code is
 modified to allow for bounded sequence numbers.
 
-\subsubsection{Sequenced Unreliable Connection.}
+\subsection{Sequenced Unreliable Connection.}
 
 The SUC protocol is simply a best effort protocol: it employs a sliding window 
 to try to deliver messages as quickly as possible. A window size is decided, 
@@ -191,7 +191,7 @@ The psuedocode is included for clarity below:
 
 \end{algorithmic}
 
-\subsection{Group Management Algorithm}
+\section{Group Management Algorithm}
 
 Our software uses a leader election algorithm, ``Invitation Election 
 Algorithm'' written by Garcia-Molina and listed in \cite{INVITATIONELECTION}. 
@@ -402,7 +402,7 @@ if a group is able to form all members have some chance of communicating with
 each other.
 
 
-\subsection{Network Simulation}
+\section{Network Simulation}
 
 Network unreliability is simulated by dropping datagrams from specific sources 
 on the receiver side. Each receiver was given an XML file describing the 
@@ -416,14 +416,14 @@ or not to drop a message. A dropped message was not delivered to any of the
 sub-modules and was not acknowledged by the receiver. Using this method we were 
 able to emulate a lossy network link but not one with message delays.
 
-\subsection{System Implementation}
+\section{System Implementation}
 
 The FREEDM DGI software uses a Broker Architectural pattern. This design is 
 realized in C++ using the Boost Library\cite{BOOST}. We have also make use of 
 other languages such as Python to provide bootstrapping and start-up routines 
 for the software.
 
-\subsection{How the Network Reliability Simulator Fits Into the Communication 
+\section{How the Network Reliability Simulator Fits Into the Communication 
 Stack}
 
 Because the DGI's network communication is implemented using UDP, there is a 
@@ -436,7 +436,7 @@ halt processing the  message if it should be discarded based on the defined
 random chance in the configuration file. Otherwise, it is delivered to the 
 addressed module.
 
-\subsection{Real Time}
+\section{Real Time}
 The DGI's specifications also call for real time reaction to events in the
 system. The DGI's real-time requirements are designed to enforce a tight
 upper bound on the amount of time used creating groups, discovering peers,
@@ -496,7 +496,7 @@ query-response time (based on the latency between communicating processes).
 This implies that a module which engages in these activities has an
 upper-bound in latency before messages are considered lost.
 
-\subsection{Markov Models}
+\section{Markov Models}
 Understanding how the dynamics of group formation is captured in a Markov Model 
 is critical for both assessing its applicability and accuracy in this 
 application. First, however, the dynamics of group membership must be 
