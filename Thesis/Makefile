@@ -1,7 +1,7 @@
 #Specify the file to work on
 SOURCE=dissertation
 
-all: $(SOURCE).pdf
+all: plots $(SOURCE).pdf
 
 bibliography: base $(SOURCE).aux latex_bibliography.bib
 	bibtex $(SOURCE).aux 
@@ -18,6 +18,9 @@ $(SOURCE).pdf: bibliography index
 
 view: all
 	zathura $(SOURCE).pdf
+
+plots:
+	make -C ./gnuplots all
 
 clean:
 	rm -f $(SOURCE).{aux,bbl,blg,dvi,glg,glo,gls,idx,ist,fff,nlo,nls,ilg}
