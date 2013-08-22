@@ -12,6 +12,8 @@ ten minutes, the maximum result is 9 minutes of in group time.
 
 \section{SRC}
 
+\subsection{Two Node Case}
+
 \begin{figure}[!h]
 \centering
 \includegraphics{2NODE-SRC-100-SIZE.pdf}
@@ -29,4 +31,82 @@ ten minutes, the maximum result is 9 minutes of in group time.
 The 100ms resend SRC test with two nodes can be considered a sort of a control.
 These tests, pictured in Figures \ref{fig:MGS-2NODE-100} and
 \ref{fig:IGT-2NODE-100}. This test highlights the excellent performance of the
-SRC protocol.
+SRC protocol, achieving the maximum in group time of 9 minutes with only 15\%
+of datagrams arriving at the reciever. Figure \ref{fig:MGS-2NODE-100} shows
+that when there is no chance of datagrams arriving, the maximum group size is
+one since no elections can occur. As the reliability increases, more time is
+spent in a group. Since the maximum group size is 2, it is directly related to
+the in group time.
+
+\begin{figure}[!h]
+\centering
+\includegraphics{2NODE-SRC-200-SIZE.pdf}
+\caption{Average size of formed groups for two node system with 200ms resend time}
+\label{fig:MGS-2NODE-200}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics{2NODE-SRC-200-GROUP.pdf}
+\caption{Average size of formed groups for two node system with 200ms resend time}
+\label{fig:IGT-2NODE-200}
+\end{figure}
+
+Figures \ref{fig:MGS-2NODE-200} and \ref{fig:IGT-2NODE-200} demonstrates that as the
+rate at which lost datagrams are resent is decreased to resend every 200ms the
+time in group falls off. This behavior is expected, since each exchange has a
+time limit for each message to arrive and the number of attempts is reduced by
+increasing the resend time.
+
+\subsection{Transient Partition Case}
+
+\begin{figure}[!h]
+\centering
+\includegraphics{TRANS-SRC-100-SIZE.pdf}
+\caption{Average size of formed groups for the transient partition case with 100ms resend time}
+\label{fig:MGS-TRANS-100}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics{TRANS-SRC-100-GROUP.pdf}
+\caption{Average size of formed groups for the transient partition case with 100ms resend time}
+\label{fig:IGT-TRANS-100}
+\end{figure}
+
+The transient partition case, shows a simple example where a network partition
+seperates two groups of DGI. In the simplest case where the opposite side of
+the partition is unreachabe, nodes will form a group with the other nodes on the
+same side of the partition. In our tests, there are two nodes on each side of
+the partition. In the experiment, the probability of a datagram crossing the
+partition is increased as the experiment continues. The 100ms case is shown in
+Figures \ref{fig:MGS-TRANS-100} and \ref{fig:IGT-TRANS-100}.
+
+While messages cannot cross the partition, the DGIs stay in a group with the
+nodes on the same side of the partition leading to an in group time of 9 minutes,
+the maximum value. As packets begin to cross the partition (with the reliability
+increasing), DGI instances on either side begin to attempt to complete elections
+with the nodes on the opposite partition and the time in group begins to fall.
+However during this time, the mean group size continues to increase, meaning
+while the elections are decreasing the amount of time that the module spends in
+state where it can actively do work, it typically does not fall into a state
+where it is in a group by itself, which means that most of the lost in group
+time comes from elections.
+
+
+\begin{figure}[!h]
+\centering
+\includegraphics{TRANS-SRC-200-SIZE.pdf}
+\caption{Average size of formed groups for the transient partition case with 200ms resend time}
+\label{fig:MGS-TRANS-200}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics{TRANS-SRC-200-GROUP.pdf}
+\caption{Average size of formed groups for the transient partition case with 200ms resend time}
+\label{fig:IGT-TRANS-200}
+\end{figure}
+
+The 200ms case displays similiar behavior, with a wider valley due to the
+limited number of datagrams. 
