@@ -10,7 +10,7 @@ The first minute of each test in the experimental test is discarded to remove
 any transients in the test. The result is that while the tests were run for
 ten minutes, the maximum result is 9 minutes of in group time.
 
-\section{SRC}
+\section{Sequenced Reliable Connection}
 
 \subsection{Two Node Case}
 
@@ -18,21 +18,21 @@ ten minutes, the maximum result is 9 minutes of in group time.
 \centering
 \includegraphics{2NODE-SRC-100-SIZE.pdf}
 \caption{Average size of formed groups for two node system with 100ms resend time}
-\label{fig:MGS-2NODE-100}
+\label{fig:MGS-SRC-2NODE-100}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
 \includegraphics{2NODE-SRC-100-GROUP.pdf}
 \caption{Average size of formed groups for two node system with 100ms resend time}
-\label{fig:IGT-2NODE-100}
+\label{fig:IGT-SRC-2NODE-100}
 \end{figure}
 
 The 100ms resend SRC test with two nodes can be considered a sort of a control.
-These tests, pictured in Figures \ref{fig:MGS-2NODE-100} and
-\ref{fig:IGT-2NODE-100}. This test highlights the excellent performance of the
+These tests, pictured in Figures \ref{fig:MGS-SRC-2NODE-100} and
+\ref{fig:IGT-SRC-2NODE-100}. This test highlights the excellent performance of the
 SRC protocol, achieving the maximum in group time of 9 minutes with only 15\%
-of datagrams arriving at the reciever. Figure \ref{fig:MGS-2NODE-100} shows
+of datagrams arriving at the reciever. Figure \ref{fig:MGS-SRC-2NODE-100} shows
 that when there is no chance of datagrams arriving, the maximum group size is
 one since no elections can occur. As the reliability increases, more time is
 spent in a group. Since the maximum group size is 2, it is directly related to
@@ -42,17 +42,17 @@ the in group time.
 \centering
 \includegraphics{2NODE-SRC-200-SIZE.pdf}
 \caption{Average size of formed groups for two node system with 200ms resend time}
-\label{fig:MGS-2NODE-200}
+\label{fig:MGS-SRC-2NODE-200}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
 \includegraphics{2NODE-SRC-200-GROUP.pdf}
 \caption{Average size of formed groups for two node system with 200ms resend time}
-\label{fig:IGT-2NODE-200}
+\label{fig:IGT-SRC-2NODE-200}
 \end{figure}
 
-Figures \ref{fig:MGS-2NODE-200} and \ref{fig:IGT-2NODE-200} demonstrates that as the
+Figures \ref{fig:MGS-SRC-2NODE-200} and \ref{fig:IGT-SRC-2NODE-200} demonstrates that as the
 rate at which lost datagrams are resent is decreased to resend every 200ms the
 time in group falls off. This behavior is expected, since each exchange has a
 time limit for each message to arrive and the number of attempts is reduced by
@@ -80,7 +80,7 @@ the partition is unreachabe, nodes will form a group with the other nodes on the
 same side of the partition. In our tests, there are two nodes on each side of
 the partition. In the experiment, the probability of a datagram crossing the
 partition is increased as the experiment continues. The 100ms case is shown in
-Figures \ref{fig:MGS-TRANS-100} and \ref{fig:IGT-TRANS-100}.
+Figures \ref{fig:MGS-SRC-TRANS-100} and \ref{fig:IGT-SRCTRANS-100}.
 
 While messages cannot cross the partition, the DGIs stay in a group with the
 nodes on the same side of the partition leading to an in group time of 9 minutes,
@@ -93,20 +93,57 @@ state where it can actively do work, it typically does not fall into a state
 where it is in a group by itself, which means that most of the lost in group
 time comes from elections.
 
-
 \begin{figure}[!h]
 \centering
 \includegraphics{TRANS-SRC-200-SIZE.pdf}
 \caption{Average size of formed groups for the transient partition case with 200ms resend time}
-\label{fig:MGS-TRANS-200}
+\label{fig:MGS-SRC-TRANS-200}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
 \includegraphics{TRANS-SRC-200-GROUP.pdf}
 \caption{Average size of formed groups for the transient partition case with 200ms resend time}
-\label{fig:IGT-TRANS-200}
+\label{fig:IGT-SRC-TRANS-200}
 \end{figure}
 
-The 200ms case displays similiar behavior, with a wider valley due to the
-limited number of datagrams. 
+The 200ms case, shown in Figures \ref{fig:MGS-SRC-TRANS-200} and \ref{fig:IGT-SRC-TRANS-200} displays similiar behavior, with a wider valley due to the
+limited number of datagrams. It is also worth noting the that the mean group
+size dips below 2 in the figure, possibly because the longer resend times allow
+for more race conditions between potential leaders. Discussion of these race
+conditions is shown in discussed during the SUC charts since it is more prevalant
+in those experiments.
+
+\section{Sequenced Unreliable Connection}
+
+\subsection{Two Node Case}
+
+The SUC protocol's experimental tests show an immediate problem: although there
+is a general trend of growth in the amount of time in group and group size
+charts, shown in Figures \ref{fig:MGS-SUC-2NODE-100} and \ref{fig:IGT-SUC-2NODE-100}
+there is a high degree in variablity for any point collected in the experiments.
+
+\begin{figure}[!h]
+\centering
+\includegraphics{2NODE-SUC-100-SIZE.pdf}
+\caption{Average size of formed groups for two node system with 100ms resend time}
+\label{fig:MGS-SUC-2NODE-100}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics{2NODE-SUC-100-GROUP.pdf}
+\caption{Average size of formed groups for two node system with 100ms resend time}
+\label{fig:IGT-SUC-2NODE-100}
+\end{figure}
+
+In order to identify why these issues occured, the experimental simulator was
+developed. As stated previously, the simulator emulated the packet loss and
+behavior of the protocol. The simulator determined the amount of time necessary
+to complete and election, and the amount of time that group would last after
+being formed. The simulator allowed more trials of each prescribed reliability
+and was able to emulate each event at each probability a fixed number of times,
+unlike the in the experimental system, where rare events (such as elections
+or group failures) were only collected a few times.
+
+
