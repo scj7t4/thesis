@@ -497,6 +497,78 @@ This implies that a module which engages in these activities has an
 upper-bound in latency before messages are considered lost.
 
 \section{Markov Models}
+
+Markov models are a common way of recording probabilistic processes that can
+be in various states which change over time. A Markov model is a directed
+graph composed of states, and transititons between these states. Each
+transition has some probability attached to them.
+
+The models begins in some initial state, and then transitions into other states
+based on the probabilities assigned on each edge of the graph. Each state is
+memoryless, meaning that the history of the system, or the previous states have
+no effect on the next transition that occurs. Letting $Fx(s)$ equal the complete
+history of a Markov chain $X$ up to time $s$, and letting $j \in S$, where $S$
+is the complete set of states in the model. CITE STOICH BIO
+
+\begin{equation}
+P\{ X(t)=j | F_X(s) \} = P\{ X(t)=j | X(s) \}
+\end{equation}
+
+Additionally, the models we present are time homogenous, meaning that the
+time that transition probabilties are not affected by the amount of time that
+has passed in the simulation. CITE STOICH BIO
+
+\begin{equation}
+P\{ X(t)=j | X(s) \} = P\{ X(t)=j | X(0) \}
+\end{equation}
+
+Models can be either discrete time or continous time. In a discrete time model
+time is divided into distinct slices. After each "slice" the system transitions
+based on the random chance from each of possible transitions. The discrete model
+also allows for a transition which returns to the same state.
+
+To contrast, a continous time model assumes that the time between transitions
+are exponentially distributed. Each transition has some expected value or mean
+value which describes the amount of time before a transition occurs. Continous
+time models do not have transitions which return to the same state since the
+expected value of the transition time describes when how long the system 
+remains in the same state The probability density
+function (PDF) of the exponential distrobution can be written as: CITE
+
+\begin{equation}
+f(x;\lambda) = \begin{cases}
+\lambda e^{-\lambda x}, & x \ge 0, \\
+0, & x < 0.
+\end{cases}
+\end{equation}
+
+As a result, the expected or mean value of an exponential distribution, is a function of
+the parameter $\lambda$: CITE
+
+\begin{equation}
+\mathrm{E}[X] = \frac{1}{\lambda}. \!
+\end{equation}
+
+When there are multiple possible transitions from a state, each with their own
+expected transition time, the expected amount of time in the state cate can be
+written as:
+
+Each transition lends to an expected amount of time expected in the state. Then,
+to do a random walk of a continous time Markov chain, an intensity matrix must
+also be generated in order to describe which transition is taken after the
+exponentially distributed amount of time in the state has passed. Consider then
+two streams of random variables, one of which is exponentially distributed and
+used to determine the amount of time in a state. The second stream is normally
+distributed and used to determine which state to transition to through the
+intensity matrix.
+
+To collect the in group time from a Markov model the SharpE tool was used.
+Developed by Trivedi's team at Duke University, SharpE is a tool commonly used
+for reliability and availibilty testing, and features a Markov chain tool. Data
+collected from the simulator was used with SharpE to collect a steady state
+probability (the probability that the system will be in a given state at any
+given instant) from the collected simulation data.
+
 Understanding how the dynamics of group formation is captured in a Markov Model 
 is critical for both assessing its applicability and accuracy in this 
 application. First, however, the dynamics of group membership must be 
@@ -572,6 +644,3 @@ first consider that the distributed can only perform meaningful work when the
 processes can work together to perform physical migration. This means that 
 there are two networks that affect the system's ability to do work: the 
 physical and the cyber.
-
-Nodes may be separated into distinct partitions. The cyber and physical systems 
-can span different nodes 
