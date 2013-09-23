@@ -144,6 +144,20 @@ to complete and election, and the amount of time that group would last after
 being formed. The simulator allowed more trials of each prescribed reliability
 and was able to emulate each event at each probability a fixed number of times,
 unlike the in the experimental system, where rare events (such as elections
-or group failures) were only collected a few times.
+or group failures) were only collected a few times. The collected data was fed
+into SharpE.
+
+Using the simulation identified a race condition which is a major factor in the
+source of the variability in the collected data. As show in Figure MARK the 
+behavior of the algorithm causes the peers to synchronize when there is little
+to no latency, as there is in the local area network used to perform the test.
+The result is that the coordinators and members attempt to exchange their
+keep-alive messages simultaneously. Because the SUC protocol will stop accepting
+older sequence numbers when a message is recieved, race conditions result in
+a greater number of lost messages. Since both parties are attempting to
+deliver queries and responses, the queries can be destroyed by the responses.
+This is a particularly noticable problem at higher reliability figures. The
+probability of a message being lost because a newer message supersceedes it
+is shown in Figure MARK.
 
 
