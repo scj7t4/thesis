@@ -63,14 +63,91 @@ properties:
 
 \begin{itemize}
     \item The system employs a membership service. This service monitors for failures and reports them to the other processes as part of the process group (or view) system.
-    \item When a process is identified as failing it is removed from the groups that it belongs to and the remainin processes determine a new view.
-    \item After a process has been identified as failing, no message will be recieved from it.
+    \item When a process is identified as failing it is removed from the groups that it belongs to and the remaining processes determine a new view.
+    \item After a process has been identified as failing, no message will be received from it.
 \end{itemize}
 
 As part of the failure model, it is worth noting two commonly used multicast
 delivery garuntees: uniform and non-uniform. The uniform propery obligates that
 if one multicast is delivered to a node in the current view, it is delivered to
 all nodes in the current view.
+
+\section{Extended Virtual Synchrony}
+
+One of the major shortcomings of the original virtual synchrony model lay in
+how it handled network partitions. In virtual synchrony, when the network
+partitioned, only processes in the primary partition were allowed to continue.
+Processes that were not in the primary partition could not rejoin the primary
+partition without being restarted, that is, the process joining the view must
+be a new process so that there are no message delivery obligations for that
+process in the view.
+
+Mosler et. al's group at the University of California Santa Barbara designed
+an extended version of virtual synchrony, dubbed extended virtual synchrony.
+Extended virtual synchrony is compatible with the original virtual synchrony,
+and can implement all the functionality and limitations of the original design,
+as specified in the original paper. Because it supports virtual synchrony,
+extended virtual synchrony has become the basis for a number of related
+frameworks that have been designed since Isis including Horus, Totem, Transis,
+and Spread.
+
+Note that in Mosler's work, the name view has been substituted for configuration.
+For consistency in this section, the word view will be used to describe a group
+or a configuration, and all three terms are equivalent.
+
+Extended virtual synchrony places the following obligations on the message
+delivery service, described informally below:
+
+\begin{enumerate}
+	\item As defined in Virtual Synchrony, events can be cansually related.
+		Furthermore, if a message is delivered, the delivery is casually
+		related to the send event for that message. 
+	\item If a message $m$ is sent in some view $c$ by some process $p$ then $p$
+		cannot send $m$ in some other view $c'$
+	\item If not all processes install a view or a process leaves a view, a new
+		view is created. Furthermore, views are unique and events occur after a
+		view's creation and before its destruction. Messages which are delivered
+		before a view's destruction must be delivered by all processes in that
+		view (unless a process fails). Similarly, a message delivery which occurs
+		after the creation of a view must occur after the view is installed by
+		every process in the view.
+	\item Every sent message is delivered by the process that sends it (unless it
+		fails) even if the message is only delivered to that process.
+	\item If two processes are in sequential views, they deliver the same set of
+		messages in the second configuration.
+	\item If the send events of two messages is casually related, then if the
+		second of those messages is delivered, the first message is also delivered.
+	\item Messages delivered in total order must delivered at the same logical time.
+		Additionally, this total order must be consistent with the partial, casual
+		order. When a view changes, a process is not obligated to deliver messages
+		for processes that are not in the same view.
+	\item If one process in a view delivers a message, all processes in that view
+		deliver the message, unless that process fails. If an event which delivers
+		a message in some view occurs, then the messages that installed that view
+		was also delivered.
+\end{enumerate}
+
+Extended virtual synchrony lifts the obligation that messages will no longer be
+received by processes that have been removed by a view. It also provides
+additional restrictions on the sending of messages between two different views
+(Item 2) and an obligation on the delivery of messages (Item 4). 
+
+The concept of a primary view or primary configuration still exists within the
+extended virtual synchrony model and is still described by the notion of being
+the largest view. Since views can now partition and rejoin the primary partition
+the rules presented above also allow the history of the primary partition to be
+totally ordered. Additionally, two consecutive primary views have at least
+process that was a member of each view.
+
+To join views, processes are first informed of a failure (or joinable partition) 
+by a membership service. Processes maintain an obligation set of messages they
+have acknowledged but not yet delivered. After being informed of the need to
+change views, the processes begin buffering received messages and transition
+into a transitional view. In the transitional view messages are sent and
+delivered by the processes to fulfill the casuality and ordering requirements
+listed above. Once all messages have be transmitted, received and delivered as
+needed and the processes obligation set is empty, the view transitions from a
+transitional view to a regular view and execution continues as normal.
 
 \subsection{Comparison To DGI}
 
