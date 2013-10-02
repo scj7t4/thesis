@@ -2,6 +2,8 @@
 
 \section{Virtual Synchrony}
 
+(Do I need to describe the difference between Recieve and Deliver?)
+
 Consider a distributed system where events can be causually related based
 on their execution on the local processors and communication between
 processes, as defined in CITE. Virtually synchronous systems use multicast
@@ -161,32 +163,43 @@ However, this simplifies the DGI fulfilling it's real time requirements.
 processes must be able to react to changes in the power system within a
 maximum amount of time. These interactions do not require interaction between
 all processes within the group. Additionally, this allows for private
-transactions to occur between DGI processes.
+transactions to occur between DGI processes. Furthermore, hardware performance
+is limited in the current specification of the DGI platform, since the
+project is currently targeting a low power ARM board for deployment.
 
 The DGI has also been implemented using message delivery schemes that are
-unicast instead of multicast, since this is the easiest to achieve. A
-majority of systems implementing virtual synchrony use a model where local
-area communication is emphasized, with additional structures in place to
-transfer information across a WAN to other process groups.
+unicast instead of multicast, since this is the easiest to achieve in
+practice. A majority of systems implementing virtual synchrony use a model 
+where local area communication is emphasized, with additional structures in
+place to transfer information across a WAN to other process groups.
 
-\section{Isis and Horus}
+Groups in DGI are not obligated to deliver any subset of the messages to any
+peer in the system. Some of the employed algorithms in DGI need all of the
+messages to be delivered in a timely manner, but they do not require the same
+message to be delivered to every peer in the current design of the system.
+
+\section{Isis (1989) and Horus (1996)}
+
+(Note: I want it to be clear that Isis is Virtual Synchrony, Horus supports extended through the correct application of layers, but doesn't have to)
 
 A product of Dr. Kenneth Birman and his group at Cornell, Isis and Horus are
 two distributed frameworks which are comparable to the DGI. Although these
-projects are no longer actively developed, it is worth understanding them,
-to better grasp their successor, Spread, which will be compared to DGI later
-in this work.
+projects are no longer actively developed, Isis and Horus are the foundation
+which all other virtual synchrony frameworks are based.
 
 Isis was originally developed to create a reliable distributed framework for
 creating other applications. As Isis was one of the first of its kind, the
 burden of maintaining a robust framework that met the development needs of its
 users eventually made Birman's group create a newer, updated framework called
-Horus. However, Isis and Horus largely implement the same concepts.
+Horus, which implemented the improved extended virtual synchrony model. However, 
+Isis and Horus largely implement the same concepts.
 
-Horus/Isis are described as a group communications system. They provide a 
+Both Horus and Isis are described as a group communications system. They provide a 
 messaging architecture which clients use to deliver messages between processes.
 The frameworks provide a reliabile distributed multicast, and a failure
-detection scheme.
+detection scheme. Horus offered a modular design with a variety of extensions
+which could change message characteristics and performance as needed by the 
+project.
 
 \subsection{Group Model}
 In Horus and Isis, a group is a collection of processes which can communicate with one
@@ -196,27 +209,59 @@ make up a group is called a view.
 
 Over time, due to failure, the view will change. Since views are distributed
 concurrently and asynchronously, each process can have a different view. Horus
-is designed to have a modular communication structure, which allows the 
-communication channel to have different properties which will affect which 
-messages will be delivered in the event of a view change.
+is designed to have a modular communication structure composed of layers, which 
+allows the communication channel to have different properties which will affect
+which messages will be delivered in the event of a view change. Horus' layers
+allow developers to go as far to not use the complete virtual synchrony model,
+if the programmer desires. For example, Horus can implement total order using
+a token passing layer, or casual ordering using vector clocks.
 
-Both Horus and Isis have limited support for partitioning. In the event that
+Isis has limited support for partitioning. In the event that
 a partition forms, dividing the large group into subgroups, only the primary
 group is allowed to continue operating. The primary group is selected by
-choosing the largest partition. By their own description, only the primary
-group is allowed to continue working. This is to allow the partitions to
-reffififijoin: only the work from the primary partition should be used.
+choosing the largest partition. Horus, on the other hand implements the extended
+virtual synchrony model and does not have that limtitation.
 
-\section{Totem}
+\section{Transis (1992)}
+
+(Transis is similar to virtual synchrony but supports partitions, but is not explicitly extended virtual synchrony)
+
+Transis was developed as a more pragmatic approach to the creation of a distributed
+framework. Transis is developed with the key consideration that, while multicast is
+the most efficient for distributing information in a view or group of processors (as
+point to point quickly gives rise to N^2 complexity) it can be impractical, especially
+over a wide area network to rely on broadcast to deliver messages. Transis, then
+considers two components for the network: a local area component and a wide area 
+component.
+
+The local area component, Lansis, is responsible for the excange of messages across a
+LAN. Transis uses a combination of acknowledgements, which are piggybacked on regular
+messages to identify lost messages. If a process observes a message being acknowledged
+that it does not receive then it sends a negative acknowledgement broadcast informing
+the other members of the view it did not receive that message. In Lansis, the 
+acknowledgement signals that a process is ready to deliver a message. Lansis assumes
+that all messages can be casually related in a global, directed, acyclic graph and
+there are a number of schemes that deliver messages based on adherance to that graph.
+
+Like other frameworks, Transis uses gateways, which that call Xporters to deliver
+messages between the local views. 
+
+\section{Totem (1996)}
+
+(Totem should clearly be Extended Virtual Synchrony)
 
 Totem is largely in the same vein as Isis. Developed at the University of
 California, Santa Barbara by Moser, Melliar-Smith, Agarwal et. al. Totem is
 designed to use local area networks, connected by gateways. The local area
 networks use a token passing ring and multicast the messages, much like Isis
-and Horus. The gateways join these rings into a multi-ring topology.
-
-Like Isis, the message protocol gives the message total ordering using a
-token passing protocol.
+and Horus. The gateways join these rings into a multi-ring topology. Messages
+are first delivered on the ring which they are sent, then forwarded by the
+gateway which connects the local ring to the wide area ring for delivery to
+the other rings. The message protocol gives the message total ordering using a
+token passing protocol. Topology changes are handled in the local ring, then
+forwarded through the gateway where the system determines if the local change
+necessitates a change in the wide area ring. Failure detection is also implemented
+to detect failed gateways.
 
 \section{Spread}
 
