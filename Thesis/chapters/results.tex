@@ -153,11 +153,70 @@ behavior of the algorithm causes the peers to synchronize when there is little
 to no latency, as there is in the local area network used to perform the test.
 The result is that the coordinators and members attempt to exchange their
 keep-alive messages simultaneously. Because the SUC protocol will stop accepting
-older sequence numbers when a message is recieved, race conditions result in
+older sequence numbers when a message is received, race conditions result in
 a greater number of lost messages. Since both parties are attempting to
 deliver queries and responses, the queries can be destroyed by the responses.
-This is a particularly noticable problem at higher reliability figures. The
+This is a particularly noticeable problem at higher reliability figures. The
 probability of a message being lost because a newer message supersceedes it
-is shown in Figure MARK.
+is shown in Figure MARK. (Need to make that one)
 
+The simulator is capable of simulations assume the processes have exact
+synchronization, as well has a user defined offset, represented as the number
+of ticks for the simulation. A tick of the simulation is the amount of time
+that will pass in an experimental run between the time a packet is sent and
+the first time that packet is resent (the resend time). In order to accurately
+capture the behavoir of a specific experimental run the offset must be estimated
+since a changing offset can have a major effect on the characteristics of the
+system (PROBABLY NEED TO PRODUCE ANOTHER CHART HERE SHOWING HOW OFFSET EFFECTS THE SHAPE OF THE GRAPH).
+
+For the 100ms example, it was estimated that the processes synchronize fairly
+closely with eachother, and so the simulator was run with a very small offset (approximately 100ms, the smallest the simulator could emulate with one tick)
+between the two simulated processes. The result, as compared with the
+experimental value is shown in Figure \ref{fig:COMPARE-SUC-2NODE-100}.
+
+\begin{figure}[!h]
+\centering
+\includegraphics{2NODE-SUC-100-COMPARE.pdf}
+\caption{Comparison of in group time as collected from the experimental platform and the simulator (1 tick offset between processes).}
+\label{fig:COMPARE-SUC-2NODE-100}
+\end{figure}
+
+From figures \ref{fig:COMPARE-SUC-2NODE-100} and MARK one can conclude that for the SUC protocol the 
+race condition between processes is a major factor in the amount of time processes
+can spend in groups. While it is obvious that competition for access to the channel
+is a detriment to the system, the replication of this competition in software is
+also a major factor in the stability of groups formed. Furthermore, based on the 
+real-time design of the DGI, synchronization is a major concern because the real-time
+execution is designed to cause the processes to synchronize as closely as possible.
+
+\begin{figure}[!h]
+\centering
+\includegraphics{2NODE-SUC-200-SIZE.pdf}
+\caption{Average size of formed groups for two node system with 200ms resend time}
+\label{fig:MGS-SUC-2NODE-200}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics{2NODE-SUC-200-GROUP.pdf}
+\caption{Average size of formed groups for two node system with 200ms resend time}
+\label{fig:IGT-SUC-2NODE-200}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics{2NODE-SUC-200-COMPARE.pdf}
+\caption{Comparison of in group time as collected from the experimental platform and the simulator (2 tick offset between processes).}
+\label{fig:COMPARE-SUC-2NODE-200}
+\end{figure}
+
+
+In the 200ms resend case, show in Figures \ref{fig:MGS-SUC-2NODE-200} and \ref{fig:IGT-SUC-2NODE-200}, we can observe a more consistent and
+growth rate in the in group time as a the reliability increases. In fact, averaging
+across all the collected data points from the experiment, the average in group time
+is higher for the 200ms case than it is for the 100ms case ( 6.86 vs 6.09 ). Once
+again, race conditions are the culprit: the collected data when fit to a run of the
+simulation corresponds to a greater offset in the simulator: approximately 400ms (2 ticks at 200ms),
+which is two ticks of the simulaton. The comparison between the experimental and
+simulator values is shown in Figure \ref{fig:COMPARE-SUC-2NODE-200}.
 
