@@ -2,31 +2,31 @@
 
 \section{Virtual Synchrony}
 
-(Do I need to describe the difference between Recieve and Deliver?)
+(Do I need to describe the difference between Receive and Deliver?)
 
 Consider a distributed system where events can be causually related based
 on their execution on the local processors and communication between
 processes, as defined in CITE. Virtually synchronous systems use multicast
-to communicate reliabily between proceses.
+to communicate reliably between processes.
 
 \begin{enumerate}
     \item If $e$ and $e'$ are events local to a process $P_{i}$ and $e$ occurs before $e'$, then $e \rightarrow e'$
     \item If $e = send(m) and e'=deliver(m)$ for the same message $m$, then $e \rightarrow e'$
 \end{enumerate}
 
-This defines a dependence and casuality relation between events in the system.
+This defines a dependence and causality relation between events in the system.
 If two events cannot be causually related (that is $e \not\rightarrow e'$ and
 $e' \not\rightarrow e$ then the events are considered concurrent. From this
 one can define an execution history $H$.
 
-Virtual synchrony is a concept employed by a great number of distributed
+Virtual synchronous is a concept employed by a great number of distributed
 frameworks to impose synchronization on a system. Virtual synchrony is a
 model of communication and execution that allows the system designer to
 enforce synchronization on the system. Although the processes do not
 execute tasks simultaneously, the execution history of each process cannot
-be differenitated from a trace where tasks are executed simultaneously. A
-pair of histories $H$ and $H'$ are equivalent if for each procress in the
-system (noted as $p$) $H|_{p}$ cannot be differenatiated $H'|_{p}$ based
+be differentiated from a trace where tasks are executed simultaneously. A
+pair of histories $H$ and $H'$ are equivalent if for each process in the
+system (noted as $p$) $H|_{p}$ cannot be differentiated $H'|_{p}$ based
 on the casual relationships between the events in the history.
 
 Additionally, a history is considered complete if all sent messages are
@@ -44,17 +44,17 @@ implementation of a virtually synchron/ous system applies a different structure
 to the way processes are grouped, there are common features between each
 implementation.
 
-A process group in a virtual synchronous system is commonly refered to as a
+A process group in a virtual synchronous system is commonly referred to as a
 view. A view is a collection of processes that are virtually synchronous
-with eachother. Process groups in virtually synchronous systems place 
+with each other. Process groups in virtually synchronous systems place 
 obligations on the delivery of messages to members of the view. A history
 $H$ is legal if:
 
 \begin{enumerate}
-    \item Given a function $time(e)$ that returns a global time of when the event occured $e$, then $e \rightarrow e' \Rightarrow time(e) < time(e').$
+    \item Given a function $time(e)$ that returns a global time of when the event occurred $e$, then $e \rightarrow e' \Rightarrow time(e) < time(e').$
     \item $time(e) \neq time(e') \forall e, e' \in H|_{p}$ (where $e \neq e'$) for each process.
     \item A change in view (group membership) occur at the same logical time for all processes in the view.
-    \item All multicast message deliveres occur in the view of a group. That is, if a message is sent in a view, it is delivered in that view, for every process in that view.
+    \item All multicast message delivers occur in the view of a group. That is, if a message is sent in a view, it is delivered in that view, for every process in that view.
     \item Atomic broadcast ($abcast$) messages are totally ordered.
 \end{enumerate}
 
@@ -70,7 +70,7 @@ properties:
 \end{itemize}
 
 As part of the failure model, it is worth noting two commonly used multicast
-delivery garuntees: uniform and non-uniform. The uniform propery obligates that
+delivery guarantees: uniform and non-uniform. The uniform property obligates that
 if one multicast is delivered to a node in the current view, it is delivered to
 all nodes in the current view.
 
@@ -101,7 +101,7 @@ Extended virtual synchrony places the following obligations on the message
 delivery service, described informally below:
 
 \begin{enumerate}
-	\item As defined in Virtual Synchrony, events can be cansually related.
+	\item As defined in Virtual Synchrony, events can be causually related.
 		Furthermore, if a message is delivered, the delivery is casually
 		related to the send event for that message. 
 	\item If a message $m$ is sent in some view $c$ by some process $p$ then $p$
@@ -146,7 +146,7 @@ by a membership service. Processes maintain an obligation set of messages they
 have acknowledged but not yet delivered. After being informed of the need to
 change views, the processes begin buffering received messages and transition
 into a transitional view. In the transitional view messages are sent and
-delivered by the processes to fulfill the casuality and ordering requirements
+delivered by the processes to fulfill the causality and ordering requirements
 listed above. Once all messages have be transmitted, received and delivered as
 needed and the processes obligation set is empty, the view transitions from a
 transitional view to a regular view and execution continues as normal.
@@ -196,15 +196,15 @@ Isis and Horus largely implement the same concepts.
 
 Both Horus and Isis are described as a group communications system. They provide a 
 messaging architecture which clients use to deliver messages between processes.
-The frameworks provide a reliabile distributed multicast, and a failure
+The frameworks provide a reliable distributed multicast, and a failure
 detection scheme. Horus offered a modular design with a variety of extensions
 which could change message characteristics and performance as needed by the 
 project.
 
 \subsection{Group Model}
 In Horus and Isis, a group is a collection of processes which can communicate with one
-another to do work. Multicasts are directed to the group, and are gaurnteed to
-be recieved by all members or no members. The collection of processes which
+another to do work. Multicasts are directed to the group, and are guaranteed to
+be received by all members or no members. The collection of processes which
 make up a group is called a view.
 
 Over time, due to failure, the view will change. Since views are distributed
@@ -220,7 +220,7 @@ Isis has limited support for partitioning. In the event that
 a partition forms, dividing the large group into subgroups, only the primary
 group is allowed to continue operating. The primary group is selected by
 choosing the largest partition. Horus, on the other hand implements the extended
-virtual synchrony model and does not have that limtitation.
+virtual synchrony model and does not have that limitation.
 
 \section{Transis (1992)}
 
@@ -234,14 +234,14 @@ over a wide area network to rely on broadcast to deliver messages. Transis, then
 considers two components for the network: a local area component and a wide area 
 component.
 
-The local area component, Lansis, is responsible for the excange of messages across a
-LAN. Transis uses a combination of acknowledgements, which are piggybacked on regular
+The local area component, Lansis, is responsible for the exchange of messages across a
+LAN. Transis uses a combination of acknowledgments, which are piggybacked on regular
 messages to identify lost messages. If a process observes a message being acknowledged
-that it does not receive then it sends a negative acknowledgement broadcast informing
+that it does not receive then it sends a negative acknowledgment broadcast informing
 the other members of the view it did not receive that message. In Lansis, the 
-acknowledgement signals that a process is ready to deliver a message. Lansis assumes
+acknowledgment signals that a process is ready to deliver a message. Lansis assumes
 that all messages can be casually related in a global, directed, acyclic graph and
-there are a number of schemes that deliver messages based on adherance to that graph.
+there are a number of schemes that deliver messages based on adherence to that graph.
 
 Like other frameworks, Transis uses gateways, which that call Xporters to deliver
 messages between the local views. 
@@ -264,4 +264,50 @@ necessitates a change in the wide area ring. Failure detection is also implement
 to detect failed gateways.
 
 \section{Spread}
+
+Spread is a modern distributed framework. It is available as a library for a
+variety of languages including Java, Python and C++. Spread is designed as a
+series of daemons which communicate over a wide area network. Processes on the
+same LAN as the daemons connect to the daemon directly. This is analogous the
+gateways in the other distributed toolkits, however the daemon is a special,
+dedicated message passing process, rather than a participating peer with a
+special role.
+
+Using a dedicated daemon allows a spread configuration to reconfigure less
+frequently when a process stops responding (which normally correlates to a
+view change) since the daemons can insert a message informing other processes
+that a process has left while still maintaining the message ordering without
+disruption. Major reconfigurations only need to occur when a daemon is
+suspected of failing.
+
+Spread implements an extended virtual synchrony model. However, message
+ordering is performed at the daemon level, rather than at the group level.
+Total ordering is done using a token passing scheme among the daemons.
+
+\section{Failure Detectors}
+
+Failure detectors (Sometimes referred to as unreliable failure detectors)
+ are special class of processes in a distributed system that
+detect other failed processes. Distributed systems use failure detection to
+identify failed processes for group management routines. Because it isn't
+possible to directly detect a failed process in an asynchronous system, there
+has been a wide breath of work related to different classifications of failure
+detectors, with different properties. Some of the properties include:
+
+\begin{itemize}
+    \item Strong Completeness - Every faulty process is eventually suspected by
+        every other working process.
+    \item Weak Completeness - Every faulty process is eventually suspected by 
+        some other working process.
+    \item Strong Accuracy - No process is suspected before it actually fails.
+    \item Weak Accuracy - There exists some process is never suspected of failure.
+    \item Eventual Strong Accuracy - There is an initial period where strong
+        accuracy is not kept. Eventually, working processes are identified
+        as such, and are not suspected unless they actually fail.
+    \item Eventual Weak Accuracy - There is an initial period where weak
+        accuracy is not kept. Eventually, working processes are identified
+        as such, and there is some process that is never suspected of failing
+        again.
+\end{itemize}
+
 
