@@ -1,49 +1,22 @@
 \chapter{Background Theory}
+
 \section{FREEDM DGI}
-The FREEDM DGI is a smart grid operating system that organizes and coordinates 
-power electronics and negotiates contracts to deliver power to devices and 
-regions that cannot effectively facilitate their own need.
 
-To accomplish this, the DGI software consists of a central component, the 
-broker, which is responsible for presenting a communication interface and 
-furnishing any common functionality needed by any algorithms used by the 
-system. These algorithms are grouped into modules.
+The FREEDM DGI is a smart grid operating system that organizes and coordinates power electronics and negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their own need.
 
-The intial work this document uses a version of the FREEDM DGI software with 
-only one module: group management. Group management implements a leader
-election algorithm to discover which nodes are reachable in the cyber domain.
+To accomplish this, the DGI software consists of a central component, the broker, which is responsible for presenting a communication interface and furnishing any common functionality needed by any algorithms used by the system. These algorithms are grouped into modules. These algorithms work in concert to move power from areas of excess supply to excess demand.
+
+The initial work this document uses a version of the FREEDM DGI software with only one module: group management. Group management implements a leader election algorithm to discover which nodes are reachable in the cyber domain. A full system would feature additional modules, that provide additional functionality such as collecting a global snapshot, and a module which negotiates the migrations and gives commands to physical components. Additionally, a full implementation of the system is real-time which creates a maximum time before the system reacts to a change in the physical or cyber network.
 
 \section{Broker Architecture}
 
-The DGI software is designed around the broker architecture specification. Each 
-core functionality of the system is implemented within a module 
-which is provided access to core interfaces which deliver functionality such as 
-scheduling requests, message passing, and a framework to manipulate physical 
-devices, including those which exist only in simulation environments such as 
-PSCAD\cite{PSCAD} and RSCAD\cite{RSCAD}.
+The DGI software is designed around the broker architecture specification. Each core functionality of the system is implemented within a module which is provided access to core interfaces which deliver functionality such as scheduling requests, message passing, and a framework to manipulate physical devices, including those which exist only in simulation environments such as PSCAD\cite{PSCAD} and RSCAD\cite{RSCAD}.
 
-The Broker provides a common message passing interface which all modules are 
-allowed access to. This interface also provides the inter-module communication 
-which delivers messages between software modules, effectively decoupling them 
-outside of the requirement for them to be able to recognize messages addressed 
-to them from other modules.
+The Broker provides a common message passing interface which all modules are allowed access to. This interface also provides the inter-module communication which delivers messages between software modules, effectively decoupling them outside of the requirement for them to be able to recognize messages addressed to them from other modules.
 
-Several of the distributed algorithms used in the software require the use of 
-ordered communication channels. To achieve this, FREEDM provides a reliable 
-ordered communication protocol (The sequenced reliable connection or SRC) to 
-the modules, as well as a ``best effort'' protocol (The sequenced unreliable 
-connection or SUC) which is also FIFO (first in, first out), but provides 
-limited delivery guarantees.
+Several of the distributed algorithms used in the software require the use of ordered communication channels. To achieve this, FREEDM provides a reliable ordered communication protocol (The sequenced reliable connection or SRC) to the modules, as well as a ``best effort'' protocol (The sequenced unreliable connection or SUC) which is also FIFO (first in, first out), but provides limited delivery guarantees.
 
-We elected to design and implement our own simple message delivery schemes in 
-order to avoid complexities introduced by using TCP in our system. During 
-development, it was observed that constructing a TCP connection to a node that 
-had 
-failed or was unreachable took a considerable amount of time. We elected to use 
-UDP packets which do not have those issues, since the protocol is 
-connectionless. To accomplish this lightweight protocols which are best effort 
-oriented were implemented to deliver messages as quickly as possible within
-the following requirements.
+We elected to design and implement our own simple message delivery schemes in order to avoid complexities introduced by using TCP in our system. During development, it was observed that constructing a TCP connection to a node that had failed or was unreachable took a considerable amount of time. We elected to use UDP packets which do not have those issues, since the protocol is connectionless. UDP also allows development of protocols with various properties to evaluate which properties are desirable. To accomplish this lightweight protocols which are best effort oriented were implemented to deliver messages as quickly as possible within the requirements.
 
 \subsection{Sequenced Reliable Connection.}
 
@@ -53,7 +26,7 @@ the message delivery time exceeds some timeout. When designing this scheme we
 wanted to achieve several criteria:
 
 \begin{itemize}
-\item Messages must be accepted in order - Some distributed algorithms rely on 
+\item Messages must be delivered in order - Some distributed algorithms rely on 
 the assumption that the underlying message channel is FIFO.
 \item Messages can become irrelevant - Some messages may only have a short 
 period in which they are worth sending. Outside of that time period, they 
@@ -69,132 +42,30 @@ it is still relevant.
 
 There one adjustable parameter, the resend time, which controls how often the 
 system would attempt to deliver a message it hadn't yet received an 
-acknowledgment for.
-
-To further explain the characteristics of the protocol, the psuedocode is 
-included below:
-
-\begin{algorithmic}
-
-\State $inseqno \gets 0$
-\State $outseqno \gets 1$
-\State $outqueue \gets []$
-\State $kill \gets null$
-\State $lastack \gets 0$
-
-\Function{Receive}{msg}
-    \If {$msg.type = MSG$}
-        \If {$msg.seqno = inseqno+1$}
-            \State $SendAck(msg.seqno)$
-            \State $inseqno \gets inseqno + 1$
-        \ElsIf {$msg.seqno > inseqno$ and $msg.kill \neq null$ and $msg.kill 
-\leq inseqno$}
-            \State $SendAck(msg.seqno)$
-            \State $inseqno \gets msg.seqno + 1$
-        \Else
-            \State $SendAck(inseqno)$
-        \EndIf
-    \ElsIf {$msg.type = ACK$}
-        \If {$msg.seqno = outqueue.front.seqno$}
-            \State $outqueue.pop()$
-            \State $kill \gets null$
-            \State $lastack \gets msg.seqno$
-            \State $Write(outqueue.front,kill)$
-        \Else
-            \State $Write(outqueue.front,kill)$
-        \EndIf
-    \EndIf
-\EndFunction
-
-\Function{Send}{msg}
-    \State $msg.seqno \gets outseqno$
-    \State $outseqno \gets outseqno+1$
-    \State $outqueue.push(msg)$
-    \If {$outqueue.size = 0$}
-        \State $Write(outqueue.front,kill)$
-    \EndIf
-\EndFunction
-
-\Function{Resend}{}
-    \While{$outqueue.size \geq 0$ and $outqueue.front.expired$}
-        \State $outqueue.pop()$
-        \State $kill \gets lastack$
-    \EndWhile
-    \If {$outqueue.size \geq 0$}
-        \State $Write(outqueue.front,kill)$    
-    \EndIf
-\EndFunction
-
-\end{algorithmic}
+acknowledgement for. To further explain the characteristics of the protocol, 
+the psuedocode is included in Appendix REF
 
 Note that the $Resend()$ function is periodically called to attempt to redeliver
-lost messages to the reciever. This is, of course, a version with unbounded
-sequence numbers. The implementation available with the FREEDM source code is
-modified to allow for bounded sequence numbers.
+lost messages to the receiver. 
 
 \subsection{Sequenced Unreliable Connection.}
 
 The SUC protocol is simply a best effort protocol: it employs a sliding window 
 to try to deliver messages as quickly as possible. A window size is decided, 
 and then at any given time, the sender can have up to that many messages in the 
-channel, awaiting acknowledgment. The receiver will look for increasing 
+channel, awaiting acknowledgement. The receiver will look for increasing 
 sequence numbers, and disregard any message that is of a lower sequence number 
 than is expected. The purpose of this protocol is to implement a bare minimum: 
 messages are accepted in the order they are sent.
 
 Like the SRC protocol, the SUC protocol's resend time can be adjusted. 
 Additionally, the window size is also configurable, but was left unchanged for 
-the tests presented in this work.
-
-The psuedocode is included for clarity below:
-
-\begin{algorithmic}
-
-\State $inseqno \gets 0$
-\State $outseqno \gets 0$
-\State $outqueue \gets []$
-
-\Function{Receive}{msg}
-    \If {$msg.type = MSG$}
-        \If {$msg.seqno > inseqno$}
-            \State $SendAck(msg.seqno)$
-            \State $inseqno \gets msg.seqno$
-        \Else
-            \State $SendAck(inseqno)$
-        \EndIf
-    \ElsIf {$msg.type = ACK$}
-        \State $popped \gets 0$
-        \If {$msg.seqno \leq outqueue.front.seqno$}
-            \State $outqueue.pop()$
-            \State $popped \gets popped+1$
-        \EndIf
-        \For{$i = WindowSize-popped \to min(WindowSize-1,outqueue.size)$}
-            \State $Write(outqueue[i])$
-        \EndFor
-    \EndIf
-\EndFunction
-
-\Function{Send}{msg}
-    \State $msg.seqno \gets outseqno$
-    \State $outseqno \gets outseqno+1$
-    \State $outqueue.push(msg)$
-    \If {$outqueue.size \leq WindowSize$}
-        \State $Write(msg)$
-    \EndIf
-\EndFunction
-
-\Function{Resend}{}
-    \For{$i = 0 \to min(WindowSize-1,outqueue.size)$}
-        \State $Write(outqueue[i])$
-    \EndFor
-\EndFunction
-
-\end{algorithmic}
+the tests presented in this work. The psuedocode is included included in Appendix REF
 
 \section{Group Management Algorithm}
 
 Our software uses a leader election algorithm, ``Invitation Election 
-Algorithm'' written by Garcia-Molina and listed in \cite{INVITATIONELECTION}. 
+Algorithm'' written by Garcia-Molina in \cite{INVITATIONELECTION}. 
 His algorithm provides a robust election procedure which allows for transient 
 partitions. Transient partitions are formed when a faulty link between two or 
 more clusters of DGIs causes the groups to temporarily divide. These transient 
@@ -202,166 +73,6 @@ partitions merge when the link is more reliable. The election algorithm
 allows for failures that disconnect two distinct sub-networks. These sub 
 networks are fully connected, but connectivity between the two sub-networks is 
 limited by an unreliable link.
-
-\begin{algorithmic}
-
-\State $AllNodes \gets \{ 1, 2, ..., N \}$
-\State $Coordinators \gets \emptyset$
-\State $UpNodes \gets { Me }$
-\State $State \gets Normal$
-\State $Coordinator \gets Me$
-\State $Responses \gets \emptyset$
-\State $Counter \gets$ A random initial identifier
-\State $GroupID \gets (Me,Counter)$
-
-\State
-
-\Function{Check}{}
-    \State This function is called periodically by the leader
-    \If {$State = Normal$ and $Coordinator \gets Me$}
-        \State $Responses \gets \emptyset$
-        \State $TempSet \gets \emptyset$
-        \For {$j = (AllNodes - \{Me\})$}
-            \State $AreYouCoordinator(j)$
-            \State $TempSet \gets TempSet \cup j$
-        \EndFor
-        \State Nodes which respond "Yes" to $AreYouCoordinator$ are put into 
-the $Responses$ set. When all nodes have responded or after 
-$Timeout(CheckTimeout)$, Nodes that do not respond are removed from UpNodes and 
-execution continues
-        \State $UpNodes \gets (TempSet-Responses) \cup {Me}$
-        \If {$Responses = \emptyset$}
-            \Return
-        \EndIf
-        \State $p \gets \max(Responses)$
-        \If $Me < P$
-            \State Wait time proportional to p-i
-        \EndIf
-        \Call{Merge}{Responses}
-    \EndIf
-    \State The next call to this is after Timeout(CheckTimeout)
-\EndFunction
-
-\State
-
-\Function{Timeout}{}
-    \State This function is called periodically by the group members
-    \If {$Coordinator = Me$}
-        \Return
-    \Else
-        \Call{AreYouThere}{Coordinator,GroupID,Me}
-        \If{Response is No or after $Timeout(TimeoutTimeout)$}
-            \Call{Recovery}{}
-        \EndIf
-    \EndIf
-    \State The next call to this is after Timeout(TimeoutTimeout)
-\EndFunction
-
-\State
-
-\Function{Merge}{Coordinators}
-    \State This function invites all coordinators in Coordinators to join a 
-group led by Me
-    \State $State \gets Election$
-    \State Stop work
-    \State $Counter \gets Counter+1$
-    \State $GroupID \gets (Me,Counter)$
-    \State $Coordinator \gets Me$
-    \State $TempSet \gets UpNodes - {Me}$
-    \State $UpNodes \gets \emptyset$
-    \For {$j \in Coordinators$}
-        \Call{Invite}{j,Coordinator,GroupID}
-    \EndFor
-    \For {$j \in TempSet$}
-        \Call{Invite}{j,Coordinator,GroupID}
-    \EndFor
-    \State Wait for $Timeout(InviteTimeout)$, Nodes that accept the invite are 
-added to UpNodes
-    \State $State \gets Reorganization$
-    \For {$j \in UpNodes$}
-        \Call{Ready}{j,Coordinator,GroupID,UpNodes}
-    \EndFor
-    \State $State \gets Normal$
-\EndFunction
-
-\State
-
-\Function{ReceiveReady}{Sender,Leader, Identifier, Peers}
-    \If {$State = Reorganization$ and $GroupID = Identifier$}
-        \State $UpNodes \gets Peers$
-        \State $State \gets Normal$      
-    \EndIf
-\EndFunction
-
-\State
-
-\Function{ReceiveAreYouCoordinator}{Sender}
-    \If {$State = Normal$ and $Coordinator = Me$}
-        \State Respond Yes
-    \Else
-        \State Respond No
-    \EndIf
-\EndFunction
-
-\State
-
-\Function{ReceiveAreYouThere}{Sender, Identifier}
-    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpNodes$}
-        \State Respond Yes
-    \Else
-        \State Respond No
-    \EndIf
-\EndFunction
-
-\State
-
-\Function{ReceiveInvitation}{Sender,Leader,Identifier}
-    \If {$State \neq Normal$}
-        \Return
-    \EndIf
-    \State Stop Work
-    \State $Temp \gets Coordinator$
-    \State $TempSet \gets UpNodes$
-    \State $State \gets Election$
-    \State $Coordinator \gets Leader$
-    \State $GroupID \gets Identifier$
-    \If {$Temp = Me$}
-        \State Forward invite to old group members
-        \For $j \in TempSet$
-            \State $Invite(j,Coordinator,GroupID)$
-        \EndFor
-    \EndIf
-    \State $Accept(Coordinator,GroupID)$
-    \State $State \gets Reorganization$
-    \If {$Timeout(ReadyTimeout)$ expires before $Ready$ is recieved}
-        \State $Recovery()$
-    \EndIf
-\EndFunction
-
-\State
-
-\Function{ReceiveAccept}{Sender,Leader,Identifier}
-    \If {$State \gets Election$ and $GroupID = Identifier$ and $Coordinator = 
-Leader$}
-        \State $UpNodes \gets UpNodes \cup {Sender}$
-    \EndIf
-\EndFunction
-
-\State
-
-\Function{Recovery}{}
-    \State $State \gets Election$
-    \State Stop Work
-    \State $Counter \gets Counter + 1$
-    \State $GroupID \gets (Me,Counter)$
-    \State $Coordinator \gets Me$
-    \State $UpNodes \gets {Me}$
-    \State $State \gets Reorganization$
-    \State $State \gets Normal$
-\EndFunction
-
-\end{algorithmic}
-
 
 The elected leader is responsible for making work assignments and identifying 
 and merging with other coordinators when they are found, as well as maintaining 
@@ -373,40 +84,35 @@ they can identify another coordinator to join with. Therefore, a leader and each
 of the members maintains a set of processes which are currently reachable, which
 is a subset of all known processes in the system.
 
-This Leader election can also be classified as a sort of failure detector 
-(CITE).
-Failure detectors are algorithms which detect the failure of processes in a 
-system.
-A failure detector algorithm maintains a list of processes that it suspects have
+This Leader election can also be classified as a failure detector 
+(CITE). Failure detectors are algorithms which detect the failure of processes in a 
+system. A failure detector algorithm maintains a list of processes that it suspects have
 crashed. This informal description gives the failure detector strong ties to the
 Leader Election process. The Group Management module maintains a list of 
-suspected
-processes which can be determined from the set of all processes and the current
+suspected processes which can be determined from the set of all processes and the current
 membership. 
 
-The leader and members have seperate roles to play in the failure detection
+The leader and members have separate roles to play in the failure detection
 process. The leader, using the $Check()$ function will constantly search for 
-other
-leaders to join groups with. This serves as a ping / response query for 
-detecting
-failures in the system. It is also capable of detecting a change in state either
+other leaders to join groups with. This serves as a ping / response query for 
+detecting failures in the system. It is also capable of detecting a change in state either
 by network issue or crash failure that causes the process being queried to no 
-longer
-consider itself part of the leaders group. The member on the other hand, as the
+longer consider itself part of the leaders group. The member on the other hand, as the
 algorithm is written will only suspect the leader, and not the other processes.
 Of course, simple modifications could allow the member to suspect other members
 by use of a heart beat or query-reply system, it is not implemented in DGI code.
 
-In this work it is assumed that a leader does not span two partitoned networks:
+In this work it is assumed that a leader does not span two partitioned networks:
 if a group is able to form all members have some chance of communicating with
 each other.
 
+DESCRIBE WHAT KIND OF FAILURE DETECTOR LEADER ELECTION IS.
 
 \section{Network Simulation}
 
 Network unreliability is simulated by dropping datagrams from specific sources 
 on the receiver side. Each receiver was given an XML file describing the 
- prescribed reliability of messages arriving from a specific source. The 
+prescribed reliability of messages arriving from a specific source. The 
 network settings were loaded at run time and could be polled if necessary for 
 changes in the link reliability.
 
@@ -452,7 +158,7 @@ next module. This interaction is shown in Figure \ref{fig:REALTIMESCHEDULER}
 \centering
 \includegraphics[width=1.0\textwidth]{RealTimeScheduler.pdf}
 \captionsetup{singlelinecheck=off}
-\caption[Real Time Scheduler]{The realtime scheduler uses a round robin approach to allot execution time to modules. 
+\caption[Real Time Scheduler]{The real time scheduler uses a round robin approach to allot execution time to modules. 
 \begin{enumerate}
     \item Modules request that a task be executed by specifying a time in the
           future to execute a task. A timer is set to count down to the
@@ -500,8 +206,10 @@ upper-bound in latency before messages are considered lost.
 
 Markov models are a common way of recording probabilistic processes that can
 be in various states which change over time. A Markov model is a directed
-graph composed of states, and transititons between these states. Each
+graph composed of states, and transitions between these states. Each
 transition has some probability attached to them.
+
+\subsection{Continuous Time Markov Chains}
 
 The models begins in some initial state, and then transitions into other states
 based on the probabilities assigned on each edge of the graph. Each state is
@@ -514,31 +222,31 @@ is the complete set of states in the model. CITE STOICH BIO
 P\{ X(t)=j | F_X(s) \} = P\{ X(t)=j | X(s) \}
 \end{equation}
 
-Additionally, the models we present are time homogenous, meaning that the
-time that transition probabilties are not affected by the amount of time that
+Additionally, the models we present are time homogeneous, meaning that the
+time that transition probabilities are not affected by the amount of time that
 has passed in the simulation. CITE STOICH BIO
 
 \begin{equation}
 P\{ X(t)=j | X(s) \} = P\{ X(t)=j | X(0) \}
 \end{equation}
 
-Models can be either discrete time or continous time. In a discrete time model
+Models can be either discrete time or continuous time. In a discrete time model
 time is divided into distinct slices. After each "slice" the system transitions
 based on the random chance from each of possible transitions. The discrete model
 also allows for a transition which returns to the same state.
 
-To contrast, a continous time model assumes that the time between transitions
+To contrast, a continuous time model assumes that the time between transitions
 are exponentially distributed. Each transition has some expected value or mean
-value which describes the amount of time before a transition occurs. Continous
+value which describes the amount of time before a transition occurs. Continuous
 time models do not have transitions which return to the same state since the
 expected value of the transition time describes when how long the system 
 remains in the same state The probability density
-function (PDF) of the exponential distrobution can be written as: CITE
+function (PDF) of the exponential distribution can be written as: CITE
 
 \begin{equation}
 f(x;\lambda) = \begin{cases}
-\lambda e^{-\lambda x}, & x \ge 0, \\
-0, & x < 0.
+\lambda e^{-\lambda x} & x \ge 0 \\
+0, & x < 0
 \end{cases}
 \end{equation}
 
@@ -550,11 +258,19 @@ the parameter $\lambda$: CITE
 \end{equation}
 
 When there are multiple possible transitions from a state, each with their own
-expected transition time, the expected amount of time in the state cate can be
-written as:
+expected transition time, the expected amount of time in the state is:
+
+\begin{equation}
+\sum \lambda(x,y) = \sum \lambda p_{x,y} = \sum \lambda(x)
+\end{equation}
+
+Where lambda(x,y) is the expected amount of time before state $x$ transitions to
+state $y$. Interestingly, the expected time in a state ($\lambda(x)$) is related
+to a the expected time for an individual transition ($\lambda(x,y)$) by a probability
+$p_{x,y)$.
 
 Each transition lends to an expected amount of time expected in the state. Then,
-to do a random walk of a continous time Markov chain, an intensity matrix must
+to do a random walk of a continuous time Markov chain, an intensity matrix must
 also be generated in order to describe which transition is taken after the
 exponentially distributed amount of time in the state has passed. Consider then
 two streams of random variables, one of which is exponentially distributed and
@@ -562,9 +278,11 @@ used to determine the amount of time in a state. The second stream is normally
 distributed and used to determine which state to transition to through the
 intensity matrix.
 
+\subsection{Modelling The Group}
+
 To collect the in group time from a Markov model the SharpE tool was used.
 Developed by Trivedi's team at Duke University, SharpE is a tool commonly used
-for reliability and availibilty testing, and features a Markov chain tool. Data
+for reliability and availability testing, and features a Markov chain tool. Data
 collected from the simulator was used with SharpE to collect a steady state
 probability (the probability that the system will be in a given state at any
 given instant) from the collected simulation data.
@@ -595,6 +313,8 @@ Consider a set of processes which have already formed a group. These processes
 occasionally exchange messages to determine if the other processes have 
 crashed. These processes can be classified into two sets: Leaders and Members.
 
+\subsection{Failure Detection}
+
 When a leader sends its check messages, the nodes that receive it either 
 respond in the positive, indicating that they are also leaders, or in the 
 negative indicating that they have already joined a group. This message is sent 
@@ -618,6 +338,45 @@ list of members for a group is pushed to every member of that group by the
 leader. Members cannot suspect other processes of being crashed, only the 
 leader can identify failed group members.
 
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.0\textwidth]{markov-ayc.pdf}
+\captionsetup{singlelinecheck=off}
+\caption{A diagram showing a partial Markov chain for failure detection}
+}
+\label{fig:MARKOVAYC}
+\end{figure}
+
+A model of a failure detection stage of the leader election algorithm is presented in
+Figure \ref{fig:MARKOVAYC}. A set of nodes begin in a normal state as part of a group.
+The leader sends a query to every member, and every member sends a query to the leader.
+If a response is not received in either direction, the process is considered to be 
+unreachable and is either ejected from the group by the leader (if the query originated from the leader)
+or the member leaves the group and becomes a coordinator themselves. 
+
+The system will stay in the original state as long as all nodes complete their queries and responses.
+Let $T_{RESPONSE}$ be the amount of time allowed for a response, $T_{BETWEENCHECKS} be the time between
+discovery attempts, and $p_{FAILURE}$ is the probability that at least one peer fails to complete the exchange.
+Based on this, the expected amount of time in the grouped state ($T_{GROUPED}) is:
+
+\begin{equation}
+\begin{cases}
+T_{GROUPED} = ( T_{RESPONSE}+T_{BETWEENCHECKS}  ) / p_{FAILURE} & p_{FAILURE} > 0 \\
+\infty & p_{FAILURE} = 0
+\end{cases}
+\end{equation}
+
+Let $\delta$ equal exponential parameter of the exponential distribution for the base state. Then
+we can relate the probabilities of each possible transition to the parameter for the base state. Let
+$p_{i}$ be the probability of transitioning to configuration $i$ after leaving the base state and let
+$f_{i}$ be the exponential parameter for the transition to an individual configuration:
+
+\begin{equation}
+$\delta = \sum f_{i} = \sum \delta p_{i} = \frac{1}{T_{GROUPED}}
+\end{equation}
+
+\subsection{Leader Election}
+
 During elections, a highest priority leader (identified by its process id) will 
 send invites to the other leaders it has identified. If those leaders accept 
 the highest priority leader's invites, they will reply with an accept message 
@@ -631,16 +390,70 @@ decreases the size of groups. Note that elections can decrease the size of
 groups as well as increase them: If a round of forwarding invites fails by the 
 new leader to his original group, the group size could decrease.
 
-When a process is initialized it begins in the "solo" state: it is in a group 
+When a process is initialized it begins in the ``solo'' state: it is in a group 
 with itself as the only member. As nodes are discovered by checks, the 
 processes combine into groups. Groups are not limited by increasing one a time; 
 they can increase by combined size of the groups of the leader processes.
-
-The result is similar to a life death process with more complex skips forward 
-or backward across the population.
 
 We define a metric to assess the performance of the system under duress, we 
 first consider that the distributed can only perform meaningful work when the 
 processes can work together to perform physical migration. This means that 
 there are two networks that affect the system's ability to do work: the 
 physical and the cyber.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.0\textwidth]{markov-election.pdf}
+\captionsetup{singlelinecheck=off}
+\caption{A diagram showing a partial Markov chain for an election}
+}
+\label{fig:MARKOVELECTION}
+\end{figure}
+
+A continuous time Markov model of a single election is presented in Figure \ref{fig:MARKOVELECTION}.
+A set of leaders begin in a normal state. After some time $T_{DISCOVER}$ an "are you coordinator"
+message discovers some other other peer. $T_{DISCOVER}$ is a function of the number of discovery
+checks which discover no leaders (which in turn is a function of the link reliability). Let
+$T_{RESPONSE}$ be the amount of time allowed for a response, $T_{BETWEENCHECKS} be the time between
+discovery attempts, and $p_{DISCOVERY}$ is the probability that the exchange discovers a leader.
+
+\begin{equation}
+\begin{cases}
+T_{DISCOVER} = ( T_{RESPONSE}+T_{BETWEENCHECKS} ) / p_{DISCOVERY} & p_{DISCOVERY} > 0 \\
+\infty & p_{DISCOVERY} = 0
+\end{cases}
+\end{equation}
+
+Then, the parameter $\mu$ in Figure \ref{fig:MARKOVELECTION} is a function of $T_{DISCOVER}:
+
+\begin{equation}
+\mu = \frac{1}{T_{DISCOVER}}
+\end{equation}
+
+Once a leader has been discovered, the system transitions into an election state where the peers
+hold an election to determine a new configuration. As shown in Figure \ref{fig: MARKOVELECTION},
+an election can have a variety of outcomes. Each potential configuration is paired with an exponential distribution parameter
+$e_{i}$ which is a function of the link reliability. The amount of time that an election takes is fixed
+before the algorithm is executed. Let, $T_{ELECTION} be the mean time it takes to complete any election. Therefore:
+
+\begin{equation}
+\lamda = \sum e_{i} = \sum \lambda p_{i}
+\end{equation}
+
+Where $p_{i} is the probability (on transition) that the system transition to configuration $i$.
+
+\subsection{Combined Model}
+
+A combined model combines election and failure detection Markov chain components. Except for the
+states where all reachable nodes are in the game group and the states where there are no reachable
+leaders each state has a combination of an election transition and a failure transition. Given the
+properties of continuous time distributions, let $\gamma_{X}$ equal the exponential parameter that
+relates to the expected amount of time in a system configuration $X$. Then:
+
+\begin{equation}
+\gamma_{X} = \lambda_{X} = \delta_{X}
+\end{equation}
+
+Analysis of time in group is found as a steady state probability using SharpE. Analysis is done by
+considering some node process $P_{i}$. If $P_{i}$ is a group with another process and not reconfiguring
+that process contributes to the in-group steady state.

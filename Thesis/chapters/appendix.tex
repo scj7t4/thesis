@@ -1,0 +1,267 @@
+\section{SRC Protocol}
+
+The following the psuedocode for the SRC protocol, which is a sequenced reliabile protocol. Messages are delivered before a prespecified deadline. If the message is not delivered before the deadline the message is no longer sent and the next message (if it is not expired) is delivered instead. The scheme is a modified send-and-wait scheme so at most one message is being delivered at a time. This is,a version with unbounded
+sequence numbers. The implementation available with the FREEDM source code is modified to allow for bounded sequence numbers.
+
+\begin{algorithmic}
+
+\State $inseqno \gets 0$
+\State $outseqno \gets 1$
+\State $outqueue \gets []$
+\State $kill \gets null$
+\State $lastack \gets 0$
+
+\Function{Receive}{msg}
+    \If {$msg.type = MSG$}
+        \If {$msg.seqno = inseqno+1$}
+            \State $SendAck(msg.seqno)$
+            \State $inseqno \gets inseqno + 1$
+        \ElsIf {$msg.seqno > inseqno$ and $msg.kill \neq null$ and $msg.kill 
+\leq inseqno$}
+            \State $SendAck(msg.seqno)$
+            \State $inseqno \gets msg.seqno + 1$
+        \Else
+            \State $SendAck(inseqno)$
+        \EndIf
+    \ElsIf {$msg.type = ACK$}
+        \If {$msg.seqno = outqueue.front.seqno$}
+            \State $outqueue.pop()$
+            \State $kill \gets null$
+            \State $lastack \gets msg.seqno$
+            \State $Write(outqueue.front,kill)$
+        \Else
+            \State $Write(outqueue.front,kill)$
+        \EndIf
+    \EndIf
+\EndFunction
+
+\Function{Send}{msg}
+    \State $msg.seqno \gets outseqno$
+    \State $outseqno \gets outseqno+1$
+    \State $outqueue.push(msg)$
+    \If {$outqueue.size = 0$}
+        \State $Write(outqueue.front,kill)$
+    \EndIf
+\EndFunction
+
+\Function{Resend}{}
+    \While{$outqueue.size \geq 0$ and $outqueue.front.expired$}
+        \State $outqueue.pop()$
+        \State $kill \gets lastack$
+    \EndWhile
+    \If {$outqueue.size \geq 0$}
+        \State $Write(outqueue.front,kill)$    
+    \EndIf
+\EndFunction
+
+\end{algorithmic}
+
+\section{SUC Protocol}
+
+The following is the psuedocode for the SUC protocol which is a sequenced unreliable protocol. Messages are ordered, but delivery is not guaranteed. The protocol is a modified sliding window protocol so several messages are sent for delivery at the same time. If a message with a higher sequence number is recieved, messages with lower sequence numbers are considered lost (unless they've already been delivered) and if they arrive later, out of order, they are discarded.
+
+\begin{algorithmic}
+
+\State $inseqno \gets 0$
+\State $outseqno \gets 0$
+\State $outqueue \gets []$
+
+\Function{Receive}{msg}
+    \If {$msg.type = MSG$}
+        \If {$msg.seqno > inseqno$}
+            \State $SendAck(msg.seqno)$
+            \State $inseqno \gets msg.seqno$
+        \Else
+            \State $SendAck(inseqno)$
+        \EndIf
+    \ElsIf {$msg.type = ACK$}
+        \State $popped \gets 0$
+        \If {$msg.seqno \leq outqueue.front.seqno$}
+            \State $outqueue.pop()$
+            \State $popped \gets popped+1$
+        \EndIf
+        \For{$i = WindowSize-popped \to min(WindowSize-1,outqueue.size)$}
+            \State $Write(outqueue[i])$
+        \EndFor
+    \EndIf
+\EndFunction
+
+\Function{Send}{msg}
+    \State $msg.seqno \gets outseqno$
+    \State $outseqno \gets outseqno+1$
+    \State $outqueue.push(msg)$
+    \If {$outqueue.size \leq WindowSize$}
+        \State $Write(msg)$
+    \EndIf
+\EndFunction
+
+\Function{Resend}{}
+    \For{$i = 0 \to min(WindowSize-1,outqueue.size)$}
+        \State $Write(outqueue[i])$
+    \EndFor
+\EndFunction
+
+\end{algorithmic}
+
+\section{Leader Election}
+
+The following is the psuedocode for Garcia-Molina's leader election algorith orginially published in CITE. Leaders are responsible for detecting the failure of each of the members and reporting it to the rest of the group. Members detect the failure of the leader and perform elections to combine groups.
+
+\begin{algorithmic}
+
+\State $AllNodes \gets \{ 1, 2, ..., N \}$
+\State $Coordinators \gets \emptyset$
+\State $UpNodes \gets { Me }$
+\State $State \gets Normal$
+\State $Coordinator \gets Me$
+\State $Responses \gets \emptyset$
+\State $Counter \gets$ A random initial identifier
+\State $GroupID \gets (Me,Counter)$
+
+\State
+
+\Function{Check}{}
+    \State This function is called periodically by the leader
+    \If {$State = Normal$ and $Coordinator \gets Me$}
+        \State $Responses \gets \emptyset$
+        \State $TempSet \gets \emptyset$
+        \For {$j = (AllNodes - \{Me\})$}
+            \State $AreYouCoordinator(j)$
+            \State $TempSet \gets TempSet \cup j$
+        \EndFor
+        \State Nodes which respond "Yes" to $AreYouCoordinator$ are put into 
+the $Responses$ set. When all nodes have responded or after 
+$Timeout(CheckTimeout)$, Nodes that do not respond are removed from UpNodes and 
+execution continues
+        \State $UpNodes \gets (TempSet-Responses) \cup {Me}$
+        \If {$Responses = \emptyset$}
+            \Return
+        \EndIf
+        \State $p \gets \max(Responses)$
+        \If $Me < P$
+            \State Wait time proportional to p-i
+        \EndIf
+        \Call{Merge}{Responses}
+    \EndIf
+    \State The next call to this is after Timeout(CheckTimeout)
+\EndFunction
+
+\State
+
+\Function{Timeout}{}
+    \State This function is called periodically by the group members
+    \If {$Coordinator = Me$}
+        \Return
+    \Else
+        \Call{AreYouThere}{Coordinator,GroupID,Me}
+        \If{Response is No or after $Timeout(TimeoutTimeout)$}
+            \Call{Recovery}{}
+        \EndIf
+    \EndIf
+    \State The next call to this is after Timeout(TimeoutTimeout)
+\EndFunction
+
+\State
+
+\Function{Merge}{Coordinators}
+    \State This function invites all coordinators in Coordinators to join a 
+group led by Me
+    \State $State \gets Election$
+    \State Stop work
+    \State $Counter \gets Counter+1$
+    \State $GroupID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $TempSet \gets UpNodes - {Me}$
+    \State $UpNodes \gets \emptyset$
+    \For {$j \in Coordinators$}
+        \Call{Invite}{j,Coordinator,GroupID}
+    \EndFor
+    \For {$j \in TempSet$}
+        \Call{Invite}{j,Coordinator,GroupID}
+    \EndFor
+    \State Wait for $Timeout(InviteTimeout)$, Nodes that accept the invite are 
+added to UpNodes
+    \State $State \gets Reorganization$
+    \For {$j \in UpNodes$}
+        \Call{Ready}{j,Coordinator,GroupID,UpNodes}
+    \EndFor
+    \State $State \gets Normal$
+\EndFunction
+
+\State
+
+\Function{ReceiveReady}{Sender,Leader, Identifier, Peers}
+    \If {$State = Reorganization$ and $GroupID = Identifier$}
+        \State $UpNodes \gets Peers$
+        \State $State \gets Normal$      
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouCoordinator}{Sender}
+    \If {$State = Normal$ and $Coordinator = Me$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouThere}{Sender, Identifier}
+    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpNodes$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveInvitation}{Sender,Leader,Identifier}
+    \If {$State \neq Normal$}
+        \Return
+    \EndIf
+    \State Stop Work
+    \State $Temp \gets Coordinator$
+    \State $TempSet \gets UpNodes$
+    \State $State \gets Election$
+    \State $Coordinator \gets Leader$
+    \State $GroupID \gets Identifier$
+    \If {$Temp = Me$}
+        \State Forward invite to old group members
+        \For $j \in TempSet$
+            \State $Invite(j,Coordinator,GroupID)$
+        \EndFor
+    \EndIf
+    \State $Accept(Coordinator,GroupID)$
+    \State $State \gets Reorganization$
+    \If {$Timeout(ReadyTimeout)$ expires before $Ready$ is recieved}
+        \State $Recovery()$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAccept}{Sender,Leader,Identifier}
+    \If {$State \gets Election$ and $GroupID = Identifier$ and $Coordinator = 
+Leader$}
+        \State $UpNodes \gets UpNodes \cup {Sender}$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{Recovery}{}
+    \State $State \gets Election$
+    \State Stop Work
+    \State $Counter \gets Counter + 1$
+    \State $GroupID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $UpNodes \gets {Me}$
+    \State $State \gets Reorganization$
+    \State $State \gets Normal$
+\EndFunction
+
+\end{algorithmic}
