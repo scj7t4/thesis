@@ -310,4 +310,14 @@ detectors, with different properties. Some of the properties include:
         again.
 \end{itemize}
 
+One class of failure detectors, Omega class Failure detectors, are particularly interesting
+because of CITE. An eventual weak failure (weak completeness and eventual weak accuracy) 
+detector is the weakest detector which can still solve consensus. It is denoted several ways
+in various works including $\diamond \mathcal{W}$, $\mathcal{W}$ and $\Omega$ (Omega).
 
+CITE studies an Omega class failure detector using OmNet++, a network simulation software.
+Instead of omission failures, however, it considers crash failures. Each configuration goes
+through a predefined sequence of crash failures. OmNet is used to count the number of messages
+sent by each of three different leader election algorithms. Additionally, CITE only considers
+the system to be in a complete and active state when all participants have consensus on a 
+single leader.
