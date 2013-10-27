@@ -11,4 +11,4 @@ set style line 1 lt 1 lc rgb "red" lw 1
 set style line 2 lt 1 lc rgb "black" lw 1
 set key right bottom
 plot '2NODE-SUC-100.dat'        using 1:9 ti "Experimental Value", \
-     '2NODE-SUC-100-SIMUL.dat'  using 1:3 ti "Simulator Value"
+     '2NODE-SUC-100-SIMUL.dat'  using 1:3 ti "SharpE Uptime"

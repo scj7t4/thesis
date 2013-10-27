@@ -265,7 +265,7 @@ expected transition time, the expected amount of time in the state is:
 Where lambda(x,y) is the expected amount of time before state $x$ transitions to
 state $y$. Interestingly, the expected time in a state ($\lambda(x)$) is related
 to a the expected time for an individual transition ($\lambda(x,y)$) by a probability
-$p_{x,y)$.
+$p_{x,y}$.
 
 Each transition lends to an expected amount of time expected in the state. Then,
 to do a random walk of a continuous time Markov chain, an intensity matrix must
@@ -341,7 +341,7 @@ leader can identify failed group members.
 \includegraphics[width=1.0\textwidth]{markov-ayc.pdf}
 \captionsetup{singlelinecheck=off}
 \caption{A diagram showing a partial Markov chain for failure detection}
-}
+
 \label{fig:MARKOVAYC}
 \end{figure}
 
@@ -353,9 +353,9 @@ unreachable and is either ejected from the group by the leader (if the query ori
 or the member leaves the group and becomes a coordinator themselves. 
 
 The system will stay in the original state as long as all nodes complete their queries and responses.
-Let $T_{RESPONSE}$ be the amount of time allowed for a response, $T_{BETWEENCHECKS} be the time between
+Let $T_{RESPONSE}$ be the amount of time allowed for a response, $T_{BETWEENCHECKS}$ be the time between
 discovery attempts, and $p_{FAILURE}$ is the probability that at least one peer fails to complete the exchange.
-Based on this, the expected amount of time in the grouped state ($T_{GROUPED}) is:
+Based on this, the expected amount of time in the grouped state ($T_{GROUPED}$) is:
 
 \begin{equation}
 \begin{cases}
@@ -370,7 +370,7 @@ $p_{i}$ be the probability of transitioning to configuration $i$ after leaving t
 $f_{i}$ be the exponential parameter for the transition to an individual configuration:
 
 \begin{equation}
-$\delta = \sum f_{i} = \sum \delta p_{i} = \frac{1}{T_{GROUPED}}
+\delta = \sum f_{i} = \sum \delta p_{i} = \frac{1}{T_{GROUPED}}
 \end{equation}
 
 \subsection{Leader Election}
@@ -404,7 +404,6 @@ physical and the cyber.
 \includegraphics[width=1.0\textwidth]{markov-election.pdf}
 \captionsetup{singlelinecheck=off}
 \caption{A diagram showing a partial Markov chain for an election}
-}
 \label{fig:MARKOVELECTION}
 \end{figure}
 
@@ -412,7 +411,7 @@ A continuous time Markov model of a single election is presented in Figure \ref{
 A set of leaders begin in a normal state. After some time $T_{DISCOVER}$ an "are you coordinator"
 message discovers some other other peer. $T_{DISCOVER}$ is a function of the number of discovery
 checks which discover no leaders (which in turn is a function of the link reliability). Let
-$T_{RESPONSE}$ be the amount of time allowed for a response, $T_{BETWEENCHECKS} be the time between
+$T_{RESPONSE}$ be the amount of time allowed for a response, $T_{BETWEENCHECKS}$ be the time between
 discovery attempts, and $p_{DISCOVERY}$ is the probability that the exchange discovers a leader.
 
 \begin{equation}
@@ -422,23 +421,23 @@ T_{DISCOVER} = ( T_{RESPONSE}+T_{BETWEENCHECKS} ) / p_{DISCOVERY} & p_{DISCOVERY
 \end{cases}
 \end{equation}
 
-Then, the parameter $\mu$ in Figure \ref{fig:MARKOVELECTION} is a function of $T_{DISCOVER}:
+Then, the parameter $\mu$ in Figure \ref{fig:MARKOVELECTION} is a function of $T_{DISCOVER}$:
 
 \begin{equation}
 \mu = \frac{1}{T_{DISCOVER}}
 \end{equation}
 
 Once a leader has been discovered, the system transitions into an election state where the peers
-hold an election to determine a new configuration. As shown in Figure \ref{fig: MARKOVELECTION},
+hold an election to determine a new configuration. As shown in Figure \ref{fig:MARKOVELECTION},
 an election can have a variety of outcomes. Each potential configuration is paired with an exponential distribution parameter
 $e_{i}$ which is a function of the link reliability. The amount of time that an election takes is fixed
-before the algorithm is executed. Let, $T_{ELECTION} be the mean time it takes to complete any election. Therefore:
+before the algorithm is executed. Let, $T_{ELECTION}$ be the mean time it takes to complete any election. Therefore:
 
 \begin{equation}
-\lamda = \sum e_{i} = \sum \lambda p_{i}
+\lambda = \sum e_{i} = \sum \lambda p_{i}
 \end{equation}
 
-Where $p_{i} is the probability (on transition) that the system transition to configuration $i$.
+Where $p_{i}$ is the probability (on transition) that the system transition to configuration $i$.
 
 \subsection{Combined Model}
 
