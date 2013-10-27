@@ -32,7 +32,7 @@ The 100ms resend SRC test with two nodes can be considered a sort of a control.
 These tests, pictured in Figures \ref{fig:MGS-SRC-2NODE-100} and
 \ref{fig:IGT-SRC-2NODE-100}. This test highlights the excellent performance of the
 SRC protocol, achieving the maximum in group time of 9 minutes with only 15\%
-of datagrams arriving at the reciever. Figure \ref{fig:MGS-SRC-2NODE-100} shows
+of datagrams arriving at the receiver. Figure \ref{fig:MGS-SRC-2NODE-100} shows
 that when there is no chance of datagrams arriving, the maximum group size is
 one since no elections can occur. As the reliability increases, more time is
 spent in a group. Since the maximum group size is 2, it is directly related to
@@ -75,8 +75,8 @@ increasing the resend time.
 \end{figure}
 
 The transient partition case, shows a simple example where a network partition
-seperates two groups of DGI. In the simplest case where the opposite side of
-the partition is unreachabe, nodes will form a group with the other nodes on the
+separates two groups of DGI. In the simplest case where the opposite side of
+the partition is unreachable, nodes will form a group with the other nodes on the
 same side of the partition. In our tests, there are two nodes on each side of
 the partition. In the experiment, the probability of a datagram crossing the
 partition is increased as the experiment continues. The 100ms case is shown in
@@ -107,11 +107,11 @@ time comes from elections.
 \label{fig:IGT-SRC-TRANS-200}
 \end{figure}
 
-The 200ms case, shown in Figures \ref{fig:MGS-SRC-TRANS-200} and \ref{fig:IGT-SRC-TRANS-200} displays similiar behavior, with a wider valley due to the
+The 200ms case, shown in Figures \ref{fig:MGS-SRC-TRANS-200} and \ref{fig:IGT-SRC-TRANS-200} displays similar behavior, with a wider valley due to the
 limited number of datagrams. It is also worth noting the that the mean group
 size dips below 2 in the figure, possibly because the longer resend times allow
 for more race conditions between potential leaders. Discussion of these race
-conditions is shown in discussed during the SUC charts since it is more prevalant
+conditions is shown in discussed during the SUC charts since it is more prevalent
 in those experiments.
 
 \section{Sequenced Unreliable Connection}
@@ -121,7 +121,7 @@ in those experiments.
 The SUC protocol's experimental tests show an immediate problem: although there
 is a general trend of growth in the amount of time in group and group size
 charts, shown in Figures \ref{fig:MGS-SUC-2NODE-100} and \ref{fig:IGT-SUC-2NODE-100}
-there is a high degree in variablity for any point collected in the experiments.
+there is a high degree in variability for any point collected in the experiments.
 
 \begin{figure}[!h]
 \centering
@@ -137,7 +137,7 @@ there is a high degree in variablity for any point collected in the experiments.
 \label{fig:IGT-SUC-2NODE-100}
 \end{figure}
 
-In order to identify why these issues occured, the experimental simulator was
+In order to identify why these issues occurred, the experimental simulator was
 developed. As stated previously, the simulator emulated the packet loss and
 behavior of the protocol. The simulator determined the amount of time necessary
 to complete and election, and the amount of time that group would last after
@@ -157,7 +157,7 @@ older sequence numbers when a message is received, race conditions result in
 a greater number of lost messages. Since both parties are attempting to
 deliver queries and responses, the queries can be destroyed by the responses.
 This is a particularly noticeable problem at higher reliability figures. The
-probability of a message being lost because a newer message supersceedes it
+probability of a message being lost because a newer message supersedes it
 is shown in Figure MARK. (Need to make that one)
 
 The simulator is capable of simulations assume the processes have exact
@@ -170,7 +170,7 @@ since a changing offset can have a major effect on the characteristics of the
 system (PROBABLY NEED TO PRODUCE ANOTHER CHART HERE SHOWING HOW OFFSET EFFECTS THE SHAPE OF THE GRAPH).
 
 For the 100ms example, it was estimated that the processes synchronize fairly
-closely with eachother, and so the simulator was run with a very small offset (approximately 100ms, the smallest the simulator could emulate with one tick)
+closely with each other, and so the simulator was run with a very small offset (approximately 100ms, the smallest the simulator could emulate with one tick)
 between the two simulated processes. The result, as compared with the
 experimental value is shown in Figure \ref{fig:COMPARE-SUC-2NODE-100}.
 
@@ -217,6 +217,6 @@ across all the collected data points from the experiment, the average in group t
 is higher for the 200ms case than it is for the 100ms case ( 6.86 vs 6.09 ). Once
 again, race conditions are the culprit: the collected data when fit to a run of the
 simulation corresponds to a greater offset in the simulator: approximately 400ms (2 ticks at 200ms),
-which is two ticks of the simulaton. The comparison between the experimental and
+which is two ticks of the stimulation. The comparison between the experimental and
 simulator values is shown in Figure \ref{fig:COMPARE-SUC-2NODE-200}.
 

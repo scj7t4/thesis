@@ -38,3 +38,19 @@ slice of what sort of analysis can be performed on a distributed cyber control
 by subjecting the system to packet loss. The analysis focuses on quantifiable
 changes in the amount of time a node of the system could spend participating in
 energy management with other nodes.
+
+This work is meant to be an investigation cyber control on a physical system in
+the face of faults. While a considerable amount of work has been done on the
+physical components of a smart grid, there is a much smaller body of work on what
+effects distributed computer control could have on this grid. This work presents
+the ground work for greater work involving testing the cyber system with both simulators
+and physical hardware to understand what effects this control on the system could have.
+A robust CPS should not degrade the performance of the system. For example, a partition
+in the cyber network, but not in the physical ideally should not be able cause instability
+for the system as a whole.
+
+The culmination of this work will be the development of a model of a partitioning
+environment with omission faults to predict the stability of groups for a given system
+configuration. This information can be used to determine how long load balancing operations
+can be run in an environment without the omitted messages causing the cyber control to
+make changes which destabilize the system.
