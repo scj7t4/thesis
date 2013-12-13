@@ -85,7 +85,7 @@ of the members maintains a set of processes which are currently reachable, which
 is a subset of all known processes in the system.
 
 This Leader election can also be classified as a failure detector 
-(CITE). Failure detectors are algorithms which detect the failure of processes in a 
+\cite{LEADERELECTIONEVAL}. Failure detectors are algorithms which detect the failure of processes in a 
 system. A failure detector algorithm maintains a list of processes that it suspects have
 crashed. This informal description gives the failure detector strong ties to the
 Leader Election process. The Group Management module maintains a list of 
@@ -353,14 +353,14 @@ unreachable and is either ejected from the group by the leader (if the query ori
 or the member leaves the group and becomes a coordinator themselves. 
 
 The system will stay in the original state as long as all nodes complete their queries and responses.
-Let $T_{RESPONSE}$ be the amount of time allowed for a response, $T_{BETWEENCHECKS}$ be the time between
-discovery attempts, and $p_{FAILURE}$ is the probability that at least one peer fails to complete the exchange.
-Based on this, the expected amount of time in the grouped state ($T_{GROUPED}$) is:
+Let $T_{R}$ be the amount of time allowed for a response, $T_{C}$ be the time between
+discovery attempts, and $p_{F}$ is the probability that at least one peer fails to complete the exchange.
+Based on this, the expected amount of time in the grouped state ($T_{G}$) is:
 
 \begin{equation}
 \begin{cases}
-T_{GROUPED} = ( T_{RESPONSE}+T_{BETWEENCHECKS}  ) / p_{FAILURE} & p_{FAILURE} > 0 \\
-\infty & p_{FAILURE} = 0
+T_{G} = ( T_{R}+T_{C}  ) / p_{F} & p_{F} > 0 \\
+\infty & p_{F} = 0
 \end{cases}
 \end{equation}
 
@@ -370,7 +370,7 @@ $p_{i}$ be the probability of transitioning to configuration $i$ after leaving t
 $f_{i}$ be the exponential parameter for the transition to an individual configuration:
 
 \begin{equation}
-\delta = \sum f_{i} = \sum \delta p_{i} = \frac{1}{T_{GROUPED}}
+\delta = \sum f_{i} = \sum \delta p_{i} = \frac{1}{T_{G}}
 \end{equation}
 
 \subsection{Leader Election}
@@ -408,30 +408,30 @@ physical and the cyber.
 \end{figure}
 
 A continuous time Markov model of a single election is presented in Figure \ref{fig:MARKOVELECTION}.
-A set of leaders begin in a normal state. After some time $T_{DISCOVER}$ an "are you coordinator"
-message discovers some other other peer. $T_{DISCOVER}$ is a function of the number of discovery
+A set of leaders begin in a normal state. After some time $T_{D}$ an ``are you coordinator''
+message discovers some other other peer. $T_{D}$ is a function of the number of discovery
 checks which discover no leaders (which in turn is a function of the link reliability). Let
-$T_{RESPONSE}$ be the amount of time allowed for a response, $T_{BETWEENCHECKS}$ be the time between
-discovery attempts, and $p_{DISCOVERY}$ is the probability that the exchange discovers a leader.
+$T_{R}$ be the amount of time allowed for a response, $T_{C}$ be the time between
+discovery attempts, and $p_{D}$ is the probability that the exchange discovers a leader.
 
 \begin{equation}
 \begin{cases}
-T_{DISCOVER} = ( T_{RESPONSE}+T_{BETWEENCHECKS} ) / p_{DISCOVERY} & p_{DISCOVERY} > 0 \\
-\infty & p_{DISCOVERY} = 0
+T_{D} = ( T_{R}+T_{C} ) / p_{D} & p_{D} > 0 \\
+\infty & p_{D} = 0
 \end{cases}
 \end{equation}
 
-Then, the parameter $\mu$ in Figure \ref{fig:MARKOVELECTION} is a function of $T_{DISCOVER}$:
+Then, the parameter $\mu$ in Figure \ref{fig:MARKOVELECTION} is a function of $T_{D}$:
 
 \begin{equation}
-\mu = \frac{1}{T_{DISCOVER}}
+\mu = \frac{1}{T_{D}}
 \end{equation}
 
 Once a leader has been discovered, the system transitions into an election state where the peers
 hold an election to determine a new configuration. As shown in Figure \ref{fig:MARKOVELECTION},
 an election can have a variety of outcomes. Each potential configuration is paired with an exponential distribution parameter
 $e_{i}$ which is a function of the link reliability. The amount of time that an election takes is fixed
-before the algorithm is executed. Let, $T_{ELECTION}$ be the mean time it takes to complete any election. Therefore:
+before the algorithm is executed. Let, $T_{E}$ be the mean time it takes to complete any election. Therefore:
 
 \begin{equation}
 \lambda = \sum e_{i} = \sum \lambda p_{i}

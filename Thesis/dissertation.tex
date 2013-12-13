@@ -111,10 +111,10 @@
 % %pagebackref, % Adds backlink text to the end of each item in the bibliography, as a list of page numbers. 
 linktocpage, % make page number, not text, be link on TOC, LOF and LOT 
 % colorlinks=false, 
-pdftitle={Dissertation}, 
-pdfauthor={Ben Payne}, 
-pdfsubject={PhD dissertation}, 
-pdfkeywords={exam dissertation anderson localization random media gain}
+pdftitle={Comprehensive}, 
+pdfauthor={Stephen Jackson}, 
+pdfsubject={PhD Comprehensive}, 
+pdfkeywords={exam jackson distributed systems smart grid leader election group management}
 ]{hyperref}
 
 %ps% ... uncomment after editing toc, lof, lot ...
@@ -125,9 +125,9 @@ pdfkeywords={exam dissertation anderson localization random media gain}
 %ps% ... specify: ms | phd ...
 \begin{ThesisTitlePage}{phd}
 
-\author{\MakeUppercase{Benjamin Henry Payne}}
+\author{\MakeUppercase{Stephen Jackson}}
 
-\thesistitle{SOMETHING SOMETHING GROUP MANAGEMENT}
+\thesistitle{Applications for Group Management To Manage CPS Stability}
 
 \department{Computer Science}
 
@@ -148,7 +148,7 @@ pdfkeywords={exam dissertation anderson localization random media gain}
 \memberfour{Dr. Sahra Sedighsarvestani}
 
 %ps% ... Graduation date.  NOT your submission date! ...
-\graddate{2013}
+\graddate{2014}
 
 \end{ThesisTitlePage}
 
@@ -267,6 +267,7 @@ pdfkeywords={exam dissertation anderson localization random media gain}
 \end{ThesisBody}
 
 \begin{ThesisAppendix}{three}
+\input{chapters/appendix.tex}
 %\input{chapters/appendix_lengths} % referenced in introduction
 %\input{chapters/appendix_transmission_derivation} % expansion of math in T/E paper
 %\input{chapters/appendix_q1d_transfer_matrix_derivation}
@@ -277,9 +278,9 @@ pdfkeywords={exam dissertation anderson localization random media gain}
 \newpage\bibliographystyle{unsrt}
 \bibliography{latex_bibliography}
 
-\begin{Vita}
-\input{chapters/vita}
-\end{Vita}
+%\begin{Vita}
+%\input{chapters/vita}
+%\end{Vita}
 
 
 \newpage 
