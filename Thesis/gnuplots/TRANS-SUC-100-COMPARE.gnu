@@ -10,4 +10,4 @@ set yrange [ 0.00000 : 10.0000 ] noreverse nowriteback
 set style line 1 lt 1 lc rgb "red" lw 1
 set style line 2 lt 1 lc rgb "black" lw 1
 plot 'TRANS-SUC-100.dat' using 1:9:9:9:9 with candlesticks ls 2 notitle,      ''                 using 1:8:7:11:10 with candlesticks ls 1 ti "Experimental Value", \
-     'TRANS-SUC-100-SIMUL.dat'  using 1:3 ti "SharpE Uptime"
+     'TRANS-SUC-100-SIMUL.dat'  using 1:4 ti "SharpE Uptime"
