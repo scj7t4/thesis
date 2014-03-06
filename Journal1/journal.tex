@@ -981,6 +981,17 @@ is important to note that:
 \mathrm{E}[X] = \frac{1}{\lambda}. \!
 \end{equation}
 
+and
+
+\begin{equation}
+\lambda(x) = \sum \lambda(x,y) = \sum \lambda(x) p(x,y)
+\end{equation}
+
+Where $\lambda(x)$ is the exponential parameter for the total time spend in
+a state $x$, $\lambda(x,y)$ is the exponential parameter for a transition from
+state $x$ to state $y$, and $p(x,y)$ is the normally distributed probability that
+a state transitions from state $x$ to state $y$.
+
 \subsubsection{Failure Detection}
 When a leader sends its check messages, the nodes that receive it either
 respond in the positive, indicating that they are also leaders, or in the
@@ -1066,7 +1077,6 @@ processes can work together to perform physical migration. This means that
 there are two networks that affect the system's ability to do work: the
 physical and the cyber.
 
-REDO THIS FIGURE
 
 \begin{figure}[!h]
 \centering
@@ -1077,7 +1087,7 @@ REDO THIS FIGURE
 
 A continuous time Markov model of a single election is presented in Figure \ref{fig:MARKOVELECTION}.
 A set of leaders begin in a normal state. After some time $T_{D}$ an ``are you coordinator''
-message discovers some other other peer. $T_{D}$ is a function of the number of discovery
+message discovers some other peer. $T_{D}$ is a function of the number of discovery
 checks which discover no leaders (which in turn is a function of the link reliability). Let
 $T_{R}$ be the amount of time allowed for a response, $T_{C}$ be the time between
 discovery attempts, and $p_{D}$ is the probability that the exchange discovers a leader.
@@ -1089,25 +1099,24 @@ T_{D} = ( T_{R}+T_{C} ) / p_{D} & p_{D} > 0 \\
 \end{cases}
 \end{equation}
 
-Then, the parameter $\mu$ in Figure \ref{fig:MARKOVELECTION} is a function of $T_{D}$:
+Then, the parameters $e_x$ in Figure \ref{fig:MARKOVELECTION} are a function of $T_{D}$ and $p_{x}$,
+the probability an election results in configuration $x$.
 
 \begin{equation}
-\mu = \frac{1}{T_{D}}
+e_x = \frac{p_{x}}{T_{D}}
 \end{equation}
 
 Once a leader has been discovered, the system transitions into an election state, based on the
 potential outcome, where the peers hold an election to determine a new configuration. As shown
 in Figure \ref{fig:MARKOVELECTION}, an election can either succeed or fail, resulting in a new system
-configuration, or causing each involved process to return to the single member group state.
+configuration, or each involved process to return to the single member group state.
  
-$e_{i}$ which is a function of the link reliability. The amount of time that an election takes is fixed
-before the algorithm is executed. Let, $T_{E}$ be the mean time it takes to complete any election. Therefore:
+The amount of time that an election takes is fixed before the algorithm is executed. 
+Let $T_{E}$ be the mean time it takes to complete any election. Therefore:
 
 \begin{equation}
-\lambda = \sum e_{i} = \sum \lambda p_{i}
+\mu = \frac{1}{T_{E}}
 \end{equation}
-
-Where $p_{i}$ is the probability (on transition) that the system transition to configuration $i$.
 
 \subsubsection{Combined Model}
 
