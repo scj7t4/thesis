@@ -532,7 +532,7 @@ can be increased. In some of these networks, distributing the cyber control
 offers increased redundancy and availability during fault conditions. However,
 there are very few works which study the effects of cyber faults on a 
 distributed system. These are of a particular interest in the Smart Grid
-enviroment where outages and failures are very costly. By examining the
+environment where outages and failures are very costly. By examining the
 behavior of a distributed system under fault scenarios, the overall robustness
 of the system can be improved by planning characteristics and responses to
 faults that allow the system to continue operating under difficult scenarios. 
@@ -617,7 +617,7 @@ Distributed Computing, Smart Grid, Leader Election, Group Management, Reliabilit
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
 \IEEEPARstart{F}{REEDM} (Future Renewable Electric Energy Delivery and Management) System
-is a Smart Grid project focused on the future of the electrial grid. Major proposed features
+is a Smart Grid project focused on the future of the electrical grid. Major proposed features
 of the FREEDM network include the Solid State Transformer, distributed local energy storage,
 and distributed local energy generation\cite{FREEDMMIGRATION}. This vein of research emphasizes decentralizing the
 power grid; making it more reliable by distributing energy production resources. Part of this
@@ -632,8 +632,8 @@ physical system apply unstable settings.
 
 This work presents the initial steps to better understanding and planning for these faults.
 By taking a new approach to considering how a distributed system interacts during a fault condition,
-new techiniques for managing a fault scenario in a cyber-physical systems will be created. To do
-this, we present an approach in modelling the behavior of a system using models and Markov chains.
+new techniques for managing a fault scenario in a cyber-physical systems will be created. To do
+this, we present an approach in modeling the behavior of a system using models and Markov chains.
 These chains produce expectations of how long a system can be expected to stay in a particular
 state, or how much time it will be able to spend coordinating over a period of time. Using these
 measures, the behavior of the control system for the physical devices can be adjusted to
@@ -663,18 +663,18 @@ physical components.
 The DGI is a real-time system: certain actions (and reactions) involving power
 system components need to be completed with a pre-specified time-frame to keep
 the system stable. The DGI uses a round robin scheduler: each module is given
-a predetermined window of execution which it may use to peform it's duties. When
+a predetermined window of execution which it may use to perform it's duties. When
 a module's time period expires, the next module in the line is allowed to
 execute. All participating peers are assumed to be on the same schedule: all
 peers begin execution of a model simultaneously. This is accomplished using \cite{DCS}.
 This work assumes that the clocks are synchronized: If the network has faulted,
-they have not drifted noticably from their last synchronization. Additionally,
+they have not drifted noticeably from their last synchronization. Additionally,
 a production system would like uses GPS time synchronization in order to take
-certain powersystem readings \cite{PHASORREADINGS}.
+certain power system readings \cite{PHASORREADINGS}.
  
 
 \section{Broker Architecture}
-The DGI software is designed around the broker architecture specification. Each core functionality of the system is implemented within a module which is provided access to core interfaces which deliver functionality such as scheduling requests, message passing, and a framework to manipulate physical devices, including those which exist only in simulation environments such as PSCAD\cite{PSCAD} and RSCAD\cite{RSCAD}. These interactions are integral part of the DGI development and work with RSCAD in a Hardware-In-The-Loop testbed was presented in \cite{HILTESTBED}
+The DGI software is designed around the broker architecture specification. Each core functionality of the system is implemented within a module which is provided access to core interfaces which deliver functionality such as scheduling requests, message passing, and a framework to manipulate physical devices, including those which exist only in simulation environments such as PSCAD\cite{PSCAD} and RSCAD\cite{RSCAD}. These interactions are integral part of the DGI development and work with RSCAD in a Hardware-In-The-Loop test-bed was presented in \cite{HILTESTBED}
 
 The Broker provides a common message passing interface which all modules are allowed access to. This interface also provides the inter-module communication which delivers messages between software modules, effectively decoupling them outside of the requirement for them to be able to recognize messages addressed to them from other modules.
 
@@ -707,7 +707,7 @@ it is still relevant.
 
 There one adjustable parameter, the resend time, which controls how often the
 system would attempt to deliver a message it hadn't yet received an
-acknowledgement for. 
+acknowledgment for. 
 
 Note that the $Resend()$ function is periodically called to attempt to redeliver
 lost messages to the receiver.
@@ -716,7 +716,7 @@ lost messages to the receiver.
 The SUC protocol is simply a best effort protocol: it employs a sliding window 
 to try to deliver messages as quickly as possible. A window size is decided, 
 and then at any given time, the sender can have up to that many messages in the 
-channel, awaiting acknowledgement. The receiver will look for increasing 
+channel, awaiting acknowledgment. The receiver will look for increasing 
 sequence numbers, and disregard any message that is of a lower sequence number 
 than is expected. The purpose of this protocol is to implement a bare minimum: 
 messages are accepted in the order they are sent.
@@ -792,7 +792,7 @@ random chance in the configuration file. Otherwise, it is delivered to the
 addressed module.
 
 \section{Previous Results}
-Intitial data was collected from a non-real time version of the DGI code.
+Initial data was collected from a non-real time version of the DGI code.
 For each selected message arrival chance, as many as forty tests were run.
 The collected results from the tests are divided into several target scenarios
 as well as the protocol used.
@@ -927,13 +927,13 @@ more formal approach was tried.
 
 Since the system, taken as a whole can be reasonably modeled as a collection of 
 states each describing the state or configuration of the system, and that the
-transitions between those state (failure events or election events) are probabisitic,
-rather than determinisitic, it is a natural extension to model the distributed
+transitions between those state (failure events or election events) are probabilistic,
+rather than deterministic, it is a natural extension to model the distributed
 system as a Markov Chain.
 
 In order to model the system, we assumed that the time between events was 
 exponentially distributed. Furthermore, we assumed that the system would be
-fairly well synchronized, with most elections occuring at the same time. This
+fairly well synchronized, with most elections occurring at the same time. This
 assumption was valid for 2-Node cases of our non-real-time code, but was
 a major issue as the number of nodes began to increase. However, with of
 the use of the round-robin scheduler with synchronization to enforce our
@@ -964,7 +964,7 @@ leaders.
 The DGI can perform work assuming that it is in a group, and not in an election
 state (since the Group Management module instructs other modules to stop during
 an election). The collected data in the previous sections is based on that
-assumption, and the Markov Chains which models those scenarioes needed to as
+assumption, and the Markov Chains which models those scenarios needed to as
 well.
 
 Processes in the DGI are either members or leaders. Leaders are processes
@@ -973,7 +973,7 @@ which have won elections among its members.
 As stated previously, it was assumed that the events in the distributed system
 were distributed exponentially. This was partially in order to facilitate
 the use of the program SharpE, and partially for the ease of the mathematics
-involved in the continous time markov chain. Events are modelled in the chain
+involved in the continuous time Markov chain. Events are modeled in the chain
 using $\lambda(x)$ which is the parameter of the exponential distribution. It
 is important to note that:
 
@@ -1119,11 +1119,11 @@ time spent in a particular configuration is a function of the $\lambda$'s of all
 events that can cause the system to transition away from a configuration. 
 
 To construct the Markov chain, simulations of individual events are performed. The circumstances
-for the events are assumed to be homogenous: processes only differ by their process id.
-Using this assumption, the simulation of events can be broken down into a series of scenarioes
-that are representive of the events in the system. Since each scenario is idependent of other
+for the events are assumed to be homogeneous: processes only differ by their process id.
+Using this assumption, the simulation of events can be broken down into a series of scenarios
+that are representative of the events in the system. Since each scenario is independent of other
 scenarios, each scenario can be run independently.  Additionally, since the circumstances
-are assumed to be homogenous, scenarios that are similiar, such as ones where two processes
+are assumed to be homogeneous, scenarios that are similar, such as ones where two processes
 swap roles can be simulated only once, and the results can be transformed from one scenario
 to another with a simple mapping. This mapping scheme and parallizability helps keep the
 state space explosion of the potential states under control.
@@ -1169,10 +1169,10 @@ included the structure of the chain, which naturally assumes that all processes 
 election state a roughly the same time, which is not typically true for any number of processes
 greater than 2. Additionally, the simulator could only assume that the synchronization between
 processes was mostly fixed, which was not the case in the larger configurations, since the
-coincidental synchronization that occured in the two node case was supressed by the increased
-number of peers. Futhermore, an issue with SharpE was discovered that prevented the
+coincidental synchronization that occurred in the two node case was suppressed by the increased
+number of peers. Furthermore, an issue with SharpE was discovered that prevented the
 particular structure of the chains produced from being handled correctly. To circumvent that,
-issue, SharpE was replaced by a random-walker which generates exponentially distribued numbers
+issue, SharpE was replaced by a random-walker which generates exponentially distributed numbers
 and follows the paths of the chain, across several hundred trials, in order to collect time in group data for
 models which SharpE cannot process.
 
@@ -1195,13 +1195,13 @@ data is overlaid with the results from the random walker in Figures \ref{fig:COM
 \centering
 \includegraphics[width=1.0\linewidth]{TRANS-RT-SUC-64-COMPARE.pdf}
 
-\caption{Comparison of in group time as collected from the experimental platform and the time in group from the equivalent markov chain (64ms between resends).}
+\caption{Comparison of in group time as collected from the experimental platform and the time in group from the equivalent Markov chain (64ms between resends).}
 \label{fig:COMPARE-SUC-TRANS-RT-64}
 \end{figure}
 
 
-Correlation was calculated from the collected data: a correlation factor of 81.84\% was 
-found for the 128ms resend case and a factor of 87.54\% was found for the 64ms resend case.
+Correlation was calculated from the collected data: a correlation coefficient of .8184 was 
+found for the 128ms resend case and a factor of .8754 was found for the 64ms resend case.
 
 
 % An example of a floating figure using the graphicx package.
@@ -1295,14 +1295,14 @@ found for the 128ms resend case and a factor of 87.54\% was found for the 64ms r
 \section{Conclusion}
 
 This work presented a new approach for predicting the behavior of a real-time
-distributed system under omission failure conditions. By using a continous time
+distributed system under omission failure conditions. By using a continuous time
 Markov chain, a variety of insights can be gathered about the system, including
 observations such as how long a particular configuration will be stable for, 
 and the behavior of the system in the long run.  The Markov results will be used
  to make better real time schedules to better react to the network faults we
 plan on introducing to our testbeds. For example, if migrations are failing
 and a sufficient number of migrations can cause the physical system to fail,
-the scheduler may need tobehave in a manner that limits the number of failed
+the scheduler may need to behave in a manner that limits the number of failed
 migrations that can occur before group reconfigures. This work is a stepping
 stone towards designing a real-time schedule that manages the system correctly
 when there are cyber faults. Schedules and behavior can be designed around how
