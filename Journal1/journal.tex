@@ -619,7 +619,7 @@ Distributed Computing, Smart Grid, Leader Election, Group Management, Reliabilit
 \IEEEPARstart{F}{REEDM} (Future Renewable Electric Energy Delivery and Management) System
 is a Smart Grid project focused on the future of the electrial grid. Major proposed features
 of the FREEDM network include the Solid State Transformer, distributed local energy storage,
-and distributed local energy generation\cite{SOMEFREEDM}. This vein of research emphasizes decentralizing the
+and distributed local energy generation\cite{FREEDMMIGRATION}. This vein of research emphasizes decentralizing the
 power grid; making it more reliable by distributing energy production resources. Part of this
 design requires the system to operate in islanded mode, where portions of the distribution
 network are segmented from each other.
@@ -627,7 +627,7 @@ network are segmented from each other.
 The effects of these partitions are still not well understood, especially since in a distributed
 cyber-physical system partitions may occur in both the cyber and physical domains. As a result,
 it is not well known how cyber or physical fault will effect the other portion of the system.
-However, based on research such as \cite{HAREINI}, indicates that cyber faults, can cause a
+However, based on research such as \cite{HARINI}, indicates that cyber faults, can cause a
 physical system apply unstable settings.
 
 This work presents the initial steps to better understanding and planning for these faults.
@@ -1181,10 +1181,27 @@ mostly simultaneously was an appropriate assumption for the real-time system, si
 round-robin scheduler synchronizes when processes run their group management modules. The
 simulator was set to assume that the synchronization between processes was very tight, and
 new experimental data was collected for the 4 node, transient partition case. The collected
-data is overlaid with the results from the random walker in Figures \ref{DURH} and \ref{HURR}.
+data is overlaid with the results from the random walker in Figures \ref{fig:COMPARE-SUC-TRANS-RT-128} and \ref{fig:COMPARE-SUC-TRANS-RT-64}.
 
-Correlation was calculated from the collected data: a correlation factor of 81.35\% was 
-found for the 128ms resend case and a factor of 87.03\% was found for the 64ms resend case.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.0\linewidth]{TRANS-RT-SUC-128-COMPARE.pdf}
+
+\caption{Comparison of in group time as collected from the experimental platform and the time in group from the equivalent Markov chain (128ms between resends).}
+\label{fig:COMPARE-SUC-TRANS-RT-128}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1.0\linewidth]{TRANS-RT-SUC-64-COMPARE.pdf}
+
+\caption{Comparison of in group time as collected from the experimental platform and the time in group from the equivalent markov chain (64ms between resends).}
+\label{fig:COMPARE-SUC-TRANS-RT-64}
+\end{figure}
+
+
+Correlation was calculated from the collected data: a correlation factor of 81.84\% was 
+found for the 128ms resend case and a factor of 87.54\% was found for the 64ms resend case.
 
 
 % An example of a floating figure using the graphicx package.
