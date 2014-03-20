@@ -2,7 +2,7 @@
 set terminal epslatex  
 set output 'TRANS-RT-SUC-64-COMPARE.tex'
 set boxwidth 3 absolute
-set title "Simulated versus Experimental Time In Group: Two Node (SUC 64ms Resend)" 
+set title "Simulated versus Experimental Time In Group: Transient Partition (SUC 64ms Resend)" 
 set xrange [ -5.00000 : 105.0000 ] noreverse nowriteback
 set ylabel "In Group Time (Seconds)"
 set xlabel "Network Reliability"
