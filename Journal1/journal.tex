@@ -531,11 +531,11 @@ network with cyber control, the performance and reliability of the system
 can be increased. In some of these networks, distributing the cyber control
 offers increased redundancy and availability during fault conditions. However,
 there are very few works which study the effects of cyber faults on a 
-distributed system. These are of a particular interest in the Smart Grid
+distributed cyber-physical system. These are of a particular interest in the Smart Grid
 environment where outages and failures are very costly. By examining the
 behavior of a distributed system under fault scenarios, the overall robustness
 of the system can be improved by planning characteristics and responses to
-faults that allow the system to continue operating under difficult scenarios. 
+faults that allow the system to continue operating in difficult circumstances. 
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -620,7 +620,7 @@ Distributed Computing, Smart Grid, Leader Election, Group Management, Reliabilit
 is a Smart Grid project focused on the future of the electrical grid. Major proposed features
 of the FREEDM network include the Solid State Transformer, distributed local energy storage,
 and distributed local energy generation\cite{FREEDMMIGRATION}. This vein of research emphasizes decentralizing the
-power grid; making it more reliable by distributing energy production resources. Part of this
+power grid: making it more reliable by distributing energy production resources. Part of this
 design requires the system to operate in islanded mode, where portions of the distribution
 network are segmented from each other.
 
@@ -635,9 +635,9 @@ By taking a new approach to considering how a distributed system interacts durin
 new techniques for managing a fault scenario in a cyber-physical systems will be created. To do
 this, we present an approach in modeling the behavior of a system using models and Markov chains.
 These chains produce expectations of how long a system can be expected to stay in a particular
-state, or how much time it will be able to spend coordinating over a period of time. Using these
-measures, the behavior of the control system for the physical devices can be adjusted to
-prevent faults.
+state, or how much time it will be able to spend coordinating and doing useful work over a period
+of time. Using these measures, the behavior of the control system for the physical devices 
+can be adjusted to prevent faults.
 
 %\IEEEpubidadjcol
 % needed in second column of first page if using \IEEEpubid
@@ -663,19 +663,15 @@ physical components.
 The DGI is a real-time system: certain actions (and reactions) involving power
 system components need to be completed with a pre-specified time-frame to keep
 the system stable. The DGI uses a round robin scheduler: each module is given
-a predetermined window of execution which it may use to perform it's duties. When
+a predetermined window of execution which it may use to perform its duties. When
 a module's time period expires, the next module in the line is allowed to
-execute. All participating peers are assumed to be on the same schedule: all
-peers begin execution of a model simultaneously. This is accomplished using \cite{DCS}.
-This work assumes that the clocks are synchronized: If the network has faulted,
-they have not drifted noticeably from their last synchronization. Additionally,
-a production system would likely use GPS time synchronization in order to take
-certain power system readings \cite{PHASORREADINGS}.
+execute. 
  
 \section{Group Management}
-The DGI uses a leader election algorithm, ``Invitation Election
+The DGI uses the leader election algorithm, ``Invitation Election
 Algorithm'' written by Garcia-Molina in \cite{INVITATIONELECTION}.
-His algorithm provides a robust election procedure which allows for transient
+Orginally published in 1986, his algorithm provides a robust election 
+procedure which allows for transient
 partitions. Transient partitions are formed when a faulty link between two or
 more clusters of DGIs causes the groups to temporarily divide. These transient
 partitions merge when the link is more reliable. The election algorithm
@@ -683,12 +679,27 @@ allows for failures that disconnect two distinct sub-networks. These sub
 networks are fully connected, but connectivity between the two sub-networks is
 limited by an unreliable link.
 
+Since Garcia-Molina's orginal publication, there has been a large body of
+work creating various election algorithms. Each algorithm is
+designed to be well suited to the circumstances it will deployed in: there are
+specialized algorithms for wireless sensor
+networks\cite{LE-WSN-1}\cite{LE-WSN-2}, detecting failures in
+certain
+circumstances\cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}, and of course, transient partitions. Work on leader
+elections has been incorporated into a variety of distributed frameworks:
+Isis\cite{ISISTOOLKIT},
+Horus\cite{HORUSTOOLKIT}, Totem\cite{TOTEMTOOLKIT},
+Transis\cite{TRANSISTOOLKIT}, and Spread\cite{SPREADTOOLKIT} all have methods for creating groups. Despite
+this wide body of work, the fundamentals of leader election are consistent
+accross all work: nodes arrive at a consensus of a single peer who coordinates
+the group, and nodes the fail are detected and removed from the group. 
+
 The elected leader is responsible for making work assignments and identifying
 and merging with other coordinators when they are found, as well as maintaining
 a up-to-date list of peers for the members of his group.  Likewise, members of
 the group can detect the failure of the group leader by periodically checking
 if the group leader is still alive by sending a message. If the leader fails to
-respond, the querying node will enter a recovery state and operate alone until
+respond, the querying nodes will enter a recovery state and operate alone until
 they can identify another coordinator to join with. Therefore, a leader and each
 of the members maintains a set of processes which are currently reachable, which
 is a subset of all known processes in the system.
@@ -702,7 +713,7 @@ suspected processes which can be determined from the set of all processes and th
 membership.
 
 The leader and members have separate roles to play in the failure detection
-process. The leader, using a function will periodically search for
+process. The leader, will periodically search for
 other leaders to join groups with. This serves as a ping / response query for
 detecting failures in the system. It is also capable of detecting a change in state either
 by network issue or crash failure that causes the process being queried to no
@@ -712,21 +723,47 @@ Of course, simple modifications could allow the member to suspect other members
 by use of a heart beat or query-reply system, it is not implemented in DGI code.
 
 In this work it is assumed that a leader does not span two partitioned networks:
-if a group is able to form all members have some chance of communicating with
+if a group is able to form, all members have some chance of communicating with
 each other.
 
 \section {Experimental Setup}
 
 \subsection{Broker Architecture}
-The DGI software is designed around the broker architecture specification. Each core functionality of the system is implemented within a module which is provided access to core interfaces which deliver functionality such as scheduling requests, message passing, and a framework to manipulate physical devices, including those which exist only in simulation environments such as PSCAD\cite{PSCAD} and RSCAD\cite{RSCAD}. These interactions are integral part of the DGI development and work with RSCAD in a Hardware-In-The-Loop test-bed was presented in \cite{HILTESTBED}
+The DGI software is designed around a broker architectural specification.
+Each core functionality of the system is implemented within a module which is
+provided access to core interfaces which deliver functionality such as
+scheduling requests, message passing, and a framework to manipulate physical
+devices.
 
-The Broker provides a common message passing interface which all modules are allowed access to. This interface also provides the inter-module communication which delivers messages between software modules, effectively decoupling them outside of the requirement for them to be able to recognize messages addressed to them from other modules.
+The Broker provides a common message passing interface that all modules are
+allowed to access. Information is passed between modules using this message
+passing interface. For example, the list of peers in the group is made available
+to other modules with a message. 
 
-Several of the distributed algorithms used in the software require the use of ordered communication channels. To achieve this, FREEDM provides a reliable ordered communication protocol (The sequenced reliable connection or SRC) to the modules, as well as a ``best effort'' protocol (The sequenced unreliable connection or SUC) which is also FIFO (first in, first out), but provides limited delivery guarantees.
+Several of the distributed algorithms used in the software require the use of
+ordered communication channels. To achieve this, FREEDM provides a reliable
+ordered communication protocol (The sequenced reliable connection or SRC) to
+the modules, as well as a ``best effort'' protocol (The sequenced unreliable
+connection or SUC) which is also FIFO (first in, first out), but provides
+limited delivery guarantees.
 
-We elected to design and implement our own simple message delivery schemes in order to avoid complexities introduced by using TCP in our system. During development, it was observed that constructing a TCP connection to a node that had failed or was unreachable took a considerable amount of time. We elected to use UDP packets which do not have those issues, since the protocol is connectionless. UDP also allows development of protocols with various properties to evaluate which properties are desirable. To accomplish this lightweight protocols which are best effort oriented were implemented to deliver messages as quickly as possible within the requirements.
+We elected to design and implement our own simple message delivery schemes in
+order to avoid complexities introduced by using TCP in our system. During
+development, it was observed that constructing a TCP connection to a node that
+had failed or was unreachable took a considerable amount of time. We elected to
+use UDP packets which do not have those issues, since the protocol is
+connectionless. UDP also allows development of protocols with various
+properties to evaluate which properties are desirable. To accomplish this
+lightweight protocols which are best effort oriented were implemented to
+deliver messages as quickly as possible within the requirements.
 
-The decision to go with a lighter weight protocol was also influenced by the FREEDM center targeting lower cost, less powerful ARM boards, with less available computing resources than a traditional server or desktop. Furthermore, the protocols listed here continue operating despite omission failures: they follow the assumption that not every message is critical to the operation of the DGI and that the channel does not need to halt entirely to deliver one of the messages.
+The decision to go with a lighter weight protocol was also influenced by the
+FREEDM center targeting lower cost, less powerful ARM boards, with less
+available computing resources than a traditional server or desktop.
+Furthermore, the protocols listed here continue operating despite omission
+failures: they follow the assumption that not every message is critical to the
+operation of the DGI and that the channel does not need to halt entirely to
+deliver one of the messages.
 
 \subsection{Sequenced Reliable Connection}
 The sequenced reliable connection is a modified send and wait protocol with the
@@ -769,7 +806,7 @@ Like the SRC protocol, the SUC protocol's resend time can be adjusted.
 Additionally, the window size is also configurable, but was left unchanged for 
 the tests presented in this work.
 
-\subsection{Network Simulation}
+\subsection{Experimental Setup}
 Network unreliability is simulated by dropping datagrams from specific sources
 on the receiver side. Each receiver was given an XML file describing the
 prescribed reliability of messages arriving from a specific source. The
@@ -782,15 +819,9 @@ or not to drop a message. A dropped message was not delivered to any of the
 sub-modules and was not acknowledged by the receiver. Using this method we were 
 able to emulate a lossy network link but not one with message delays.
 
-Because the DGI's network communication is implemented using UDP, there is a
-listener class which is responsible for accepting all incoming messages on the
-socket the system is listening on. This component is responsible for querying
-the appropriate protocol's class to determine
-if a message should be accepted. To do this, when a message is received, the
-message is parsed by the listener. At this point the network simulation will
-halt processing the  message if it should be discarded based on the defined
-random chance in the configuration file. Otherwise, it is delivered to the
-addressed module.
+``Lost'' messages are dropped on the reciever side. Code was inserted in the
+datagram processing code of the DGI. The DGI will not deliver the message to
+the modules if the message is selected to be dropped.
 
 \section{Previous Results}
 Initial data was collected from a non-real time version of the DGI code.
@@ -801,7 +832,7 @@ as well as the protocol used.
 The first minute of each test in the experimental test is discarded to remove
 any transients in the test. The result is that while the tests were run for
 ten minutes, the maximum result is 9 minutes of in-group time. These graphs
-first appeared in \cite{CRITIS2012}
+first appeared in \cite{CRITIS2012}.
 
 \subsection{Sequenced Reliable Connection}
 
@@ -849,7 +880,7 @@ increasing the resend time.
 \label{fig:IGT-SRC-TRANS-100}
 \end{figure}
 
-The transient partition case, shows a simple example where a network partition
+The transient partition case shows a simple example where a network partition
 separates two groups of DGI processes. In the simplest case where the opposite side of
 the partition is unreachable, nodes will form a group with the other nodes on the
 same side of the partition. In our tests, there are two nodes on each side of
@@ -859,8 +890,8 @@ Figures \ref{fig:MGS-SRC-TRANS-100} and \ref{fig:IGT-SRC-TRANS-100}.
 
 While messages cannot cross the partition, the DGIs stay in a group with the
 nodes on the same side of the partition leading to an in group time of 9 minutes,
-the maximum value. As packets begin to cross the partition (with the reliability
-increasing), DGI instances on either side begin to attempt to complete elections
+the maximum value. As packets begin to cross the partition (as the reliability
+increases), DGI instances on either side begin to attempt to complete elections
 with the nodes on the opposite partition and the time in group begins to fall.
 However during this time, the mean group size continues to increase, meaning
 while the elections are decreasing the amount of time that the module spends in
@@ -932,6 +963,7 @@ transitions between those state (failure events or election events) are probabil
 rather than deterministic, it is a natural extension to model the distributed
 system as a Markov Chain.
 
+\subsection{Assumptions}
 In order to model the system, we assumed that the time between events was 
 exponentially distributed. Furthermore, we assumed that the system would be
 fairly well synchronized, with most elections occurring at the same time. This
@@ -940,6 +972,13 @@ a major issue as the number of nodes began to increase. However, with of
 the use of the round-robin scheduler with synchronization to enforce our
 real-time requirements, assuming the synchronization of processes is not a
 major leap.
+
+All participating peers are assumed to be on the same schedule: all
+peers begin execution of a model simultaneously. This is accomplished using \cite{DCS}.
+This work assumes that the clocks are synchronized: if the network has faulted,
+they have not drifted noticeably from their last synchronization. Additionally,
+a production system would likely use GPS time synchronization in order to take
+certain power system readings \cite{PHASORREADINGS}.
 
 \subsection{Constructing The Markov Chain}
 
@@ -973,7 +1012,8 @@ which have won elections among its members.
 
 As stated previously, it was assumed that the events in the distributed system
 were distributed exponentially. This was partially in order to facilitate
-the use of the program SharpE, and partially for the ease of the mathematics
+the use of the program SharpE \cite{SHARPE}\cite{SHARPE2} made by Dr. Kishor
+Trivedi's group at Duke University, and partially for the ease of the mathematics
 involved in the continuous time Markov chain. Events are modeled in the chain
 using $\lambda(x)$ which is the parameter of the exponential distribution. It
 is important to note that:
