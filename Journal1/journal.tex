@@ -627,17 +627,26 @@ network are segmented from each other.
 The effects of these partitions are still not well understood, especially since in a distributed
 cyber-physical system partitions may occur in both the cyber and physical domains. As a result,
 it is not well known how cyber or physical fault will effect the other portion of the system.
-However, based on research such as \cite{HARINI}, indicates that cyber faults, can cause a
+However, research such as \cite{HARINI}, indicates that cyber faults can cause a
 physical system apply unstable settings.
 
 This work presents the initial steps to better understanding and planning for these faults.
 By taking a new approach to considering how a distributed system interacts during a fault condition,
 new techniques for managing a fault scenario in a cyber-physical systems will be created. To do
-this, we present an approach in modeling the behavior of a system using models and Markov chains.
+this, we present an approach in modeling the grouping behavior of a system using Markov chains.
 These chains produce expectations of how long a system can be expected to stay in a particular
 state, or how much time it will be able to spend coordinating and doing useful work over a period
 of time. Using these measures, the behavior of the control system for the physical devices 
 can be adjusted to prevent faults.
+
+The next section describes the FREEDM smart-grid system and the DGI (Distributed Grid Intelligence). In section 3,
+we overview the group management algorithm, and the state of the art for distributed
+systems. In section 4 we describe in detail the architecture of the DGI, including the architecture
+of the message passing interface and the protocols used in the experiments, as well as our
+experimental setup. In section 5 we outline our previous results, collected by running the DGI
+in a controlled environment. Section 6 explains the assumptions and how the Markov Chains are
+contructed. In section 7, we show the accuracy of these models for predicting grouping behavior
+of the system. Conclusions are presented in the final section.
 
 %\IEEEpubidadjcol
 % needed in second column of first page if using \IEEEpubid
@@ -657,7 +666,7 @@ management, the focus of this work, implements a leader election algorithm to
 discover which nodes are reachable in the cyber domain.
 
 Other modules provide additional functionality such as collecting global
-snapshots, and a module which negotiates the migrations and gives commands to
+snapshots, and a module that negotiates the migrations and gives commands to
 physical components.
 
 The DGI is a real-time system: certain actions (and reactions) involving power
@@ -670,7 +679,7 @@ execute.
 \section{Group Management}
 The DGI uses the leader election algorithm, ``Invitation Election
 Algorithm'' written by Garcia-Molina in \cite{INVITATIONELECTION}.
-Orginally published in 1986, his algorithm provides a robust election 
+Originally published in 1982, his algorithm provides a robust election 
 procedure which allows for transient
 partitions. Transient partitions are formed when a faulty link between two or
 more clusters of DGIs causes the groups to temporarily divide. These transient
@@ -679,7 +688,7 @@ allows for failures that disconnect two distinct sub-networks. These sub
 networks are fully connected, but connectivity between the two sub-networks is
 limited by an unreliable link.
 
-Since Garcia-Molina's orginal publication, there has been a large body of
+Since Garcia-Molina's original publication, there has been a large body of
 work creating various election algorithms. Each algorithm is
 designed to be well suited to the circumstances it will deployed in: there are
 specialized algorithms for wireless sensor
@@ -691,12 +700,12 @@ Isis\cite{ISISTOOLKIT},
 Horus\cite{HORUSTOOLKIT}, Totem\cite{TOTEMTOOLKIT},
 Transis\cite{TRANSISTOOLKIT}, and Spread\cite{SPREADTOOLKIT} all have methods for creating groups. Despite
 this wide body of work, the fundamentals of leader election are consistent
-accross all work: nodes arrive at a consensus of a single peer who coordinates
+across all work: nodes arrive at a consensus of a single peer who coordinates
 the group, and nodes the fail are detected and removed from the group. 
 
 The elected leader is responsible for making work assignments and identifying
 and merging with other coordinators when they are found, as well as maintaining
-a up-to-date list of peers for the members of his group.  Likewise, members of
+an up-to-date list of peers for the members of his group.  Likewise, members of
 the group can detect the failure of the group leader by periodically checking
 if the group leader is still alive by sending a message. If the leader fails to
 respond, the querying nodes will enter a recovery state and operate alone until
@@ -713,14 +722,13 @@ suspected processes which can be determined from the set of all processes and th
 membership.
 
 The leader and members have separate roles to play in the failure detection
-process. The leader, will periodically search for
-other leaders to join groups with. This serves as a ping / response query for
+process. Leaders use a periodic search to locate other leaders in order to merge groups.
+ This serves as a ping / response query for
 detecting failures in the system. It is also capable of detecting a change in state either
 by network issue or crash failure that causes the process being queried to no
-longer consider itself part of the leaders group. The member on the other hand, as the
-algorithm is written will only suspect the leader, and not the other processes.
+longer consider itself part of the leader's group. The member will only suspect the leader, and not the other processes.
 Of course, simple modifications could allow the member to suspect other members
-by use of a heart beat or query-reply system, it is not implemented in DGI code.
+by use of a heart beat or query-reply system, but it is not implemented in DGI code.
 
 In this work it is assumed that a leader does not span two partitioned networks:
 if a group is able to form, all members have some chance of communicating with
@@ -730,7 +738,7 @@ each other.
 
 \subsection{Broker Architecture}
 The DGI software is designed around a broker architectural specification.
-Each core functionality of the system is implemented within a module which is
+Each core functionality of the system is implemented within a module that is
 provided access to core interfaces which deliver functionality such as
 scheduling requests, message passing, and a framework to manipulate physical
 devices.
@@ -758,7 +766,7 @@ lightweight protocols which are best effort oriented were implemented to
 deliver messages as quickly as possible within the requirements.
 
 The decision to go with a lighter weight protocol was also influenced by the
-FREEDM center targeting lower cost, less powerful ARM boards, with less
+FREEDM center targeting lower cost, less powerful implementation platforms, with less
 available computing resources than a traditional server or desktop.
 Furthermore, the protocols listed here continue operating despite omission
 failures: they follow the assumption that not every message is critical to the
@@ -788,9 +796,7 @@ it is still relevant.
 
 There one adjustable parameter, the resend time, which controls how often the
 system would attempt to deliver a message it hadn't yet received an
-acknowledgment for. 
-
-Note that there is a resend function is periodically called to attempt to redeliver
+acknowledgment for. A resend function is periodically called to attempt to redeliver
 lost messages to the receiver.
 
 \subsection{Sequenced Unreliable Connection}
@@ -819,7 +825,7 @@ or not to drop a message. A dropped message was not delivered to any of the
 sub-modules and was not acknowledged by the receiver. Using this method we were 
 able to emulate a lossy network link but not one with message delays.
 
-``Lost'' messages are dropped on the reciever side. Code was inserted in the
+``Lost'' messages are dropped on the receiver side. Code was inserted in the
 datagram processing code of the DGI. The DGI will not deliver the message to
 the modules if the message is selected to be dropped.
 
@@ -841,24 +847,24 @@ first appeared in \cite{CRITIS2012}.
 \begin{figure}[!h]
 \centering
 \includegraphics[width=\linewidth]{2NODE-SRC-100-GROUP.pdf}
-\caption{Time in group over 10 minute run for two node system with 100ms resend time}
+\caption{Time in group over a 10 minute run for two node system with 100ms resend time}
 \label{fig:IGT-SRC-2NODE-100}
 \end{figure}
 
 The 100ms resend SRC test with two nodes can be considered a sort of a control.
-These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}. This test highlights the performance of the
+These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}, highlights the performance of the
 SRC protocol, achieving the maximum in-group time of 9 minutes with only 15\%
 of datagrams arriving at the receiver. 
 
 \begin{figure}[!h]
 \centering
 \includegraphics[width=\linewidth]{2NODE-SRC-200-GROUP.pdf}
-\caption{Time in group over 10 minute run for two node system with 200ms resend time}
+\caption{Time in group over a 10 minute run for two node system with 200ms resend time}
 \label{fig:IGT-SRC-2NODE-200}
 \end{figure}
 
 Figures \ref{fig:IGT-SRC-2NODE-200} demonstrates that as the
-rate at which lost datagrams are resent is decreased to resend every 200ms the
+rate at which lost datagrams are resent is decreased to 200ms the
 time in group falls off. This behavior is expected, since each exchange has a
 time limit for each message to arrive and the number of attempts is reduced by
 increasing the resend time.
@@ -876,7 +882,7 @@ increasing the resend time.
 \begin{figure}[!h]
 \centering
 \includegraphics[width=\linewidth]{TRANS-SRC-100-GROUP.pdf}
-\caption{Time in group over 10 minute run for the transient partition case with 100ms resend time}
+\caption{Time in group over a 10 minute run for the transient partition case with 100ms resend time}
 \label{fig:IGT-SRC-TRANS-100}
 \end{figure}
 
@@ -909,7 +915,7 @@ time comes from elections.
 \begin{figure}[!h]
 \centering
 \includegraphics[width=\linewidth]{TRANS-SRC-200-GROUP.pdf}
-\caption{Time in group over 10 minute run for the transient partition case with 200ms resend time}
+\caption{Time in group over a 10 minute run for the transient partition case with 200ms resend time}
 \label{fig:IGT-SRC-TRANS-200}
 \end{figure}
 
@@ -932,14 +938,14 @@ there is a high amount of variance for any particular trial.
 \begin{figure}[!h]
 \centering
 \includegraphics[width=\linewidth]{2NODE-SUC-100-GROUP.pdf}
-\caption{Time in group over 10 minute run for two node system with 100ms resend time}
+\caption{Time in group over a 10 minute run for two node system with 100ms resend time}
 \label{fig:IGT-SUC-2NODE-100}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
 \includegraphics[width=\linewidth]{2NODE-SUC-200-GROUP.pdf}
-\caption{Time in group over 10 minute run for two node system with 200ms resend time}
+\caption{Time in group over a 10 minute run for two node system with 200ms resend time}
 \label{fig:IGT-SUC-2NODE-200}
 \end{figure}
 
@@ -957,7 +963,7 @@ Due to the high amount of variance in the collected data, and the resulting
 difficulty making any sort of prediction about other systems from the data, a
 more formal approach was tried.
 
-Since the system, taken as a whole can be reasonably modeled as a collection of 
+Since the system, taken as a whole, can be reasonably modeled as a collection of 
 states each describing the state or configuration of the system, and that the
 transitions between those state (failure events or election events) are probabilistic,
 rather than deterministic, it is a natural extension to model the distributed
@@ -975,8 +981,8 @@ major leap.
 
 All participating peers are assumed to be on the same schedule: all
 peers begin execution of a model simultaneously. This is accomplished using \cite{DCS}.
-This work assumes that the clocks are synchronized: if the network has faulted,
-they have not drifted noticeably from their last synchronization. Additionally,
+This work assumes that the clocks are synchronized: even if the network has faulted,
+process clocks have not drifted noticeably from their last synchronization. Additionally,
 a production system would likely use GPS time synchronization in order to take
 certain power system readings \cite{PHASORREADINGS}.
 
@@ -1002,19 +1008,16 @@ messages to determine if the other processes have crashed, and to discover new
 leaders. 
 
 The DGI can perform work assuming that it is in a group, and not in an election
-state (since the Group Management module instructs other modules to stop during
+state (since the group management module instructs other modules to stop during
 an election). The collected data in the previous sections is based on that
-assumption, and the Markov Chains which models those scenarios needed to as
+assumption, and the Markov chains that models those scenarios needed to as
 well.
 
 Processes in the DGI are either members or leaders. Leaders are processes
 which have won elections among its members.
 
 As stated previously, it was assumed that the events in the distributed system
-were distributed exponentially. This was partially in order to facilitate
-the use of the program SharpE \cite{SHARPE}\cite{SHARPE2} made by Dr. Kishor
-Trivedi's group at Duke University, and partially for the ease of the mathematics
-involved in the continuous time Markov chain. Events are modeled in the chain
+were distributed exponentially. Events are modeled in the chain
 using $\lambda(x)$ which is the parameter of the exponential distribution. It
 is important to note that:
 
@@ -1044,8 +1047,8 @@ leaders group, if they were members.
 
 The member on the other hand will only direct its check message to the leader
 of its current group. As with the leader's check message, the response can
-either be positive or negative. A yes response indicates that the leader is
-still available and considers the member a part of its group. A no response
+either be positive or negative. A ``yes'' response indicates that the leader is
+still available and considers the member a part of its group. A ``no'' response
 indicates that either the leader has failed and recovered, or it has suspected
 the member process of being unreachable (either due to crash or network issue)
 and has removed them from the group. In this event the member will enter a
@@ -1057,12 +1060,12 @@ list of members for a group is pushed to every member of that group by the
 leader. Members cannot suspect other processes of being crashed, only the
 leader can identify failed group members.
 
-\begin{figure}[!h]
+\begin{figure*}
 \centering
 \includegraphics[width=.9\linewidth]{markov-ayc.pdf}
 \caption{A diagram showing a partial Markov chain for failure detection}
 \label{fig:MARKOVAYC}
-\end{figure}
+\end{figure*}
 
 A model of a failure detection stage of the leader election algorithm is presented in
 Figure \ref{fig:MARKOVAYC}. A set of nodes begin in a normal state as part of a group.
@@ -1112,11 +1115,11 @@ with itself as the only member. As nodes are discovered by checks, the
 processes combine into groups. Groups are not limited by increasing one a time;
 they can increase by combined size of the groups of the leader processes.
 
-We define a metric to assess the performance of the system under duress, we
+We define a metric to assess the performance of the system under duress: we
 first consider that the distributed can only perform meaningful work when the
 processes can work together to perform physical migration. This means that
 there are two networks that affect the system's ability to do work: the
-physical and the cyber.
+physical flow network and the cyber communication network.
 
 
 \begin{figure}[!h]
@@ -1162,7 +1165,7 @@ Let $T_{E}$ be the mean time it takes to complete any election. Therefore:
 \subsubsection{Combined Model}
 
 A combined model combines election and failure detection Markov chain components. Except for the
-states where all reachable nodes are in the game group and the states where there are no reachable
+states where all reachable nodes are in the same group and the states where there are no reachable
 leaders each state has a combination of election transitions and failure transitions.                                                        
 The combined model is predictive of the overall characteristics of the system. The
 time spent in a particular configuration is a function of the $\lambda$'s of all the
@@ -1182,7 +1185,8 @@ state space explosion of the potential states under control.
 
 The presented methodology of constructing the model was initially calibrated against the
 original two-node case, using a non-real-time version of the DGI codebase. The resulting
-Markov chain was processed using SharpE which measured the reward collected in 600 second,
+Markov chain was processed using SharpE \cite{SHARPE}\cite{SHARPE2} made by Dr. Kishor
+Trivedi's group at Duke University, a popular tool for reliability analysis. SharpE measured the reward collected in 600 seconds,
 minus the reward that was collected in the first 60 seconds (to emulate that the first
 60 seconds were discarded in the experimental runs.) The SharpE results are plotted along
 with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \ref{fig:COMPARE-SUC-2NODE-200}.
@@ -1250,8 +1254,9 @@ data is overlaid with the results from the random walker in Figures \ref{fig:COM
 \end{figure}
 
 
-Correlation was calculated from the collected data: a correlation coefficient of .8184 was 
-found for the 128ms resend case and a factor of .8754 was found for the 64ms resend case.
+Correlation was calculated from the collected data: a correlation coefficient of 0.7656 was 
+found for the 128ms resend case between the experimental median and Markov-predicted value,
+ and a factor of .8603 was found for the 64ms resend case between the experimental median and Markov-predicted value.
 
 
 % An example of a floating figure using the graphicx package.
@@ -1386,10 +1391,10 @@ system during cyber faults.
   % regular IEEE prefers the singular form
   \section*{Acknowledgment}
 \fi
-
-
-The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...The authors would like to thank...
-
+The authors acknowledge the support of the Future Renewable
+Electric Energy Delivery and Management Center,
+a National Science Foundation supported Engineering Research
+Center under grant NSF EEC-081212, and the United States Department of Education GAANN program.
 
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.
@@ -1445,22 +1450,26 @@ The authors would like to thank...The authors would like to thank...The authors 
 %\begin{biography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
 % or if you just want to reserve a space for a photo:
 
-\begin{IEEEbiography}{Michael Shell}
-Biography text here.
+\begin{IEEEbiography}{Stephen Jackson}
+Received a BS in Computer Engineering and Computer Science from Missouri University of Science \& Technology in 2010. He is currently pursuing a PhD in Computer Science at Missouri S\&T. He is a member of the Critical Infrastructure Protection laboratory at S\&T, and a recipient of the Information-Assurance GAANN fellowship. His research interests include distributed systems, cyber-physical systems, and system reliability.
 \end{IEEEbiography}
 
 % if you will not have a photo at all:
-\begin{IEEEbiographynophoto}{John Doe}
-Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.
-\end{IEEEbiographynophoto}
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{bmcmillin}}]{Bruce McMillin}
+ (SM '07) is currently a Professor
+of Computer Science and Director of the Center for
+Information Assurance at Missouri S\&T, Rolla, MO,
+USA. He leads and participates in interdisciplinary
+teams in formal methods for fault tolerance and security
+in distributed embedded systems with an eye towards
+critical infrastructure protection. He is leading
+the distributed grid intelligence project of the Future
+Renewables Engineering Research Center.
+\end{IEEEbiography}
 
 % insert where needed to balance the two columns on the last page with
 % biographies
 %\newpage
-
-\begin{IEEEbiographynophoto}{Jane Doe}
-Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.Biography text here.
-\end{IEEEbiographynophoto}
 
 % You can push biographies down or up by placing
 % a \vfill before or after them. The appropriate
@@ -1468,7 +1477,7 @@ Biography text here.Biography text here.Biography text here.Biography text here.
 % on the last page and whether or not the columns
 % are being equalized.
 
-%\vfill
+\vfill
 
 % Can be used to pull up biographies so that the bottom of the last one
 % is flush with the other column.
