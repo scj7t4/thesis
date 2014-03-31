@@ -627,7 +627,7 @@ network are segmented from each other.
 The effects of these partitions are still not well understood, especially since in a distributed
 cyber-physical system partitions may occur in both the cyber and physical domains. As a result,
 it is not well known how cyber or physical fault will effect the other portion of the system.
-However, research such as \cite{HARINI}, indicates that cyber faults can cause a
+However, research such as \cite{HARINI}\cite{TSG}, indicates that cyber faults can cause a
 physical system apply unstable settings.
 
 This work presents the initial steps to better understanding and planning for these faults.
@@ -655,6 +655,8 @@ In this work we model the group management module of the FREEDM DGI (Distributed
 The DGI (Distributed Grid Intelligence) is a smart grid operating system
 that organizes and coordinates power electronics and negotiates contracts to
 deliver power to devices and regions that cannot effectively facilitate their own need.
+The DGI leverages common distributed algorithms to control the power grid, making it an
+attractive target for modelling a distributed system.
 
 (Is one sentence enough to smooth that over? I'm struggling a bit with smoothing that out)
 
@@ -1063,12 +1065,12 @@ list of members for a group is pushed to every member of that group by the
 leader. Members cannot suspect other processes of being crashed, only the
 leader can identify failed group members.
 
-\begin{figure*}
+\begin{figure}
 \centering
-\includegraphics[width=.9\linewidth]{markov-ayc.pdf}
+\includegraphics[width=.9\linewidth]{MarkovAYC2.pdf}
 \caption{A diagram showing a partial Markov chain for failure detection}
 \label{fig:MARKOVAYC}
-\end{figure*}
+\end{figure}
 
 A model of a failure detection stage of the leader election algorithm is presented in
 Figure \ref{fig:MARKOVAYC}. A set of nodes begin in a normal state as part of a group.
@@ -1125,12 +1127,12 @@ there are two networks that affect the system's ability to do work: the
 physical flow network and the cyber communication network.
 
 
-\begin{figure}[!h]
+\begin{figure*}
 \centering
-\includegraphics[width=1.0\linewidth]{markov-election.pdf}
+\includegraphics[width=1.0\linewidth]{MarkovElection2.pdf}
 \caption{A diagram showing a partial Markov chain for an election}
 \label{fig:MARKOVELECTION}
-\end{figure}
+\end{figure*}
 
 A continuous time Markov model of a single election is presented in Figure \ref{fig:MARKOVELECTION}.
 A set of leaders begin in a normal state. After some time $T_{D}$ an ``are you coordinator''
@@ -1256,11 +1258,24 @@ data is overlaid with the results from the random walker in Figures \ref{fig:COM
 \label{fig:COMPARE-SUC-TRANS-RT-64}
 \end{figure}
 
+As a measure of the strength of the model, the correlation between the predicted value was compared.
+The average error was also computed for each of the samples taken. This information is presented in
+Table \ref{tab:STAT-DATA}.
 
-Correlation was calculated from the collected data: a correlation coefficient of 0.7656 was 
-found for the 128ms resend case between the experimental median and Markov-predicted value,
- and a factor of .8603 was found for the 64ms resend case between the experimental median and Markov-predicted value.
-
+\begin{table}
+% increase table row spacing, adjust to taste
+\caption{Error and correlation of experimental data and Markov chain predictions}
+\label{tab:STAT-DATA}
+\centering
+% Some packages, such as MDW tools, offer better commands for making tables
+% than the plain LaTeX2e tabular which is used here.
+\begin{tabular}{|c||c|c|c|} 
+\hline
+Resend & Correlation & Error \\ \hline
+128 & 0.7656 & 11.61\% \\ \hline
+64 & 0.8604 & 11.70\% \\ \hline 
+\end{tabular}
+\end{table}
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
@@ -1454,7 +1469,7 @@ Center under grant NSF EEC-081212, and the United States Department of Education
 % or if you just want to reserve a space for a photo:
 
 \begin{IEEEbiography}{Stephen Jackson}
-Received a BS in Computer Engineering and Computer Science from Missouri University of Science \& Technology in 2010. He is currently pursuing a PhD in Computer Science at Missouri S\&T. He is a member of the Critical Infrastructure Protection laboratory at S\&T, and a recipient of the Information-Assurance GAANN fellowship. His research interests include distributed systems, cyber-physical systems, and system reliability.
+Received a BS in Computer Engineering and Computer Science from Missouri University of Science \& Technology in 2010. He is currently pursuing a PhD in Computer Science at Missouri S\&T. He is a member of the Critical Infrastructure Protection Laboratory at S\&T, and a recipient of the Information-Assurance GAANN fellowship. His research interests include distributed systems, cyber-physical systems, and system reliability.
 \end{IEEEbiography}
 
 % if you will not have a photo at all:
