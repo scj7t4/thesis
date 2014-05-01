@@ -1,28 +1,30 @@
 \chapter{Conclusion}
 
-In this work we have examined an application of leader election algorithms in a
-cyber-physical system. We showed that while there are definite benefits and
-uses for leader election algorithms in cyber-physical systems, they generate a
-flurry of new problems for system designers to deal with. We have shown that
-network instability can cause disruptions to the amount of service the cyber
-system can provide. In our analysis we questioned what the effect of transient
-partitions and link failures would be on the physical system, especially when
-the two networks are isomorphic. Our work shows that with the selection of an
-appropriate protocol under certain failure models, a good quality of service
-can be achieved in general. The transient partition case, by contrast, creates
-problems with group stability and is an issue to be investigated further with
-respect to its effect on CPSes.
+This work presented a new approach for predicting the behavior of a real-time
+distributed system under omission failure conditions. By using a continuous time
+Markov chain, a variety of insights can be gathered about the system, including
+observations such as how long a particular configuration will be stable for,
+and the behavior of the system in the long run.  The Markov results will be used
+ to make better real time schedules to better react to the network faults we
+plan on introducing to our testbeds. For example, if migrations are failing
+and a sufficient number of migrations can cause the physical system to fail,
+the scheduler may need to behave in a manner that limits the number of failed
+migrations that can occur before group reconfigures. This work is a stepping
+stone towards designing a real-time schedule that manages the system correctly
+when there are cyber faults. Schedules and behavior can be designed around how
+the system behaves on its worst days. This work also allows these schedule designs
+and evaluations to be completed much more quickly than they could be by running
+the system for long periods of time. Therefore results from the test bed, combined
+with results the models yield schedules that improve the stability of the
+system during cyber faults.
 
-of the DGI was compared against other distributed computing frameworks. The DGI group management system was first run with a testing framework that organized various configurations as prescribed by a series of input files and commands. The collected results provided insight into the interactions of the system as the omission failures increased.
+
+The DGI group management system was first run with a testing framework that organized various configurations as prescribed by a series of input files and commands. The collected results provided insight into the interactions of the system as the omission failures increased.
 
 However in environments where there are fewer omission failures, there were not a large enough number of events collected to make a satisfactory conclusion about the inter-arrival time about events at those levels of omission failures. In correct this we developed a simulation tool that recreates the events of the full DGI system in controlled circumstances. These collected events were used to construct a Markov chain that relates to the collected experimental results. These chains were fed into SharpE to produce an in group time metric equivalent to those collected using the experimental platform.
 
 The simulator will allow the construction of larger models more quickly and will lead to increasingly refined methods of gauging the amount of time in group. This information can then been combined with the instability metrics collected from a physical system to rigorously determine the relationship between omission failures and the interaction between processes in controlling the physical system in order to prevent the number of omission failures from causing physical instability in the system.
 
-Motivate instability
-    CPS should only help, not harm.
-    Describe in detail how lost messages can cause    instability
-    Present Harini paper.
 
 It is important that the behavior of the cyber controller only supplements its physical component. If the behavior of the cyber component can potentially cause instability by making changes that do not benefit the physical system, particularly in cases where a system without a cyber component would have remained stable without interaction.
 
@@ -30,18 +32,10 @@ The primary concern are scenarios in which the cyber controller attempts to make
 
 In \cite{HARINI}, Cloudhari et. al. show that failed transactions can create a scenario where the frequency of a power system could become unstable. They classified the stability of the system using a k-value which is a measure of the number of migrations which can fail before the system becomes unstable. As part of this the have created a series of invariants which a system must meet to be considered stable and remain stable. Given this, a metric of what the physical system can bear before becoming unstable, it is possible to tune the cyber control to limit the number of failed migrations by managing the membership of groups.
 
-Show how group management can manage instability
-    show that realtime dgi can manage the number of lost messages before the node is removed.
-    Show that the reconfiguration rate is function of variety of parameters.
 
 In a round-robin real-time schedule, each module gets a fixed amount of time to execute. As a consequence there is a fixed number of migrations a load balancing module can execute before the system re-evaluates the group's stability. Thus, a node which is failing to migrate due to lost messages can be handled correctly. It may be that the correct method is to remove from the group, change algorithms or adjust parameters. The correct action to take in the event of cyber failure in order to prevent physical failure is a topic of future research.
 
 The rate that the system should reconfigure then is a function of the maximum number of failed migrations that the system can take, the time it takes to write to the channel and the time it takes process messages. The amount of time in group can also be consideration for which algorithm to select based on the needed amount of time to perform its work.
-
-Propose
-    using gm to manage lost messages.
-    analyze how packet loss affects the physical instability
-    some papers 2 j + 1 c
 
 Group Management can be used as a critical component in a real-time distributed system to manage the number of lost messages, and as a consequence the number of failed migrations in a CPS. It is critical to understand how frequently nodes enter and exit the group based on lost messages and how many migrations fail as a consequence of those messages.
 
