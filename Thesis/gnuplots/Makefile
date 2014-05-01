@@ -3,7 +3,7 @@ default: all
 all: $(addsuffix .pdf, $(basename $(wildcard *.gnu) ) )
 
 %.pdf : %.gnu
-	gnuplot $*.gnu
+	gnuplot -e "SIZE_X=${SIZE_X};SIZE_Y=${SIZE_Y}" $*.gnu
 	sed -e 's;INPUTFILE;$*.tex;' -e 'w $*.fig' -n CHART.TEMPLATE
 	pdflatex $*.fig
 	rm -f $*.{aux,bbl,blg,dvi,glg,glo,gls,idx,ist,fff,nlo,nls,ilg}

@@ -1,5 +1,5 @@
 
-set terminal epslatex size 3.125,2.69 color colortext  
+set terminal epslatex size SIZE_X,SIZE_Y color colortext  
 set output '2NODE-SUC-100-COMPARE.tex'
 set boxwidth 3 absolute
 set title "Simulated versus Experimental Time In Group:\n Two Node (SUC 100ms Resend)" 

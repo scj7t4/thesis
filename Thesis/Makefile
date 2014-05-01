@@ -20,7 +20,8 @@ view: all
 	zathura $(SOURCE).pdf
 
 plots:
-	make -C ./gnuplots all
+	make -C ./gnuplots clean
+	make -C ./gnuplots all SIZE_X=5.5 SIZE_Y=3.125
 
 clean:
 	rm -f $(SOURCE).{aux,bbl,blg,dvi,glg,glo,gls,idx,ist,fff,nlo,nls,ilg}

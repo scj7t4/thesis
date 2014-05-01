@@ -1,5 +1,5 @@
 
-set terminal epslatex size 3.125,2.69 color colortext  
+set terminal epslatex size SIZE_X,SIZE_Y color colortext  
 set output 'TRANS-SUC-100-COMPARE.tex'
 set boxwidth 3 absolute
 set title "Comparision Between Experimental and SharpE (Transient Partition, 100ms Resend, SUC)" 

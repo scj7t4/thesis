@@ -1,5 +1,4 @@
-
-set terminal epslatex size 3.125,2.69 color colortext 
+set terminal epslatex size SIZE_X,SIZE_Y color colortext 
 set output '2NODE-SRC-100-GROUP.tex'
 set boxwidth 3 absolute
 set title "Time In Group:\n Two Node (SRC 100ms Resend)" 

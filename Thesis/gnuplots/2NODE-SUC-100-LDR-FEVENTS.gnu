@@ -5,7 +5,7 @@ min=0. #min value
 width=(max-min)/n #interval width
 #function used to map a value to the intervals
 hist(x,width)=width*floor((x)/width)
-set terminal epslatex size 3.125,2.69 color colortext  
+set terminal epslatex size SIZE_X,SIZE_Y color colortext  
 set output '2NODE-SUC-100-LDR-FEVENTS.tex'
 set boxwidth 0.9*width
 set title "Two Node, Number Of Detected Leader Failures (SUC - 100ms Resend)" 

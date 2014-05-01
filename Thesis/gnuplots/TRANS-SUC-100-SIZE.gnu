@@ -1,5 +1,5 @@
 
-set terminal epslatex size 3.125,2.69 color colortext  
+set terminal epslatex size SIZE_X,SIZE_Y color colortext  
 set output 'TRANS-SUC-100-SIZE.tex'
 set boxwidth 3 absolute
 set title "Average Group Size:\n Transient Partition (SUC - 100ms Resend)" 
