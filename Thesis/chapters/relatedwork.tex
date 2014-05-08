@@ -1,55 +1,16 @@
 \chapter{Related Work}
-
 \section{Virtual Synchrony}
-
-(Do I need to describe the difference between Receive and Deliver?)
-
-Consider a distributed system where events can be causally related based
-on their execution on the local processors and communication between
-processes, as defined in \cite[p~.101]{ISISTOOLKIT}. Virtually synchronous systems use multicast
-to communicate reliably between processes.
-
+Virtual synchrony (and its original implementation, Isis) is an execution model for distributed systems. Virtual synchrony is based on the idea of synchronous execution where each process acts based on a globally share clock. Synchronous systems are the easiest to program for, but true synchrony is not feasible in most circumstances. Instead, the virtual synchrony execution model was developed. 
+Virtual synchrony is a model of communication and execution that allows the system designer to emulate synchronous execution. Although the processes do not execute tasks simultaneously, the execution history of each process cannot be differentiated from a trace where tasks are executed simultaneously. 
+Consider a distributed system where events can be causally related based on their execution on the local processors and communication between processes, as defined in \cite[p~.101]{ISISTOOLKIT}. 
 \begin{enumerate}
     \item If $e$ and $e'$ are events local to a process $P_{i}$ and $e$ occurs before $e'$, then $e \rightarrow e'$
     \item If $e = send(m) and e'=deliver(m)$ for the same message $m$, then $e \rightarrow e'$
 \end{enumerate} \cite[p~.101]{ISISTOOLKIT}
-
-This defines a dependence and causality relation between events in the system.
-If two events cannot be causally related (that is $e \not\rightarrow e'$ and
-$e' \not\rightarrow e$ then the events are considered concurrent. From this
-one can define an execution history $H$.
-
-Virtual synchronous is a concept employed by a great number of distributed
-frameworks to impose synchronization on a system. Virtual synchrony is a
-model of communication and execution that allows the system designer to
-enforce synchronization on the system. Although the processes do not
-execute tasks simultaneously, the execution history of each process cannot
-be differentiated from a trace where tasks are executed simultaneously. A
-pair of histories $H$ and $H'$ are equivalent if for each process in the
-system (noted as $p$) $H|_{p}$ cannot be differentiated $H'|_{p}$ based
-on the casual relationships between the events in the history. \cite[p~.103]{ISISTOOLKIT}
-
-Additionally, a history is considered complete if all sent messages are
-delivered and there are no casual holes. A casual hole is a circumstance
-where an event $e$ is casually related to $e'$ by $e' \rightarrow e$ and
-$e$ appears in a history, but $e'$ is not. 
-
-A virtually synchronous system is one where each history the system is
-indistinguishable from all histories produced by a synchronous system. \cite[p~.104]{ISISTOOLKIT}
-
+This defines a dependence and causality relation between events in the system. If two events cannot be causally related (that is $e \not\rightarrow e'$ and $e' \not\rightarrow e$ then the events are considered concurrent. From this, one can define an execution history $H$. A pair of histories $H$ and $H'$ are equivalent if for each process in the system (noted as $p$) $H|_{p}$ cannot be differentiated $H'|_{p}$ based on the casual relationships between the events in the history. \cite[p~.103]{ISISTOOLKIT} Additionally, a history is considered complete if all sent messages are delivered and there are no casual holes. A casual hole is a circumstance where an event $e$ is casually related to $e'$ by $e' \rightarrow e$ and $e$ appears in a history, but $e'$ is not. A virtually synchronous system is one where each history the system is indistinguishable from all histories produced by a synchronous system. \cite[p~.104]{ISISTOOLKIT}
 \subsection{Process Groups}
-
-Virtual synchrony models also support process groups. Although each
-implementation of a virtually synchronous system applies a different structure
-to the way processes are grouped, there are common features between each
-implementation.
-
-A process group in a virtual synchronous system is commonly referred to as a
-view. A view is a collection of processes that are virtually synchronous
-with each other. Process groups in virtually synchronous systems place 
-obligations on the delivery of messages to members of the view. A history
-$H$ is legal if:
-
+Virtual synchrony models also support process groups. Although each implementation of a virtually synchronous system applies a different structure to the way processes are grouped, implementations share common features.
+A process group in a virtual synchronous system is commonly referred to as a view. A view is a collection of processes that are virtually synchronous with each other. Process groups in virtually synchronous systems place obligations on the delivery of messages to members of the view. A history $H$ is legal if:
 \begin{enumerate}
     \item Given a function $time(e)$ that returns a global time of when the event occurred $e$, then $e \rightarrow e' \Rightarrow time(e) < time(e').$
     \item $time(e) \neq time(e') \forall e, e' \in H|_{p}$ (where $e \neq e'$) for each process.
@@ -57,49 +18,19 @@ $H$ is legal if:
     \item All multicast message delivers occur in the view of a group. That is, if a message is sent in a view, it is delivered in that view, for every process in that view.
     \item Atomic broadcast ($abcast$) messages are totally ordered.
 \end{enumerate} \cite[p~.103]{ISISTOOLKIT}
-
-A process group interacting creates a legal history for the virtually
-synchronous system. However, processes can fail. The crash-failure model is
-commonly used. To achieve this, the virtual synchrony model has the following
-properties:
-
+A process group interacting creates a legal history for the virtually synchronous system. However, processes can fail.  Virtual synchrony systems have several properties to handle crash failures\cite[p~.102]{ISISTOOLKIT}:
 \begin{itemize}
     \item The system employs a membership service. This service monitors for failures and reports them to the other processes as part of the process group (or view) system.
     \item When a process is identified as failing it is removed from the groups that it belongs to and the remaining processes determine a new view.
     \item After a process has been identified as failing, no message will be received from it.
-\end{itemize} \cite[p~.102]{ISISTOOLKIT}
-
-As part of the failure model, it is worth noting two commonly used multicast
-delivery guarantees: uniform and non-uniform. The uniform property obligates that
-if one multicast is delivered to a node in the current view, it is delivered to
-all nodes in the current view.
-
+\end{itemize} 
+As part of the failure model, it is worth noting two commonly used multicast delivery guarantees: uniform and non-uniform. The uniform property obligates that if one multicast is delivered to a node in the current view, it is delivered to all nodes in the current view.
 \section{Extended Virtual Synchrony}
+One of the major shortcomings of the original virtual synchrony model lay in how it handled network partitions. In virtual synchrony, when the network partitioned, only processes in the primary partition were allowed to continue. Processes that were not in the primary partition could not rejoin the primary partition without being restarted: the process joining the view must be a new process so that there are no message delivery obligations for that process in the view.
+Mosler et. al's group at the University of California Santa Barbara\cite{EXTENDEDVIRTUALSYNCHRONY} designed an improved version of virtual synchrony, dubbed extended virtual synchrony. Extended virtual synchrony is compatible with the original virtual synchrony, and can implement all the functionality and limitations of the original design, as specified in the original paper. Because it supports virtual synchrony, extended virtual synchrony has become the basis for a number of related frameworks that have been designed since Isis including Horus, Totem, Transis, and Spread.
+Note that in \cite{EXTENDEDVIRTUALSYNCHRONY} work, the name view has been substituted for configuration. For consistency in this section, the word view will be used to describe a group or a configuration, and all three terms are equivalent.
 
-One of the major shortcomings of the original virtual synchrony model lay in
-how it handled network partitions. In virtual synchrony, when the network
-partitioned, only processes in the primary partition were allowed to continue.
-Processes that were not in the primary partition could not rejoin the primary
-partition without being restarted, that is, the process joining the view must
-be a new process so that there are no message delivery obligations for that
-process in the view.
-
-Mosler et. al's group at the University of California Santa Barbara\cite{EXTENDEDVIRTUALSYNCHRONY} designed
-an extended version of virtual synchrony, dubbed extended virtual synchrony.
-Extended virtual synchrony is compatible with the original virtual synchrony,
-and can implement all the functionality and limitations of the original design,
-as specified in the original paper. Because it supports virtual synchrony,
-extended virtual synchrony has become the basis for a number of related
-frameworks that have been designed since Isis including Horus, Totem, Transis,
-and Spread.
-
-Note that in \cite{EXTENDEDVIRTUALSYNCHRONY} work, the name view has been substituted for configuration.
-For consistency in this section, the word view will be used to describe a group
-or a configuration, and all three terms are equivalent.
-
-Extended virtual synchrony places the following obligations on the message
-delivery service, described informally below:
-
+Extended virtual synchrony places obligations on the message delivery service, described informally below:
 \begin{enumerate}
 	\item As defined in Virtual Synchrony, events can be causally related.
 		Furthermore, if a message is delivered, the delivery is casually
@@ -129,170 +60,59 @@ delivery service, described informally below:
 		was also delivered.
 \end{enumerate} \cite{EXTENDEDVIRTUALSYNCHRONY}
 
-Extended virtual synchrony lifts the obligation that messages will no longer be
-received by processes that have been removed by a view. It also provides
-additional restrictions on the sending of messages between two different views
-(Item 2) and an obligation on the delivery of messages (Item 4). 
+Extended virtual synchrony lifts the obligation that messages will no longer be received by processes that have been removed by a view. It also provides additional restrictions on the sending of messages between two different views (Item 2) and an obligation on the delivery of messages (Item 4). 
 
-The concept of a primary view or primary configuration still exists within the
-extended virtual synchrony model and is still described by the notion of being
-the largest view. Since views can now partition and rejoin the primary partition
-the rules presented above also allow the history of the primary partition to be
-totally ordered. Additionally, two consecutive primary views have at least
-process that was a member of each view.
+The concept of a primary view or primary configuration still exists within the extended virtual synchrony model and is still described by the notion of being the largest view. Since views can now partition and rejoin the primary partition the rules presented above also allow the history of the primary partition to be totally ordered. Additionally, two consecutive primary views have at least one process that was a member of each view.
 
-To join views, processes are first informed of a failure (or joinable partition) 
-by a membership service. Processes maintain an obligation set of messages they
-have acknowledged but not yet delivered. After being informed of the need to
-change views, the processes begin buffering received messages and transition
-into a transitional view. In the transitional view messages are sent and
-delivered by the processes to fulfill the causality and ordering requirements
-listed above. Once all messages have be transmitted, received and delivered as
-needed and the processes obligation set is empty, the view transitions from a
-transitional view to a regular view and execution continues as normal.
+To join views, processes are first informed of a failure (or joinable partition) by a membership service. Processes maintain an obligation set of messages they have acknowledged but not yet delivered. After being informed of the need to change views, the processes begin buffering received messages and transition into a transitional view. In the transitional view messages are sent and delivered by the processes to fulfill the causality and ordering requirements listed above. Once all messages have be transmitted, received and delivered as needed and the processes obligation set is empty, the view transitions from a transitional view to a regular view and execution continues as normal.
 
 \subsection{Comparison To DGI}
 
-The DGI places similar but distinct requirements on execution of processes in
-its system. The DGI enforces synchronization between processes that obligates
-each active process to enter each module's phase simultaneously. This is
-fulfilled by using a clock synchronization algorithm. The virtual synchrony
-model, at its most basic, does not require a clock to enforce its ordering.
+The DGI places similar but distinct requirements on execution of processes in its system. The DGI enforces synchronization between processes that obligates each active process to enter each module's phase simultaneously. This is fulfilled by using a clock synchronization algorithm. The virtual synchrony model, at its most basic, does not require a clock to enforce its ordering.
 
-However, this simplifies the DGI fulfilling it's real time requirements. 
-processes must be able to react to changes in the power system within a
-maximum amount of time. These interactions do not require interaction between
-all processes within the group. Additionally, this allows for private
-transactions to occur between DGI processes. Furthermore, hardware performance
-is limited in the current specification of the DGI platform, since the
-project is currently targeting a low power ARM board for deployment.
+However, this simplifies the DGI fulfilling its real time requirements.  Processes must be able to react to changes in the power system within a maximum amount of time. These interactions do not require interaction between all processes within the group. Additionally, this allows for private transactions to occur between DGI processes. Furthermore, hardware performance is limited in the current specification of the DGI platform, since the project is currently targeting a low power ARM board for deployment.
 
-The DGI has also been implemented using message delivery schemes that are
-unicast instead of multicast, since this is the easiest to achieve in
-practice. A majority of systems implementing virtual synchrony use a model 
-where local area communication is emphasized, with additional structures in
-place to transfer information across a WAN to other process groups.
+The DGI has also been implemented using message delivery schemes that are unicast instead of multicast, since this is the easiest to achieve in practice. A majority of systems implementing virtual synchrony use a model where local area communication is emphasized, with additional structures in place to transfer information across a WAN to other process groups.
 
-Groups in DGI are not obligated to deliver any subset of the messages to any
-peer in the system. Some of the employed algorithms in DGI need all of the
-messages to be delivered in a timely manner, but they do not require the same
-message to be delivered to every peer in the current design of the system.
+Groups in DGI are not obligated to deliver any subset of the messages to any peer in the system. Some of the employed algorithms in DGI need all of the messages to be delivered in a timely manner, but they do not require the same message to be delivered to every peer in the current design of the system.
 
 \section{Isis (1989) and Horus (1996)}
 
-(Note: I want it to be clear that Isis is Virtual Synchrony, Horus supports extended through the correct application of layers, but doesn't have to)
+A product of Dr. Kenneth Birman and his group at Cornell, Isis \cite{ISISTOOLKIT} and Horus \cite{HORUSTOOLKIT} are two distributed frameworks which are comparable to the DGI. Although these projects are no longer actively developed, Isis and Horus are the foundation which all other virtual synchrony frameworks are based.
 
-A product of Dr. Kenneth Birman and his group at Cornell, Isis \cite{ISISTOOLKIT} and Horus \cite{HORUSTOOLKIT} are
-two distributed frameworks which are comparable to the DGI. Although these
-projects are no longer actively developed, Isis and Horus are the foundation
-which all other virtual synchrony frameworks are based.
+Isis was originally developed to create a reliable distributed framework for creating other applications. As Isis was one of the first of its kind, the burden of maintaining a robust framework that met the development needs of its users eventually led Birman's group to create a newer, updated framework called Horus, which implemented the improved extended virtual synchrony model. However, Isis and Horus largely implement the same concepts.
 
-Isis was originally developed to create a reliable distributed framework for
-creating other applications. As Isis was one of the first of its kind, the
-burden of maintaining a robust framework that met the development needs of its
-users eventually made Birman's group create a newer, updated framework called
-Horus, which implemented the improved extended virtual synchrony model. However, 
-Isis and Horus largely implement the same concepts.
-
-Both Horus and Isis are described as a group communications system. They provide a 
-messaging architecture which clients use to deliver messages between processes.
-The frameworks provide a reliable distributed multicast, and a failure
-detection scheme. Horus offered a modular design with a variety of extensions
-which could change message characteristics and performance as needed by the 
-project.
+Both Horus and Isis are described as a group communications system. They provide a messaging architecture which clients use to deliver messages between processes. The frameworks provide a reliable distributed multicast, and a failure detection scheme. Horus offered a modular design with a variety of extensions which could change message characteristics and performance as needed by the project.
 
 \subsection{Group Model}
-In Horus and Isis, a group is a collection of processes which can communicate with one
-another to do work. Multicasts are directed to the group, and are guaranteed to
-be received by all members or no members. The collection of processes which
-make up a group is called a view.
+In Horus and Isis, a group is a collection of processes which can communicate with one another to do work. Multicasts are directed to the group, and are guaranteed to be received by all members or no members. The collection of processes which make up a group is called a view.
+Over time, due to failure, the view will change. Since views are distributed concurrently and asynchronously, each process can have a different view. Horus is designed to have a modular communication structure composed of layers, which allows the communication channel to have different properties which will affect which messages will be delivered in the event of a view change. Horus' layers allow developers to go as far to not use the complete virtual synchrony model, if the programmer desires. For example, Horus can implement total order using a token passing layer, or casual ordering using vector clocks.
 
-Over time, due to failure, the view will change. Since views are distributed
-concurrently and asynchronously, each process can have a different view. Horus
-is designed to have a modular communication structure composed of layers, which 
-allows the communication channel to have different properties which will affect
-which messages will be delivered in the event of a view change. Horus' layers
-allow developers to go as far to not use the complete virtual synchrony model,
-if the programmer desires. For example, Horus can implement total order using
-a token passing layer, or casual ordering using vector clocks.
-
-Isis has limited support for partitioning. In the event that
-a partition forms, dividing the large group into subgroups, only the primary
-group is allowed to continue operating. The primary group is selected by
-choosing the largest partition. Horus, on the other hand implements the extended
-virtual synchrony model and does not have that limitation.
+Isis has limited support for partitioning. In the event that a partition forms, dividing the large group into subgroups, only the primary group is allowed to continue operating. The primary group is selected by choosing the largest partition. Horus, on the other hand implements the extended virtual synchrony model and does not have that limitation.
 
 \section{Transis (1992)}
 
-(Transis is similar to virtual synchrony but supports partitions, but is not explicitly extended virtual synchrony)
+Transis \cite{TRANSISTOOLKIT} was developed as a more pragmatic approach to the creation of a distributed framework. Transis is developed with the key consideration that, while multicast is the most efficient for distributing information in a view or group of processors (as point to point quickly gives rise to N$^{2}$ complexity) it can be impractical, especially over a wide area network to rely on broadcast to deliver messages. Transis, then considers two components for the network: a local area component and a wide area component.
 
-Transis \cite{TRANSISTOOLKIT} was developed as a more pragmatic approach to the creation of a distributed
-framework. Transis is developed with the key consideration that, while multicast is
-the most efficient for distributing information in a view or group of processors (as
-point to point quickly gives rise to N$^{2}$ complexity) it can be impractical, especially
-over a wide area network to rely on broadcast to deliver messages. Transis, then
-considers two components for the network: a local area component and a wide area 
-component.
+The local area component, Lansis, is responsible for the exchange of messages across a LAN. Transis uses a combination of acknowledgements, which are piggybacked on regular messages to identify lost messages. If a process observes a message being acknowledged that it does not receive then it sends a negative acknowledgement broadcast informing the other members of the view it did not receive that message. In Lansis, the acknowledgement signals that a process is ready to deliver a message. Lansis assumes that all messages can be casually related in a global, directed, acyclic graph and there are a number of schemes that deliver messages based on adherence to that graph.
 
-The local area component, Lansis, is responsible for the exchange of messages across a
-LAN. Transis uses a combination of acknowledgements, which are piggybacked on regular
-messages to identify lost messages. If a process observes a message being acknowledged
-that it does not receive then it sends a negative acknowledgement broadcast informing
-the other members of the view it did not receive that message. In Lansis, the 
-acknowledgement signals that a process is ready to deliver a message. Lansis assumes
-that all messages can be casually related in a global, directed, acyclic graph and
-there are a number of schemes that deliver messages based on adherence to that graph.
-
-Like other frameworks, Transis uses gateways, which that call Xporters to deliver
-messages between the local views. 
+Like other frameworks, Transis uses gateways, called Xporters, to deliver messages between the local views. 
 
 \section{Totem (1996)}
 
-(Totem should clearly be Extended Virtual Synchrony)
-
-Totem\cite{TOTEMTOOLKIT} is largely in the same vein as Isis. Developed at the University of
-California, Santa Barbara by Moser, Melliar-Smith, Agarwal et. al. Totem is
-designed to use local area networks, connected by gateways. The local area
-networks use a token passing ring and multicast the messages, much like Isis
-and Horus. The gateways join these rings into a multi-ring topology. Messages
-are first delivered on the ring which they are sent, then forwarded by the
-gateway which connects the local ring to the wide area ring for delivery to
-the other rings. The message protocol gives the message total ordering using a
-token passing protocol. Topology changes are handled in the local ring, then
-forwarded through the gateway where the system determines if the local change
-necessitates a change in the wide area ring. Failure detection is also implemented
-to detect failed gateways.
+Totem\cite{TOTEMTOOLKIT} is largely in the same vein as Isis. Developed at the University of California, Santa Barbara by Moser, Melliar-Smith, Agarwal et. al. Totem is designed to use local area networks, connected by gateways. The local area networks use a token passing ring and multicast the messages, much like Isis and Horus. The gateways join these rings into a multi-ring topology. Messages are first delivered on the ring which they are sent, then forwarded by the gateway which connects the local ring to the wide area ring for delivery to the other rings. The message protocol gives the message total ordering using a token passing protocol. Topology changes are handled in the local ring, then forwarded through the gateway where the system determines if the local change necessitates a change in the wide area ring. Failure detection is also implemented to detect failed gateways.
 
 \section{Spread}
 
-Spread\cite{SPREADTOOLKIT} is a modern distributed framework. It is available as a library for a
-variety of languages including Java, Python and C++. Spread is designed as a
-series of daemons which communicate over a wide area network. Processes on the
-same LAN as the daemons connect to the daemon directly. This is analogous the
-gateways in the other distributed toolkits, however the daemon is a special,
-dedicated message passing process, rather than a participating peer with a
-special role.
+Spread\cite{SPREADTOOLKIT} is a modern distributed framework. It is available as a library for a variety of languages including Java, Python and C++. Spread is designed as a series of daemons which communicate over a wide area network. Processes on the same LAN as the daemons connect to the daemon directly. This is analogous the gateways in the other distributed toolkits, however the daemon is a special, dedicated message passing process, rather than a participating peer with a special role.
 
-Using a dedicated daemon allows a spread configuration to reconfigure less
-frequently when a process stops responding (which normally correlates to a
-view change) since the daemons can insert a message informing other processes
-that a process has left while still maintaining the message ordering without
-disruption. Major reconfigurations only need to occur when a daemon is
-suspected of failing.
+Using a dedicated daemon allows a spread configuration to reconfigure less frequently when a process stops responding (which normally correlates to a view change) since the daemons can insert a message informing other processes that a process has left while still maintaining the message ordering without disruption. Major reconfigurations only need to occur when a daemon is suspected of failing.
 
-Spread implements an extended virtual synchrony model. However, message
-ordering is performed at the daemon level, rather than at the group level.
-Total ordering is done using a token passing scheme among the daemons.
+Spread implements an extended virtual synchrony model. However, message ordering is performed at the daemon level, rather than at the group level. Total ordering is done using a token passing scheme among the daemons.
 
 \section{Failure Detectors}
 
-Failure detectors \cite{FAILUREDETECTORS} (Sometimes referred to as unreliable failure detectors)
- are special class of processes in a distributed system that
-detect other failed processes. Distributed systems use failure detection to
-identify failed processes for group management routines. Because it isn't
-possible to directly detect a failed process in an asynchronous system, there
-has been a wide breath of work related to different classifications of failure
-detectors, with different properties. Some of the properties include:
+Failure detectors \cite{FAILUREDETECTORS} (Sometimes referred to as unreliable failure detectors) are special class of processes in a distributed system that detect other failed processes. Distributed systems use failure detection to identify failed processes for group management routines. Because it isn't possible to directly detect a failed process in an asynchronous system, there has been a wide breath of work related to different classifications of failure detectors, with different properties. Some of the properties include\cite{FAILUREDETECTORS}:
 
 \begin{itemize}
     \item Strong Completeness - Every faulty process is eventually suspected by
@@ -308,16 +128,8 @@ detectors, with different properties. Some of the properties include:
         accuracy is not kept. Eventually, working processes are identified
         as such, and there is some process that is never suspected of failing
         again.
-\end{itemize} \cite{FAILUREDETECTORS}
+\end{itemize} 
 
-One class of failure detectors, Omega class Failure detectors, are particularly interesting
-because of \cite{LEADERELECTIONEVAL}. An eventual weak failure (weak completeness and eventual weak accuracy) 
-detector is the weakest detector which can still solve consensus. It is denoted several ways
-in various works including $\diamond \mathcal{W}$ \cite{FAILUREDETECTORS}, $\mathcal{W}$ \cite{WEAKESTFAILURE1} \cite{WEAKESTFAILURE2} and $\Omega$ (Omega) \cite{LEADERELECTIONEVAL}.
+One class of failure detectors, Omega class Failure detectors, are particularly interesting because of \cite{LEADERELECTIONEVAL}. An eventual weak failure (weak completeness and eventual weak accuracy) detector is the weakest detector which can still solve consensus. It is denoted several ways in various works including $\diamond \mathcal{W}$ \cite{FAILUREDETECTORS}, $\mathcal{W}$ \cite{WEAKESTFAILURE1} \cite{WEAKESTFAILURE2} and $\Omega$ (Omega) \cite{LEADERELECTIONEVAL}.
 
-\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++, a network simulation software.
-Instead of omission failures, however, it considers crash failures. Each configuration goes
-through a predefined sequence of crash failures. OmNet is used to count the number of messages
-sent by each of three different leader election algorithms. Additionally, \cite{LEADERELECTIONEVAL} only considers
-the system to be in a complete and active state when all participants have consensus on a 
-single leader.
+\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++, a network simulation software. Instead of omission failures, however, it considers crash failures. Each configuration goes through a predefined sequence of crash failures. OmNet is used to count the number of messages sent by each of three different leader election algorithms. Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a complete and active state when all participants have consensus on a single leader.
