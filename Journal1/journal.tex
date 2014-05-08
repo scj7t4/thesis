@@ -1105,7 +1105,7 @@ $f_{i}$ be the exponential parameter for the transition to an individual configu
 During elections, a highest priority leader (identified by its process id) will
 send invites to the other leaders it has identified. If those leaders accept
 the highest priority leader's invites, they will reply with an accept message
-and forward the invite to their members, if their are any. If the highest
+and forward the invite to their members, if there are any. If the highest
 priority process fails to become the leader the next highest will send invites
 after a specified interval has passed.
 
@@ -1158,7 +1158,7 @@ e_x = \frac{p_{x}}{T_{D}}
 Once a leader has been discovered, the system transitions into an election state, based on the
 potential outcome, where the peers hold an election to determine a new configuration. As shown
 in Figure \ref{fig:MARKOVELECTION}, an election can either succeed or fail, resulting in a new system
-configuration, or each involved process to return to the single member group state.
+configuration, or each involved process returing to the single member group state.
  
 The amount of time that an election takes is fixed before the algorithm is executed. 
 Let $T_{E}$ be the mean time it takes to complete any election. Therefore:
