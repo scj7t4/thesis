@@ -5,7 +5,7 @@ Virtual synchrony is a model of communication and execution that allows the syst
 Consider a distributed system where events can be causally related based on their execution on the local processors and communication between processes, as defined in \cite[p~.101]{ISISTOOLKIT}. 
 \begin{enumerate}
     \item If $e$ and $e'$ are events local to a process $P_{i}$ and $e$ occurs before $e'$, then $e \rightarrow e'$
-    \item If $e = send(m) and e'=deliver(m)$ for the same message $m$, then $e \rightarrow e'$
+    \item If $e = send(m)$ and $e'=deliver(m)$ for the same message $m$, then $e \rightarrow e'$
 \end{enumerate} \cite[p~.101]{ISISTOOLKIT}
 This defines a dependence and causality relation between events in the system. If two events cannot be causally related (that is $e \not\rightarrow e'$ and $e' \not\rightarrow e$ then the events are considered concurrent. From this, one can define an execution history $H$. A pair of histories $H$ and $H'$ are equivalent if for each process in the system (noted as $p$) $H|_{p}$ cannot be differentiated $H'|_{p}$ based on the casual relationships between the events in the history. \cite[p~.103]{ISISTOOLKIT} Additionally, a history is considered complete if all sent messages are delivered and there are no casual holes. A casual hole is a circumstance where an event $e$ is casually related to $e'$ by $e' \rightarrow e$ and $e$ appears in a history, but $e'$ is not. A virtually synchronous system is one where each history the system is indistinguishable from all histories produced by a synchronous system. \cite[p~.104]{ISISTOOLKIT}
 \subsection{Process Groups}
@@ -104,7 +104,7 @@ Totem\cite{TOTEMTOOLKIT} is largely in the same vein as Isis. Developed at the U
 
 \section{Spread}
 
-Spread\cite{SPREADTOOLKIT} is a modern distributed framework. It is available as a library for a variety of languages including Java, Python and C++. Spread is designed as a series of daemons which communicate over a wide area network. Processes on the same LAN as the daemons connect to the daemon directly. This is analogous the gateways in the other distributed toolkits, however the daemon is a special, dedicated message passing process, rather than a participating peer with a special role.
+Spread\cite{SPREADTOOLKIT} is a modern distributed framework. It is available as a library for a variety of languages including Java, Python and C++. Spread is designed as a series of daemons which communicate over a wide area network. Processes on the same LAN as the daemons connect to the daemon directly. This is analogous to the gateways in the other distributed toolkits, however the daemon is a special, dedicated message passing process, rather than a participating peer with a special role.
 
 Using a dedicated daemon allows a spread configuration to reconfigure less frequently when a process stops responding (which normally correlates to a view change) since the daemons can insert a message informing other processes that a process has left while still maintaining the message ordering without disruption. Major reconfigurations only need to occur when a daemon is suspected of failing.
 
