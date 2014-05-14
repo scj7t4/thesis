@@ -206,6 +206,7 @@
           \@memberone, Co-advisor \\
           \@membertwo\\
           \@memberthree \\
+          \@memberfour \\
           \end{onehalfspacing}\end{center}
         \end{minipage}
         \end{center}
