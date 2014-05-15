@@ -17,6 +17,12 @@ $(SOURCE).pdf: bibliography
 	pdflatex $(SOURCE).tex
 	pdflatex $(SOURCE).tex
 
+editing: editing.tex latex_bibliography.bib
+	pdflatex editing.tex
+	bibtex editing.aux
+	pdflatex editing.tex
+	pdflatex editing.tex
+
 view: all
 	zathura $(SOURCE).pdf
 
