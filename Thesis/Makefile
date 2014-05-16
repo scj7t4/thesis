@@ -21,7 +21,7 @@ view: all
 
 plots:
 	make -C ./gnuplots clean
-	make -C ./gnuplots all SIZE_X=5.5 SIZE_Y=3.125
+	make -C ./gnuplots all SIZE_X=3.125 SIZE_Y=2.69
 
 clean:
 	rm -f $(SOURCE).{aux,bbl,blg,dvi,glg,glo,gls,idx,ist,fff,nlo,nls,ilg}

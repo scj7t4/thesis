@@ -195,6 +195,8 @@
           \adviser, Advisor\\
           \@memberone \\
           \@membertwo\\
+          \@memberthree \\
+          \@memberfour \\
           \end{onehalfspacing}\end{center}
         \end{minipage}
         \end{center}

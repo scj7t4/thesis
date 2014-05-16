@@ -14,17 +14,17 @@ The DGI is a real-time system: certain actions (and reactions) involving power s
 
 \section{Broker Architecture}
 
-The DGI software is designed around a broker architectural specification. Each core functionality of the system is implemented within a module that is provided access to core interfaces which deliver functionality such as scheduling requests, message passing, and a framework to manipulate physical devices.
+The DGI software is designed around a broker architectural specification. Each core functionality of the system is implemented within a module that is provided access to interfaces which deliver functionality such as scheduling requests, message passing, and a framework to manipulate physical devices.
 
 The Broker provides a common message passing interface that all modules are allowed to access. Information is passed between modules using this message passing interface. For example, the list of peers in the group is made available to other modules with a message.
 
 Several of the distributed algorithms used in the software require the use of ordered communication channels. To achieve this, FREEDM provides a reliable ordered communication protocol (The sequenced reliable connection or SRC) to the modules, as well as a ``best effort'' protocol (The sequenced unreliable connection or SUC) which is also FIFO (first in, first out), but provides limited delivery guarantees.
 
-We elected to design and implement our own simple message delivery schemes in order to avoid complexities introduced by using TCP in our system. During development, it was observed that constructing a TCP connection to a node that had failed or was unreachable took a considerable amount of time. We elected to use UDP packets which do not have those issues, since the protocol is connectionless. UDP also allows development of protocols with various properties to evaluate which properties are desirable. To accomplish this lightweight protocols which are best effort oriented were implemented to deliver messages as quickly as possible within the requirements.
+We elected to design and implement our own simple message delivery schemes in order to avoid complexities introduced by using TCP in our system. During development, it was observed that constructing a TCP connection to a node that had failed or was unreachable took a considerable amount of time. We elected to use UDP packets which do not have those issues, since the protocol is connectionless. UDP also allows development of protocols with various properties to evaluate which properties are desirable. As a result, lightweight protocols which are best effort oriented were implemented to deliver messages as quickly as possible within the requirements.
 
 The decision to go with a lighter weight protocol was also influenced by the FREEDM center targeting lower cost, less powerful implementation platforms, with less available computing resources than a traditional server or desktop. Furthermore, the protocols listed here continue operating despite omission failures: they follow the assumption that not every message is critical to the operation of the DGI and that the channel does not need to halt entirely to deliver one of the messages.
 
-\subsection{Sequenced Reliable Connection.}
+\subsection{Sequenced Reliable Connection}
 
 The sequenced reliable connection is a modified send and wait protocol with the ability to stop resending messages and move on to the next one in the queue if the message delivery time exceeds some timeout. When designing this scheme we wanted to achieve several criteria:
 
@@ -45,7 +45,7 @@ it is still relevant.
 
 There one adjustable parameter, the resend time, which controls how often the system would attempt to deliver a message it hadn't yet received an acknowledgement for. There is a Resend() function is periodically called to attempt to redeliver lost messages to the receiver. 
 
-\subsection{Sequenced Unreliable Connection.}
+\subsection{Sequenced Unreliable Connection}
 
 The SUC protocol is simply a best effort protocol: it employs a sliding window to try to deliver messages as quickly as possible. A window size is decided, and then at any given time, the sender can have up to that many messages in the channel, awaiting acknowledgement. The receiver will look for increasing sequence numbers, and disregard any message that is of a lower sequence number than is expected. The purpose of this protocol is to implement a bare minimum: messages are accepted in the order they are sent.
 
@@ -80,13 +80,13 @@ To enforce these bounds, the real-time DGI has distinct phases which modules are
 \label{fig:REALTIMESCHEDULER}
 \end{figure}
 
-Modules inform the scheduler of tasks it wishes to perform by either submitting them to be performed at some point in the future, or informing the scheduler of a tasks that is ready to be executed immediately.
+Modules inform the scheduler of tasks they wish to perform by either submitting them to be performed at some point in the future, or informing the scheduler of a tasks that is ready to be executed immediately.
 
-Tasks that have become ready, either by being inserted as ready, or the time period that specified when it should be executed after has passed. The prepared task is inserted into a ready queue for the module that the task has been scheduled for.
+Tasks become ready, either by being inserted as ready, or the time period that specified when it should be executed after has passed. The prepared task is inserted into a ready queue for the module that the task has been scheduled for.
 
 When that modules phase is active, the task is pulled from the ready queue and executed. When the phase is complete, the scheduler will stop pulling tasks from the previous modules queue and begin pulling from the next modules queue.
 
-This allows enforcement upper bound message delay. The modules have a specific amount of processing time allotted. Modules with messages that invoke responses (or a series of queries and responses) typically are required to be received within the same phase, using round numbers which enforce that the message was sent within the same phase.
+This allows enforcement of upper bound message delay. The modules have a specific amount of processing time allotted. Modules with messages that invoke responses (or a series of queries and responses) typically are required to be received within the same phase, using round numbers which enforce that the message was sent within the same phase.
 
 Modules are designed and allotted time to allow for parameters such as maximum query-response time (based on the latency between communicating processes).  This implies that a module which engages in these activities has an upper-bound in latency before messages are considered lost.
 
@@ -94,11 +94,9 @@ Modules are designed and allotted time to allow for parameters such as maximum q
 
 The DGI uses the leader election algorithm, ``Invitation Election Algorithm'' written by Garcia-Molina in \cite{INVITATIONELECTION}. Originally published in 1982, his algorithm provides a robust election procedure which allows for transient partitions. Transient partitions are formed when a faulty link between two or more clusters of DGIs causes the groups to temporarily divide. These transient partitions merge when the link is more reliable. The election algorithm allows for failures that disconnect two distinct sub-networks. These sub networks are fully connected, but connectivity between the two sub-networks is limited by an unreliable link.
 
-Since Garcia-Molina's original publication, there has been a large body of work creating various election algorithms. Each algorithm is designed to be well suited to the circumstances it will deployed in: there are specialized algorithms for wireless sensor networks\cite{LE-WSN-1}\cite{LE-WSN-2}, detecting failures in certain circumstances\cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}, and of course, transient partitions. Work on leader elections has been incorporated into a variety of distributed frameworks: Isis\cite{ISISTOOLKIT}, Horus\cite{HORUSTOOLKIT}, Totem\cite{TOTEMTOOLKIT}, Transis\cite{TRANSISTOOLKIT}, and Spread\cite{SPREADTOOLKIT} all have methods for creating groups. Despite this wide body of work, the fundamentals of leader election are consistent across all work: nodes arrive at a consensus of a single peer who coordinates the group, and nodes the fail are detected and removed from the group.
+Since Garcia-Molina's original publication, there has been a large body of work creating various election algorithms. Each algorithm is designed to be well suited to the circumstances it will deployed in: there are specialized algorithms for wireless sensor networks\cite{LE-WSN-1}\cite{LE-WSN-2}, detecting failures in certain circumstances\cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}, and transient partitions. Work on leader elections has been incorporated into a variety of distributed frameworks: Isis\cite{ISISTOOLKIT}, Horus\cite{HORUSTOOLKIT}, Totem\cite{TOTEMTOOLKIT}, Transis\cite{TRANSISTOOLKIT}, and Spread\cite{SPREADTOOLKIT} all have methods for creating groups. Despite this wide body of work, the fundamentals of leader election are consistent: nodes arrive at a consensus of a single peer who coordinates the group, and nodes the fail are detected and removed from the group.
 
 The elected leader is responsible for making work assignments and identifying and merging with other coordinators when they are found, as well as maintaining an up-to-date list of peers for the members of his group.  Likewise, members of  the group can detect the failure of the group leader by periodically checking  if the group leader is still alive by sending a message. If the leader fails to  respond, the querying node will enter a recovery state and operate alone until  they can identify another coordinator to join with. Therefore, a leader and each of the members maintains a set of processes which are currently reachable, which is a subset of all known processes in the system.
-
-This Leader election can also be classified as a failure detector \cite{LEADERELECTIONEVAL}. Failure detectors are algorithms which detect the failure of processes in a system. A failure detector algorithm maintains a list of processes that it suspects have crashed. This informal description gives the failure detector strong ties to the Leader Election process. The Group Management module maintains a list of  suspected processes which can be determined from the set of all processes and the current membership. 
 
 The leader and members have separate roles to play in the failure detection process. Leaders use a periodic search to locate other leaders in order to merge groups. This serves as a ping / response query for detecting failures in the system. It is also capable of detecting a change in state either by network issue or crash failure that causes the process being queried to no longer consider itself part of the leader's group. The member will only suspect the leader, and not the other processes.
 Of course, simple modifications could allow the member to suspect other members by use of a heart beat or query-reply system, but it is not implemented in DGI code.
@@ -132,7 +130,7 @@ P\{ X(t)=j | X(s) \} = P\{ X(t)=j | X(0) \}
 \end{equation}
 
 Models can be either discrete time or continuous time. In a discrete time model
-time is divided into distinct slices. After each "slice" the system transitions
+time is divided into distinct slices. After each ``slice'' the system transitions
 based on the random chance from each of possible transitions. The discrete model
 also allows for a transition which returns to the same state.
 
@@ -185,19 +183,7 @@ The DGI can perform work assuming that it is in a group, and not in an election 
 
 Processes in the DGI are either members or leaders. Leaders are processes which have won elections among its members.
 
-As stated previously, it was assumed that the events in the distributed system were distributed exponentially. Events are modeled in the chain using $\lambda(x)$ which is the parameter of the exponential distribution. It is important to note that:
-
-\begin{equation}
-\mathrm{E}[X] = \frac{1}{\lambda}. \!
-\end{equation}
-
-and
-
-\begin{equation}
-\lambda(x) = \sum \lambda(x,y) = \sum \lambda(x) p(x,y)
-\end{equation}
-
-Where $\lambda(x)$ is the exponential parameter for the total time spend in a state $x$, $\lambda(x,y)$ is the exponential parameter for a transition from state $x$ to state $y$, and $p(x,y)$ is the normally distributed probability that a state transitions from state $x$ to state $y$.
+As stated previously, it was assumed that the events in the distributed system were distributed exponentially. Events are modeled in the chain using $\lambda(x)$ which is the parameter of the exponential distribution. 
 
 \subsubsection{Failure Detection}
 When a leader sends its check messages, the nodes that receive it either respond in the positive, indicating that they are also leaders, or in the negative indicating that they have already joined a group. This message is sent to all known nodes in the system. If a process replies that it is also a leader, the original sender will enter and election mode and attempt to combine groups with the first process. Nodes that fail to respond are removed from the leaders group, if they were members.
@@ -231,7 +217,7 @@ Let $\delta$ equal exponential parameter of the exponential distribution for the
 \end{equation}
 
 \subsubsection{Leader Election}
-During elections, a highest priority leader (identified by its process id) will send invites to the other leaders it has identified. If those leaders accept the highest priority leader's invites, they will reply with an accept message and forward the invite to their members, if there are any. If the highest priority process fails to become the leader the next highest will send invites after a specified interval has passed.
+During elections, a highest priority leader (decided by its process id) will send invites to the other leaders it has identified. If those leaders accept the highest priority leader's invites, they will reply with an accept message and forward the invite to their members, if there are any. If the highest priority process fails to become the leader the next highest will send invites after a specified interval has passed.
 
 Therefore, the membership of the system can be affected in two ways: election events which change the size of groups and failure suspicion (via checks) which decreases the size of groups. Note that elections can decrease the size of groups as well as increase them: If a round of forwarding invites fails by the new leader to his original group, the group size could decrease.
 
