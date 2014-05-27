@@ -47,18 +47,18 @@ The effects of these partitions are still not well understood, especially since 
 cyber-physical system partitions may occur in both the cyber and physical domains. As a result,
 it is not well known how cyber or physical fault will effect the other portion of the system.
 However, research such as \cite{HARINI}\cite{TSG}, indicates that cyber faults can cause a
-physical system apply unstable settings.
+physical system to apply unstable settings.
 
 This work presents the initial steps to better understanding and planning for these faults.
 By taking a new approach to considering how a distributed system interacts during a fault condition,
-new techniques for managing a fault scenario in a cyber-physical systems will be created. To do
+new techniques for managing a fault scenario in cyber-physical systems will be created. To do
 this, we present an approach in modeling the grouping behavior of a system using Markov chains.
 These chains produce expectations of how long a system can be expected to stay in a particular
 state, or how much time it will be able to spend coordinating and doing useful work over a period
 of time. Using these measures, the behavior of the control system for the physical devices 
 can be adjusted to prevent faults.
 
-The next section describes the FREEDM smart-grid system and the DGI (Distributed Grid Intelligence). In section 3,
+The next section describes the FREEDM smart-grid system and it's DGI (Distributed Grid Intelligence). In section 3,
 we overview the group management algorithm, and the state of the art for distributed
 systems. In section 4 we describe in detail the architecture of the DGI, including the architecture
 of the message passing interface and the protocols used in the experiments, as well as our
@@ -70,14 +70,12 @@ of the system. Conclusions are presented in the final section.
 %\IEEEpubidadjcol
 % needed in second column of first page if using \IEEEpubid
 \section{FREEDM DGI}
-In this work we model the group management module of the FREEDM DGI (Distributed Grid Intelligence).
-The DGI (Distributed Grid Intelligence) is a smart grid operating system
+In this work we model the group management module of the FREEDM DGI.
+The DGI is a smart grid operating system
 that organizes and coordinates power electronics and negotiates contracts to
 deliver power to devices and regions that cannot effectively facilitate their own need.
 The DGI leverages common distributed algorithms to control the power grid, making it an
 attractive target for modeling a distributed system.
-
-(Is one sentence enough to smooth that over? I'm struggling a bit with smoothing that out)
 
 To accomplish this, the DGI software consists of a central component, the
 broker, which is responsible for presenting a communication interface and
@@ -134,7 +132,8 @@ the group can detect the failure of the group leader by periodically checking
 if the group leader is still alive by sending a message. If the leader fails to
 respond, the querying nodes will enter a recovery state and operate alone until
 they can identify another coordinator to join with. Therefore, a leader and each
-of the members maintains a set of processes which are currently reachable, which
+of the members maintain a set of processes which are currently reachable, which
+
 is a subset of all known processes in the system.
 
 This Leader election can also be classified as a failure detector
@@ -157,6 +156,12 @@ by use of a heart beat or query-reply system, but it is not implemented in DGI c
 In this work it is assumed that a leader does not span two partitioned networks:
 if a group is able to form, all members have some chance of communicating with
 each other.
+
+We define a metric to assess the performance of the system under duress: we
+first consider that the distributed can only perform meaningful work when the
+processes can work together to perform physical migration. This means that
+there are two networks that affect the system's ability to do work: the
+physical flow network and the cyber communication network.
 
 \section {Experimental Setup}
 
@@ -185,7 +190,7 @@ development, it was observed that constructing a TCP connection to a node that
 had failed or was unreachable took a considerable amount of time. We elected to
 use UDP packets which do not have those issues, since the protocol is
 connectionless. UDP also allows development of protocols with various
-properties to evaluate which properties are desirable. To accomplish this
+properties to evaluate which properties are desirable. To accomplish this,
 lightweight protocols which are best effort oriented were implemented to
 deliver messages as quickly as possible within the requirements.
 
@@ -236,6 +241,13 @@ Like the SRC protocol, the SUC protocol's resend time can be adjusted.
 Additionally, the window size is also configurable, but was left unchanged for 
 the tests presented in this work.
 
+The SUC protocol was developed because early hypothesis about the
+characteristics of the distributed system when there are omission failures
+supposed that a lighter weight protocol might be more advantageous than a more
+complex protocol. After seeing the protocols behavior during omission failure,
+we continued to analyze it because it represented a more complex behavior to
+model using Markov chains.
+
 \subsection{Experimental Setup}
 Network unreliability is simulated by dropping datagrams from specific sources
 on the receiver side. Each receiver was given an XML file describing the
@@ -243,8 +255,8 @@ prescribed reliability of messages arriving from a specific source. The
 network settings were loaded at run time and could be polled if necessary for
 changes in the link reliability.
 
-On receipt of a message, the broker's communication layer examine the source
-and select randomly based on the reliability prescribed in the XML file whether
+On receipt of a message, the broker's communication layer examines the source
+and selects randomly based on the reliability prescribed in the XML file whether
 or not to drop a message. A dropped message was not delivered to any of the
 sub-modules and was not acknowledged by the receiver. Using this method we were 
 able to emulate a lossy network link but not one with message delays.
@@ -261,7 +273,7 @@ as well as the protocol used.
 
 The first minute of each test in the experimental test is discarded to remove
 any transients in the test. The result is that while the tests were run for
-ten minutes, the maximum result is 9 minutes of in-group time. These graphs
+ten minutes, the maximum result is 9 minutes of in group time. These graphs
 first appeared in \cite{CRITIS2012}.
 
 \subsection{Sequenced Reliable Connection}
@@ -277,7 +289,7 @@ first appeared in \cite{CRITIS2012}.
 
 The 100ms resend SRC test with two nodes can be considered a sort of a control.
 These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}, highlights the performance of the
-SRC protocol, achieving the maximum in-group time of 9 minutes with only 15\%
+SRC protocol, achieving the maximum in group time of 9 minutes with only 15\%
 of datagrams arriving at the receiver. 
 
 \begin{figure}[!h]
@@ -289,7 +301,7 @@ of datagrams arriving at the receiver.
 
 Figures \ref{fig:IGT-SRC-2NODE-200} demonstrates that as the
 rate at which lost datagrams are resent is decreased to 200ms the
-time in group falls off. This behavior is expected, since each exchange has a
+in group time falls off. This behavior is expected, since each exchange has a
 time limit for each message to arrive and the number of attempts is reduced by
 increasing the resend time.
 
@@ -322,11 +334,11 @@ While messages cannot cross the partition, the DGIs stay in a group with the
 nodes on the same side of the partition leading to an in group time of 9 minutes,
 the maximum value. As packets begin to cross the partition (as the reliability
 increases), DGI instances on either side begin to attempt to complete elections
-with the nodes on the opposite partition and the time in group begins to fall.
+with the nodes on the opposite partition and the in group time begins to fall.
 However during this time, the mean group size continues to increase, meaning
 while the elections are decreasing the amount of time that the module spends in
 state where it can actively do work, it typically does not fall into a state
-where it is in a group by itself, which means that most of the lost in-group
+where it is in a group by itself, which means that most of the lost in group
 time comes from elections.
 
 \begin{figure}[!h]
@@ -374,11 +386,11 @@ there is a high amount of variance for any particular trial.
 \end{figure}
 
 In the 200ms resend case, show in Figure \ref{fig:IGT-SUC-2NODE-200}, it can be 
-observed that there is a more growth rate in the in-group time as a the
+observed that there is a more growth rate in the in group time as a the
 reliability increases. In fact, averaging across all the collected data points
-from the experiment, the average in-group time is higher for the 200ms case
+from the experiment, the average in group time is higher for the 200ms case
 than it is for the 100ms case ( 6.86 vs 6.09 ). However, due to the large amount
-of variance in the collected in-group time, it is not possible to state with
+of variance in the collected in group time, it is not possible to state with
 confidence that the there is a significant difference between the two cases.
 
 \section{Formal Modeling}
@@ -397,8 +409,8 @@ system as a Markov Chain.
 In order to model the system, we assumed that the time between events was 
 exponentially distributed. Furthermore, we assumed that the system would be
 fairly well synchronized, with most elections occurring at the same time. This
-assumption was valid for 2-Node cases of our non-real-time code, but was
-a major issue as the number of nodes began to increase. However, with of
+assumption was valid for the 2-Node cases of our non-real-time code, but was
+a major issue as the number of nodes began to increase. However, with
 the use of the round-robin scheduler with synchronization to enforce our
 real-time requirements, assuming the synchronization of processes is not a
 major leap.
@@ -412,7 +424,7 @@ certain power system readings \cite{PHASORREADINGS}.
 
 \subsection{Constructing The Markov Chain}
 
-Consider a set of processes, which are linked by some packet based network
+Consider a set of processes which are linked by some packet based network
 protocol. In our experiments we provide two protocols, each with different
 delivery characteristics. Under ideal conditions a packet sent by one process
 will always be delivered to its destination. Without a delivery protocol, as
@@ -425,10 +437,10 @@ Keeping in mind that a single lost packet does not necessitate the message it
 contained is forever lost, different protocols allow for different levels of
 reliability despite packet loss.
 
-The leader election algorithm is centered around two critical events: checking,
+The leader election algorithm is centered around two critical events: checking
 and elections. The check system is used to detect both failures and the
 availability of nodes for election. Processes in the system occasionally exchange 
-messages to determine if the other processes have crashed, and to discover new
+messages to determine if the other processes have failed, and to discover new
 leaders. 
 
 The DGI can perform work assuming that it is in a group, and not in an election
@@ -440,7 +452,7 @@ well.
 Processes in the DGI are either members or leaders. Leaders are processes
 which have won elections among its members.
 
-As stated previously, it was assumed that the events in the distributed system
+As stated previously, it was assumed that the interarrival times of events in the distributed system
 were distributed exponentially. Events are modeled in the chain
 using $\lambda(x)$ which is the parameter of the exponential distribution. It
 is important to note that:
@@ -465,9 +477,9 @@ When a leader sends its check messages, the nodes that receive it either
 respond in the positive, indicating that they are also leaders, or in the
 negative indicating that they have already joined a group. This message is sent
 to all known nodes in the system. If a process replies that it is also a
-leader, the original sender will enter and election mode and attempt to combine
+leader, the original sender will enter an election mode and attempt to combine
 groups with the first process. Nodes that fail to respond are removed from the
-leaders group, if they were members.
+leader's group, if they were members.
 
 The member on the other hand will only direct its check message to the leader
 of its current group. As with the leader's check message, the response can
@@ -510,10 +522,11 @@ T_{G} = ( T_{R}+T_{C}  ) / p_{F} & p_{F} > 0 \\
 \end{cases}
 \end{equation}
 
-Let $\delta$ equal exponential parameter of the exponential distribution for the base state. Then
-we can relate the probabilities of each possible transition to the parameter for the base state. Let
-$p_{i}$ be the probability of transitioning to configuration $i$ after leaving the base state and let
-$f_{i}$ be the exponential parameter for the transition to an individual configuration:
+Let $\delta$ equal exponential parameter of the exponential distribution for the expected time in some
+set of groups. Then
+we can relate the probabilities of each possible transition to the parameter for that configuration. Let
+$p_{i}$ be the probability of transitioning to some set of groups $i$ after leaving the base state and let
+$f_{i}$ be the exponential parameter for the transition to a configuration:
 
 \begin{equation}
 \delta = \sum f_{i} = \sum \delta p_{i} = \frac{1}{T_{G}}
@@ -539,11 +552,6 @@ with itself as the only member. As nodes are discovered by checks, the
 processes combine into groups. Groups are not limited by increasing one a time;
 they can increase by combined size of the groups of the leader processes.
 
-We define a metric to assess the performance of the system under duress: we
-first consider that the distributed can only perform meaningful work when the
-processes can work together to perform physical migration. This means that
-there are two networks that affect the system's ability to do work: the
-physical flow network and the cyber communication network.
 
 
 \begin{figure*}
@@ -618,7 +626,7 @@ with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \re
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.0\linewidth]{2NODE-SUC-100-COMPARE.pdf}
-\caption{Comparison of in-group time as collected from the experimental platform and the simulator (1 tick offset between processes).}
+\caption{Comparison of in group time as collected from the experimental platform and the simulator (1 tick offset between processes).}
 \label{fig:COMPARE-SUC-2NODE-100}
 \end{figure}
 
@@ -627,7 +635,7 @@ with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \re
 \centering
 \includegraphics[width=1.0\linewidth]{2NODE-SUC-200-COMPARE.pdf}
 
-\caption{Comparison of in-group time as collected from the experimental platform and the simulator (2 tick offset between processes).}
+\caption{Comparison of in group time as collected from the experimental platform and the simulator (2 tick offset between processes).}
 \label{fig:COMPARE-SUC-2NODE-200}
 \end{figure}
 
@@ -665,7 +673,7 @@ data is overlaid with the results from the random walker in Figures \ref{fig:COM
 \centering
 \includegraphics[width=1.0\linewidth]{TRANS-RT-SUC-128-COMPARE.pdf}
 
-\caption{Comparison of in-group time as collected from the experimental platform and the time in group from the equivalent Markov chain (128ms between resends).}
+\caption{Comparison of in group time as collected from the experimental platform and the time in group from the equivalent Markov chain (128ms between resends).}
 \label{fig:COMPARE-SUC-TRANS-RT-128}
 \end{figure}
 
@@ -673,7 +681,7 @@ data is overlaid with the results from the random walker in Figures \ref{fig:COM
 \centering
 \includegraphics[width=1.0\linewidth]{TRANS-RT-SUC-64-COMPARE.pdf}
 
-\caption{Comparison of in-group time as collected from the experimental platform and the time in group from the equivalent Markov chain (64ms between resends).}
+\caption{Comparison of in group time as collected from the experimental platform and the time in group from the equivalent Markov chain (64ms between resends).}
 \label{fig:COMPARE-SUC-TRANS-RT-64}
 \end{figure}
 
