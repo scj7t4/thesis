@@ -45,7 +45,7 @@ network are segmented from each other.
 
 The effects of these partitions are still not well understood, especially since in a distributed
 cyber-physical system partitions may occur in both the cyber and physical domains. As a result,
-it is not well known how cyber or physical fault will effect the other portion of the system.
+it is not well known how a /cyber or physical fault will effect the other portion of the system.
 However, research such as \cite{HARINI}\cite{TSG}, indicates that cyber faults can cause a
 physical system to apply unstable settings.
 
@@ -246,7 +246,8 @@ characteristics of the distributed system when there are omission failures
 supposed that a lighter weight protocol might be more advantageous than a more
 complex protocol. After seeing the protocols behavior during omission failure,
 we continued to analyze it because it represented a more complex behavior to
-model using Markov chains.
+model using Markov chains, since the nature of the protocol allows for a race
+condition when a packet is lost.
 
 \subsection{Experimental Setup}
 Network unreliability is simulated by dropping datagrams from specific sources
@@ -409,7 +410,7 @@ system as a Markov Chain.
 In order to model the system, we assumed that the time between events was 
 exponentially distributed. Furthermore, we assumed that the system would be
 fairly well synchronized, with most elections occurring at the same time. This
-assumption was valid for the 2-Node cases of our non-real-time code, but was
+assumption was valid for the 2-node cases of our non-real-time code, but was
 a major issue as the number of nodes began to increase. However, with
 the use of the round-robin scheduler with synchronization to enforce our
 real-time requirements, assuming the synchronization of processes is not a
@@ -448,9 +449,6 @@ state (since the group management module instructs other modules to stop during
 an election). The collected data in the previous sections is based on that
 assumption, and the Markov chains that models those scenarios needed to as
 well.
-
-Processes in the DGI are either members or leaders. Leaders are processes
-which have won elections among its members.
 
 As stated previously, it was assumed that the interarrival times of events in the distributed system
 were distributed exponentially. Events are modeled in the chain
