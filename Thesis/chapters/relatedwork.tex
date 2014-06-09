@@ -112,7 +112,7 @@ Totem\cite{TOTEMTOOLKIT} was developed at the University of California, Santa Ba
 
 \section{Spread}
 
-Spread\cite{SPREADTOOLKIT} is a modern distributed framework. It is designed as a series of daemons which communicate over a wide area network. Processes on the same LAN as the daemons connect to the daemon directly. This is analogous to the gateways in the other distributed toolkits, however the daemon is a special, dedicated message passing process, rather than a participating process with a special role.
+Spread\cite{SPREADTOOLKIT} is a modern distributed framework. It is designed as a series of daemons which communicate over a wide area network. Processes on the same LAN as the daemons connect to the daemon directly. This is analogous to the gateways in the other distributed toolkits, however, the daemon is a special, dedicated message passing process, rather than a participating process with a special role.
 
 Using a dedicated daemon allows a Spread configuration to reconfigure less frequently when a process stops responding (which normally correlates to a view change) since the daemons can insert a message informing other processes that a process has left while still maintaining the message ordering without disruption. Major reconfigurations only need to occur when a daemon is suspected of failing.
 
@@ -120,7 +120,7 @@ Spread implements an extended virtual synchrony model. However, message ordering
 
 \section{Failure Detectors}
 
-Failure detectors \cite{FAILUREDETECTORS} (Sometimes referred to as unreliable failure detectors) are special class of processes in a distributed system that detect other failed processes. Distributed systems use failure detection to identify failed processes for group management routines. Because it isn't possible to directly detect a failed process in an asynchronous system, there has been a wide breath of work related to different classifications of failure detectors, with different properties. Some of the properties include\cite{FAILUREDETECTORS}:
+Failure detectors \cite{FAILUREDETECTORS} (Sometimes referred to as unreliable failure detectors) are special class of processes in a distributed system that detect other failed processes. Distributed systems use failure detection to identify failed processes for group management routines. Because it isn't possible to directly detect a failed process in an asynchronous system, there has been a wide breadth of work related to different classifications of failure detectors, with different properties. Some of the properties include\cite{FAILUREDETECTORS}:
 
 \begin{itemize}
     \item Strong Completeness - Every faulty process is eventually suspected by
@@ -140,4 +140,4 @@ Failure detectors \cite{FAILUREDETECTORS} (Sometimes referred to as unreliable f
 
 One class of failure detectors, Omega class Failure detectors, are particularly interesting because of \cite{LEADERELECTIONEVAL}. An eventual weak failure (weak completeness and eventual weak accuracy) detector is the weakest detector which can still solve consensus. It is denoted several ways in various works including $\diamond \mathcal{W}$ \cite{FAILUREDETECTORS}, $\mathcal{W}$ \cite{WEAKESTFAILURE1} \cite{WEAKESTFAILURE2} and $\Omega$ (Omega) \cite{LEADERELECTIONEVAL}.
 
-\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++, a network simulation software. Instead of omission failures, however, it considers crash failures. Each configuration goes through a predefined sequence of crash failures. OmNet is used to count the number of messages sent by each of three different leader election algorithms. Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a complete and active state when all participants have consensus on a single leader.
+\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++, a network simulation software package. Instead of omission failures, however, it considers crash failures. Each configuration goes through a predefined sequence of crash failures. OmNet++ is used to count the number of messages sent by each of three different leader election algorithms. Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a complete and active state when all participants have consensus on a single leader.
