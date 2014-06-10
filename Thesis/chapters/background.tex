@@ -121,25 +121,27 @@ are exponentially distributed.
 
 \subsection{Continuous Time Markov Chains}
 
-The model begins in some initial state, and then transitions into other states based on the probabilities assigned on each edge of the graph. Each state is memoryless, meaning that the history of the system, or the previous states have no effect on the next transition that occurs. Letting $Fx(s)$ equal the complete history of a Markov chain $X$ up to time $s$, and letting $j \in S$, where $S$ is the complete set of states in the model.
+The model begins in some initial state, and then transitions into other states based on the probabilities assigned on each edge of the graph. Each state is memoryless, meaning that the history of the system, or the previous states have no effect on the next transition that occurs. Letting $F_X(s)$ equal the complete history of a Markov chain $X$ up to the state $s$, and $j \in S$, where $S$ is the complete set of states in the model, then the probability of transitioning to the next state $j$ ($X_{n+1}=j$) only depends on the current state $s$ ($X_{n}$): \cite{MARKOV2} 
 
 \begin{equation}
-P\{ X(t)=j | F_X(s) \} = P\{ X(t)=j | X(s) \}
-\end{equation}
-
-Additionally, the models we present are time homogeneous, meaning that the time that transition probabilities are not affected by the amount of time that has passed in the simulation. 
-
-\begin{equation}
-P\{ X(t)=j | X(s) \} = P\{ X(t)=j | X(0) \}
+P\{ X_{n+1}=j | F_{X}(s) \} = P\{ X_{n+1}=j | X_{n} = s) \}
 \end{equation}
 
 
-Each transition has some expected value or mean
-value which describes the amount of time before a transition occurs. Continuous
+Additionally, the models we present are time homogeneous, meaning that the time that transition probabilities are not affected by the amount of time that has passed in the simulation.
+Let $X(s) = i$ indicate the model is in state $i$ at time $s$ if the model is time homogenous, then the probability of transitioning to state $j$ only depends on the time spent in that
+state ($t$).
+
+\begin{equation}
+P\{ X(s+t)=j | X(s) = i \} = P\{ X(t)=j | X(0) = i \}
+\end{equation}
+
+
+Each transition has some expected value or holding time which describes the amount of time before a transition occurs. Continuous
 time models do not have transitions that return to the same state since the
 expected value of the transition time describes when how long the system 
 remains in the same state. The probability density
-function (PDF) of the exponential distribution can be written as: CITE
+function (PDF) of the exponential distribution can be written as: \cite{MARKOV1}
 
 \begin{equation}
 f(x;\lambda) = \begin{cases}
@@ -149,13 +151,13 @@ f(x;\lambda) = \begin{cases}
 \end{equation}
 
 As a result, the expected or mean value of an exponential distribution, is a function of
-the parameter $\lambda$: CITE
+the parameter $\lambda$: \cite{MARKOV1}
 
 \begin{equation}
 \mathrm{E}[X] = \frac{1}{\lambda}. \!
 \end{equation}
 
-When there are multiple possible transitions from a state, each with their own expected transition time, the expected amount of time in the state is:
+When there are multiple possible transitions from a state, each with their own expected transition time, the expected amount of time in the state is: \cite{MARKOV2}
 
 \begin{equation}
 \sum \lambda(x,y) = \sum \lambda p_{x,y} = \lambda(x)
@@ -206,10 +208,10 @@ T_{G} = ( T_{R}+T_{C}  ) / p_{F} & p_{F} > 0 \\
 \end{cases}
 \end{equation}
 
-Let $\delta$ equal exponential parameter of the exponential distribution for the base state. Then we can relate the probabilities of each possible transition to the parameter for the base state. Let $p_{i}$ be the probability of transitioning to configuration $i$ after leaving the base state and let $f_{i}$ be the exponential parameter for the transition to an individual configuration:
+Let $\lambda_{G}$ equal exponential parameter of the exponential distribution for a grouped state. Then we can relate the probabilities of each possible transition to the parameter for that state. Let $p_{i}$ be the probability of transitioning to configuration $i$ after leaving the base state and let $f_{i}$ be the exponential parameter for the transition to that configuration:
 
 \begin{equation}
-\delta = \sum f_{i} = \sum \delta p_{i} = \frac{1}{T_{G}}
+\lambda_{G} = \sum f_{i} = \sum \lambda_{G} p_{i} = \frac{1}{T_{G}}
 \end{equation}
 
 \subsubsection{Leader Election}
