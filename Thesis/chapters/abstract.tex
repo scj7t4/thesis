@@ -2,7 +2,7 @@
 Cyber-physical systems (CPS) are an attractive option for future development of
 critical infrastructure systems. By supplementing the traditional physical
 network with cyber control, the performance and reliability of the system
-can be increased. In some of these networks, distributing the cyber control
+can be increased. In these networks, distributing the cyber control
 offers increased redundancy and availability during fault conditions. However,
 there are very few works which study the effects of cyber faults on a 
 distributed cyber-physical system. These are of a particular interest in the smart grid
@@ -11,16 +11,12 @@ behavior of a distributed system under fault scenarios, the overall robustness
 of the system can be improved by planning characteristics and responses to
 faults that allow the system to continue operating in difficult circumstances.
 
-This work examines the consequences of network unreliability on a core part of the
- Distributed Grid Intelligence (DGI) for the FREEDM (Future Renewable Electric 
-Energy Delivery and Management) Project. By applying different rates of packet
-loss in specific configurations to the communication stack of the software and
-observe the behavior of a critical component (Group Management) under those
-conditions. These components identify the amount of time spent in a group,
-working, as a function of the network reliability. Given this one can parameterize
-the amount of messages that are lost and thus the number of failed physical actuations.
-Knowing this and the physical characteristics of the system, one can tune the amount
-of time between reconfiguration in order to prevent the number of failed physical
-changes from causing the system to become unstable. Using this, we can develop
-methods and guarantees to protect the operation of a CPS.
-\end{abstract}
+This work presents a techinque for modelling the availability of a cyberphysical
+system. This is of high value because there is a limited
+amount of research that describes that models the availibility of distributed systems,
+and CPSs in general. This approach encodes the behavior of a dynamic reconfiguration 
+system of a CPS as a continous-time Markov chain.
+These models provide an estimate of when a cyberphysical system will be able to do work
+and when it is reconfiguring. Generated models are presented and evaluted against data
+collected from actual runs of the system. Using these models, we will be able to develop
+methods and gaurantees to quantify and protect operation of a CPS.
