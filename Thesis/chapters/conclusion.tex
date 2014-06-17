@@ -1,12 +1,98 @@
 \chapter{Conclusion}
 
-This work presented a new approach for predicting the behavior of a real-time distributed system under omission failure conditions. By using a continuous time Markov chain, a variety of insights can be gathered about the system, including observations such as how long a particular configuration will be stable, and the behavior of the system in the long run.  The Markov results will be used  to make better real time schedules to better react to the network faults we plan on introducing to our test beds. The primary concern are scenarios in which the cyber controller attempts to make physical components which are not connected in the physical network interact. In this scenario, both networks are harmed by these components interacting, unneeded power is given to one of the physical network, and power that may not be available is taken from another. An additional concern are scenarios where a fault in the cyber network causes the paired events where two physical controllers change to accomplish some transaction or exchange to only be partially executed. For example, in the DGI load balancing scheme, a node in a supply state injects a quantum of power into the physical network, but the node in the demand state does not change to accept it. These errors, which are the primary focus of this work could cause instability if a sufficient number of these failed exchanges occur. In \cite{HARINI}, Choudhari et. al. show that failed transactions can create a scenario where the frequency of a power system could become unstable. 
+This work presented a new approach for predicting the behavior of a real-time distributed system under omission failure conditions. By using a continuous time Markov chain, a variety of insights can be gathered about the system, including observations such as how long a particular configuration will be stable, and the behavior of the system in the long run.  The Markov results will be used  to make better real time schedules to better react to the network faults we plan on introducing to our test beds. The primary concern are scenarios in which the cyber controller attempts to make physical components which are not connected in the physical network interact, and scenarios where a fault in the cyber network causes the paired events (where two physical controllers change to accomplish some transaction or exchange) to only be partially executed. For example, in the DGI load balancing scheme, a node in a supply state injects a quantum of power into the physical network, but the node in the demand state does not change to accept it. These errors, which are the primary focus of this work could cause instability if a sufficient number of these failed exchanges occur. In \cite{HARINI}, Choudhari et. al. show that failed transactions can create a scenario where the frequency of a power system could become unstable. 
 
 Moving forward, we have identified these areas as targets for improving the research done and creating new contributions.
 
+\section{Selecting A Schedule}
+
+As shown earlier in the paper there is a relationship between congestion and the amount of time a process spends in a group. We have shown that an exponential distribution as part of a continous-time Markov chain can be used to describe the expected time in a configuration given an omission fault rate. Based on this, we expect to be able to develop a function which relates the congestion in the network to predict how long a pair of processes will be able to interact. Therefore, when a process observes congestion, either from the network hardware or lost messages they will be able to produce an estimate of their ability to stay in a group with a process. If we consider a pair of processess, P1 and P2 which are in a group together then there is some function which describes the expected amount of time until P1 suspects P2 of failing or vice-versa:
+
+\begin{equation}
+
+E(c)[X] = \begin{cases}
+0 & c \eq 1.0
+\inf & c \eq 0.0
+1 / \lambda(c) & otherwise 
+\end{cases}
+
+\end{equation}
+
+Where $c$ is a measure of the congestion in the system: the expected time in group is zero when no messages can be delivered, and infinite when no messages are lost.
+As congestion is observed by processes, they produce new estimates of $\lambda$ as a function of the congestion $c$.
+The value of $\lambda(c)$ may be based on a series of collected data sampled discretely (using simulation) or may be mapable with distrobutions related to the exponential distribution such as the Weibull distribution (SOME CITATION USING WEIBULL FOR PROCESS FAILURE RATES).
+
+Additionally, congestion can be used to predict how many migrations will fail.
+Given a real time schedule and a congestion value $c$, as with the groups we can define a function $F(c)$ describes the likelyhood of a migration failing.
+These failed migrations contribute to a k-value which can be used in a simplied version of the physical invariant from \cite{HARINI}\cite{CPS1}\cite{CPS2}
+
+\begin{equation}
+
+{ k \lt max_outstanding_migrations }
+
+\end{equation}
+
+If the number of failed migrations $k$ exceeds the maximum number of outstanding migrations the system will be unstable.
+A CPS implementing this invariant will stop performing migrations when this invariant would be violated.
+We can definite a related value $remaining_k$:
+
+\begin{equation}
+remaining_k \eq max_outstanding_migrations - k
+\end{equation}  
+
+Then we can produce a relationship of when a group is likely to violate the physical invariant in a round, given an upper bound on the number of migrations that will be attempted that round:
+
+\begin{equation}
+
+{ F(c) * max_migrations \gte remaining_k }
+
+\end{equation}
+
+Given this, we can then consider the time that a process may live for, the time it would take to reconfigure, and the likelyhood of violating the physical invariant into account as part of selecting a real-time schedule.
+For example, given that it maybe easier to maintain an existing group rather than elect a new one during network congestion, we can select a new schedule that optimizes the amount of work done and the health of the physical system.
+Consider a pair of real-time schedules A and B.
+Schedule A favors high-performance: it expects very little congestion on the network, in exchange however, it can complete many more migrations per round (Noted as $R_{m}$).
+Schedule B is slower and safer.
+It has longer timeout periods that allow for more omission failures.
+However, as a result, it can't do a much work: the rate that migrations are performed is lower.
+The relationship between schedule A and B in terms of the functions $E(c)[X]$ and $F(c)$ in summarized in Table \ref{tab:SCHED-COMPARE}.
+
+\begin{table}
+\caption{Comparsion of two proposed schedules, A and B}
+\label{tab:SCHED-COMPARE}
+\centering
+\begin{tabluar}{ c  c  c }
+Schedule A & & Schedule B \\ \hline
+$E_{A}(c)[X]$ & \lt & $E_{B}(c)[X]$ \\
+$F_{A}(c)$ & \gt & $F_{B}(c)$ \\ 
+$R_{Am}$ & \gt & $R_{Bm}$ \\ 
+\end{tabular}
+\end{table}
+
+If we define a function $migrations(R_{m},t)$ that relates a time period $t$ and the migration to the rate the migrations are attempted to a number of attempted number of migrations over a time period $t$.
+With this function a relationship between the number of failed migrations on schedule A to the lower amount of work produced on schedule B, assuming the migration size is constant:
+
+\begin{equation}
+
+\delta(A,B) = (F_{A}(c) * migrations(R_{Am},t)) - (F_{B}(c) * migrations(R_{Bm},t))
+
+\end{equation}
+
+Based on the above equation, schedule B should be selected when delta is negative, yielding the invariant for the current schedule x and the set of potential schedules S:
+
+\begin{equation}
+{ \delta(x,y) \gte 0 \forall y \in S }
+\end{equation}
+
+
 \section{Time between reconfigurations}
 
- The rate that the system should reconfigure is a function of the maximum number of failed migrations that the system can handle before becoming unstable, the time it takes to write to the channel and the time it takes process messages. The amount of time in group can also be a consideration for which algorithm to select based on the needed amount of time to perform its work. Group Management can be used as a critical component in a real-time distributed system to manage the number of lost messages and as a consequence, the number of failed migrations in a CPS. It is critical to understand how frequently nodes enter and exit the group based on lost messages and how many migrations fail as a consequence of those messages. This area is deficient because it is strongly coupled to the interactions with the physical component: we must understand how the cyber configuration and physical changes made by that configuration can affect the system, and establish when reconfigurations should occur to keep the system stable. To correct this, we hope to develop a mathematical relationship between the stability of the group, and the physical management functionality of the CPS.
+The rate that the system should reconfigure is a function of the maximum number of failed migrations that the system can handle before becoming unstable, the time it takes to write to the channel and the time it takes process messages.
+The amount of time in group can also be a consideration for which algorithm to select based on the needed amount of time to perform its work.
+ Group Management can be used as a critical component in a real-time distributed system to manage the number of lost messages and as a consequence, the number of failed migrations in a CPS.
+ It is critical to understand how frequently nodes enter and exit the group based on lost messages and how many migrations fail as a consequence of those messages.
+ This area is deficient because it is strongly coupled to the interactions with the physical component: we must understand how the cyber configuration and physical changes made by that configuration can affect the system, and establish when reconfigurations should occur to keep the system stable.
+ To correct this, we hope to develop a mathematical relationship between the stability of the group, and the physical management functionality of the CPS.
 
 \section{Correctness of an Installed Configuration}
 
@@ -22,4 +108,4 @@ The models presented in this work focus only on the leader election component of
 
 \section{Deliverables}
 
-Therefore, moving forward, we will expand the models we have presented here to include more of the properties of the complete CPS. This model will allow us to better understand what effects the group behavior has on the CPS. Using this, we can establish invariants, like those in \cite{HARINI}\cite{CPS1}\cite{CPS2}, which allow us to ensure the correctness of a CPS by providing assertions which will not be broken during execution. Creating these invariants will allow us to improve the development of CPSs, especially in their dynamic configuration, which is an area with limited development. These invariants also allow us to create an assertion of correctness which can be validated, during runtime, to ensure the system maintains its stability, with an end goal of quantifying system robustness. We will continue to create and validate models of the CPS against simulations and actual hardware. As we do so we will construct invariants that describe the correct behavior of the groups to ensure safe operation. In addition to the existing conference paper \cite{CRITIS2012}, we have prepared a journal paper with the new work in this document. 
+Therefore, moving forward, we will expand the models we have presented here to include more of the properties of the complete CPS. This model will allow us to better understand what effects the group behavior has on the CPS. Using this, we can establish invariants which allow us to ensure the correctness of a CPS by providing assertions which will not be broken during execution. Creating these invariants will allow us to improve the development of CPSs, especially in their dynamic configuration, which is an area with limited development. These invariants also allow us to create an assertion of correctness which can be validated, during runtime, to ensure the system maintains its stability. We will continue to create and validate models of the CPS against simulations and actual hardware. As we do so we will construct invariants that describe the correct behavior of the groups to ensure safe operation. In addition to the existing conference paper \cite{CRITIS2012}, we have prepared a journal paper with the new work in this document. 
