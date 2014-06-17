@@ -188,7 +188,9 @@ greater than 2. Additionally, the simulator could only assume that the synchroni
 processes was mostly fixed, which was not the case in the larger configurations, since the
 coincidental synchronization that occurred in the two node case was suppressed by the increased
 number of peers. Furthermore, an issue with SharpE was discovered that prevented the
-particular structure of the chains produced from being handled correctly. To circumvent that
+particular structure of the chains produced from being handled correctly. In particular, the
+structure of elections, where a chain goes through election state to a normal state causes the
+semi-symbolic solver SharpE uses to produce an unreasonable expected reward. To circumvent that
 issue, SharpE was replaced by a random-walker which generates exponentially distributed numbers
 and follows the paths of the chain, across several hundred trials, in order to collect time in group data for
 models which SharpE cannot process.
@@ -213,7 +215,7 @@ models which SharpE cannot process.
 The structure of the Markov Chain, which assumed that processes enter the election state
 mostly simultaneously was an appropriate assumption for the real-time system, since the
 round-robin scheduler synchronizes when processes run their group management modules. The
-simulator was set to assume that the synchronization between processes was very tight, and
+simulator was set to assume that the synchronization between processes was less than one resend interval, and
 new experimental data was collected for the 4 node, transient partition case. The collected
 data is overlaid with the results from the random walker in Figures \ref{fig:COMPARE-SUC-TRANS-RT-128} and \ref{fig:COMPARE-SUC-TRANS-RT-64}.
 

@@ -1,4 +1,34 @@
 \chapter{Related Work}
+
+\section{Failure Classification}
+
+Processes can fail in a variety of ways. In this work we focus on how cyber processes can fail. There are a variety of faults that have been classified. In this work,
+we focus on two different modes of failure:
+
+\subsection{Crash or Fail-Stop Failure}
+
+A crash failure or its more generalized form, a fail-stop failure, describes a failure in which a process stops executing. In general, this is considered to be an
+irreversible failure, since a process typically does not resume from a crashed state. There are categorizations of crash failures, called napping failure
+where a process will appear to have crashed for a finite amount of time before resuming normal operation. Crash failures are impossible to detect with absolute
+certainty in an asynchronus system. Processes can be suspected by other processes through the use of challenge/response messages or heartbeat messages that allow
+a process to prove that it has not crashed yet. A system that can handle a crash failure is implied to be able to handle a fail-stop failure.\cite{DISTRIBUTED}
+
+The fail-stop failure has three properties \cite{DISTRIBUTED}:
+
+\begin{enumerate}
+\item When a failure occurs the program execution is stopped.
+\item A process can detect when another fail-stop process has failed.
+\item Volatile storage is lost when the fail-stop process is stopped.
+\end{enumerate}
+
+\subsection{Omission Failure}
+
+An omission failure occurs when a message is never recieved by the reciever. Omission failures can occur when the communication medium is unavalable,
+or when the latency of message exceeds a timeout for it's expected delivery. Protocols like TCP do not tolerate omission failures: a packet is resent until
+it is acknowledged by the reciever. If the acknowledgement never comes, the connection is closed. As a contrast, UDP assumes that any datagram could be lost
+and it is the responsibility of the programmer to handle missing datagrams appropriately. An omission failure can have the same observable affects as a napping
+failure in some situations. \cite{DISTRIBUTED}
+
 \section{Virtual Synchrony}
 Virtual synchrony (and its original implementation, Isis\cite{ISISTOOLKIT}) is an execution model for distributed systems. Virtual synchrony is based on the idea of synchronous execution where each process acts based on a globally shared clock. Synchronous systems are the easiest to program for, but true synchrony is not feasible in most circumstances. Instead, the virtual synchrony execution model was developed. 
 
@@ -16,12 +46,12 @@ This defines a dependence and causality relation between events in the system. I
 
 \subsection{Process Groups}
 Virtual synchrony models also support process groups. Although each implementation of a virtually synchronous system applies a different structure to the way processes are grouped, implementations share common features.
-A process group in a virtual synchronous system is commonly referred to as a view. A view is a collection of processes that are virtually synchronous with each other. A view refers to a specific group configuration, while a group is a general descriptor for a collection of processes. Process groups in virtually synchronous systems place obligations on the delivery of messages to members of a view. A history $H$ of a view is legal if \cite[p~.103]{ISISTOOLKIT}:
+A process group in a virtual synchronous system is commonly referred to as a view. A view is a collection of processes that are virtually synchronous with each other. A view refers to a specific group: the set of processes in that view, and a leader if there is one. A group is a general descriptor for a collection of processes. Process groups in virtually synchronous systems place obligations on the delivery of messages to members of a view. A history $H$ of a view is legal if \cite[p~.103]{ISISTOOLKIT}:
 \begin{enumerate}
     \item Given a function $time(e)$ that returns a global time of when the event occurred $e$, then $e \rightarrow e' \Rightarrow time(e) < time(e').$
     \item $time(e) \neq time(e') \forall e, e' \in H|_{p}$ (where $e \neq e'$) for each process.
     \item A change in view (group membership) occurs at the same logical time for all processes in the view.
-    \item All multicast message delivers occur in the current view of a group. That is, if a message is sent in a view, it is delivered in that view, for every process in that view.
+    \item All multicast message deliveries occur in the current view of a group. That is, if a message is sent in a view, it is delivered in that view, for every process in that view.
 \end{enumerate}
 
 A process group interacting via message passing creates a legal history for the virtually synchronous system. However, processes can fail.  Virtual synchrony systems have several properties to handle fail-stop failures\cite[p~.102]{ISISTOOLKIT}:
@@ -57,7 +87,7 @@ Extended virtual synchrony places obligations on the message delivery service, d
 	\item Every sent message is delivered by the process that sends it (unless it
 		fails) even if the message is only delivered to that process.
 	\item If two processes are in sequential views, they deliver the same set of
-		messages in the second configuration.
+		messages in the second view.
 	\item If the send events of two messages are casually related, if the
 		second of those messages is delivered, the first message is also delivered.
 	\item Messages delivered in total order must delivered at the same logical time.
@@ -70,7 +100,7 @@ Extended virtual synchrony places obligations on the message delivery service, d
 		were also delivered.
 \end{enumerate}
 
-It also provides additional restrictions on the sending of messages between two different views (Item 2) and an obligation on the delivery of messages (Item 4). The concept of a primary view or primary configuration still exists within the extended virtual synchrony model and is still described by the notion of being the largest view. Since views can now partition and rejoin the primary partition the rules presented above also allow the history of the views with respect to the regular messages in the primary partition to be totally ordered. Additionally, two consecutive primary views have at least one process that was a member of each view.
+It also provides additional restrictions on the sending of messages between two different views (Item 2) and an obligation on the delivery of messages (Item 4). The concept of a primary view still exists within the extended virtual synchrony model and is still described by the notion of being the largest view. Since views can now partition and rejoin the primary partition the rules presented above also allow the history of the views with respect to the regular messages in the primary partition to be totally ordered. Additionally, two consecutive primary views have at least one process that was a member of each view.
 
 To join views, processes are first informed of a failure (or joinable partition) by a membership service. Processes maintain an obligation set of messages they have acknowledged but not yet delivered. After being informed of the need to change views, the processes begin buffering received messages and transition into a transitional view. In the transitional view messages are sent and delivered by the processes to fulfill the causality and ordering requirements listed above. Once all messages have be transmitted, received and delivered as needed and the process' obligation set is empty, the view transitions from a transitional view to a regular view and execution continues as normal.
 
@@ -100,7 +130,7 @@ Isis has limited support for partitioning. In the event that a partition forms, 
 
 \section{Transis (1992)}
 
-Transis \cite{TRANSISTOOLKIT} was developed as a more pragmatic approach to the creation of a distributed framework. Transis is developed with the key consideration that, while multicast is the most efficient for distributing information in a view or group of processors (as point to point quickly gives rise to N$^{2}$ complexity) it can be impractical, especially over a wide area network to rely on broadcast to deliver messages. Transis, then considers two components for the network: a local area component and a wide area component.
+Transis \cite{TRANSISTOOLKIT} was developed as a more pragmatic approach to the creation of a distributed framework. Transis is developed with the key consideration that, while multicast is the most efficient for distributing information in a view or group of processors (as point to point quickly gives rise to N$^{2}$ message complexity, where $N$ is the number of processes. ) it can be impractical, especially over a wide area network to rely on broadcast to deliver messages. Transis, then considers two components for the network: a local area component and a wide area component.
 
 The local area component, Lansis, is responsible for the exchange of messages across a LAN. Transis uses gateways, called Xporters, to deliver messages between the local views. Transis uses a combination of acknowledgements, which are piggybacked on regular messages to identify lost messages. If a process observes a message being acknowledged that it does not receive then it sends a negative acknowledgement broadcast informing the other members of the view it did not receive that message. In Lansis, the acknowledgement signals that a process is ready to deliver a message. Lansis assumes that all messages can be casually related in a global, directed, acyclic graph and there are a number of schemes that deliver messages based on adherence to that graph.
 
@@ -108,13 +138,13 @@ The local area component, Lansis, is responsible for the exchange of messages ac
 
 \section{Totem (1996)}
 
-Totem\cite{TOTEMTOOLKIT} was developed at the University of California, Santa Barbara by Moser, Melliar-Smith, Agarwal et. al. Totem is designed to use local area networks, connected by gateways. The local area networks use a token passing ring and multicast the messages, much like Isis and Horus. The gateways join these rings into a multi-ring topology. Messages are first delivered on the ring which they are sent, then forwarded by the gateway which connects the local ring to the wide area ring for delivery to the other rings. The message protocol gives the message total ordering using a token passing protocol. Topology changes are handled in the local ring, then forwarded through the gateway where the system determines if the local change necessitates a change in the wide area ring. Failure detection is also implemented to detect failed gateways.
-
+Totem\cite{TOTEMTOOLKIT} is designed to use local area networks, connected by gateways. The local area networks use a token passing ring and multicast the messages, much like Isis and Horus. The gateways join these rings into a multi-ring topology. Messages are first delivered on the ring which they are sent, then forwarded by the gateway which connects the local ring to the wide area ring for delivery to the other rings. The message protocol gives the message total ordering using a token passing protocol. Topology changes are handled in the local ring, then forwarded through the gateway where the system determines if the local change necessitates a change in the wide area ring. Failure detection is also implemented to detect failed gateways.
+                                             
 \section{Spread}
 
 Spread\cite{SPREADTOOLKIT} is a modern distributed framework. It is designed as a series of daemons which communicate over a wide area network. Processes on the same LAN as the daemons connect to the daemon directly. This is analogous to the gateways in the other distributed toolkits, however, the daemon is a special, dedicated message passing process, rather than a participating process with a special role.
 
-Using a dedicated daemon allows a Spread configuration to reconfigure less frequently when a process stops responding (which normally correlates to a view change) since the daemons can insert a message informing other processes that a process has left while still maintaining the message ordering without disruption. Major reconfigurations only need to occur when a daemon is suspected of failing.
+Using a dedicated daemon allows a Spread view to reconfigure less frequently when a process stops responding (which normally correlates to a view change) since the daemons can insert a message informing other processes that a process has left while still maintaining the message ordering without disruption. Major reconfigurations only need to occur when a daemon is suspected of failing.
 
 Spread implements an extended virtual synchrony model. However, message ordering is performed at the daemon level, rather than at the group level. Total ordering is done using a token passing scheme among the daemons.
 
@@ -140,4 +170,4 @@ Failure detectors \cite{FAILUREDETECTORS} (Sometimes referred to as unreliable f
 
 One class of failure detectors, Omega class Failure detectors, are particularly interesting because of \cite{LEADERELECTIONEVAL}. An eventual weak failure (weak completeness and eventual weak accuracy) detector is the weakest detector which can still solve consensus. It is denoted several ways in various works including $\diamond \mathcal{W}$ \cite{FAILUREDETECTORS}, $\mathcal{W}$ \cite{WEAKESTFAILURE1} \cite{WEAKESTFAILURE2} and $\Omega$ (Omega) \cite{LEADERELECTIONEVAL}.
 
-\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++, a network simulation software package. Instead of omission failures, however, it considers crash failures. Each configuration goes through a predefined sequence of crash failures. OmNet++ is used to count the number of messages sent by each of three different leader election algorithms. Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a complete and active state when all participants have consensus on a single leader.
+\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++\cite{OMNET}, a network simulation software package. Instead of omission failures, however, it considers crash failures. Each configuration goes through a predefined sequence of crash failures. OmNet++ is used to count the number of messages sent by each of three different leader election algorithms. Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a complete and active state when all participants have consensus on a single leader.
