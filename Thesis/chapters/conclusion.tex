@@ -12,10 +12,10 @@ Moving forward, we have identified these areas as targets for improving the rese
 \section{Selecting A Schedule}
 
 As shown previously, there is a relationship between congestion and the amount of time a process spends in a group.
-We have shown that an exponential distribution as part of a continous-time Markov chain can be used to describe the expected time in a configuration given an omission fault rate.
+We have shown that an exponential distribution as part of a continuous-time Markov chain can be used to describe the expected time in a configuration given an omission fault rate.
 Based on this, we expect to be able to develop a function which relates the congestion in the network to predict how long a pair of processes will be able to interact.
 Therefore, when a process observes congestion, either from the network hardware or lost messages they will be able to produce an estimate of their ability to stay in a group with a process.
-If we consider a pair of processess, P1 and P2 which are in a group together then there is some function which describes the expected amount of time until the group would need to reconfigure:
+If we consider a pair of processes, P1 and P2 which are in a group together then there is some function which describes the expected amount of time until the group would need to reconfigure:
 
 \begin{equation}
 
@@ -32,8 +32,8 @@ As congestion is observed by processes, they produce new estimates of $\lambda$ 
 The value of $\lambda(c)$ may be based on a series of collected data sampled discretely (using simulation) or may be mappable with a probability distribution or as a Poisson process.
 
 Additionally, congestion can be used to predict how many migrations will fail.
-Given a real time schedule and a congestion value $c$, as with the groups we can define a function $F(c)$ describes the likelyhood of a migration failing.
-These failed migrations contribute to a k-value which can be used in a simplied version of the physical invariant from \cite{HARINI}\cite{CPS1}\cite{CPS2}
+Given a real time schedule and a congestion value $c$, as with the groups we can define a function $F(c)$ describes the likelihood of a migration failing.
+These failed migrations contribute to a k-value which can be used in a simplified version of the physical invariant from \cite{HARINI}\cite{CPS1}\cite{CPS2}
 
 \begin{equation}
 
@@ -57,7 +57,7 @@ Then we can produce a relationship of when a group is likely to violate the phys
 
 \end{equation}
 
-Given this, we can then consider the time that a process may live for, the time it would take to reconfigure, and the likelyhood of violating the physical invariant into account as part of selecting a real-time schedule.
+Given this, we can then consider the time that a process may live for, the time it would take to reconfigure, and the likelihood of violating the physical invariant into account as part of selecting a real-time schedule.
 For example, given that it maybe easier to maintain an existing group rather than elect a new one during network congestion, we can select a new schedule that optimizes the amount of work done and the health of the physical system.
 Consider a pair of real-time schedules A and B.
 Schedule A favors high-performance: it expects very little congestion on the network, in exchange however, it can complete many more migrations per round (Noted as $R_{m}$).
@@ -67,7 +67,7 @@ However, as a result, it can't do a much work: the rate that migrations are perf
 The relationship between schedule A and B in terms of the functions $E(c)[X]$ and $F(c)$ in summarized in Table \ref{tab:SCHED-COMPARE}.
 
 \begin{table}
-\caption{Comparsion of two proposed schedules, A and B}
+\caption{Comparison of two proposed schedules, A and B}
 \label{tab:SCHED-COMPARE}
 \centering
 \begin{tabluar}{ c  c  c }
@@ -104,15 +104,15 @@ This area is deficient because it is strongly coupled to the interactions with t
 
 The work presented in this document is probabilistic: the results of a leader election are random and based only on responses arriving with in a specified period of time.
 Other factors can affect what configurations can be installed such as trust in the parties in the group, the underlying physical topology, and the reliability of the peers in that group.
-We will develop gaurds on the properties of a configuration that protect the physical topology and the members of the group.
+We will develop guards on the properties of a configuration that protect the physical topology and the members of the group.
 These guarantees would also allow processes to better police the configurations they are installed in, in order to protect the system from malicious nodes.
 
-These gaurds can ensure quantities like trust in the invovled properties, the physical organization for verfication methods like attestation.
-Gaurds could also ensure the capability of the group to do work: a formed group in which all processes are in supply or demand can do no work.
+These guards can ensure quantities like trust in the involved properties, the physical organization for verification methods like attestation.
+Guards could also ensure the capability of the group to do work: a formed group in which all processes are in supply or demand can do no work.
 Likewise, if the congestion is too high between a pair of processes, it will affect the ability of the group to do work.
-Perhaps most importantly, we wish to ensure that a partition in the cyber domain will not cause a connected physical topology to become instable.
+Perhaps most importantly, we wish to ensure that a partition in the cyber domain will not cause a connected physical topology to become unstable.
 Interference between groups in the physical domain should not allow a global physical invariant ($P_{IG}$ to be violated.
-We wish to develop gaurds that ensure that when locally evaluable invariants being true implies the global physical invariant is true:
+We wish to develop guards that ensure that when locally evaluable invariants being true implies the global physical invariant is true:
 
 \begin{equation}
 \bigwedge_{g \in Groups}P_{Ig} \rightarrow P_{IG}
@@ -125,12 +125,12 @@ Where $P_{Ig}$ is the physical invariant for a group.
 We recognize that the model presented thus far does not have ideal accuracy.
 We expect to be able to further refine the model and the algorithms and formulas for generating the model.
 There are some features of the behavior of the DGI which are not completely encapsulated in the model.
-Currently, the arrival times are a continous time estimation of events that occurs discretely in the realtime system.
-The failure detection checks occur on a specific interval, but the continous time Markov Chain allows these events to occur at any moment.
-This limitation rreduces the accuracy of the model.
+Currently, the arrival times are a continuous time estimation of events that occurs discretely in the real-time system.
+The failure detection checks occur on a specific interval, but the continuous time Markov Chain allows these events to occur at any moment.
+This limitation reduces the accuracy of the model.
 
 With respect to the way the models are generated with the simulator, the way models are specified can be generalized to support more systems of similar design.
-Additionally, the simulator uses the resend interval as the smalles timestep, which allows models to be evaluated quickly, but limits accuracy.
+Additionally, the simulator uses the resend interval as the smallest timestep, which allows models to be evaluated quickly, but limits accuracy.
 Lastly, it is worthwhile to adapt the simulation to use a more common network simulation software like OmNet++ to make the results more portable.
 
 The models presented in this work focus only on the leader election component of a dynamically configured CPS. Additional work would incorporate additional components of the DGI system into the models for a more complete picture of the behavior of the system during failures. We will consider the correctness of the incorporated algorithms, how omission failures can violate that correctness, and what restrictions we can place on the configuration and operation of DGIs in order to protect the entire system during failures. To do this, we will expand the analysis performed here to incorporate algorithms such as state collection and load balancing and define metrics to quantify their behavior during omission failures. This thrust will pair with the correctness and time between reconfigurations: different algorithms will have different amounts of failure that can be allowed before reconfiguration is necessary.
