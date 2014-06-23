@@ -35,114 +35,81 @@
 % 
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
-\IEEEPARstart{F}{REEDM} (Future Renewable Electric Energy Delivery and Management) System
-is a Smart Grid project focused on the future of the electrical grid. Major proposed features
-of the FREEDM network include the Solid State Transformer, distributed local energy storage,
-and distributed local energy generation\cite{FREEDMMIGRATION}. This vein of research emphasizes decentralizing the
-power grid: making it more reliable by distributing energy production resources. Part of this
-design requires the system to operate in islanded mode, where portions of the distribution
+\IEEEPARstart{F}{REEDM} (Future Renewable Electric Energy Delivery and Management) is a smart grid project focused on the future of the electrical grid.
+Major proposed features of the FREEDM network include the solid state transformer, distributed local energy storage, and distributed local energy generation \cite{FREEDMMIGRATION}.
+This vein of research emphasizes decentralizing the power grid, making it more reliable by distributing energy production resources.
+Part of this design requires the system to operate in islanded mode, where portions of the distribution
 network are segmented from each other.
 
-The effects of these partitions are still not well understood, especially since in a distributed
-cyber-physical system partitions may occur in both the cyber and physical domains. As a result,
-it is not well known how a /cyber or physical fault will effect the other portion of the system.
-However, research such as \cite{HARINI}\cite{TSG}, indicates that cyber faults can cause a
+The effects of these partitions are still not well understood.
+This is particularly true in a distributed cyber-physical system, in which partitions may occur in both the cyber and physical domains.
+As a result,it is not well known how either a cyber or physical faults will effect the other portion of the system.
+However, previously conducted research \cite{HARINI}\cite{TSG} indicates that cyber faults can cause a
 physical system to apply unstable settings.
 
-This work presents the initial steps to better understanding and planning for these faults.
-By taking a new approach to considering how a distributed system interacts during a fault condition,
-new techniques for managing a fault scenario in cyber-physical systems will be created. To do
-this, we present an approach in modeling the grouping behavior of a system using Markov chains.
-These chains produce expectations of how long a system can be expected to stay in a particular
-state, or how much time it will be able to spend coordinating and doing useful work over a period
-of time. Using these measures, the behavior of the control system for the physical devices 
-can be adjusted to prevent faults.
+This work presents the initial steps neccessary to better understanding and planning for these faults.
+A new approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems. 
+This discussion presents an approach that utilizes Markov chain to model a system's grouping behavior.
+These chains produce expectations with regard to not only how long a system can be expected to stay in a particular state but also much time it will be able to spend coordinating and doing useful work over a period
+of time. 
+Using these measures, the behavior of the control system for the physical devices can be adjusted to prevent faults.
 
-The next section describes the FREEDM smart-grid system and it's DGI (Distributed Grid Intelligence). In section 3,
-we overview the group management algorithm, and the state of the art for distributed
-systems. In section 4 we describe in detail the architecture of the DGI, including the architecture
-of the message passing interface and the protocols used in the experiments, as well as our
-experimental setup. In section 5 we outline our previous results, collected by running the DGI
-in a controlled environment. Section 6 explains the assumptions and how the Markov Chains are
-constructed. In section 7, we show the accuracy of these models for predicting grouping behavior
-of the system. Conclusions are presented in the final section.
+The next section describes both the FREEDM smart-grid system and it's Distributed Grid Intelligence (DGI).
+Section 3, includes an overview the group management algorithm, and the state of the art for distributed systems.
+Section 4 discusses the architecture of the DGI, including the architecture of the message passing interface and the protocols used in the experiments, and the experimental setup.
+Section 5 outlines previously gathered results collected by running the DGI in a controlled environment.
+Section 6 explains the assumptions made and the Markov Chain's construction. 
+Section 7 focuses on the accuracy of these models for predicting grouping behavior.
+Section 8 offers summary and conclusion.
 
 %\IEEEpubidadjcol
 % needed in second column of first page if using \IEEEpubid
 \section{FREEDM DGI}
-In this work we model the group management module of the FREEDM DGI.
-The DGI is a smart grid operating system
-that organizes and coordinates power electronics and negotiates contracts to
-deliver power to devices and regions that cannot effectively facilitate their own need.
-The DGI leverages common distributed algorithms to control the power grid, making it an
-attractive target for modeling a distributed system.
+This models the group management module of the FREEDM DGI.
+The DGI is a smart grid operating system that organizes and coordinates power electronics.
+It also negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their own needs.
+DGI leverages common distributed algorithms to control the power grid, making it an attractive target for modeling a distributed system.
 
-To accomplish this, the DGI software consists of a central component, the
-broker, which is responsible for presenting a communication interface and
-furnishing any common functionality needed by any algorithms used by the
-system. These algorithms are grouped into modules. These algorithms work in
-concert to move power from areas of excess supply to excess demand.
+The DGI software consists of a central component, known as the broker.
+This broker is responsible for presenting a communication interface.
+It also furnishes any common functionality the system's algorithms may need.
+These algorithms, grouped into modules, work in concert to move power from areas of excess supply to excess demand.
 
-The DGI uses several modules to manage a distributed smart-grid system. Group
-management, the focus of this work, implements a leader election algorithm to
-discover which nodes are reachable in the cyber domain.
+DGI utilizes several modules to manage a distributed smart-grid system.
+Group management, the focus of this work, implements a leader election algorithm to discover which processes are reachable within the cyber domain.
+Other modules provide additional functionality, such as collecting global snapshots, negotiating the migrations, and giving commands to physical components.
 
-Other modules provide additional functionality such as collecting global
-snapshots, and a module that negotiates the migrations and gives commands to
-physical components.
-
-The DGI is a real-time system: certain actions (and reactions) involving power
-system components need to be completed with a pre-specified time-frame to keep
-the system stable. The DGI uses a round robin scheduler: each module is given
-a predetermined window of execution which it may use to perform its duties. When
-a module's time period expires, the next module in the line is allowed to
-execute. 
+DGI is a real-time system; certain actions (and reactions) involving power system components need to be completed within a pre-specified time-frame to keep the system stable.
+It uses a round robin schedulerin which each module is given a predetermined window of execution which it may use to perform its duties.
+When a module's time period expires, the next module in the line is allowed to execute. 
  
 \section{Group Management}
-The DGI uses the leader election algorithm, ``Invitation Election
-Algorithm'' written by Garcia-Molina in \cite{INVITATIONELECTION}.
-Originally published in 1982, his algorithm provides a robust election 
-procedure which allows for transient
-partitions. Transient partitions are formed when a faulty link between two or
-more clusters of DGIs causes the groups to temporarily divide. These transient
-partitions merge when the link is more reliable. The election algorithm
-allows for failures that disconnect two distinct sub-networks. These sub
-networks are fully connected, but connectivity between the two sub-networks is
-limited by an unreliable link.
+The DGI uses the leader election algorithm, ``Invitation Election Algorithm,'' written by Garcia-Molina \cite{INVITATIONELECTION}.
+Originally published in 1982, this algorithm provides a robust election  procedure that allows for transient partitions.
+Transient partitions are formed when a faulty link between two or more clusters of DGIs causes the groups to divide temporarily.
+These transient partitions merge when the link becomes more reliable.
+The election algorithm allows for failures that disconnect two distinct sub-networks.
+These sub networks are fully connected, but connectivity between the two sub-networks is limited by an unreliable link.
 
-Since Garcia-Molina's original publication, there has been a large body of
-work creating various election algorithms. Each algorithm is
-designed to be well suited to the circumstances it will deployed in: there are
-specialized algorithms for wireless sensor
-networks\cite{LE-WSN-1}\cite{LE-WSN-2}, detecting failures in
-certain
-circumstances\cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}, and of course, transient partitions. Work on leader
-elections has been incorporated into a variety of distributed frameworks:
-Isis\cite{ISISTOOLKIT},
-Horus\cite{HORUSTOOLKIT}, Totem\cite{TOTEMTOOLKIT},
-Transis\cite{TRANSISTOOLKIT}, and Spread\cite{SPREADTOOLKIT} all have methods for creating groups. Despite
-this wide body of work, the fundamentals of leader election are consistent
-across all work: nodes arrive at a consensus of a single peer who coordinates
-the group, and nodes the fail are detected and removed from the group. 
+Since Garcia-Molina's original publication \cite{INVITATIONELECTION}, a large number of election algorithms have been created. 
+Each algorithm is designed to be well-suited to the circumstances it will deployed in.
+Specialized algorithms exist for wireless sensor networks \cite{LE-WSN-1}\cite{LE-WSN-2}, detecting failures in certain circumstances \cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}, and of course, transient partitions.
+Work on leader elections has been incorporated into a variety of distributed frameworks: Isis \cite{ISISTOOLKIT}, Horus \cite{HORUSTOOLKIT}, Totem \cite{TOTEMTOOLKIT}, Transis \cite{TRANSISTOOLKIT}, and Spread \cite{SPREADTOOLKIT} all have methods for creating groups.
+Despite this wide array of work, the fundamentals of leader election are consistent
+across all work.
+Processes arrive at a consensus of a single peer that coordinates the group.
+Processes that fail are detected and removed from the group. 
 
-The elected leader is responsible for making work assignments and identifying
-and merging with other coordinators when they are found, as well as maintaining
-an up-to-date list of peers for the members of his group.  Likewise, members of
-the group can detect the failure of the group leader by periodically checking
-if the group leader is still alive by sending a message. If the leader fails to
-respond, the querying nodes will enter a recovery state and operate alone until
-they can identify another coordinator to join with. Therefore, a leader and each
-of the members maintain a set of processes which are currently reachable, which
+The elected leader is responsible for making work assignments, and identifying and merging with other coordinators when they are found, as well as maintaining an up-to-date list of peers for the members of his group. 
+Group members monitor the group leader by periodically checking if the group leader is still alive by sending a message. 
+If the leader fails to respond, the querying nodes will enter a recovery state and operate alone until
+they can identify another coordinator.
+Therefore, a leader and each of the members maintain a set of processes which are currently reachable, a subset of all known processes in the system.
 
-is a subset of all known processes in the system.
-
-This Leader election can also be classified as a failure detector
-\cite{LEADERELECTIONEVAL}. Failure detectors are algorithms which detect the failure of processes in a
-system. A failure detector algorithm maintains a list of processes that it suspects have
-crashed. This informal description gives the failure detector strong ties to the
-Leader Election process. The Group Management module maintains a list of
-suspected processes which can be determined from the set of all processes and the current
-membership.
+Leader election can also be classified as a failure detector \cite{LEADERELECTIONEVAL}.
+Failure detectors are algorithms which detect the failure of processes within a system; they maintain a list of processes that they suspect have crashed.
+This informal description gives the failure detector strong ties to the leader election process. 
+The group management module maintains a list of suspected processes which can be determined from the set of all processes and the current membership.
 
 The leader and members have separate roles to play in the failure detection
 process. Leaders use a periodic search to locate other leaders in order to merge groups.
