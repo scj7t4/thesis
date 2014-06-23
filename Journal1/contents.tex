@@ -129,115 +129,78 @@ This means that there are two networks that affect the system's ability to do wo
 
 \subsection{Broker Architecture}
 The DGI software used in this designed around a broker architectural specification.
-Each core functionality of the system is implemented within a module that is
-provided access to core interfaces which deliver functionality such as
-scheduling requests, message passing, and a framework to manipulate physical
-devices.
+Each core functionality of the system was implemented within a module that was provided access to core interfaces.
+These interfaces provided functionality such as scheduling requests, message passing, and a framework to manipulate physical devices.
 
-The Broker provides a common message passing interface that all modules are
-allowed to access. Information is passed between modules using this message
-passing interface. For example, the list of peers in the group is made available
-to other modules with a message. 
+The Broker provided a common message passing interface that all modules could access.
+This interface was then used to pass information between modules. 
+For example, the list of peers in the group was sent as a message. 
 
-Several of the distributed algorithms used in the software require the use of
-ordered communication channels. To achieve this, FREEDM provides a reliable
-ordered communication protocol (The sequenced reliable connection or SRC) to
-the modules, as well as a ``best effort'' protocol (The sequenced unreliable
-connection or SUC) which is also FIFO (first in, first out), but provides
-limited delivery guarantees.
+Several of the distributed algorithms used in the software required the use of ordered communication channels.
+DGI provided a reliable ordered communication protocol (The sequenced reliable connection or SRC).
+It also offered a ``best effort'' protocol (The sequenced unreliable connection or SUC).
+This protocol was also FIFO (first in, first out), but provided limited delivery guarantees.
 
-We elected to design and implement our own simple message delivery schemes in
-order to avoid complexities introduced by using TCP in our system. During
-development, it was observed that constructing a TCP connection to a node that
-had failed or was unreachable took a considerable amount of time. We elected to
-use UDP packets which do not have those issues, since the protocol is
-connectionless. UDP also allows development of protocols with various
-properties to evaluate which properties are desirable. To accomplish this,
-lightweight protocols which are best effort oriented were implemented to
-deliver messages as quickly as possible within the requirements.
-
-The decision to go with a lighter weight protocol was also influenced by the
-FREEDM center targeting lower cost, less powerful implementation platforms, with less
-available computing resources than a traditional server or desktop.
-Furthermore, the protocols listed here continue operating despite omission
-failures: they follow the assumption that not every message is critical to the
-operation of the DGI and that the channel does not need to halt entirely to
-deliver one of the messages.
+Simple message delivery schemes were used in order to avoid complexities introduced by using TCP.
+Constructing a TCP connection to a process that either had failed or was unreachable required a considerable amount of time.
+We elected to use UDP packets which do not have those issues, since the protocol is connectionless.
+UDP also allowed for the development of multiple protocols with various properties to evaluate which properties are desirable.
+Lightweight protocols which were best effort oriented were implemented to deliver messages within the requirements.
+The protocols listed here continued operating despite omission failures.
+They follow the assumption that not every message is critical to the operation of the DGI and that the channel did not need to halt entirely to deliver one of the messages.
 
 \subsection{Sequenced Reliable Connection}
-The sequenced reliable connection is a modified send and wait protocol with the
-ability to stop resending messages and move on to the next one in the queue if
-the message delivery time exceeds some timeout. When designing this scheme we
-wanted to achieve several criteria:
+The sequenced reliable connection was a modified send and wait protocol that had the ability to stop resending messages and move on to the next one in the queue if the message delivery time exceeded some timeout. 
+The design of this protocol met several criteria:
 
 \begin{itemize}
-\item Messages must be delivered in order - Some distributed algorithms rely on
-the assumption that the underlying message channel is FIFO.
-\item Messages can become irrelevant - Some messages may only have a short
-period in which they are worth sending. Outside of that time period, they
-should be considered inconsequential and should be skipped. To achieve this, we
-have added message expiration times. After a certain amount of time has passed,
-the sender will no longer attempt to write that message to the channel.
-Instead, he will proceed to the next unexpired message and attach a ``kill''
-value to the message being sent, with the number of the last message the sender
-knows the receiver accepted.
-\item As much effort as possible should be applied to deliver a message while
-it is still relevant.
+\item Messages needed to be delivered in order. A number of distributed algorithms rely on the assumption that the underlying message channel is FIFO.
+\item Messages could become irrelevant.
+Some messages may only have a short period in which they are worth sending. 
+Beyond that time period, they should be considered inconsequential and thus, skipped.
+Message expiration times were used to address this issue.
+After a certain amount of time had passed, the sender would longer attempt to write that message to the channel.
+Instead, he would proceed to the next unexpired message and attach a ``kill'' value. 
+The kill value was the sequence number of the last message the sender knows the receiver accepted.
+\item Every effort needed to be made to deliver a message while it was still relevant.
 \end{itemize}
 
-There one adjustable parameter, the resend time, which controls how often the
-system would attempt to deliver a message it hadn't yet received an
-acknowledgment for. A resend function is periodically called to attempt to redeliver
-lost messages to the receiver.
+One adjustable parameter, the resend time, controlled how often the system would attempt to deliver a message it had not received an acknowledgment for.
+A resend function was periodically called in an attempt to redeliver lost messages to the receiver.
 
 \subsection{Sequenced Unreliable Connection}
-The SUC protocol is simply a best effort protocol: it employs a sliding window 
-to try to deliver messages as quickly as possible. A window size is decided, 
-and then at any given time, the sender can have up to that many messages in the 
-channel, awaiting acknowledgment. The receiver will look for increasing 
-sequence numbers, and disregard any message that is of a lower sequence number 
-than is expected. The purpose of this protocol is to implement a bare minimum: 
-messages are accepted in the order they are sent.
+The SUC protocol was a best effort protocol: it employed a sliding window to deliver messages as quickly as possible.
+A window size was chosen, the sender can have up to that many outstanding messages at any given time.
+The receiver would look for increasing sequence numbers, and disregard any message that was of a lower sequence number than was expected.
+The purpose of this protocol was to implement a bare minimum: messages were accepted in the order they are sent.
 
-Like the SRC protocol, the SUC protocol's resend time can be adjusted. 
-Additionally, the window size is also configurable, but was left unchanged for 
-the tests presented in this work.
+The SUC protocol's resend time could be adjusted. 
+Additionally, the window size was configurable. 
+However the window size was left unchanged for the tests presented in this work.
 
-The SUC protocol was developed because early hypothesis about the
-characteristics of the distributed system when there are omission failures
-supposed that a lighter weight protocol might be more advantageous than a more
-complex protocol. After seeing the protocols behavior during omission failure,
-we continued to analyze it because it represented a more complex behavior to
-model using Markov chains, since the nature of the protocol allows for a race
-condition when a packet is lost.
+The SUC protocol was developed because early hypothesis omission failures supposed that a lighter weight protocol might be more advantageous.
+The lightweight protocol also presented a more complex behavior to model using Markov chains, since the nature of the protocol allowed for a race condition were a packet is lost.
 
 \subsection{Experimental Setup}
-Network unreliability is simulated by dropping datagrams from specific sources
-on the receiver side. Each receiver was given an XML file describing the
-prescribed reliability of messages arriving from a specific source. The
-network settings were loaded at run time and could be polled if necessary for
-changes in the link reliability.
+Network unreliability was simulated by dropping datagrams from specific sources on the receiver side.
+Each receiver was given an XML file describing the prescribed reliability of messages arriving from a specific source.
+The network settings were loaded at run time and could be polled if necessary for changes in the link reliability.
 
-On receipt of a message, the broker's communication layer examines the source
-and selects randomly based on the reliability prescribed in the XML file whether
-or not to drop a message. A dropped message was not delivered to any of the
-sub-modules and was not acknowledged by the receiver. Using this method we were 
-able to emulate a lossy network link but not one with message delays.
-
-``Lost'' messages are dropped on the receiver side. Code was inserted in the
-datagram processing code of the DGI. The DGI will not deliver the message to
-the modules if the message is selected to be dropped.
+``Lost'' messages are dropped on the receiver side. 
+Code was inserted in the datagram processing code of the broker.
+The broker would not deliver the message to the modules if the message is selected to be dropped.
+On receipt of a message, the broker's examinesdthe source and randomly selected based on the prescribed reliability to drop a message.
+A dropped message was not delivered to any of the modules and was not acknowledged by the receiver.
+This method emulated a lossy network link but not one with message delays.
 
 \section{Previous Results}
 Initial data was collected from a non-real time version of the DGI code.
 For each selected message arrival chance, as many as forty tests were run.
-The collected results from the tests are divided into several target scenarios
-as well as the protocol used.
+The collected results from the tests are divided into several target scenarios as well as the protocol used.
 
-The first minute of each test in the experimental test is discarded to remove
-any transients in the test. The result is that while the tests were run for
-ten minutes, the maximum result is 9 minutes of in group time. These graphs
-first appeared in \cite{CRITIS2012}.
+The first minute of each test in the experimental test is discarded so that any transients in the test could be removed.
+The tests were run for ten minutes, however the maximum result was 9 minutes of in group time.
+These graphs first appeared in \cite{CRITIS2012}.
 
 \subsection{Sequenced Reliable Connection}
 
