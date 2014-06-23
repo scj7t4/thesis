@@ -111,29 +111,24 @@ Failure detectors are algorithms which detect the failure of processes within a 
 This informal description gives the failure detector strong ties to the leader election process. 
 The group management module maintains a list of suspected processes which can be determined from the set of all processes and the current membership.
 
-The leader and members have separate roles to play in the failure detection
-process. Leaders use a periodic search to locate other leaders in order to merge groups.
- This serves as a ping / response query for
-detecting failures in the system. It is also capable of detecting a change in state either
-by network issue or crash failure that causes the process being queried to no
-longer consider itself part of the leader's group. The member will only suspect the leader, and not the other processes.
-Of course, simple modifications could allow the member to suspect other members
-by use of a heart beat or query-reply system, but it is not implemented in DGI code.
+The leader and the members have separate roles to play in the failure detection process.
+Leaders use a periodic search to locate other leaders in order to merge groups.
+This serves as a ping / response query for detecting failures within the system.
+The member sends a query its leader.
+The member will only suspect the leader, and not the other processes in their group.
+Of course, simple modifications could allow the member to suspect other members.
+However, that modification is not implemented in DGI code.
 
-In this work it is assumed that a leader does not span two partitioned networks:
-if a group is able to form, all members have some chance of communicating with
-each other.
+In this work it is assumed that a leader does not span two partitioned networks; if a group was able to form, all members have some chance of communicating with one another.
 
-We define a metric to assess the performance of the system under duress: we
-first consider that the distributed can only perform meaningful work when the
-processes can work together to perform physical migration. This means that
-there are two networks that affect the system's ability to do work: the
-physical flow network and the cyber communication network.
+We define a metric to assess the performance of the system under duress.
+A distributed can only perform meaningful work when the processes can work together to perform physical migration.
+This means that there are two networks that affect the system's ability to do work: the physical flow network and the cyber communication network.
 
 \section {Experimental Setup}
 
 \subsection{Broker Architecture}
-The DGI software is designed around a broker architectural specification.
+The DGI software used in this designed around a broker architectural specification.
 Each core functionality of the system is implemented within a module that is
 provided access to core interfaces which deliver functionality such as
 scheduling requests, message passing, and a framework to manipulate physical
