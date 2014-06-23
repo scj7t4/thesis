@@ -206,31 +206,27 @@ These graphs first appeared in \cite{CRITIS2012}.
 
 \subsubsection{Two Node Case}
 
+The 100ms resend SRC test with two nodes can be considered a type of control in this study.
+These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}, highlight the performance of the SRC protocol.
+The maximum in group time of 9 minutes was achieved with only 15\% of datagrams arriving at the receiver. 
+
 \begin{figure}[!h]
 \centering
 \includegraphics[width=\linewidth]{2NODE-SRC-100-GROUP.pdf}
-\caption{Time in group over a 10 minute run for two node system with 100ms resend time}
+\caption{Time in-group over a 10 minute run for a two node-system with a 100ms resend time}
 \label{fig:IGT-SRC-2NODE-100}
 \end{figure}
-
-The 100ms resend SRC test with two nodes can be considered a sort of a control.
-These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}, highlights the performance of the
-SRC protocol, achieving the maximum in group time of 9 minutes with only 15\%
-of datagrams arriving at the receiver. 
 
 \begin{figure}[!h]
 \centering
 \includegraphics[width=\linewidth]{2NODE-SRC-200-GROUP.pdf}
-\caption{Time in group over a 10 minute run for two node system with 200ms resend time}
+\caption{Time in-group over a 10 minute run for a two node-system with a 200ms resend time}
 \label{fig:IGT-SRC-2NODE-200}
 \end{figure}
 
-Figures \ref{fig:IGT-SRC-2NODE-200} demonstrates that as the
-rate at which lost datagrams are resent is decreased to 200ms the
-in group time falls off. This behavior is expected, since each exchange has a
-time limit for each message to arrive and the number of attempts is reduced by
-increasing the resend time.
-
+Figure \ref{fig:IGT-SRC-2NODE-200} demonstrates that as the rate at which lost datagrams were re-sent was decreased to 200ms, the in-group time decreased.
+This behavior was expected.
+Each exchange had a time limit for each message to arrive and the number of attempts was reduced by increasing the resend time.
 
 \subsubsection{Transient Partition Case}
 
@@ -248,13 +244,10 @@ increasing the resend time.
 \label{fig:IGT-SRC-TRANS-100}
 \end{figure}
 
-The transient partition case shows a simple example where a network partition
-separates two groups of DGI processes. In the simplest case where the opposite side of
-the partition is unreachable, nodes will form a group with the other nodes on the
-same side of the partition. In our tests, there are two nodes on each side of
-the partition. In the experiment, the probability of a datagram crossing the
-partition is increased as the experiment continues. The 100ms case is shown in
-Figures \ref{fig:MGS-SRC-TRANS-100} and \ref{fig:IGT-SRC-TRANS-100}.
+The transient partition case is a simple example in which a network partition separates two groups of DGI processes. In the simplest case where the opposite side of the partition is unreachable, nodes will form a group with the other nodes on the same side of the partition.
+In this study, two processes were present on each side of the partition.
+In the experiment, the probability of a datagram crossing the partition was increased as the experiment continued.
+The 100ms case is shown in Figures \ref{fig:MGS-SRC-TRANS-100} and \ref{fig:IGT-SRC-TRANS-100}.
 
 While messages cannot cross the partition, the DGIs stay in a group with the
 nodes on the same side of the partition leading to an in group time of 9 minutes,
