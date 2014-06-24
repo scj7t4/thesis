@@ -404,25 +404,18 @@ Let $p_{i}$ be the probability of transitioning to some set of groups $i$ and le
 
 
 \subsubsection{Leader Election}
-During elections, a highest priority leader (identified by its process id) will
-send invites to the other leaders it has identified. If those leaders accept
-the highest priority leader's invites, they will reply with an accept message
-and forward the invite to their members, if there are any. If the highest
-priority process fails to become the leader the next highest will send invites
-after a specified interval has passed.
+During elections, a highest priority leader (identified by its process ID) sent invites to the other leaders it had previously identified.
+If those leaders accepted the highest priority leader's invite, they replied with an accept messageand forwarded the invite to their members.
+If the highest priority process failed to become the leader the next highest will sent invites after a specified interval had passed.
 
-Therefore, the membership of the system can be affected in two ways: election
-events which change the size of groups and failure suspicion (via checks) which
-decreases the size of groups. Note that elections can decrease the size of
-groups as well as increase them: If a round of forwarding invites fails by the
-new leader to his original group, the group size could decrease.
+Therefore, the membership of the system was affected in two ways: 1) election events that changed the size of groups and 2) failure suspicions (via checks) which decreased the group's size.
+Note that elections coulf decrease the group's as well as increase them.
+If a round of forwarding invites fails, the group size could decrease.
 
-When a process is initialized it begins in the ``solo'' state: it is in a group
-with itself as the only member. As nodes are discovered by checks, the
-processes combine into groups. Groups are not limited by increasing one a time;
-they can increase by combined size of the groups of the leader processes.
-
-
+When a process is initialized, it begins in the ``solo'' state.
+Thus begins in a group win which it is the only member. 
+The processes combine into groups as other processes are discovered by checks.
+Groups are not limited by increasing one a time; they can increase by combined size of the groups of the leader processes.
 
 \begin{figure*}
 \centering
@@ -432,11 +425,12 @@ they can increase by combined size of the groups of the leader processes.
 \end{figure*}
 
 A continuous time Markov model of a single election is presented in Figure \ref{fig:MARKOVELECTION}.
-A set of leaders begin in a normal state. After some time $T_{D}$ an ``are you coordinator''
-message discovers some other peer. $T_{D}$ is a function of the number of discovery
-checks which discover no leaders (which in turn is a function of the link reliability). Let
-$T_{R}$ be the amount of time allowed for a response, $T_{C}$ be the time between
-discovery attempts, and $p_{D}$ is the probability that the exchange discovers a leader.
+Here, a set of leaders begin in a normal state.
+After some time ($T_{D}$), an ``are you coordinator'' message discovers some other peer.
+$T_{D}$ is a function of the number of discovery checks that do no discover any leaders. 
+This is a function of the link reliability.
+Let $T_{R}$ be the amount of time allowed for a response, $T_{C}$ be the time between
+discovery attempts, and $p_{D}$ be the probability that the exchange discovers a leader.
 
 \begin{equation}
 \begin{cases}
@@ -445,20 +439,18 @@ T_{D} = ( T_{R}+T_{C} ) / p_{D} & p_{D} > 0 \\
 \end{cases}
 \end{equation}
 
-Then, the parameters $e_x$ in Figure \ref{fig:MARKOVELECTION} are a function of $T_{D}$ and $p_{x}$,
-the probability an election results in configuration $x$.
+The parameters ($e_x$) in Figure \ref{fig:MARKOVELECTION} are a function of $T_{D}$ and the probability an election results in configuration $x$ ($p_{x}$).
 
 \begin{equation}
 e_x = \frac{p_{x}}{T_{D}}
 \end{equation}
 
-Once a leader has been discovered, the system transitions into an election state, based on the
-potential outcome, where the peers hold an election to determine a new configuration. As shown
-in Figure \ref{fig:MARKOVELECTION}, an election can either succeed or fail, resulting in a new system
-configuration, or each involved process returing to the single member group state.
+Once a leader has been discovered, the system transitions into an election state, based on the potential outcome, in which the peers hold an election to determine a new configuration.
+An election can either succeed or fail, as illustrated in Figure \ref{fig:MARKOVELECTION}. 
+This results in a new system configuration, or each involved process returing to the single member group state.
  
 The amount of time that an election takes is fixed before the algorithm is executed. 
-Let $T_{E}$ be the mean time it takes to complete any election. Therefore:
+Let $T_{E}$ be the mean time it takes to complete any election. Therefore,
 
 \begin{equation}
 \mu = \frac{1}{T_{E}}
@@ -466,32 +458,29 @@ Let $T_{E}$ be the mean time it takes to complete any election. Therefore:
 
 \subsubsection{Combined Model}
 
-A combined model combines election and failure detection Markov chain components. Except for the
-states where all reachable nodes are in the same group and the states where there are no reachable
-leaders each state has a combination of election transitions and failure transitions.                                                        
-The combined model is predictive of the overall characteristics of the system. The
-time spent in a particular configuration is a function of the $\lambda$'s of all the
-events that can cause the system to transition away from a configuration. 
+A combined model combines election and failure detection Markov chain components.
+Each state has a combination of election transitions and failure transitions.
+States where all reachable nodes are in the same group do not have election transitions.
+Likewise, states where there are no reachable leaders do not have election transitions.                                                        
+The combined model is predictive of the system's overall characteristics.
+The time spent in a particular configuration is a function of $\lambda$'s for all events that can cause the system to transition away from a configuration. 
 
-To construct the Markov chain, simulations of individual events are performed. The circumstances
-for the events are assumed to be homogeneous: processes only differ by their process id.
-Using this assumption, the simulation of events can be broken down into a series of scenarios
-that are representative of the events in the system. Since each scenario is independent of other
-scenarios, each scenario can be run independently.  Additionally, since the circumstances
-are assumed to be homogeneous, scenarios that are similar, such as ones where two processes
-swap roles can be simulated only once, and the results can be transformed from one scenario
-to another with a simple mapping. This mapping scheme and parallizability helps keep the
-state space explosion of the potential states under control.
+Simulations of individual events were performed to construct the Markov chain.
+The circumstances for the events were assumed to be homogeneous; processes only differws by their process ID.
+Under this assumption, the simulation of events was broken down into a series of scenarios that represented of the system's events.
+Because each scenario is independent of other scenarios, each scenario ran independently.
+Additionally, because the circumstances were assumed to be homogeneous, scenarios that are similar such as ones where two processes swapped roles were simulated only once. 
+The results were transformed from one scenario to another with a simple mapping.
+This mapping scheme and parallizability helped keep the state space explosion of the potential states under control.
 
 \section{Model Calibration}
 
-The presented methodology of constructing the model was initially calibrated against the
-original two-node case, using a non-real-time version of the DGI codebase. The resulting
-Markov chain was processed using SharpE \cite{SHARPE}\cite{SHARPE2} made by Dr. Kishor
-Trivedi's group at Duke University, a popular tool for reliability analysis. SharpE measured the reward collected in 600 seconds,
-minus the reward that was collected in the first 60 seconds (to emulate that the first
-60 seconds were discarded in the experimental runs.) The SharpE results are plotted along
-with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \ref{fig:COMPARE-SUC-2NODE-200}.
+The presented methodology of constructing the model was initially calibrated against the original two-node case.
+This calibration used a non-real-time version of the DGI codebase.
+The resulting Markov chain was processed using SharpE \cite{SHARPE}\cite{SHARPE2} made by Dr. Kishor Trivedi's group at Duke University, a popular tool for reliability analysis.
+SharpE measured the reward collected in 600 seconds, minus the reward that was collected in the first 60 seconds. 
+Discarding the reward from the first 60 seconds emulated the 60 seconds were discarded in the experimental runs.
+The SharpE results are plotted along with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \ref{fig:COMPARE-SUC-2NODE-200}.
 
 \begin{figure}[!h]
 \centering
@@ -499,7 +488,6 @@ with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \re
 \caption{Comparison of in group time as collected from the experimental platform and the simulator (1 tick offset between processes).}
 \label{fig:COMPARE-SUC-2NODE-100}
 \end{figure}
-
 
 \begin{figure}[!h]
 \centering
@@ -509,35 +497,30 @@ with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \re
 \label{fig:COMPARE-SUC-2NODE-200}
 \end{figure}
 
-The race condition between processes during an election is a consideration in the original
-leader election algorithm, and is an additional factor here. The simulator provided a parameter
-to allow the operator to select how closely synchronized the peers were (the time difference
-between when each of them would search for leaders.) The exchange of messages, particularly
-during an election had a tendency to synchronize nodes during elections, and so the nodes could
-synchronize even if they did not initially begin in a synchronized state. As a result, the
-simulation results aligned best for the 100ms resend case with 1 ticks (Approximately 100ms
-difference in synchronization between processes) and 2 ticks (Approximately 400ms) in the 200ms
-resend case.
+The race condition between processes during an election is a consideration in the original leader election algorithm, and is an additional factor here.
+The simulator provided a parameter to allow the operator to select how closely synchronized the peers were.
+This synchronization was the time difference between when each of them would search for leaders.
+The exchange of messages, particularly during an election, had a tendency to synchronize nodes during elections.
+Nodes could synchronize even if they did not initially begin in a synchronized state. 
+The simulation results aligned best for the 100ms resend case with 1 tick (Approximately 100ms difference in synchronization between processes) and 2 ticks (Approximately 400ms) in the 200ms resend case.
 
-Models fit to the non-real-time code in groups larger than 2 processes did not fit well.
-This is presumed to be a combination of several factors. The suspected major source of fault
-included the structure of the chain, which naturally assumes that all processes enter the
-election state a roughly the same time, which is not typically true for any number of processes
-greater than 2. Additionally, the simulator could only assume that the synchronization between
-processes was mostly fixed, which was not the case in the larger configurations, since the
-coincidental synchronization that occurred in the two node case was suppressed by the increased
-number of peers. Furthermore, an issue with SharpE was discovered that prevented the
-particular structure of the chains produced from being handled correctly. To circumvent that,
-issue, SharpE was replaced by a random-walker which generates exponentially distributed numbers
-and follows the paths of the chain, across several hundred trials, in order to collect time in group data for
-models which SharpE cannot process.
+Models fit to the non-real-time code in groups larger than two processes had a poor fit.
+This is presumed to be a combination of several factors.
+The major source of fault included the structure of the chain. 
+Construction of the chain assumes that all processes enter the election state a roughly the same time. 
+This was not typically true for more than two processes.
+Additionally, the simulator could only assume that the synchronization between processes was fixed.
+The coincidental synchronization that occurred in the two node case was suppressed by the increased number of peers.
+Furthermore, an issue with SharpE was discovered that prevented the particular structure of the chains produced from being handled correctly.
+The election states with only one outbound transition uncovered a bug in the SharpE software.
+To circumvent that, issue, SharpE was replaced by a random-walker which generates exponentially distributed numbers and follows the paths of the chain.
+Time in group data for models which SharpE cannot process were collected across several hundred trials.
 
-The structure of the Markov Chain, which assumed that processes enter the election state
-mostly simultaneously was an appropriate assumption for the real-time system, since the
-round-robin scheduler synchronizes when processes run their group management modules. The
-simulator was set to assume that the synchronization between processes was very tight, and
-new experimental data was collected for the 4 node, transient partition case. The collected
-data is overlaid with the results from the random walker in Figures \ref{fig:COMPARE-SUC-TRANS-RT-128} and \ref{fig:COMPARE-SUC-TRANS-RT-64}.
+The structure of the Markov Chain assumed that processes enter the election state simultaneously.
+This was an appropriate assumption for the real-time system, since the round-robin scheduler synchronized when processes ran their group management modules.
+The simulator was set to assume that the synchronization between processes was very tight.
+New experimental data was collected for the 4 node, transient partition case.
+The collected data is overlaid with the results from the random walker in Figures \ref{fig:COMPARE-SUC-TRANS-RT-128} and \ref{fig:COMPARE-SUC-TRANS-RT-64}.
 
 \begin{figure}[!h]
 \centering
@@ -556,8 +539,8 @@ data is overlaid with the results from the random walker in Figures \ref{fig:COM
 \end{figure}
 
 As a measure of the strength of the model, the correlation between the predicted value was compared.
-The average error was also computed for each of the samples taken. This information is presented in
-Table \ref{tab:STAT-DATA}.
+The average error was also computed for each of the samples taken.
+This information is presented in Table \ref{tab:STAT-DATA}.
 
 \begin{table}
 % increase table row spacing, adjust to taste
@@ -576,23 +559,14 @@ Resend & Correlation & Error \\ \hline
 
 \section{Conclusion}
 
-This work presented a new approach for predicting the behavior of a real-time
-distributed system under omission failure conditions. By using a continuous time
-Markov chain, a variety of insights can be gathered about the system, including
-observations such as how long a particular configuration will be stable for, 
-and the behavior of the system in the long run.  The Markov results will be used
- to make better real time schedules to better react to the network faults we
-plan on introducing to our testbeds. For example, if migrations are failing
-and a sufficient number of migrations can cause the physical system to fail,
-the scheduler may need to behave in a manner that limits the number of failed
-migrations that can occur before group reconfigures. This work is a stepping
-stone towards designing a real-time schedule that manages the system correctly
-when there are cyber faults. Schedules and behavior can be designed around how
-the system behaves on its worst days. This work also allows these schedule designs
-and evaluations to be completed much more quickly than they could be by running
-the system for long periods of time. Therefore results from the test bed, combined
-with results the models yield schedules that improve the stability of the
-system during cyber faults.
+This work presented a new approach for predicting the behavior of a real-time distributed system under omission failure conditions.
+Using a continuous time Markov chain, a variety of insights can be gathered about the system, including observations such as how long a particular configuration will be stable for and the behavior of the system in the long run. 
+The Markov results will be used to make better real time schedules to react to the network faults we plan on introducing to our testbeds.
+For example, if migrations are failing and a sufficient number of migrations can cause the physical system to fail, the scheduler may need to behave in a manner that limits the number of failed migrations.
+This work is a stepping stone towards designing a real-time schedule that manages the physical system correctly when there are cyber faults.
+Schedules and behavior can be designed around how the system behaves on its worst days.
+This work also allows these schedule designs and evaluations to be completed much more quickly than they could be by running the system for long periods of time.
+Therefore results from the test bed, combined with results the models yield schedules that improve the stability of the system during cyber faults.
 
 
 
