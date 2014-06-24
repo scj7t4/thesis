@@ -58,13 +58,14 @@ The next section describes both the FREEDM smart-grid system and it's Distribute
 Section 3, includes an overview the group management algorithm, and the state of the art for distributed systems.
 Section 4 discusses the architecture of the DGI, including the architecture of the message passing interface and the protocols used in the experiments, and the experimental setup.
 Section 5 outlines previously gathered results collected by running the DGI in a controlled environment.
-Section 6 explains the assumptions made and the Markov Chain's construction. 
+Section 6 explai[ns the assumptions made and the Markov Chain's construction. 
 Section 7 focuses on the accuracy of these models for predicting grouping behavior.
 Section 8 offers summary and conclusion.
 
 %\IEEEpubidadjcol
 % needed in second column of first page if using \IEEEpubid
-\section{FREEDM DGI}
+\section{FREEDM DGI}D
+
 This models the group management module of the FREEDM DGI.
 The DGI is a smart grid operating system that organizes and coordinates power electronics.
 It also negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their own needs.
@@ -82,7 +83,7 @@ Other modules provide additional functionality, such as collecting global snapsh
 DGI is a real-time system; certain actions (and reactions) involving power system components need to be completed within a pre-specified time-frame to keep the system stable.
 It uses a round robin schedulerin which each module is given a predetermined window of execution which it may use to perform its duties.
 When a module's time period expires, the next module in the line is allowed to execute. 
- 
+
 \section{Group Management}
 The DGI uses the leader election algorithm, ``Invitation Election Algorithm,'' written by Garcia-Molina \cite{INVITATIONELECTION}.
 Originally published in 1982, this algorithm provides a robust election  procedure that allows for transient partitions.
@@ -121,7 +122,7 @@ However, that modification is not implemented in DGI code.
 
 In this work it is assumed that a leader does not span two partitioned networks; if a group was able to form, all members have some chance of communicating with one another.
 
-We define a metric to assess the performance of the system under duress.
+This study uses a metric to assess the performance of the system under duress.
 A distributed can only perform meaningful work when the processes can work together to perform physical migration.
 This means that there are two networks that affect the system's ability to do work: the physical flow network and the cyber communication network.
 
@@ -343,7 +344,7 @@ The collected data in the previous sections was based on that assumption.
 The Markov chains that model those scenarios also use that assumption.
 
 Events in the distributed system were assumed to be distributed exponentially.
-These were modeled in the chain by $\lambda(x)$ the parameter of the exponential distribution.
+These were modeled in the chain by $\lambda(x)$ the parameter of the exponential distribution. \cite{MARKOV1}\cite{MARKOV2}
 It is important to note that
 \begin{equation}
 \mathrm{E}[X] = \frac{1}{\lambda}. \!
@@ -378,7 +379,7 @@ Only the leader can identify failed group members.
 \label{fig:MARKOVAYC}
 \end{figure}
 
-Figure 9 illuststrates the model of the failure detection stage of the leader election algorithm.
+Figure \ref{fig:MARKOVAYC} illuststrates the model of the failure detection stage of the leader election algorithm.
 A set of processes begin in a normal state as part of a group.
 The leader sent a query to every member, and every member sent a query to the leader.
 If a response was not received in either direction, the process was considered to be unreachable.
@@ -394,12 +395,12 @@ T_{G} = ( T_{R}+T_{C}  ) / p_{F} & p_{F} > 0 \\
 \infty & p_{F} = 0
 \end{cases}
 \end{equation}
-Let $\delta$ equal the exponential parameter of the exponential distribution for the expected time in some set of groups.
+Let $\lambda_{G}$ equal the exponential parameter of the exponential distribution for the expected time in some set of groups.
 The probabilities of each possible transition can then be related to the parameter for that configuration.
 Let $p_{i}$ be the probability of transitioning to some set of groups $i$ and let $f_{i}$ be the exponential parameter for the transition to some other configuration:
 
 \begin{equation}
-\delta = \sum f_{i} = \sum \delta p_{i} = \frac{1}{T_{G}}
+\lambda_{G} = \sum f_{i} = \sum \delta p_{i} = \frac{1}{T_{G}}
 \end{equation}
 
 

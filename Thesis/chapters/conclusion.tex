@@ -54,10 +54,11 @@ Then we can produce a relationship of when a group is likely to violate the phys
 Given this, we can then consider the time that a process may live for, the time it would take to reconfigure, and the likelihood of violating the physical invariant into account as part of selecting a real-time schedule.
 For example, given that it maybe easier to maintain an existing group rather than elect a new one during network congestion, we can select a new schedule that optimizes the amount of work done and the health of the physical system.
 Consider a pair of real-time schedules A and B.
-Schedule A favors high-performance: it expects very little congestion on the network, in exchange however, it can complete many more migrations per round (Noted as $R_{m}$).
+Schedule A favors high-performance: it expects very little congestion on the network.
+In exchange, it can complete many more migrations per round (Noted as $R_{m}$).
 Schedule B is slower and safer.
 It has longer timeout periods that allow for more omission failures.
-However, as a result, it can't do a much work: the rate that migrations are performed is lower.
+As a result, it can't do a much work: the rate that migrations are performed is lower.
 The relationship between schedule A and B in terms of the functions $E(c)[X]$ and $F(c)$ in summarized in Table \ref{tab:SCHED-COMPARE}.
 
 \begin{table}
@@ -88,7 +89,7 @@ a given schedule in a group:
 
 The rate that the system should reconfigure is a function of the maximum number of failed migrations that the system can handle before becoming unstable, the time it takes to write to the channel and the time it takes process messages.
 The amount of time in group can also be a consideration for which algorithm to select based on the needed amount of time to perform its work.
-Group Management can be used as a critical component in a real-time distributed system to manage the number of lost messages and as a consequence, the number of failed migrations in a CPS.
+Group management can be used as a critical component in a real-time distributed system to manage the number of lost messages and as a consequence, the number of failed migrations in a CPS.
 It is critical to understand how frequently nodes enter and exit the group based on lost messages and how many migrations fail as a consequence of those messages.
 This area is deficient because it is strongly coupled to the interactions with the physical component: we must understand how the cyber configuration and physical changes made by that configuration can affect the system, and establish when reconfigurations should occur to keep the system stable.
 
@@ -104,10 +105,10 @@ Guards could also ensure the capability of the group to do work: a formed group 
 Likewise, if the congestion is too high between a pair of processes, it will affect the ability of the group to do work.
 Perhaps most importantly, we wish to ensure that a partition in the cyber domain will not cause a connected physical topology to become unstable.
 Interference between groups in the physical domain should not allow a global physical invariant ($P_{IG}$) to be violated.
-We wish to develop guards that ensure when all local invariants are true the global physical invariant is true, where $P_{Ig}$ is the physical invariant for a group g:
+We wish to develop guards that ensure when all local invariants are true the global physical invariant is true, where $P_{Ix}$ is the physical invariant for a group $x$:
 
 \begin{equation}
-\bigwedge_{g \in Groups}P_{Ig} \rightarrow P_{IG}
+\bigwedge_{x \in Groups}P_{Ix} \rightarrow P_{IG}
 \end{equation}
 
 
@@ -116,12 +117,12 @@ We wish to develop guards that ensure when all local invariants are true the glo
 We expect to be able to further refine the model and the algorithms and formulas for generating the model.
 There are some features of the behavior of the DGI which are not completely encapsulated in the model.
 Currently, the arrival times are a continuous time estimation of events that occurs discretely in the real-time system.
-The failure detection checks occur on a specific interval, but the continuous time Markov Chain allows these events to occur at any moment.
+The failure detection checks occur on a specific interval, but the continuous time Markov chain allows these events to occur at any moment.
 This limitation reduces the accuracy of the model.
 
 With respect to the way the models are generated with the simulator, the way models are specified can be generalized to support more systems of similar design.
 Additionally, the simulator uses the resend interval as the smallest timestep, which allows models to be evaluated quickly, but limits accuracy.
-Lastly, it is worthwhile to adapt the simulation to use a more common network simulation software like OmNet++ to make the results more portable.
+Lastly, it is worthwhile to adapt the simulation to use a more common network simulation software like OmNet++\cite{OMNET} to make the results more portable.
 
 The models presented in this work focus only on the leader election component of a dynamically configured CPS.
 Additional work would incorporate additional components of the DGI system into the models for a more complete picture of the behavior of the system during failures.
@@ -131,4 +132,10 @@ This thrust will pair with the correctness and time between reconfigurations: di
 
 \section{Deliverables}
 
-Therefore, moving forward, we will expand the models we have presented here to include more of the properties of the complete CPS. This model will allow us to better understand what effects the group behavior has on the CPS. Using this, we can establish invariants which allow us to ensure the correctness of a CPS by providing assertions which will not be broken during execution. Creating these invariants will allow us to improve the development of CPSs, especially in their dynamic configuration, which is an area with limited development. These invariants also allow us to create an assertion of correctness which can be validated, during runtime, to ensure the system maintains its stability. We will continue to create and validate models of the CPS against simulations and actual hardware. As we do so we will construct invariants that describe the correct behavior of the groups to ensure safe operation. In addition to the existing conference paper \cite{CRITIS2012}, we have prepared a journal paper with the new work in this document. 
+Therefore, moving forward, we will expand the models we have presented here to include more of the properties of the complete CPS.
+This model will allow us to better understand what effects the group behavior has on the CPS.
+Using this, we can establish invariants which allow us to ensure the correctness of a CPS by providing assertions which will not be broken during execution.
+Creating these invariants will allow us to improve the development of CPSs, especially in their dynamic configuration, which is an area with limited development.
+These invariants also allow us to create an assertion of correctness which can be validated, during runtime, to ensure the system maintains its stability.
+We will continue to create and validate models of the CPS against simulations and actual hardware.
+As we do so we will construct invariants that describe the correct behavior of the groups to ensure safe operation. 
