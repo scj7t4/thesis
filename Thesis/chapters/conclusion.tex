@@ -96,13 +96,13 @@ This area is deficient because it is strongly coupled to the interactions with t
 
 The work presented in this document is probabilistic: the results of a leader election are random and based only on responses arriving with in a specified period of time.
 Other factors can affect what configurations can be installed such as trust in the parties in the group, the underlying physical topology, and the reliability of the peers in that group.
-Gaurds will be developed on the properties of a configuration that protect the physical topology and the members of the group.
+Guards will be developed on the properties of a configuration that protect the physical topology and the members of the group.
 These guarantees would also allow processes to better police the configurations they are installed in, in order to protect the system from malicious nodes.
 
 These guards can ensure quantities like trust in the involved properties, the physical organization for verification methods like attestation.
 Guards could also ensure the capability of the group to do work: a formed group in which all processes are in supply or demand can do no work.
 Likewise, if the congestion is too high between a pair of processes, it will affect the ability of the group to do work.
-Perhaps most importantly, gaurds will ensure that a partition in the cyber domain will not cause a connected physical topology to become unstable.
+Perhaps most importantly, guards will ensure that a partition in the cyber domain will not cause a connected physical topology to become unstable.
 Interference between groups in the physical domain should not allow a global physical invariant ($P_{IG}$) to be violated.
 Future work will develop guards that ensure when all local invariants are true the global physical invariant is true, where $P_{Ix}$ is the physical invariant for a group $x$:
 

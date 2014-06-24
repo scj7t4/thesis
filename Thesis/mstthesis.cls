@@ -165,62 +165,7 @@
 
 \def\titlepage{%
 
-  \ifnum\numcomm<2 \typeout{---------------Masters Thesis----------}
-
-     \thispagestyle{empty}
-     \mbox{}\vspace*{\fill}
-     \begin{singlespace}
-     \begin{center}
-         \parindent=0pt
-         \vspace*{-0.25in} % ... koh (2011/09/06) ...
-        \begin{doublespace}
-        {\uppercase\expandafter{\@thesistitle}}\\ [24pt]
-         by \\ [24pt]
-         {\uppercase\expandafter{\@author}}\\ [24pt]
-         \end{doublespace}
-         A \uppercase\expandafter{\doctype} \\[12pt]
-         Presented to the Faculty of the Graduate School of the\\ [18pt]
-         MISSOURI UNIVERSITY OF SCIENCE AND TECHNOLOGY\\ [18pt]
-         In Partial Fulfillment of the Requirements for the Degree\\[24pt]
-         \uppercase\expandafter{\@degree}~IN~%
-         \uppercase\expandafter{\@department} \\ [24pt]
-         \@graddate\\[18pt]
-         Approved by\\
-     \vspace*{0.375in}
-     \end{center}
-     \if \coadviser *  % no coadviser
-        \begin{center}
-        \begin{minipage}{5in}
-          \begin{center}\begin{onehalfspacing}
-          \adviser, Advisor\\
-          \@memberone \\
-          \@membertwo\\
-          \@memberthree \\
-          \@memberfour \\
-          \end{onehalfspacing}\end{center}
-        \end{minipage}
-        \end{center}
-     \else
-        \begin{center}
-        \begin{minipage}{5in}
-          \begin{center}\begin{onehalfspacing}
-          \adviser, Co-advisor\\
-          \@memberone, Co-advisor \\
-          \@membertwo\\
-          \@memberthree \\
-          \@memberfour \\
-          \end{onehalfspacing}\end{center}
-        \end{minipage}
-        \end{center}
-     \fi
-     \end{singlespace}
-     \vspace*{\fill}
-     \newpage
-     \pagestyle{myheadings}
-     \pagenumbering{roman}
-     \setcounter{page}{2}
-
-  \else  \typeout{---------------Doctoral Thesis----------}
+  \typeout{---------------Doctoral Thesis----------}
 
      \thispagestyle{empty}
      \mbox{}\vspace*{\fill}
@@ -233,7 +178,7 @@
          by \\ [20pt]
          {\uppercase\expandafter{\@author}}\\ [20pt]
          \end{doublespace}
-         A DISSERTATION \\[18pt]
+         A COMPREHENSIVE \\[18pt]
          Presented to the Faculty of the Graduate School of the\\ [18pt]
          MISSOURI UNIVERSITY OF SCIENCE AND TECHNOLOGY\\ [18pt]
          In Partial Fulfillment of the Requirements for the Degree\\[24pt]
@@ -276,7 +221,6 @@
      \pagenumbering{roman}
      \setcounter{page}{2}
 
-  \fi
   }
 %%%%
  \def\abstitlepage{%

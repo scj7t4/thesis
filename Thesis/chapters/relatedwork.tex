@@ -9,7 +9,7 @@ Processes can fail in a variety of ways. In this work focuses on how cyber proce
 A crash failure or its more generalized form, a fail-stop failure, describes a failure in which a process stops executing.
 In general, this is considered to be an irreversible failure, since a process typically does not resume from a crashed state.
 There are categorizations of crash failures, called napping failure where a process will appear to have crashed for a finite amount of time before resuming normal operation.
-Crash failures are impossible to detect with absolute certainty in an asynchronus system.
+Crash failures are impossible to detect with absolute certainty in an asynchronous system.
 Processes can be suspected by other processes through the use of challenge/response messages or heartbeat messages that allow a process to prove that it has not crashed yet.
 A system that can handle a crash failure is implied to be able to handle a fail-stop failure.\cite{DISTRIBUTED}
 
@@ -23,10 +23,10 @@ The fail-stop failure has three properties \cite{DISTRIBUTED}:
 
 \subsection{Omission Failure}
 
-An omission failure occurs when a message is never recieved by the reciever.
-Omission failures can occur when the communication medium is unavalable or when the latency of message exceeds a timeout for it's expected delivery.
-Protocols like TCP do not tolerate omission failures: a packet is resent until it is acknowledged by the reciever.
-If the acknowledgement never comes, the connection is closed.
+An omission failure occurs when a message is never received by the receiver.
+Omission failures can occur when the communication medium is unavailable or when the latency of message exceeds a timeout for its expected delivery.
+Protocols like TCP do not tolerate omission failures: a packet is resent until it is acknowledged by the receiver.
+If the acknowledgment never comes, the connection is closed.
 As a contrast, UDP assumes that any datagram could be lost and it is the responsibility of the programmer to handle missing datagrams appropriately.
 An omission failure can have the same observable affects as a napping failure in some situations. \cite{DISTRIBUTED}
 
@@ -43,7 +43,7 @@ Consider a distributed system where events can be causally related based on thei
     \item If $e = send(m)$ and $e'=deliver(m)$ for the same message $m$, then $e \rightarrow e'$
 \end{enumerate}
 
-This defines a dependence and causality relation between events in the system. If two events cannot be causally related (that is $e \not\rightarrow e'$ and $e' \not\rightarrow e$ then the events are considered concurrent. From this, one can define an execution history $H$. A pair of histories $H$ and $H'$ are equivalent if, the history of a process $p$, $H|_{p}$, cannot be differentiated from another history, $H'|_{p}$, based on the casual relationships between the events in the history. \cite[p~.103]{ISISTOOLKIT} Additionally, a history is considered complete if all sent messages are delivered and there are no casual holes. A casual hole is a circumstance where an event $e$ is casually related to $e'$ by $e' \rightarrow e$ and $e$ appears in a history, but $e'$ does not. A virtually synchronous system is one where each history in the system is indistinguishable from all histories produced by a synchronous system. \cite[p~.104]{ISISTOOLKIT}
+This defines a dependence and causality relation between events in the system. If two events cannot be causally related (that is $e \not\rightarrow e'$ and $e' \not\rightarrow e$) then the events are considered concurrent. From this, one can define an execution history $H$. A pair of histories $H$ and $H'$ are equivalent if, the history of a process $p$, $H|_{p}$, cannot be differentiated from another history, $H'|_{p}$, based on the casual relationships between the events in the history. \cite[p~.103]{ISISTOOLKIT} Additionally, a history is considered complete if all sent messages are delivered and there are no casual holes. A casual hole is a circumstance where an event $e$ is casually related to $e'$ by $e' \rightarrow e$ and $e$ appears in a history, but $e'$ does not. A virtually synchronous system is one where each history in the system is indistinguishable from all histories produced by a synchronous system. \cite[p~.104]{ISISTOOLKIT}
 
 \subsection{Process Groups}
 Virtual synchrony models also support process groups. Although each implementation of a virtually synchronous system applies a different structure to the way processes are grouped, implementations share common features.
@@ -133,7 +133,7 @@ Isis has limited support for partitioning. In the event that a partition forms, 
 
 Transis \cite{TRANSISTOOLKIT} was developed as a more pragmatic approach to the creation of a distributed framework. Transis is developed with the key consideration that, while multicast is the most efficient for distributing information in a view or group of processors (as point to point quickly gives rise to N$^{2}$ message complexity, where $N$ is the number of processes. ) it can be impractical, especially over a wide area network to rely on broadcast to deliver messages. Transis, then considers two components for the network: a local area component and a wide area component.
 
-The local area component, Lansis, is responsible for the exchange of messages across a LAN. Transis uses gateways, called Xporters, to deliver messages between the local views. Transis uses a combination of acknowledgements, which are piggybacked on regular messages to identify lost messages. If a process observes a message being acknowledged that it does not receive then it sends a negative acknowledgement broadcast informing the other members of the view it did not receive that message. In Lansis, the acknowledgement signals that a process is ready to deliver a message. Lansis assumes that all messages can be casually related in a global, directed, acyclic graph and there are a number of schemes that deliver messages based on adherence to that graph.
+The local area component, Lansis, is responsible for the exchange of messages across a LAN. Transis uses gateways, called Xporters, to deliver messages between the local views. Transis uses a combination of acknowledgments, which are piggybacked on regular messages to identify lost messages. If a process observes a message being acknowledged that it does not receive then it sends a negative acknowledgment broadcast informing the other members of the view it did not receive that message. In Lansis, the acknowledgment signals that a process is ready to deliver a message. Lansis assumes that all messages can be casually related in a global, directed, acyclic graph and there are a number of schemes that deliver messages based on adherence to that graph.
 
  
 

@@ -1,14 +1,14 @@
 \chapter{Introduction}
 A robust cyber-physical system should be able to survive and adapt to communication network outages in both the physical and cyber domains.
 When one of these outages occurs, the physical or cyber components must take corrective action to allow the rest of the system to continue operating normally.
-Additionally, process may need to react to the state change of some other process.
+Additionally, processes may need to react to the state change of some other process.
 Managing and detecting when other processes have failed is commonly handled by a leader election algorithm and failure detector.
 
 In the smart grid domain, leader elections are an attractive option for autonomously configuring cyber components so processes can coordinate together to manage the physical system.
 Algorithms such as \cite{LOADBALANCING} and \cite{INCREMENTALCONSENSUS} are distributed algorithms for managing power in a smart grid that rely on an assumption that a group of processes will be able to coordinate together. 
 
 FREEDM (Future Renewable Electric Energy Delivery and Management) is a smart grid project focused on the future of the electrical grid.
-Major proposed features of the FREEDM network include the Solid State Transformer (SST), local energy storage, and local energy generation\cite{FREEDMMIGRATION}.
+Major proposed features of the FREEDM network include the solid state transformer (SST), local energy storage, and local energy generation\cite{FREEDMMIGRATION}.
 This vein of research emphasizes decentralizing the power grid: making it more reliable by distributing energy production resources.
 Part of this design requires the system to operate in ``islanded mode'', where portions of the distribution network are segmented from each other.
 There is a major shortage of work on the effects cyber outages have on CPSs \cite{CYBERRESEARCHCALL} \cite{SMARTGRIDBENEFITS}.
