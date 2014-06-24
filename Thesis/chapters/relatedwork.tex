@@ -2,16 +2,16 @@
 
 \section{Failure Classification}
 
-Processes can fail in a variety of ways. In this work we focus on how cyber processes can fail. There are a variety of faults that have been classified. In this work,
-we focus on two different modes of failure:
+Processes can fail in a variety of ways. In this work focuses on how cyber processes can fail. There are a variety of faults that have been classified. This work focuses on two different modes of failure:
 
 \subsection{Crash or Fail-Stop Failure}
 
-A crash failure or its more generalized form, a fail-stop failure, describes a failure in which a process stops executing. In general, this is considered to be an
-irreversible failure, since a process typically does not resume from a crashed state. There are categorizations of crash failures, called napping failure
-where a process will appear to have crashed for a finite amount of time before resuming normal operation. Crash failures are impossible to detect with absolute
-certainty in an asynchronus system. Processes can be suspected by other processes through the use of challenge/response messages or heartbeat messages that allow
-a process to prove that it has not crashed yet. A system that can handle a crash failure is implied to be able to handle a fail-stop failure.\cite{DISTRIBUTED}
+A crash failure or its more generalized form, a fail-stop failure, describes a failure in which a process stops executing.
+In general, this is considered to be an irreversible failure, since a process typically does not resume from a crashed state.
+There are categorizations of crash failures, called napping failure where a process will appear to have crashed for a finite amount of time before resuming normal operation.
+Crash failures are impossible to detect with absolute certainty in an asynchronus system.
+Processes can be suspected by other processes through the use of challenge/response messages or heartbeat messages that allow a process to prove that it has not crashed yet.
+A system that can handle a crash failure is implied to be able to handle a fail-stop failure.\cite{DISTRIBUTED}
 
 The fail-stop failure has three properties \cite{DISTRIBUTED}:
 
@@ -23,11 +23,12 @@ The fail-stop failure has three properties \cite{DISTRIBUTED}:
 
 \subsection{Omission Failure}
 
-An omission failure occurs when a message is never recieved by the reciever. Omission failures can occur when the communication medium is unavalable,
-or when the latency of message exceeds a timeout for it's expected delivery. Protocols like TCP do not tolerate omission failures: a packet is resent until
-it is acknowledged by the reciever. If the acknowledgement never comes, the connection is closed. As a contrast, UDP assumes that any datagram could be lost
-and it is the responsibility of the programmer to handle missing datagrams appropriately. An omission failure can have the same observable affects as a napping
-failure in some situations. \cite{DISTRIBUTED}
+An omission failure occurs when a message is never recieved by the reciever.
+Omission failures can occur when the communication medium is unavalable or when the latency of message exceeds a timeout for it's expected delivery.
+Protocols like TCP do not tolerate omission failures: a packet is resent until it is acknowledged by the reciever.
+If the acknowledgement never comes, the connection is closed.
+As a contrast, UDP assumes that any datagram could be lost and it is the responsibility of the programmer to handle missing datagrams appropriately.
+An omission failure can have the same observable affects as a napping failure in some situations. \cite{DISTRIBUTED}
 
 \section{Virtual Synchrony}
 Virtual synchrony (and its original implementation, Isis\cite{ISISTOOLKIT}) is an execution model for distributed systems. Virtual synchrony is based on the idea of synchronous execution where each process acts based on a globally shared clock. Synchronous systems are the easiest to program for, but true synchrony is not feasible in most circumstances. Instead, the virtual synchrony execution model was developed. 

@@ -2,20 +2,21 @@
 
 This work presented a new approach for predicting the behavior of a real-time distributed system under omission failure conditions.
 By using a continuous time Markov chain, a variety of insights can be gathered about the system, including observations such as how long a particular configuration will be stable, and the behavior of the system in the long run. 
-The Markov results will be used  to make better real time schedules to better react to the network faults we plan on introducing to our test-beds.
+The Markov results will be used  to make better real time schedules to better react to the network faults introducing in hardware-in-the-loop test-beds.
 The primary concern are scenarios in which the cyber controller attempts to make physical components which are not connected in the physical network interact, and scenarios where a fault in the cyber network causes the paired events (where two physical controllers change to accomplish some transaction or exchange) to only be partially executed.
 For example, in the DGI load balancing scheme, a node in a supply state injects a quantum of power into the physical network, but the node in the demand state does not change to accept it.
 These errors, which are the primary focus of this work could cause instability if a sufficient number of these failed exchanges occur. In \cite{HARINI}, Choudhari et. al. show that failed transactions can create a scenario where the frequency of a power system could become unstable. 
 
-Moving forward, we have identified these areas as targets for improving the research done and creating new contributions.
+Moving forward, these areas as targets for improving the research done and creating new contributions.
 
 \section{Selecting A Schedule}
 
 As shown previously, there is a relationship between congestion and the amount of time a process spends in a group.
-We have shown that an exponential distribution as part of a continuous-time Markov chain can be used to describe the expected time in a configuration given an omission fault rate.
-Based on this, we expect to be able to develop a function which relates the congestion in the network to predict how long a pair of processes will be able to interact.
+An exponential distribution as part of a continuous-time Markov chain can be used to describe the expected time in a configuration given an omission fault rate.
+Based on this, a function which relates the congestion in the network to predict how long a pair of processes will be able to interact will be developed.
 Therefore, when a process observes congestion, either from the network hardware or lost messages they will be able to produce an estimate of their ability to stay in a group with a process.
-If we consider a set of processes that are in a group together then there is some function which describes the expected amount of time until the group would need to reconfigure:
+Consider a set of processes that are in a group together.
+There is some function which describes the expected amount of time until the group would need to reconfigure:
 
 \begin{equation}
 E(c)[X] = \begin{cases}
@@ -30,7 +31,7 @@ As congestion is observed by processes, they produce new estimates of $\lambda$ 
 The value of $\lambda(c)$ may be based on a series of collected data sampled discretely (using simulation) or may be mappable with a probability distribution.
 
 Additionally, congestion can be used to predict how many migrations will fail.
-Given a real time schedule and a congestion value $c$, as with the groups we can define a function $F(c)$ describes the likelihood of a migration failing.
+Given a real time schedule and a congestion value $c$ a function $F(c)$ describes the likelihood of a migration failing.
 These failed migrations contribute to a k-value which can be used in a simplified version of the physical invariant from \cite{HARINI}\cite{CPS1}\cite{CPS2}.
 
 \begin{equation}
@@ -39,20 +40,18 @@ These failed migrations contribute to a k-value which can be used in a simplifie
 
 If the number of failed migrations $k$ exceeds the maximum number of outstanding migrations the system will be unstable.
 A CPS implementing this invariant will stop performing migrations when this invariant would be violated.
-We can definite a related value $remaining\_k$:
+A related value $remaining\_k$ can be defined:
 
 \begin{equation}
 remaining\_k = max\_outstanding\_migrations - k
 \end{equation}  
 
-Then we can produce a relationship of when a group is likely to violate the physical invariant in a round, given an upper bound on the number of migrations that will be attempted that round:
-
+This value can be used to identify when a group is likely to violate the physical invariant in a round, given an upper bound on the number of migrations that will be attempted that round
 \begin{equation}
 \{ F(c) * max\_migrations \geq remaining\_k \}
 \end{equation}
-
-Given this, we can then consider the time that a process may live for, the time it would take to reconfigure, and the likelihood of violating the physical invariant into account as part of selecting a real-time schedule.
-For example, given that it maybe easier to maintain an existing group rather than elect a new one during network congestion, we can select a new schedule that optimizes the amount of work done and the health of the physical system.
+using the time that a process may live for, the time it would take to reconfigure, and the likelihood of violating the physical invariant into account as part of selecting a real-time schedule.
+For example, given that it maybe easier to maintain an existing group rather than elect a new one during network congestion, processes can select a new schedule that optimizes the amount of work done and the health of the physical system.
 Consider a pair of real-time schedules A and B.
 Schedule A favors high-performance: it expects very little congestion on the network.
 In exchange, it can complete many more migrations per round (Noted as $R_{m}$).
@@ -73,7 +72,7 @@ $R_{Am}$ & $>$ & $R_{Bm}$ \\
 \end{tabular}
 \end{table}
 
-If we define a function $migrations(R_{m},t)$ that relates a time period $t$ and the rate migrations are attempted to a number of attempted number of migrations over a time period $t$.
+The function $migrations(R_{m},t)$ relates a time period $t$ and the rate migrations are attempted to a number of attempted number of migrations over a time period $t$.
 With this function a relationship between the number of failed migrations on schedule A to the lower amount of work produced on schedule B, assuming the migration size is constant:
 
 \begin{equation}
@@ -91,21 +90,21 @@ The rate that the system should reconfigure is a function of the maximum number 
 The amount of time in group can also be a consideration for which algorithm to select based on the needed amount of time to perform its work.
 Group management can be used as a critical component in a real-time distributed system to manage the number of lost messages and as a consequence, the number of failed migrations in a CPS.
 It is critical to understand how frequently nodes enter and exit the group based on lost messages and how many migrations fail as a consequence of those messages.
-This area is deficient because it is strongly coupled to the interactions with the physical component: we must understand how the cyber configuration and physical changes made by that configuration can affect the system, and establish when reconfigurations should occur to keep the system stable.
+This area is deficient because it is strongly coupled to the interactions with the physical component: greater understanding is needed of how the cyber configuration and physical changes made by that configuration can affect the system, and establish when reconfigurations should occur to keep the system stable.
 
 \section{Correctness of an Installed Configuration}
 
 The work presented in this document is probabilistic: the results of a leader election are random and based only on responses arriving with in a specified period of time.
 Other factors can affect what configurations can be installed such as trust in the parties in the group, the underlying physical topology, and the reliability of the peers in that group.
-We will develop guards on the properties of a configuration that protect the physical topology and the members of the group.
+Gaurds will be developed on the properties of a configuration that protect the physical topology and the members of the group.
 These guarantees would also allow processes to better police the configurations they are installed in, in order to protect the system from malicious nodes.
 
 These guards can ensure quantities like trust in the involved properties, the physical organization for verification methods like attestation.
 Guards could also ensure the capability of the group to do work: a formed group in which all processes are in supply or demand can do no work.
 Likewise, if the congestion is too high between a pair of processes, it will affect the ability of the group to do work.
-Perhaps most importantly, we wish to ensure that a partition in the cyber domain will not cause a connected physical topology to become unstable.
+Perhaps most importantly, gaurds will ensure that a partition in the cyber domain will not cause a connected physical topology to become unstable.
 Interference between groups in the physical domain should not allow a global physical invariant ($P_{IG}$) to be violated.
-We wish to develop guards that ensure when all local invariants are true the global physical invariant is true, where $P_{Ix}$ is the physical invariant for a group $x$:
+Future work will develop guards that ensure when all local invariants are true the global physical invariant is true, where $P_{Ix}$ is the physical invariant for a group $x$:
 
 \begin{equation}
 \bigwedge_{x \in Groups}P_{Ix} \rightarrow P_{IG}
@@ -114,7 +113,7 @@ We wish to develop guards that ensure when all local invariants are true the glo
 
 \section{Accuracy and Scope of The Model}
 
-We expect to be able to further refine the model and the algorithms and formulas for generating the model.
+Future work will further refine the model and the algorithms and formulas for generating the model.
 There are some features of the behavior of the DGI which are not completely encapsulated in the model.
 Currently, the arrival times are a continuous time estimation of events that occurs discretely in the real-time system.
 The failure detection checks occur on a specific interval, but the continuous time Markov chain allows these events to occur at any moment.
@@ -126,16 +125,16 @@ Lastly, it is worthwhile to adapt the simulation to use a more common network si
 
 The models presented in this work focus only on the leader election component of a dynamically configured CPS.
 Additional work would incorporate additional components of the DGI system into the models for a more complete picture of the behavior of the system during failures.
-We will consider the correctness of the incorporated algorithms, how omission failures can violate that correctness, and what restrictions we can place on the configuration and operation of DGIs in order to protect the entire system during failures.
-To do this, we will expand the analysis performed here to incorporate algorithms such as state collection and load balancing and define metrics to quantify their behavior during omission failures.
+Future work will consider the correctness of the incorporated algorithms, how omission failures can violate that correctness, and what restrictions can be placed on the configuration and operation of DGIs in order to protect the entire system during failures.
+To do this, future work will expand the analysis performed here to incorporate algorithms such as state collection and load balancing and define metrics to quantify their behavior during omission failures.
 This thrust will pair with the correctness and time between reconfigurations: different algorithms will have different amounts of failure that can be allowed before reconfiguration is necessary.
 
 \section{Deliverables}
 
-Therefore, moving forward, we will expand the models we have presented here to include more of the properties of the complete CPS.
+Therefore, moving forward, future work will expand the models presented here to include more of the properties of the complete CPS.
 This model will allow us to better understand what effects the group behavior has on the CPS.
-Using this, we can establish invariants which allow us to ensure the correctness of a CPS by providing assertions which will not be broken during execution.
+Using this, future work will establish invariants which allow us to ensure the correctness of a CPS by providing assertions which will not be broken during execution.
 Creating these invariants will allow us to improve the development of CPSs, especially in their dynamic configuration, which is an area with limited development.
 These invariants also allow us to create an assertion of correctness which can be validated, during runtime, to ensure the system maintains its stability.
-We will continue to create and validate models of the CPS against simulations and actual hardware.
-As we do so we will construct invariants that describe the correct behavior of the groups to ensure safe operation. 
+New models of the CPS will be created and validated against simulations and actual hardware.
+Invariants will be constructed that describe the correct behavior of the groups to ensure safe operation. 
