@@ -47,7 +47,7 @@ As a result,it is not well known how either a cyber or physical faults will effe
 However, previously conducted research \cite{HARINI}\cite{TSG} indicates that cyber faults can cause a
 physical system to apply unstable settings.
 
-This work presents the initial steps neccessary to better understanding and planning for these faults.
+This work presents the initial steps necessary to better understanding and planning for these faults.
 A new approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems. 
 This discussion presents an approach that utilizes Markov chain to model a system's grouping behavior.
 These chains produce expectations with regard to not only how long a system can be expected to stay in a particular state but also much time it will be able to spend coordinating and doing useful work over a period
@@ -81,7 +81,7 @@ Group management, the focus of this work, implements a leader election algorithm
 Other modules provide additional functionality, such as collecting global snapshots, negotiating the migrations, and giving commands to physical components.
 
 DGI is a real-time system; certain actions (and reactions) involving power system components need to be completed within a pre-specified time-frame to keep the system stable.
-It uses a round robin schedulerin which each module is given a predetermined window of execution which it may use to perform its duties.
+It uses a round robin scheduler in which each module is given a predetermined window of execution which it may use to perform its duties.
 When a module's time period expires, the next module in the line is allowed to execute. 
 
 \section{Group Management}
@@ -190,7 +190,7 @@ The network settings were loaded at run time and could be polled if necessary fo
 ``Lost'' messages are dropped on the receiver side. 
 Code was inserted in the datagram processing code of the broker.
 The broker would not deliver the message to the modules if the message is selected to be dropped.
-On receipt of a message, the broker's examinesdthe source and randomly selected based on the prescribed reliability to drop a message.
+On receipt of a message, the broker's examines the source and randomly selected based on the prescribed reliability to drop a message.
 A dropped message was not delivered to any of the modules and was not acknowledged by the receiver.
 This method emulated a lossy network link but not one with message delays.
 
@@ -296,7 +296,7 @@ There is a high amount of variance, however, for any particular trial.
 \label{fig:IGT-SUC-2NODE-200}
 \end{figure}
 
-In the 200ms resend case (illustrated in Figure \ref{fig:IGT-SUC-2NODE-200}), a greater growth rate occured in the in group time as the reliability increased.
+In the 200ms resend case (illustrated in Figure \ref{fig:IGT-SUC-2NODE-200}), a greater growth rate occurred in the in group time as the reliability increased.
 When an average was taken across all of the collected data points from the experiment, the average in group time is higher for the 200ms case than it was for the 100ms case (6.86 vs 6.09).
 There large amount of variance in the collected in group time, however.
 As a result, it is not possible to state with confidence that the there is a significant difference between the two cases.
@@ -304,9 +304,9 @@ As a result, it is not possible to state with confidence that the there is a sig
 \section{Formal Modeling}
 
 As a consequence of the high amount of variance in the collected data, it is difficult to make any predictions about other configurations from the collected data.
-The behavior of the DGIs acting togethere was be modeled as a collection of states.
+The behavior of the DGIs acting together was be modeled as a collection of states.
 Each state described configuration of the system, and that the transitions between those states model failure events or election events.
-These transitionas are probabilistic, and as a result it is a natural extension to model the distributed system as a Markov Chain.
+These transitions are probabilistic, and as a result it is a natural extension to model the distributed system as a Markov Chain.
 
 \subsection{Assumptions}
 The inter-arrival time between events was assumed to be exponentially distributed.
@@ -334,7 +334,7 @@ A single lost packet does not necessitate that the message it contained is forev
 Different protocols allow for different levels of reliability, despite packet loss.
 
 The leader election algorithm was centered around two critical events: checking and elections.
-The check system is used to detect both crash-stop failures and the availability of processses for election.
+The check system is used to detect both crash-stop failures and the availability of processes for election.
 Processes in the system occasionally exchanged messages to determine if the other processes had failed.
 Leaders exchanged messages to discover new leaders. 
 
@@ -368,7 +368,7 @@ A ``no'' response indicated that either the leader had failed and recovered, or 
 In either case, the member had been removed from the leader's group.
 The member would enter a recovery state and reset itself to an initial configuration where it was in a group by itself.
 
-When a change in membership occured, either due to recovery or a suspected failure, the leader pushed a list of members to the group.
+When a change in membership occurred, either due to recovery or a suspected failure, the leader pushed a list of members to the group.
 Members cannot suspect other members of failing.
 Only the leader can identify failed group members.
 
@@ -379,7 +379,7 @@ Only the leader can identify failed group members.
 \label{fig:MARKOVAYC}
 \end{figure}
 
-Figure \ref{fig:MARKOVAYC} illuststrates the model of the failure detection stage of the leader election algorithm.
+Figure \ref{fig:MARKOVAYC} illustrates the model of the failure detection stage of the leader election algorithm.
 A set of processes begin in a normal state as part of a group.
 The leader sent a query to every member, and every member sent a query to the leader.
 If a response was not received in either direction, the process was considered to be unreachable.
@@ -406,11 +406,11 @@ Let $p_{i}$ be the probability of transitioning to some set of groups $i$ and le
 
 \subsubsection{Leader Election}
 During elections, a highest priority leader (identified by its process ID) sent invites to the other leaders it had previously identified.
-If those leaders accepted the highest priority leader's invite, they replied with an accept messageand forwarded the invite to their members.
+If those leaders accepted the highest priority leader's invite, they replied with an accept message and forwarded the invite to their members.
 If the highest priority process failed to become the leader the next highest will sent invites after a specified interval had passed.
 
 Therefore, the membership of the system was affected in two ways: 1) election events that changed the size of groups and 2) failure suspicions (via checks) which decreased the group's size.
-Note that elections coulf decrease the group's as well as increase them.
+Note that elections could decrease the group's as well as increase them.
 If a round of forwarding invites fails, the group size could decrease.
 
 When a process is initialized, it begins in the ``solo'' state.
@@ -448,7 +448,7 @@ e_x = \frac{p_{x}}{T_{D}}
 
 Once a leader has been discovered, the system transitions into an election state, based on the potential outcome, in which the peers hold an election to determine a new configuration.
 An election can either succeed or fail, as illustrated in Figure \ref{fig:MARKOVELECTION}. 
-This results in a new system configuration, or each involved process returing to the single member group state.
+This results in a new system configuration, or each involved process returning to the single member group state.
  
 The amount of time that an election takes is fixed before the algorithm is executed. 
 Let $T_{E}$ be the mean time it takes to complete any election. Therefore,
@@ -467,7 +467,7 @@ The combined model is predictive of the system's overall characteristics.
 The time spent in a particular configuration is a function of $\lambda$'s for all events that can cause the system to transition away from a configuration. 
 
 Simulations of individual events were performed to construct the Markov chain.
-The circumstances for the events were assumed to be homogeneous; processes only differws by their process ID.
+The circumstances for the events were assumed to be homogeneous; processes only differs by their process ID.
 Under this assumption, the simulation of events was broken down into a series of scenarios that represented of the system's events.
 Because each scenario is independent of other scenarios, each scenario ran independently.
 Additionally, because the circumstances were assumed to be homogeneous, scenarios that are similar such as ones where two processes swapped roles were simulated only once. 
