@@ -54,8 +54,8 @@ These chains produce expectations with regard to not only how long a system can 
 of time. 
 Using these measures, the behavior of the control system for the physical devices can be adjusted to prevent faults.
 
-The next section describes both the FREEDM smart-grid system and it's Distributed Grid Intelligence (DGI).
-Section 3, includes an overview the group management algorithm, and the state of the art for distributed systems.
+The next section describes both the FREEDM smart-grid system and its Distributed Grid Intelligence (DGI).
+Section 3 includes an overview the group management algorithm, and the state of the art for distributed systems.
 Section 4 discusses the architecture of the DGI, including the architecture of the message passing interface and the protocols used in the experiments, and the experimental setup.
 Section 5 outlines previously gathered results collected by running the DGI in a controlled environment.
 Section 6 explains the assumptions made and the Markov Chain's construction. 
@@ -64,9 +64,9 @@ Section 8 offers summary and conclusion.
 
 %\IEEEpubidadjcol
 % needed in second column of first page if using \IEEEpubid
-\section{FREEDM DGI}D
+\section{FREEDM DGI}
 
-This models the group management module of the FREEDM DGI.
+This study models the group management module of the FREEDM DGI.
 The DGI is a smart grid operating system that organizes and coordinates power electronics.
 It also negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their own needs.
 DGI leverages common distributed algorithms to control the power grid, making it an attractive target for modeling a distributed system.
@@ -92,7 +92,7 @@ These transient partitions merge when the link becomes more reliable.
 The election algorithm allows for failures that disconnect two distinct sub-networks.
 These sub networks are fully connected, but connectivity between the two sub-networks is limited by an unreliable link.
 
-Since Garcia-Molina's original publication \cite{INVITATIONELECTION}, a large number of election algorithms have been created. 
+Since Garcia-Molina's original publication \cite{INVITATIONELECTION}, many of election algorithms have been created. 
 Each algorithm is designed to be well-suited to the circumstances it will deployed in.
 Specialized algorithms exist for wireless sensor networks \cite{LE-WSN-1}\cite{LE-WSN-2}, detecting failures in certain circumstances \cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}, and of course, transient partitions.
 Work on leader elections has been incorporated into a variety of distributed frameworks: Isis \cite{ISISTOOLKIT}, Horus \cite{HORUSTOOLKIT}, Totem \cite{TOTEMTOOLKIT}, Transis \cite{TRANSISTOOLKIT}, and Spread \cite{SPREADTOOLKIT} all have methods for creating groups.
@@ -115,10 +115,9 @@ The group management module maintains a list of suspected processes which can be
 The leader and the members have separate roles to play in the failure detection process.
 Leaders use a periodic search to locate other leaders in order to merge groups.
 This serves as a ping / response query for detecting failures within the system.
-The member sends a query its leader.
+The member sends a query to its leader.
 The member will only suspect the leader, and not the other processes in their group.
 Of course, simple modifications could allow the member to suspect other members.
-However, that modification is not implemented in DGI code.
 
 In this work it is assumed that a leader does not span two partitioned networks; if a group was able to form, all members have some chance of communicating with one another.
 
@@ -180,7 +179,7 @@ Additionally, the window size was configurable.
 However the window size was left unchanged for the tests presented in this work.
 
 The SUC protocol was developed because early hypothesis omission failures supposed that a lighter weight protocol might be more advantageous.
-The lightweight protocol also presented a more complex behavior to model using Markov chains, since the nature of the protocol allowed for a race condition were a packet is lost.
+The lightweight protocol also presented a more complex behavior to model using Markov chains, since the nature of the protocol allowed for a race condition where a packet is lost.
 
 \subsection{Experimental Setup}
 Network unreliability was simulated by dropping datagrams from specific sources on the receiver side.
@@ -319,11 +318,11 @@ All participating peers were assumed to be on the same schedule; all peers began
 Synchronization was accomplished using Choi's work \cite{DCS}.
 It was also assumed the clocks are synchronized. 
 If the network has faulted, process clocks would not drift noticeably from their last synchronization.
-A production system would likely use GPS time synchronization to obtain certain power system readings \cite{PHASORREADINGS}.
+As an alternative, a production system would likely use GPS time synchronization to obtain certain power system readings \cite{PHASORREADINGS}.
 
 \subsection{Constructing The Markov Chain}
 
-Consider a set of processes, that are linked by some packet-based network protocol.
+Consider a set of processes that are linked by some packet-based network protocol.
 Under ideal conditions, a packet sent by one process  will always be delivered to its destination.
 Without a delivery protocol, as soon as packets are lost by the communication network, the message that it contained is lost forever.
 Therefore to compensate for packet loss, a large variety of delivery protocols have been developed.
@@ -414,9 +413,9 @@ Note that elections could decrease the group's as well as increase them.
 If a round of forwarding invites fails, the group size could decrease.
 
 When a process is initialized, it begins in the ``solo'' state.
-Thus begins in a group win which it is the only member. 
+The solo state is a group in which it is the only member. 
 The processes combine into groups as other processes are discovered by checks.
-Groups are not limited by increasing one a time; they can increase by combined size of the groups of the leader processes.
+Groups are not limited to increasing one at a time; they can increase by combined size of the groups of the leader processes.
 
 \begin{figure*}
 \centering
@@ -480,7 +479,7 @@ The presented methodology of constructing the model was initially calibrated aga
 This calibration used a non-real-time version of the DGI codebase.
 The resulting Markov chain was processed using SharpE \cite{SHARPE}\cite{SHARPE2} made by Dr. Kishor Trivedi's group at Duke University, a popular tool for reliability analysis.
 SharpE measured the reward collected in 600 seconds, minus the reward that was collected in the first 60 seconds. 
-Discarding the reward from the first 60 seconds emulated the 60 seconds were discarded in the experimental runs.
+Discarding the reward from the first 60 seconds emulated the 60 seconds that were discarded in the experimental runs.
 The SharpE results are plotted along with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \ref{fig:COMPARE-SUC-2NODE-200}.
 
 \begin{figure}[!h]
