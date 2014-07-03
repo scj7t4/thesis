@@ -76,7 +76,7 @@ The function $migrations(R_{m},t)$ relates a time period $t$ and the rate migrat
 With this function a relationship between the number of failed migrations on schedule A to the lower amount of work produced on schedule B, assuming the migration size is constant:
 
 \begin{equation}
-\Delta(A,B) = (F_{A}(c) * migrations(R_{Am},t)) - (F_{B}(c) * migrations(R_{Bm},t))
+\Delta(A,B) = ((1-F_{A}(c)) * migrations(R_{Am},t)) - (1-(F_{B}(c)) * migrations(R_{Bm},t))
 \end{equation}
 
 Based on the above equation, schedule B should be selected when $\Delta$ is negative, yielding the invariant for the current schedule x and the set of potential schedules S, which validates when is best to apply

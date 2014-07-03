@@ -150,7 +150,7 @@ The group management module maintains a list of suspected processes which can be
 The leader and the members have separate roles to play in the failure detection process.
 Leaders use a periodic search to locate other leaders in order to merge groups.
 This serves as a ping / response query for detecting failures within the system.
-The member sends a query its leader.
+The member sends a query to its leader.
 The member will only suspect the leader, and not the other processes in their group.
 Of course, simple modifications could allow the member to suspect other members.
 However, that modification is not implemented in DGI code.
