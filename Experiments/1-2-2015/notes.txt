@@ -1,0 +1,3 @@
+NULL hypothesis MUST be that it DOESN'T fit.
+
+You are trying to REJECT the hypothesis that it doesn't fit by having X^2 values that are LESS than the critical value.

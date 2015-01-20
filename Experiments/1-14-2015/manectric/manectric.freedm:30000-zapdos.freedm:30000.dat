@@ -1,0 +1,532 @@
+** LOG START manectric.freedm:30000 2 2015-Jan-13 08:51:49.005948
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 09:01:38.959390
+## STAGE: [5, 5, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 09:02:02.205038
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 09:11:51.460999
+## STAGE: [10, 10, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 09:12:15.405287
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 09:22:04.323890
+## STAGE: [15, 15, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 09:22:28.604924
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 09:32:16.749595
+## STAGE: [20, 20, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 09:32:41.805024
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 09:42:29.531728
+## STAGE: [25, 25, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 09:42:55.005732
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 09:52:42.178247
+## STAGE: [30, 30, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 09:53:08.204627
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 10:02:54.487177
+## STAGE: [35, 35, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 10:03:21.405556
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 10:13:07.274227
+## STAGE: [40, 40, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 10:13:34.604916
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 10:23:20.182343
+## STAGE: [45, 45, 0]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 10:23:34.994543
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 10:33:32.676438
+## STAGE: [50, 50, 0]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 10:33:47.725001
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 10:43:45.406729
+## STAGE: [55, 55, 0]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 10:44:00.222150
+** LOG STOP manectric.freedm:30000 41 2015-Jan-13 10:53:57.903909
+## STAGE: [60, 60, 0]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 10:54:13.030735
+** LOG STOP manectric.freedm:30000 41 2015-Jan-13 11:04:10.712765
+## STAGE: [65, 65, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 11:04:26.005157
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 11:14:23.128919
+## STAGE: [70, 70, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 11:14:39.205306
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 11:24:35.776368
+## STAGE: [75, 75, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 11:24:52.405354
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 11:34:48.598122
+## STAGE: [80, 80, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 11:35:05.605498
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 11:45:01.105127
+## STAGE: [85, 85, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 11:45:18.805483
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 11:55:13.867156
+## STAGE: [90, 90, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 11:55:32.005441
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 12:05:26.575297
+## STAGE: [95, 95, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 12:05:45.204909
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 12:15:39.233712
+## STAGE: [100, 100, 0]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 12:15:58.405351
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 12:25:51.815255
+## STAGE: [0, 5, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 12:26:11.605695
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 12:36:04.514355
+## STAGE: [5, 5, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 12:36:24.805320
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 12:46:17.035119
+## STAGE: [10, 10, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 12:46:38.005114
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 12:56:29.801162
+## STAGE: [15, 15, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 12:56:51.204803
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 13:06:42.471603
+## STAGE: [20, 20, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 13:07:04.405319
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 13:16:55.040119
+## STAGE: [25, 25, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 13:17:17.605280
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 13:27:07.763082
+## STAGE: [30, 30, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 13:27:30.805701
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 13:37:20.374023
+## STAGE: [35, 35, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 13:37:44.005516
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 13:47:32.757990
+## STAGE: [40, 40, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 13:47:57.206135
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 13:57:45.352455
+## STAGE: [45, 45, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 13:58:10.404942
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 14:07:58.058448
+## STAGE: [50, 50, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 14:08:23.605076
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 14:18:10.773762
+## STAGE: [55, 55, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 14:18:36.805464
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 14:28:23.458516
+## STAGE: [60, 60, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 14:28:50.004717
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 14:38:35.930270
+## STAGE: [65, 65, 5]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 14:38:50.726179
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 14:48:48.408067
+## STAGE: [70, 70, 5]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 14:49:03.629504
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 14:59:01.311250
+## STAGE: [75, 75, 5]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 14:59:16.114228
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 15:09:13.795673
+## STAGE: [80, 80, 5]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 15:09:29.012674
+** LOG STOP manectric.freedm:30000 41 2015-Jan-13 15:19:26.694369
+## STAGE: [85, 85, 5]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 15:19:41.631702
+** LOG STOP manectric.freedm:30000 41 2015-Jan-13 15:29:39.313433
+## STAGE: [90, 90, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 15:29:54.606025
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 15:39:51.982002
+## STAGE: [95, 95, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 15:40:07.806269
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 15:50:04.599172
+## STAGE: [100, 100, 5]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 15:50:21.004721
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 16:00:17.124725
+## STAGE: [0, 10, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 16:00:34.204901
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 16:10:29.826663
+## STAGE: [5, 5, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 16:10:47.404846
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 16:20:42.479559
+## STAGE: [10, 10, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 16:21:00.605223
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 16:30:55.082037
+## STAGE: [15, 15, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 16:31:13.805453
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 16:41:07.882151
+## STAGE: [20, 20, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 16:41:27.005273
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 16:51:20.418016
+## STAGE: [25, 25, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 16:51:40.205008
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 17:01:33.076877
+## STAGE: [30, 30, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 17:01:53.404841
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 17:11:45.817622
+## STAGE: [35, 35, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 17:12:06.605644
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 17:21:58.189524
+## STAGE: [40, 40, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 17:22:19.804595
+** LOG STOP manectric.freedm:30000 43 2015-Jan-13 17:32:10.788743
+## STAGE: [45, 45, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 17:32:33.005288
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 17:42:23.632324
+## STAGE: [50, 50, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 17:42:46.205061
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 17:52:36.222864
+## STAGE: [55, 55, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 17:52:59.405796
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 18:02:48.680542
+## STAGE: [60, 60, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 18:03:09.805289
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 18:13:01.426161
+## STAGE: [65, 65, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 18:13:23.004911
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 18:23:14.116884
+## STAGE: [70, 70, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 18:23:36.204625
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 18:33:26.788718
+## STAGE: [75, 75, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 18:33:49.405522
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 18:43:39.272141
+## STAGE: [80, 80, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 18:44:02.605847
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 18:53:51.938256
+## STAGE: [85, 85, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 18:54:15.805315
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 19:04:04.541016
+## STAGE: [90, 90, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 19:04:29.005745
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 19:14:17.067258
+## STAGE: [95, 95, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 19:14:42.205705
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 19:24:29.866129
+## STAGE: [100, 100, 10]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 19:24:55.405726
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 19:34:42.450374
+## STAGE: [0, 15, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 19:35:08.605030
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 19:44:55.045801
+## STAGE: [5, 5, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 19:45:21.804668
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 19:55:07.486381
+## STAGE: [10, 10, 15]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 19:55:22.610584
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 20:05:20.291992
+## STAGE: [15, 15, 15]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 20:05:35.185876
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 20:15:32.867404
+## STAGE: [20, 20, 15]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 20:15:47.897894
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 20:25:45.579525
+## STAGE: [25, 25, 15]
+** LOG START manectric.freedm:30000 1 2015-Jan-13 20:26:00.491842
+** LOG STOP manectric.freedm:30000 41 2015-Jan-13 20:35:58.173827
+## STAGE: [30, 30, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 20:36:13.204693
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 20:46:10.874758
+## STAGE: [35, 35, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 20:46:26.405529
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 20:56:23.556729
+## STAGE: [40, 40, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 20:56:39.605835
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 21:06:36.160460
+## STAGE: [45, 45, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 21:06:52.805260
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 21:16:48.727179
+## STAGE: [50, 50, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 21:17:06.004796
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 21:27:01.315679
+## STAGE: [55, 55, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 21:27:19.204853
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 21:37:14.065537
+## STAGE: [60, 60, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 21:37:32.405706
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 21:47:26.589382
+## STAGE: [65, 65, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 21:47:45.605078
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 21:57:39.511963
+## STAGE: [70, 70, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 21:57:58.805018
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 22:07:52.149805
+## STAGE: [75, 75, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 22:08:12.004985
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 22:18:04.765814
+## STAGE: [80, 80, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 22:18:25.205144
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 22:28:16.937079
+## STAGE: [85, 85, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 22:28:38.404939
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 22:38:29.995886
+## STAGE: [90, 90, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 22:38:51.605698
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 22:48:42.726177
+## STAGE: [95, 95, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 22:49:04.805622
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 22:58:55.290428
+## STAGE: [100, 100, 15]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 22:59:18.004987
+** LOG STOP manectric.freedm:30000 43 2015-Jan-13 23:09:07.906809
+## STAGE: [0, 20, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 23:09:31.205642
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 23:19:20.634559
+## STAGE: [5, 5, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 23:19:44.405582
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 23:29:33.093226
+## STAGE: [10, 10, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 23:29:57.605959
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 23:39:45.736454
+## STAGE: [15, 15, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 23:40:10.805322
+** LOG STOP manectric.freedm:30000 42 2015-Jan-13 23:49:58.622063
+## STAGE: [20, 20, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-13 23:50:24.004965
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 00:00:11.275587
+## STAGE: [25, 25, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 00:00:37.205174
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 00:10:23.957773
+## STAGE: [30, 30, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 00:10:50.405419
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 00:20:36.402826
+## STAGE: [35, 35, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 00:21:03.604961
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 00:30:49.239574
+## STAGE: [40, 40, 20]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 00:31:04.128115
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 00:41:01.810000
+## STAGE: [45, 45, 20]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 00:41:16.898444
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 00:51:14.580005
+## STAGE: [50, 50, 20]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 00:51:29.572840
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 01:01:27.254705
+## STAGE: [55, 55, 20]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 01:01:42.029500
+** LOG STOP manectric.freedm:30000 41 2015-Jan-14 01:11:39.711226
+## STAGE: [60, 60, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 01:11:55.005226
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 01:21:52.445417
+## STAGE: [65, 65, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 01:22:08.205203
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 01:32:04.970065
+## STAGE: [70, 70, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 01:32:21.405117
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 01:42:17.397843
+## STAGE: [75, 75, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 01:42:34.605327
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 01:52:29.890142
+## STAGE: [80, 80, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 01:52:47.805528
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 02:02:42.849375
+## STAGE: [85, 85, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 02:03:01.005540
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 02:12:55.494180
+## STAGE: [90, 90, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 02:13:14.205075
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 02:23:07.933842
+## STAGE: [95, 95, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 02:23:27.404761
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 02:33:20.756539
+## STAGE: [100, 100, 20]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 02:33:40.605554
+** LOG STOP manectric.freedm:30000 43 2015-Jan-14 02:43:33.291504
+## STAGE: [0, 25, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 02:43:53.804874
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 02:53:45.873691
+## STAGE: [5, 5, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 02:54:07.004767
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 03:03:58.630605
+## STAGE: [10, 10, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 03:04:20.204634
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 03:14:11.176537
+## STAGE: [15, 15, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 03:14:33.404935
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 03:24:23.766798
+## STAGE: [20, 20, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 03:24:46.605281
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 03:34:36.584962
+## STAGE: [25, 25, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 03:34:59.805334
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 03:44:49.140008
+## STAGE: [30, 30, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 03:45:13.005315
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 03:55:01.843932
+## STAGE: [35, 35, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 03:55:26.205841
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 04:05:14.474473
+## STAGE: [40, 40, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 04:05:39.405172
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 04:15:27.155957
+## STAGE: [45, 45, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 04:15:52.605675
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 04:25:39.580454
+## STAGE: [50, 50, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 04:26:05.805203
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 04:35:52.347845
+## STAGE: [55, 55, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 04:36:19.005063
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 04:46:05.044508
+## STAGE: [60, 60, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 04:46:32.205146
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 04:56:17.700604
+## STAGE: [65, 65, 25]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 04:56:32.562841
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 05:06:30.244664
+## STAGE: [70, 70, 25]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 05:06:45.218633
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 05:16:42.900522
+## STAGE: [75, 75, 25]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 05:16:57.914948
+** LOG STOP manectric.freedm:30000 41 2015-Jan-14 05:26:55.596853
+## STAGE: [80, 80, 25]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 05:27:10.534066
+** LOG STOP manectric.freedm:30000 41 2015-Jan-14 05:37:08.216057
+## STAGE: [85, 85, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 05:37:23.605821
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 05:47:20.825800
+## STAGE: [90, 90, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 05:47:36.805943
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 05:57:33.433151
+## STAGE: [95, 95, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 05:57:50.004711
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 06:07:46.040657
+## STAGE: [100, 100, 25]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 06:08:03.205094
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 06:17:58.654887
+## STAGE: [0, 30, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 06:18:16.405359
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 06:28:11.308334
+## STAGE: [5, 5, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 06:28:29.605339
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 06:38:23.864274
+## STAGE: [10, 10, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 06:38:42.805238
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 06:48:36.082024
+## STAGE: [15, 15, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 06:48:56.004949
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 06:58:48.985698
+## STAGE: [20, 20, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 06:59:09.205237
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 07:09:01.745975
+## STAGE: [25, 25, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 07:09:22.404672
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 07:19:14.354546
+## STAGE: [30, 30, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 07:19:35.604827
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 07:29:27.065910
+## STAGE: [35, 35, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 07:29:48.804717
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 07:39:39.677662
+## STAGE: [40, 40, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 07:40:02.005128
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 07:49:52.324763
+## STAGE: [45, 45, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 07:50:15.205272
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 08:00:04.914842
+## STAGE: [50, 50, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 08:00:28.405725
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 08:10:17.525709
+## STAGE: [55, 55, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 08:10:41.605881
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 08:20:30.122512
+## STAGE: [60, 60, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 08:20:54.805671
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 08:30:42.678317
+## STAGE: [65, 65, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 08:31:08.004866
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 08:40:55.333936
+## STAGE: [70, 70, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 08:41:21.204933
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 08:51:08.098606
+## STAGE: [75, 75, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 08:51:34.405149
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 09:01:20.748001
+## STAGE: [80, 80, 30]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 09:01:47.605842
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 09:11:33.273167
+## STAGE: [85, 85, 30]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 09:11:48.298947
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 09:21:45.980484
+## STAGE: [90, 90, 30]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 09:22:00.996942
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 09:31:58.678697
+## STAGE: [95, 95, 30]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 09:32:13.682794
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 09:42:11.364686
+## STAGE: [100, 100, 30]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 09:42:25.945705
+** LOG STOP manectric.freedm:30000 41 2015-Jan-14 09:52:23.627446
+## STAGE: [0, 35, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 09:52:39.005282
+** LOG STOP manectric.freedm:30000 43 2015-Jan-14 10:02:36.447090
+## STAGE: [5, 5, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 10:02:52.205247
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 10:12:49.155068
+## STAGE: [10, 10, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 10:13:05.405266
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 10:23:01.905153
+## STAGE: [15, 15, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 10:23:18.605003
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 10:33:14.569848
+## STAGE: [20, 20, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 10:33:31.805174
+** LOG STOP manectric.freedm:30000 43 2015-Jan-14 10:43:26.974124
+## STAGE: [25, 25, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 10:43:45.005486
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 10:53:39.778114
+## STAGE: [30, 30, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 10:53:58.204855
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 11:03:52.371573
+## STAGE: [35, 35, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 11:04:11.404932
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 11:14:04.930736
+## STAGE: [40, 40, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 11:14:24.605273
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 11:24:17.474157
+## STAGE: [45, 45, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 11:24:37.805307
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 11:34:30.273281
+## STAGE: [50, 50, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 11:34:51.004824
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 11:44:42.437519
+## STAGE: [55, 55, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 11:45:04.205638
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 11:54:55.585480
+## STAGE: [60, 60, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 11:55:17.405089
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 12:05:08.200873
+## STAGE: [65, 65, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 12:05:30.604846
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 12:15:20.752803
+## STAGE: [70, 70, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 12:15:43.805486
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 12:25:33.397899
+## STAGE: [75, 75, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 12:25:57.005120
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 12:35:45.680653
+## STAGE: [80, 80, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 12:36:10.205126
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 12:45:58.634585
+## STAGE: [85, 85, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 12:46:23.405476
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 12:56:11.225947
+## STAGE: [90, 90, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 12:56:36.605685
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 13:06:23.937304
+## STAGE: [95, 95, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 13:06:49.805543
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 13:16:36.563295
+## STAGE: [100, 100, 35]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 13:17:03.005717
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 13:26:49.216012
+## STAGE: [0, 40, 40]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 13:27:16.205663
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 13:37:01.702175
+## STAGE: [5, 5, 40]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 13:37:16.749490
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 13:47:14.431211
+## STAGE: [10, 10, 40]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 13:47:29.554591
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 13:57:27.236586
+## STAGE: [15, 15, 40]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 13:57:42.044718
+** LOG STOP manectric.freedm:30000 41 2015-Jan-14 14:07:39.726586
+## STAGE: [20, 20, 40]
+** LOG START manectric.freedm:30000 1 2015-Jan-14 14:07:54.592359
+** LOG STOP manectric.freedm:30000 41 2015-Jan-14 14:17:52.274230
+## STAGE: [25, 25, 40]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 14:18:07.605289
+** LOG STOP manectric.freedm:30000 43 2015-Jan-14 14:28:05.030080
+## STAGE: [30, 30, 40]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 14:28:20.805970
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 14:38:17.690685
+## STAGE: [35, 35, 40]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 14:38:34.004613
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 14:48:30.388621
+## STAGE: [40, 40, 40]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 14:48:47.205732
+** LOG STOP manectric.freedm:30000 42 2015-Jan-14 14:58:42.818472
+## STAGE: [45, 45, 40]
+** LOG START manectric.freedm:30000 2 2015-Jan-14 14:59:00.405542

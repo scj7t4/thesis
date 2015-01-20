@@ -1,0 +1,714 @@
+** LOG START manectric.freedm:30000 2 2015-Jan-08 09:06:54.201288
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 09:16:45.591476
+## STAGE: [5]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 09:17:07.401295
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+39	ELECTION	manectric.freedm:30000	1
+39	REORGANIZATION	manectric.freedm:30000	1
+39	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 09:26:57.484580
+## STAGE: [10]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 09:27:20.601132
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+23	ELECTION	manectric.freedm:30000	1
+23	REORGANIZATION	manectric.freedm:30000	1
+23	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 09:37:09.402366
+## STAGE: [15]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 09:37:33.801388
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+24	ELECTION	manectric.freedm:30000	1
+24	REORGANIZATION	manectric.freedm:30000	1
+24	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 09:47:21.266876
+## STAGE: [20]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 09:47:47.001374
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+13	ELECTION	manectric.freedm:30000	1
+13	REORGANIZATION	manectric.freedm:30000	1
+13	NORMAL	manectric.freedm:30000	1
+17	ELECTION	manectric.freedm:30000	1
+17	REORGANIZATION	manectric.freedm:30000	1
+17	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 09:57:33.141410
+## STAGE: [25]
+** LOG START manectric.freedm:30000 1 2015-Jan-08 09:57:47.338551
+1	ELECTION		1
+1	REORGANIZATION	manectric.freedm:30000	1
+1	NORMAL	manectric.freedm:30000	1
+21	ELECTION	manectric.freedm:30000	1
+21	REORGANIZATION	manectric.freedm:30000	1
+21	NORMAL	manectric.freedm:30000	1
+31	ELECTION	manectric.freedm:30000	1
+31	REORGANIZATION	manectric.freedm:30000	1
+31	NORMAL	manectric.freedm:30000	1
+36	ELECTION	manectric.freedm:30000	1
+36	REORGANIZATION	manectric.freedm:30000	1
+36	NORMAL	manectric.freedm:30000	1
+39	ELECTION	manectric.freedm:30000	1
+39	REORGANIZATION	manectric.freedm:30000	1
+39	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 10:07:45.024215
+## STAGE: [30]
+** LOG START manectric.freedm:30000 1 2015-Jan-08 10:07:59.217156
+1	ELECTION		1
+1	REORGANIZATION	manectric.freedm:30000	1
+1	NORMAL	manectric.freedm:30000	1
+5	ELECTION	manectric.freedm:30000	1
+5	REORGANIZATION	manectric.freedm:30000	1
+5	NORMAL	manectric.freedm:30000	1
+9	ELECTION	manectric.freedm:30000	1
+9	REORGANIZATION	manectric.freedm:30000	1
+9	NORMAL	manectric.freedm:30000	1
+11	ELECTION	manectric.freedm:30000	1
+11	REORGANIZATION	manectric.freedm:30000	1
+11	NORMAL	manectric.freedm:30000	1
+13	ELECTION	manectric.freedm:30000	1
+13	REORGANIZATION	manectric.freedm:30000	1
+13	NORMAL	manectric.freedm:30000	1
+19	ELECTION	manectric.freedm:30000	1
+19	REORGANIZATION	manectric.freedm:30000	1
+19	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 41 2015-Jan-08 10:17:56.902659
+## STAGE: [35]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 10:18:12.001396
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+17	ELECTION	manectric.freedm:30000	1
+17	REORGANIZATION	manectric.freedm:30000	1
+17	NORMAL	manectric.freedm:30000	1
+22	ELECTION	manectric.freedm:30000	1
+22	REORGANIZATION	manectric.freedm:30000	1
+22	NORMAL	manectric.freedm:30000	1
+38	ELECTION	manectric.freedm:30000	1
+38	REORGANIZATION	manectric.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	1
+39	ELECTION	manectric.freedm:30000	1
+39	REORGANIZATION	manectric.freedm:30000	1
+39	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 10:28:08.808824
+## STAGE: [40]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 10:28:25.200998
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+3	ELECTION	manectric.freedm:30000	1
+3	REORGANIZATION	manectric.freedm:30000	1
+3	NORMAL	manectric.freedm:30000	2
+4	NORMAL	manectric.freedm:30000	1
+9	ELECTION	manectric.freedm:30000	1
+9	REORGANIZATION	manectric.freedm:30000	1
+9	NORMAL	manectric.freedm:30000	1
+16	ELECTION	manectric.freedm:30000	1
+16	REORGANIZATION	manectric.freedm:30000	1
+16	NORMAL	manectric.freedm:30000	1
+20	ELECTION	manectric.freedm:30000	1
+20	REORGANIZATION	manectric.freedm:30000	1
+20	NORMAL	manectric.freedm:30000	1
+23	ELECTION	manectric.freedm:30000	1
+23	REORGANIZATION	manectric.freedm:30000	1
+23	NORMAL	manectric.freedm:30000	1
+28	ELECTION	manectric.freedm:30000	1
+28	REORGANIZATION	manectric.freedm:30000	1
+28	NORMAL	manectric.freedm:30000	1
+31	ELECTION	manectric.freedm:30000	1
+31	REORGANIZATION	manectric.freedm:30000	1
+31	NORMAL	manectric.freedm:30000	1
+37	ELECTION	manectric.freedm:30000	1
+37	REORGANIZATION	manectric.freedm:30000	1
+37	NORMAL	manectric.freedm:30000	1
+42	ELECTION	manectric.freedm:30000	1
+42	REORGANIZATION	manectric.freedm:30000	1
+42	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 10:38:20.706264
+## STAGE: [45]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 10:38:38.400923
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+3	ELECTION	manectric.freedm:30000	1
+3	REORGANIZATION	manectric.freedm:30000	1
+3	NORMAL	manectric.freedm:30000	1
+11	ELECTION	manectric.freedm:30000	1
+11	REORGANIZATION	manectric.freedm:30000	1
+11	NORMAL	manectric.freedm:30000	1
+14	ELECTION	manectric.freedm:30000	1
+14	REORGANIZATION	manectric.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	1
+21	ELECTION	manectric.freedm:30000	1
+21	REORGANIZATION	manectric.freedm:30000	1
+21	NORMAL	manectric.freedm:30000	1
+22	ELECTION	manectric.freedm:30000	1
+22	REORGANIZATION	manectric.freedm:30000	1
+22	NORMAL	manectric.freedm:30000	1
+25	ELECTION	manectric.freedm:30000	1
+25	REORGANIZATION	manectric.freedm:30000	1
+25	NORMAL	manectric.freedm:30000	1
+27	ELECTION	manectric.freedm:30000	1
+27	REORGANIZATION	manectric.freedm:30000	1
+27	NORMAL	manectric.freedm:30000	1
+33	ELECTION	manectric.freedm:30000	1
+33	REORGANIZATION	manectric.freedm:30000	1
+33	NORMAL	manectric.freedm:30000	1
+34	ELECTION	manectric.freedm:30000	1
+34	REORGANIZATION	manectric.freedm:30000	1
+34	NORMAL	manectric.freedm:30000	1
+35	ELECTION	manectric.freedm:30000	1
+35	REORGANIZATION	manectric.freedm:30000	1
+35	NORMAL	manectric.freedm:30000	1
+36	ELECTION	manectric.freedm:30000	1
+36	REORGANIZATION	manectric.freedm:30000	1
+36	NORMAL	manectric.freedm:30000	1
+37	ELECTION	manectric.freedm:30000	1
+37	REORGANIZATION	manectric.freedm:30000	1
+37	NORMAL	manectric.freedm:30000	2
+38	NORMAL	manectric.freedm:30000	1
+38	ELECTION	manectric.freedm:30000	1
+38	REORGANIZATION	manectric.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	1
+42	ELECTION	manectric.freedm:30000	1
+42	REORGANIZATION	manectric.freedm:30000	1
+42	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 10:48:32.585334
+## STAGE: [50]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 10:48:51.601300
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+6	ELECTION	manectric.freedm:30000	1
+6	REORGANIZATION	manectric.freedm:30000	1
+6	NORMAL	manectric.freedm:30000	1
+9	ELECTION	manectric.freedm:30000	1
+9	REORGANIZATION	manectric.freedm:30000	1
+9	NORMAL	manectric.freedm:30000	1
+11	ELECTION	manectric.freedm:30000	1
+11	REORGANIZATION	manectric.freedm:30000	1
+11	NORMAL	manectric.freedm:30000	1
+12	ELECTION	manectric.freedm:30000	1
+12	REORGANIZATION	manectric.freedm:30000	1
+12	NORMAL	manectric.freedm:30000	1
+27	ELECTION	manectric.freedm:30000	1
+27	REORGANIZATION	manectric.freedm:30000	1
+27	NORMAL	manectric.freedm:30000	1
+31	ELECTION	manectric.freedm:30000	1
+31	REORGANIZATION	manectric.freedm:30000	1
+31	NORMAL	manectric.freedm:30000	1
+38	ELECTION	manectric.freedm:30000	1
+38	REORGANIZATION	manectric.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	2
+39	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 10:58:44.481596
+## STAGE: [55]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 10:59:04.800852
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+4	ELECTION	manectric.freedm:30000	1
+4	REORGANIZATION	manectric.freedm:30000	1
+4	NORMAL	manectric.freedm:30000	1
+6	ELECTION	manectric.freedm:30000	1
+6	REORGANIZATION	manectric.freedm:30000	1
+6	NORMAL	manectric.freedm:30000	1
+11	ELECTION	manectric.freedm:30000	1
+11	REORGANIZATION	manectric.freedm:30000	1
+11	NORMAL	manectric.freedm:30000	1
+12	ELECTION	manectric.freedm:30000	1
+12	REORGANIZATION	manectric.freedm:30000	1
+12	NORMAL	manectric.freedm:30000	1
+13	ELECTION	manectric.freedm:30000	1
+13	REORGANIZATION	manectric.freedm:30000	1
+13	NORMAL	manectric.freedm:30000	1
+15	ELECTION	manectric.freedm:30000	1
+15	REORGANIZATION	manectric.freedm:30000	1
+15	NORMAL	manectric.freedm:30000	1
+25	ELECTION	manectric.freedm:30000	1
+25	REORGANIZATION	manectric.freedm:30000	1
+25	NORMAL	manectric.freedm:30000	1
+28	ELECTION	manectric.freedm:30000	1
+28	REORGANIZATION	manectric.freedm:30000	1
+28	NORMAL	manectric.freedm:30000	1
+30	ELECTION	manectric.freedm:30000	1
+30	REORGANIZATION	manectric.freedm:30000	1
+30	NORMAL	manectric.freedm:30000	1
+31	ELECTION	manectric.freedm:30000	1
+31	REORGANIZATION	manectric.freedm:30000	1
+31	NORMAL	manectric.freedm:30000	1
+39	ELECTION	manectric.freedm:30000	1
+39	REORGANIZATION	manectric.freedm:30000	1
+39	NORMAL	manectric.freedm:30000	1
+42	ELECTION	manectric.freedm:30000	1
+42	REORGANIZATION	manectric.freedm:30000	1
+42	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 43 2015-Jan-08 11:08:56.400474
+## STAGE: [60]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 11:09:18.000934
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+3	ELECTION	manectric.freedm:30000	1
+3	REORGANIZATION	manectric.freedm:30000	1
+3	NORMAL	manectric.freedm:30000	2
+4	NORMAL	manectric.freedm:30000	1
+13	ELECTION	manectric.freedm:30000	1
+13	REORGANIZATION	manectric.freedm:30000	1
+13	NORMAL	manectric.freedm:30000	1
+14	ELECTION	manectric.freedm:30000	1
+14	REORGANIZATION	manectric.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	2
+15	NORMAL	manectric.freedm:30000	1
+17	ELECTION	manectric.freedm:30000	1
+17	REORGANIZATION	manectric.freedm:30000	1
+17	NORMAL	manectric.freedm:30000	1
+19	ELECTION	manectric.freedm:30000	1
+19	REORGANIZATION	manectric.freedm:30000	1
+19	NORMAL	manectric.freedm:30000	1
+27	ELECTION	manectric.freedm:30000	1
+27	REORGANIZATION	manectric.freedm:30000	1
+27	NORMAL	manectric.freedm:30000	1
+28	ELECTION	manectric.freedm:30000	1
+28	REORGANIZATION	manectric.freedm:30000	1
+28	NORMAL	manectric.freedm:30000	2
+29	NORMAL	manectric.freedm:30000	1
+33	ELECTION	manectric.freedm:30000	1
+33	REORGANIZATION	manectric.freedm:30000	1
+33	NORMAL	manectric.freedm:30000	1
+35	ELECTION	manectric.freedm:30000	1
+35	REORGANIZATION	manectric.freedm:30000	1
+35	NORMAL	manectric.freedm:30000	1
+37	ELECTION	manectric.freedm:30000	1
+37	REORGANIZATION	manectric.freedm:30000	1
+37	NORMAL	manectric.freedm:30000	1
+38	ELECTION	manectric.freedm:30000	1
+38	REORGANIZATION	manectric.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 11:19:08.254142
+## STAGE: [65]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 11:19:31.201234
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+6	ELECTION	manectric.freedm:30000	1
+6	REORGANIZATION	manectric.freedm:30000	1
+6	NORMAL	manectric.freedm:30000	1
+9	ELECTION	manectric.freedm:30000	1
+9	REORGANIZATION	manectric.freedm:30000	1
+9	NORMAL	manectric.freedm:30000	1
+11	ELECTION	manectric.freedm:30000	1
+11	REORGANIZATION	manectric.freedm:30000	1
+11	NORMAL	manectric.freedm:30000	2
+12	NORMAL	manectric.freedm:30000	1
+18	ELECTION	manectric.freedm:30000	1
+18	REORGANIZATION	manectric.freedm:30000	1
+18	NORMAL	manectric.freedm:30000	1
+21	ELECTION	manectric.freedm:30000	1
+21	REORGANIZATION	manectric.freedm:30000	1
+21	NORMAL	manectric.freedm:30000	1
+22	ELECTION	manectric.freedm:30000	1
+22	REORGANIZATION	manectric.freedm:30000	1
+22	NORMAL	manectric.freedm:30000	2
+23	NORMAL	manectric.freedm:30000	1
+24	ELECTION	manectric.freedm:30000	1
+24	REORGANIZATION	manectric.freedm:30000	1
+24	NORMAL	manectric.freedm:30000	1
+25	ELECTION	manectric.freedm:30000	1
+25	REORGANIZATION	manectric.freedm:30000	1
+25	NORMAL	manectric.freedm:30000	1
+26	ELECTION	manectric.freedm:30000	1
+26	REORGANIZATION	manectric.freedm:30000	1
+26	NORMAL	manectric.freedm:30000	1
+29	ELECTION	manectric.freedm:30000	1
+29	REORGANIZATION	manectric.freedm:30000	1
+29	NORMAL	manectric.freedm:30000	2
+32	NORMAL	manectric.freedm:30000	1
+33	ELECTION	manectric.freedm:30000	1
+33	REORGANIZATION	manectric.freedm:30000	1
+33	NORMAL	manectric.freedm:30000	1
+34	ELECTION	manectric.freedm:30000	1
+34	REORGANIZATION	manectric.freedm:30000	1
+34	NORMAL	manectric.freedm:30000	1
+37	ELECTION	manectric.freedm:30000	1
+37	REORGANIZATION	manectric.freedm:30000	1
+37	NORMAL	manectric.freedm:30000	2
+38	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 11:29:20.161544
+## STAGE: [70]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 11:29:44.401012
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+5	ELECTION	manectric.freedm:30000	1
+5	REORGANIZATION	manectric.freedm:30000	1
+5	NORMAL	manectric.freedm:30000	1
+7	ELECTION	manectric.freedm:30000	1
+7	REORGANIZATION	manectric.freedm:30000	1
+7	NORMAL	manectric.freedm:30000	1
+9	ELECTION	manectric.freedm:30000	1
+9	REORGANIZATION	manectric.freedm:30000	1
+9	NORMAL	manectric.freedm:30000	1
+10	ELECTION	manectric.freedm:30000	1
+10	REORGANIZATION	manectric.freedm:30000	1
+10	NORMAL	manectric.freedm:30000	1
+13	ELECTION	manectric.freedm:30000	1
+13	REORGANIZATION	manectric.freedm:30000	1
+13	NORMAL	manectric.freedm:30000	1
+14	ELECTION	manectric.freedm:30000	1
+14	REORGANIZATION	manectric.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	2
+15	NORMAL	manectric.freedm:30000	1
+20	ELECTION	manectric.freedm:30000	1
+20	REORGANIZATION	manectric.freedm:30000	1
+20	NORMAL	manectric.freedm:30000	1
+21	ELECTION	manectric.freedm:30000	1
+21	REORGANIZATION	manectric.freedm:30000	1
+21	NORMAL	manectric.freedm:30000	1
+22	ELECTION	manectric.freedm:30000	1
+22	REORGANIZATION	manectric.freedm:30000	1
+22	NORMAL	manectric.freedm:30000	1
+24	ELECTION	manectric.freedm:30000	1
+24	REORGANIZATION	manectric.freedm:30000	1
+24	NORMAL	manectric.freedm:30000	1
+25	ELECTION	manectric.freedm:30000	1
+25	REORGANIZATION	manectric.freedm:30000	1
+25	NORMAL	manectric.freedm:30000	2
+26	NORMAL	manectric.freedm:30000	1
+28	ELECTION	manectric.freedm:30000	1
+28	REORGANIZATION	manectric.freedm:30000	1
+28	NORMAL	manectric.freedm:30000	1
+32	ELECTION	manectric.freedm:30000	1
+32	REORGANIZATION	manectric.freedm:30000	1
+32	NORMAL	manectric.freedm:30000	1
+34	ELECTION	manectric.freedm:30000	1
+34	REORGANIZATION	manectric.freedm:30000	1
+34	NORMAL	manectric.freedm:30000	2
+35	NORMAL	manectric.freedm:30000	1
+36	ELECTION	manectric.freedm:30000	1
+36	REORGANIZATION	manectric.freedm:30000	1
+36	NORMAL	manectric.freedm:30000	1
+37	ELECTION	manectric.freedm:30000	1
+37	REORGANIZATION	manectric.freedm:30000	1
+37	NORMAL	manectric.freedm:30000	1
+38	ELECTION	manectric.freedm:30000	1
+38	REORGANIZATION	manectric.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 42 2015-Jan-08 11:39:32.058395
+## STAGE: [75]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 11:39:57.600781
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+4	ELECTION	manectric.freedm:30000	1
+4	REORGANIZATION	manectric.freedm:30000	1
+4	NORMAL	manectric.freedm:30000	1
+6	ELECTION	manectric.freedm:30000	1
+6	REORGANIZATION	manectric.freedm:30000	1
+6	NORMAL	manectric.freedm:30000	2
+7	NORMAL	manectric.freedm:30000	1
+8	ELECTION	manectric.freedm:30000	1
+8	REORGANIZATION	manectric.freedm:30000	1
+8	NORMAL	manectric.freedm:30000	2
+10	NORMAL	manectric.freedm:30000	1
+12	ELECTION	manectric.freedm:30000	1
+12	REORGANIZATION	manectric.freedm:30000	1
+12	NORMAL	manectric.freedm:30000	1
+13	ELECTION	manectric.freedm:30000	1
+13	REORGANIZATION	manectric.freedm:30000	1
+13	NORMAL	manectric.freedm:30000	1
+14	ELECTION	manectric.freedm:30000	1
+14	REORGANIZATION	manectric.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	1
+17	ELECTION	manectric.freedm:30000	1
+17	REORGANIZATION	manectric.freedm:30000	1
+17	NORMAL	manectric.freedm:30000	1
+19	ELECTION	manectric.freedm:30000	1
+19	REORGANIZATION	manectric.freedm:30000	1
+19	NORMAL	manectric.freedm:30000	1
+20	ELECTION	manectric.freedm:30000	1
+20	REORGANIZATION	manectric.freedm:30000	1
+20	NORMAL	manectric.freedm:30000	2
+21	NORMAL	manectric.freedm:30000	1
+21	ELECTION	manectric.freedm:30000	1
+21	REORGANIZATION	manectric.freedm:30000	1
+21	NORMAL	manectric.freedm:30000	2
+22	NORMAL	manectric.freedm:30000	1
+24	ELECTION	manectric.freedm:30000	1
+24	REORGANIZATION	manectric.freedm:30000	1
+24	NORMAL	manectric.freedm:30000	2
+26	NORMAL	manectric.freedm:30000	1
+26	ELECTION	manectric.freedm:30000	1
+26	REORGANIZATION	manectric.freedm:30000	1
+26	NORMAL	manectric.freedm:30000	2
+28	NORMAL	manectric.freedm:30000	1
+29	ELECTION	manectric.freedm:30000	1
+29	REORGANIZATION	manectric.freedm:30000	1
+29	NORMAL	manectric.freedm:30000	1
+31	ELECTION	manectric.freedm:30000	1
+31	REORGANIZATION	manectric.freedm:30000	1
+31	NORMAL	manectric.freedm:30000	1
+32	ELECTION	manectric.freedm:30000	1
+32	REORGANIZATION	manectric.freedm:30000	1
+32	NORMAL	manectric.freedm:30000	1
+33	ELECTION	manectric.freedm:30000	1
+33	REORGANIZATION	manectric.freedm:30000	1
+33	NORMAL	manectric.freedm:30000	2
+35	NORMAL	manectric.freedm:30000	1
+37	ELECTION	manectric.freedm:30000	1
+37	REORGANIZATION	manectric.freedm:30000	1
+37	NORMAL	manectric.freedm:30000	2
+38	NORMAL	manectric.freedm:30000	1
+38	ELECTION	manectric.freedm:30000	1
+38	REORGANIZATION	manectric.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	2
+39	NORMAL	manectric.freedm:30000	1
+42	ELECTION	manectric.freedm:30000	1
+42	REORGANIZATION	manectric.freedm:30000	1
+42	NORMAL	manectric.freedm:30000	1
+43	ELECTION	manectric.freedm:30000	1
+43	REORGANIZATION	manectric.freedm:30000	1
+43	NORMAL	manectric.freedm:30000	1
+** LOG STOP manectric.freedm:30000 43 2015-Jan-08 11:49:44.006719
+## STAGE: [80]
+** LOG START manectric.freedm:30000 1 2015-Jan-08 11:49:58.238814
+1	ELECTION		1
+1	REORGANIZATION	manectric.freedm:30000	1
+1	NORMAL	manectric.freedm:30000	1
+2	ELECTION	manectric.freedm:30000	1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	2
+4	NORMAL	manectric.freedm:30000	1
+4	ELECTION	manectric.freedm:30000	1
+4	REORGANIZATION	manectric.freedm:30000	1
+4	NORMAL	manectric.freedm:30000	1
+6	ELECTION	manectric.freedm:30000	1
+6	REORGANIZATION	manectric.freedm:30000	1
+6	NORMAL	manectric.freedm:30000	1
+7	ELECTION	manectric.freedm:30000	1
+7	REORGANIZATION	manectric.freedm:30000	1
+7	NORMAL	manectric.freedm:30000	2
+8	NORMAL	manectric.freedm:30000	1
+8	ELECTION	manectric.freedm:30000	1
+8	REORGANIZATION	manectric.freedm:30000	1
+8	NORMAL	manectric.freedm:30000	2
+9	NORMAL	manectric.freedm:30000	1
+10	ELECTION	manectric.freedm:30000	1
+10	REORGANIZATION	manectric.freedm:30000	1
+10	NORMAL	manectric.freedm:30000	1
+11	ELECTION	manectric.freedm:30000	1
+11	REORGANIZATION	manectric.freedm:30000	1
+11	NORMAL	manectric.freedm:30000	1
+14	ELECTION	manectric.freedm:30000	1
+14	REORGANIZATION	manectric.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	1
+15	ELECTION	manectric.freedm:30000	1
+15	REORGANIZATION	manectric.freedm:30000	1
+15	NORMAL	manectric.freedm:30000	1
+18	ELECTION	manectric.freedm:30000	1
+18	REORGANIZATION	manectric.freedm:30000	1
+18	NORMAL	manectric.freedm:30000	2
+21	NORMAL	manectric.freedm:30000	1
+24	ELECTION	manectric.freedm:30000	1
+24	REORGANIZATION	manectric.freedm:30000	1
+24	NORMAL	manectric.freedm:30000	1
+27	ELECTION	manectric.freedm:30000	1
+27	REORGANIZATION	manectric.freedm:30000	1
+27	NORMAL	manectric.freedm:30000	1
+28	ELECTION	manectric.freedm:30000	1
+28	REORGANIZATION	manectric.freedm:30000	1
+28	NORMAL	manectric.freedm:30000	1
+29	ELECTION	manectric.freedm:30000	1
+29	REORGANIZATION	manectric.freedm:30000	1
+29	NORMAL	manectric.freedm:30000	1
+30	ELECTION	manectric.freedm:30000	1
+30	REORGANIZATION	manectric.freedm:30000	1
+30	NORMAL	manectric.freedm:30000	1
+34	ELECTION	manectric.freedm:30000	1
+34	REORGANIZATION	manectric.freedm:30000	1
+34	NORMAL	manectric.freedm:30000	2
+38	NORMAL	manectric.freedm:30000	1
+38	ELECTION	manectric.freedm:30000	1
+38	REORGANIZATION	manectric.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	1
+39	ELECTION	manectric.freedm:30000	1
+39	REORGANIZATION	manectric.freedm:30000	1
+39	NORMAL	manectric.freedm:30000	2
+40	NORMAL	manectric.freedm:30000	1
+42	ELECTION	manectric.freedm:30000	1
+42	REORGANIZATION	manectric.freedm:30000	1
+42	NORMAL	manectric.freedm:30000	2
+** LOG STOP manectric.freedm:30000 43 2015-Jan-08 11:59:55.924572
+## STAGE: [85]
+** LOG START manectric.freedm:30000 1 2015-Jan-08 12:00:10.152927
+1	ELECTION		1
+1	REORGANIZATION	manectric.freedm:30000	1
+1	NORMAL	manectric.freedm:30000	1
+2	ELECTION	manectric.freedm:30000	1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	2
+5	NORMAL	manectric.freedm:30000	1
+6	ELECTION	manectric.freedm:30000	1
+6	REORGANIZATION	manectric.freedm:30000	1
+6	NORMAL	manectric.freedm:30000	2
+7	NORMAL	manectric.freedm:30000	1
+8	ELECTION	manectric.freedm:30000	1
+8	REORGANIZATION	manectric.freedm:30000	1
+8	NORMAL	manectric.freedm:30000	1
+10	ELECTION	manectric.freedm:30000	1
+10	REORGANIZATION	manectric.freedm:30000	1
+10	NORMAL	manectric.freedm:30000	2
+11	NORMAL	manectric.freedm:30000	1
+14	ELECTION	manectric.freedm:30000	1
+14	REORGANIZATION	manectric.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	2
+16	NORMAL	manectric.freedm:30000	1
+18	ELECTION	manectric.freedm:30000	1
+18	REORGANIZATION	manectric.freedm:30000	1
+18	NORMAL	manectric.freedm:30000	2
+20	NORMAL	manectric.freedm:30000	1
+22	ELECTION	manectric.freedm:30000	1
+22	REORGANIZATION	manectric.freedm:30000	1
+22	NORMAL	manectric.freedm:30000	2
+23	NORMAL	manectric.freedm:30000	1
+25	ELECTION	manectric.freedm:30000	1
+25	REORGANIZATION	manectric.freedm:30000	1
+25	NORMAL	manectric.freedm:30000	1
+26	ELECTION	manectric.freedm:30000	1
+26	REORGANIZATION	manectric.freedm:30000	1
+26	NORMAL	manectric.freedm:30000	2
+28	NORMAL	manectric.freedm:30000	1
+29	ELECTION	manectric.freedm:30000	1
+29	REORGANIZATION	manectric.freedm:30000	1
+29	NORMAL	manectric.freedm:30000	2
+30	NORMAL	manectric.freedm:30000	1
+30	ELECTION	manectric.freedm:30000	1
+30	REORGANIZATION	manectric.freedm:30000	1
+30	NORMAL	manectric.freedm:30000	1
+31	ELECTION	manectric.freedm:30000	1
+31	REORGANIZATION	manectric.freedm:30000	1
+31	NORMAL	manectric.freedm:30000	2
+32	NORMAL	manectric.freedm:30000	1
+34	ELECTION	manectric.freedm:30000	1
+34	REORGANIZATION	manectric.freedm:30000	1
+34	NORMAL	manectric.freedm:30000	2
+38	NORMAL	manectric.freedm:30000	1
+39	ELECTION	manectric.freedm:30000	1
+39	REORGANIZATION	manectric.freedm:30000	1
+39	NORMAL	manectric.freedm:30000	1
+40	ELECTION	manectric.freedm:30000	1
+40	REORGANIZATION	manectric.freedm:30000	1
+40	NORMAL	manectric.freedm:30000	2
+** LOG STOP manectric.freedm:30000 41 2015-Jan-08 12:10:07.838533
+## STAGE: [90]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 12:10:22.600981
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+7	ELECTION	manectric.freedm:30000	1
+7	REORGANIZATION	manectric.freedm:30000	1
+7	NORMAL	manectric.freedm:30000	2
+12	NORMAL	manectric.freedm:30000	1
+12	ELECTION	manectric.freedm:30000	1
+12	REORGANIZATION	manectric.freedm:30000	1
+12	NORMAL	manectric.freedm:30000	1
+13	ELECTION	manectric.freedm:30000	1
+13	REORGANIZATION	manectric.freedm:30000	1
+13	NORMAL	manectric.freedm:30000	2
+16	NORMAL	manectric.freedm:30000	1
+16	ELECTION	manectric.freedm:30000	1
+16	REORGANIZATION	manectric.freedm:30000	1
+16	NORMAL	manectric.freedm:30000	2
+17	NORMAL	manectric.freedm:30000	1
+20	ELECTION	manectric.freedm:30000	1
+20	REORGANIZATION	manectric.freedm:30000	1
+20	NORMAL	manectric.freedm:30000	2
+21	NORMAL	manectric.freedm:30000	1
+22	ELECTION	manectric.freedm:30000	1
+22	REORGANIZATION	manectric.freedm:30000	1
+22	NORMAL	manectric.freedm:30000	2
+25	NORMAL	manectric.freedm:30000	1
+27	ELECTION	manectric.freedm:30000	1
+27	REORGANIZATION	manectric.freedm:30000	1
+27	NORMAL	manectric.freedm:30000	1
+28	ELECTION	manectric.freedm:30000	1
+28	REORGANIZATION	manectric.freedm:30000	1
+28	NORMAL	manectric.freedm:30000	2
+30	NORMAL	manectric.freedm:30000	1
+32	ELECTION	manectric.freedm:30000	1
+32	REORGANIZATION	manectric.freedm:30000	1
+32	NORMAL	manectric.freedm:30000	2
+34	NORMAL	manectric.freedm:30000	1
+36	ELECTION	manectric.freedm:30000	1
+36	REORGANIZATION	manectric.freedm:30000	1
+36	NORMAL	manectric.freedm:30000	2
+38	NORMAL	manectric.freedm:30000	1
+39	ELECTION	manectric.freedm:30000	1
+39	REORGANIZATION	manectric.freedm:30000	1
+39	NORMAL	manectric.freedm:30000	1
+41	ELECTION	manectric.freedm:30000	1
+41	REORGANIZATION	manectric.freedm:30000	1
+41	NORMAL	manectric.freedm:30000	2
+43	NORMAL	manectric.freedm:30000	1
+43	ELECTION	manectric.freedm:30000	1
+43	REORGANIZATION	manectric.freedm:30000	1
+43	NORMAL	manectric.freedm:30000	2
+** LOG STOP manectric.freedm:30000 43 2015-Jan-08 12:20:19.780470
+## STAGE: [95]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 12:20:35.800776
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+5	ELECTION	manectric.freedm:30000	1
+5	REORGANIZATION	manectric.freedm:30000	1
+5	NORMAL	manectric.freedm:30000	2
+13	NORMAL	manectric.freedm:30000	1
+13	ELECTION	manectric.freedm:30000	1
+13	REORGANIZATION	manectric.freedm:30000	1
+13	NORMAL	manectric.freedm:30000	1
+14	ELECTION	manectric.freedm:30000	1
+14	REORGANIZATION	manectric.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	1
+15	ELECTION	manectric.freedm:30000	1
+15	REORGANIZATION	manectric.freedm:30000	1
+15	NORMAL	manectric.freedm:30000	2
+23	NORMAL	manectric.freedm:30000	1
+23	ELECTION	manectric.freedm:30000	1
+23	REORGANIZATION	manectric.freedm:30000	1
+23	NORMAL	manectric.freedm:30000	1
+24	ELECTION	manectric.freedm:30000	1
+24	REORGANIZATION	manectric.freedm:30000	1
+24	NORMAL	manectric.freedm:30000	1
+25	ELECTION	manectric.freedm:30000	1
+25	REORGANIZATION	manectric.freedm:30000	1
+25	NORMAL	manectric.freedm:30000	2
+34	NORMAL	manectric.freedm:30000	1
+34	ELECTION	manectric.freedm:30000	1
+34	REORGANIZATION	manectric.freedm:30000	1
+34	NORMAL	manectric.freedm:30000	2
+38	NORMAL	manectric.freedm:30000	1
+39	ELECTION	manectric.freedm:30000	1
+39	REORGANIZATION	manectric.freedm:30000	1
+39	NORMAL	manectric.freedm:30000	2
+41	NORMAL	manectric.freedm:30000	1
+43	ELECTION	manectric.freedm:30000	1
+43	REORGANIZATION	manectric.freedm:30000	1
+43	NORMAL	manectric.freedm:30000	2
+** LOG STOP manectric.freedm:30000 43 2015-Jan-08 12:30:31.674036
+## STAGE: [100]
+** LOG START manectric.freedm:30000 2 2015-Jan-08 12:30:49.001448
+2	ELECTION		1
+2	REORGANIZATION	manectric.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	1
+3	ELECTION	manectric.freedm:30000	1
+3	REORGANIZATION	manectric.freedm:30000	1
+3	NORMAL	manectric.freedm:30000	2
+** LOG STOP manectric.freedm:30000 43 2015-Jan-08 12:40:43.581784

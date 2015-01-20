@@ -1,0 +1,464 @@
+** LOG START raichu.freedm:30000 2 2015-Jan-08 09:06:54.201762
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 09:16:45.588630
+## STAGE: [5]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 09:17:07.400573
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 09:26:57.495420
+## STAGE: [10]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 09:27:20.601248
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 09:37:09.418347
+## STAGE: [15]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 09:37:33.801490
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 09:47:21.269103
+## STAGE: [20]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 09:47:47.000885
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 09:57:33.156130
+## STAGE: [25]
+** LOG START raichu.freedm:30000 1 2015-Jan-08 09:57:47.357389
+1	ELECTION		1
+1	REORGANIZATION	raichu.freedm:30000	1
+1	NORMAL	raichu.freedm:30000	1
+21	ELECTION	raichu.freedm:30000	1
+21	REORGANIZATION	raichu.freedm:30000	1
+22	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 10:07:45.039326
+## STAGE: [30]
+** LOG START raichu.freedm:30000 1 2015-Jan-08 10:07:59.199971
+1	ELECTION		1
+1	REORGANIZATION	raichu.freedm:30000	1
+1	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 41 2015-Jan-08 10:17:56.885808
+## STAGE: [35]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 10:18:12.000663
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 10:28:08.824293
+## STAGE: [40]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 10:28:25.201088
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+3	ELECTION	raichu.freedm:30000	1
+3	REORGANIZATION	raichu.freedm:30000	1
+4	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 10:38:20.715498
+## STAGE: [45]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 10:38:38.401030
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+35	ELECTION	raichu.freedm:30000	1
+35	REORGANIZATION	raichu.freedm:30000	1
+36	NORMAL	raichu.freedm:30000	1
+37	ELECTION	raichu.freedm:30000	1
+37	REORGANIZATION	raichu.freedm:30000	1
+38	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 10:48:32.559846
+## STAGE: [50]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 10:48:51.601480
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+38	ELECTION	raichu.freedm:30000	1
+38	REORGANIZATION	raichu.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	2
+39	ELECTION	manectric.freedm:30000	2
+39	REORGANIZATION	raichu.freedm:30000	1
+39	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 10:58:44.495307
+## STAGE: [55]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 10:59:04.801080
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 11:08:56.406260
+## STAGE: [60]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 11:09:18.001364
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+3	ELECTION	raichu.freedm:30000	1
+3	REORGANIZATION	raichu.freedm:30000	1
+3	NORMAL	manectric.freedm:30000	2
+5	ELECTION	manectric.freedm:30000	2
+5	REORGANIZATION	raichu.freedm:30000	1
+5	NORMAL	raichu.freedm:30000	1
+14	ELECTION	raichu.freedm:30000	1
+14	REORGANIZATION	raichu.freedm:30000	1
+15	NORMAL	raichu.freedm:30000	1
+28	ELECTION	raichu.freedm:30000	1
+28	REORGANIZATION	raichu.freedm:30000	1
+29	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 11:19:08.273514
+## STAGE: [65]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 11:19:31.201410
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+11	ELECTION	raichu.freedm:30000	1
+11	REORGANIZATION	raichu.freedm:30000	1
+11	NORMAL	manectric.freedm:30000	2
+13	ELECTION	manectric.freedm:30000	2
+13	REORGANIZATION	raichu.freedm:30000	1
+13	NORMAL	raichu.freedm:30000	1
+21	ELECTION	raichu.freedm:30000	1
+21	REORGANIZATION	raichu.freedm:30000	1
+22	NORMAL	raichu.freedm:30000	1
+22	ELECTION	raichu.freedm:30000	1
+22	REORGANIZATION	raichu.freedm:30000	1
+22	NORMAL	manectric.freedm:30000	2
+23	ELECTION	manectric.freedm:30000	2
+23	REORGANIZATION	raichu.freedm:30000	1
+23	NORMAL	raichu.freedm:30000	1
+29	ELECTION	raichu.freedm:30000	1
+29	REORGANIZATION	raichu.freedm:30000	1
+29	NORMAL	manectric.freedm:30000	2
+31	ELECTION	manectric.freedm:30000	2
+31	REORGANIZATION	raichu.freedm:30000	1
+31	NORMAL	raichu.freedm:30000	1
+33	ELECTION	raichu.freedm:30000	1
+33	REORGANIZATION	raichu.freedm:30000	1
+34	NORMAL	raichu.freedm:30000	1
+34	ELECTION	raichu.freedm:30000	1
+34	REORGANIZATION	raichu.freedm:30000	1
+35	NORMAL	raichu.freedm:30000	1
+37	ELECTION	raichu.freedm:30000	1
+37	REORGANIZATION	raichu.freedm:30000	1
+38	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 11:29:20.174849
+## STAGE: [70]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 11:29:44.400646
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+9	ELECTION	raichu.freedm:30000	1
+9	REORGANIZATION	raichu.freedm:30000	1
+10	NORMAL	raichu.freedm:30000	1
+14	ELECTION	raichu.freedm:30000	1
+14	REORGANIZATION	raichu.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	2
+16	ELECTION	manectric.freedm:30000	2
+16	REORGANIZATION	raichu.freedm:30000	1
+16	NORMAL	raichu.freedm:30000	1
+25	ELECTION	raichu.freedm:30000	1
+25	REORGANIZATION	raichu.freedm:30000	1
+26	NORMAL	raichu.freedm:30000	1
+28	ELECTION	raichu.freedm:30000	1
+28	REORGANIZATION	raichu.freedm:30000	1
+29	NORMAL	raichu.freedm:30000	1
+34	ELECTION	raichu.freedm:30000	1
+34	REORGANIZATION	raichu.freedm:30000	1
+35	NORMAL	raichu.freedm:30000	1
+38	ELECTION	raichu.freedm:30000	1
+38	REORGANIZATION	raichu.freedm:30000	1
+39	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 11:39:32.067536
+## STAGE: [75]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 11:39:57.600493
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+4	ELECTION	raichu.freedm:30000	1
+4	REORGANIZATION	raichu.freedm:30000	1
+5	NORMAL	raichu.freedm:30000	1
+5	ELECTION	raichu.freedm:30000	1
+5	REORGANIZATION	raichu.freedm:30000	1
+6	NORMAL	raichu.freedm:30000	1
+7	ELECTION	raichu.freedm:30000	1
+7	REORGANIZATION	raichu.freedm:30000	1
+7	NORMAL	manectric.freedm:30000	2
+8	ELECTION	manectric.freedm:30000	2
+8	REORGANIZATION	raichu.freedm:30000	1
+8	NORMAL	raichu.freedm:30000	1
+18	ELECTION	raichu.freedm:30000	1
+18	REORGANIZATION	raichu.freedm:30000	1
+19	NORMAL	raichu.freedm:30000	1
+19	ELECTION	raichu.freedm:30000	1
+19	REORGANIZATION	raichu.freedm:30000	1
+20	NORMAL	raichu.freedm:30000	1
+20	ELECTION	raichu.freedm:30000	1
+20	REORGANIZATION	raichu.freedm:30000	1
+20	NORMAL	manectric.freedm:30000	2
+21	ELECTION	manectric.freedm:30000	2
+21	REORGANIZATION	raichu.freedm:30000	1
+21	NORMAL	raichu.freedm:30000	1
+23	ELECTION	raichu.freedm:30000	1
+23	REORGANIZATION	raichu.freedm:30000	1
+23	NORMAL	manectric.freedm:30000	2
+24	ELECTION	manectric.freedm:30000	2
+24	REORGANIZATION	raichu.freedm:30000	1
+24	NORMAL	raichu.freedm:30000	1
+25	ELECTION	raichu.freedm:30000	1
+25	REORGANIZATION	raichu.freedm:30000	1
+25	NORMAL	manectric.freedm:30000	2
+27	ELECTION	manectric.freedm:30000	2
+27	REORGANIZATION	raichu.freedm:30000	1
+27	NORMAL	raichu.freedm:30000	1
+31	ELECTION	raichu.freedm:30000	1
+31	REORGANIZATION	raichu.freedm:30000	1
+32	NORMAL	raichu.freedm:30000	1
+32	ELECTION	raichu.freedm:30000	1
+32	REORGANIZATION	raichu.freedm:30000	1
+32	NORMAL	manectric.freedm:30000	2
+33	ELECTION	manectric.freedm:30000	2
+33	REORGANIZATION	raichu.freedm:30000	1
+33	NORMAL	raichu.freedm:30000	1
+36	ELECTION	raichu.freedm:30000	1
+36	REORGANIZATION	raichu.freedm:30000	1
+37	NORMAL	raichu.freedm:30000	1
+37	ELECTION	raichu.freedm:30000	1
+37	REORGANIZATION	raichu.freedm:30000	1
+37	NORMAL	manectric.freedm:30000	2
+39	ELECTION	manectric.freedm:30000	2
+39	REORGANIZATION	raichu.freedm:30000	1
+39	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 11:49:44.016439
+## STAGE: [80]
+** LOG START raichu.freedm:30000 1 2015-Jan-08 11:49:58.259833
+1	ELECTION		1
+1	REORGANIZATION	raichu.freedm:30000	1
+1	NORMAL	raichu.freedm:30000	1
+2	ELECTION	raichu.freedm:30000	1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	2
+3	ELECTION	manectric.freedm:30000	2
+3	REORGANIZATION	raichu.freedm:30000	1
+3	NORMAL	raichu.freedm:30000	1
+5	ELECTION	raichu.freedm:30000	1
+5	REORGANIZATION	raichu.freedm:30000	1
+6	NORMAL	raichu.freedm:30000	1
+6	ELECTION	raichu.freedm:30000	1
+6	REORGANIZATION	raichu.freedm:30000	1
+7	NORMAL	raichu.freedm:30000	1
+7	ELECTION	raichu.freedm:30000	1
+7	REORGANIZATION	raichu.freedm:30000	1
+8	NORMAL	raichu.freedm:30000	1
+17	ELECTION	raichu.freedm:30000	1
+17	REORGANIZATION	raichu.freedm:30000	1
+17	NORMAL	manectric.freedm:30000	2
+21	ELECTION	manectric.freedm:30000	2
+21	REORGANIZATION	raichu.freedm:30000	1
+21	NORMAL	raichu.freedm:30000	1
+33	ELECTION	raichu.freedm:30000	1
+33	REORGANIZATION	raichu.freedm:30000	1
+33	NORMAL	manectric.freedm:30000	2
+36	ELECTION	manectric.freedm:30000	2
+36	REORGANIZATION	raichu.freedm:30000	1
+36	NORMAL	raichu.freedm:30000	1
+37	ELECTION	raichu.freedm:30000	1
+37	REORGANIZATION	raichu.freedm:30000	1
+38	NORMAL	raichu.freedm:30000	1
+38	ELECTION	raichu.freedm:30000	1
+38	REORGANIZATION	raichu.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	2
+40	ELECTION	manectric.freedm:30000	2
+40	REORGANIZATION	raichu.freedm:30000	1
+40	NORMAL	raichu.freedm:30000	1
+41	ELECTION	raichu.freedm:30000	1
+41	REORGANIZATION	raichu.freedm:30000	1
+41	NORMAL	manectric.freedm:30000	2
+42	ELECTION	manectric.freedm:30000	2
+42	REORGANIZATION	raichu.freedm:30000	1
+42	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 11:59:55.941114
+## STAGE: [85]
+** LOG START raichu.freedm:30000 1 2015-Jan-08 12:00:10.169623
+1	ELECTION		1
+1	REORGANIZATION	raichu.freedm:30000	1
+1	NORMAL	raichu.freedm:30000	1
+2	ELECTION	raichu.freedm:30000	1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	manectric.freedm:30000	2
+4	ELECTION	manectric.freedm:30000	2
+4	REORGANIZATION	raichu.freedm:30000	1
+4	NORMAL	raichu.freedm:30000	1
+6	ELECTION	raichu.freedm:30000	1
+6	REORGANIZATION	raichu.freedm:30000	1
+6	NORMAL	manectric.freedm:30000	2
+7	ELECTION	manectric.freedm:30000	2
+7	REORGANIZATION	raichu.freedm:30000	1
+7	NORMAL	raichu.freedm:30000	1
+10	ELECTION	raichu.freedm:30000	1
+10	REORGANIZATION	raichu.freedm:30000	1
+10	NORMAL	manectric.freedm:30000	2
+12	ELECTION	manectric.freedm:30000	2
+12	REORGANIZATION	raichu.freedm:30000	1
+12	NORMAL	raichu.freedm:30000	1
+14	ELECTION	raichu.freedm:30000	1
+14	REORGANIZATION	raichu.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	2
+17	ELECTION	manectric.freedm:30000	2
+17	REORGANIZATION	raichu.freedm:30000	1
+17	NORMAL	raichu.freedm:30000	1
+18	ELECTION	raichu.freedm:30000	1
+18	REORGANIZATION	raichu.freedm:30000	1
+18	NORMAL	manectric.freedm:30000	2
+21	ELECTION	manectric.freedm:30000	2
+21	REORGANIZATION	raichu.freedm:30000	1
+21	NORMAL	raichu.freedm:30000	1
+22	ELECTION	raichu.freedm:30000	1
+22	REORGANIZATION	raichu.freedm:30000	1
+22	NORMAL	manectric.freedm:30000	2
+24	ELECTION	manectric.freedm:30000	2
+24	REORGANIZATION	raichu.freedm:30000	1
+24	NORMAL	raichu.freedm:30000	1
+25	ELECTION	raichu.freedm:30000	1
+25	REORGANIZATION	raichu.freedm:30000	1
+26	NORMAL	raichu.freedm:30000	1
+26	ELECTION	raichu.freedm:30000	1
+26	REORGANIZATION	raichu.freedm:30000	1
+26	NORMAL	manectric.freedm:30000	2
+28	ELECTION	manectric.freedm:30000	2
+28	REORGANIZATION	raichu.freedm:30000	1
+28	NORMAL	raichu.freedm:30000	1
+29	ELECTION	raichu.freedm:30000	1
+29	REORGANIZATION	raichu.freedm:30000	1
+30	NORMAL	raichu.freedm:30000	1
+31	ELECTION	raichu.freedm:30000	1
+31	REORGANIZATION	raichu.freedm:30000	1
+31	NORMAL	manectric.freedm:30000	2
+33	ELECTION	manectric.freedm:30000	2
+33	REORGANIZATION	raichu.freedm:30000	1
+33	NORMAL	raichu.freedm:30000	1
+34	ELECTION	raichu.freedm:30000	1
+34	REORGANIZATION	raichu.freedm:30000	1
+34	NORMAL	manectric.freedm:30000	2
+37	ELECTION	manectric.freedm:30000	2
+37	REORGANIZATION	raichu.freedm:30000	1
+37	NORMAL	raichu.freedm:30000	1
+39	ELECTION	raichu.freedm:30000	1
+39	REORGANIZATION	raichu.freedm:30000	1
+40	NORMAL	raichu.freedm:30000	1
+40	ELECTION	raichu.freedm:30000	1
+40	REORGANIZATION	raichu.freedm:30000	1
+40	NORMAL	manectric.freedm:30000	2
+41	ELECTION	manectric.freedm:30000	2
+41	REORGANIZATION	raichu.freedm:30000	1
+41	NORMAL	raichu.freedm:30000	1
+** LOG STOP raichu.freedm:30000 41 2015-Jan-08 12:10:07.852413
+## STAGE: [90]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 12:10:22.601202
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+6	ELECTION	raichu.freedm:30000	1
+6	REORGANIZATION	raichu.freedm:30000	1
+6	NORMAL	manectric.freedm:30000	2
+10	ELECTION	manectric.freedm:30000	2
+10	REORGANIZATION	raichu.freedm:30000	1
+10	NORMAL	raichu.freedm:30000	1
+12	ELECTION	raichu.freedm:30000	1
+12	REORGANIZATION	raichu.freedm:30000	1
+12	NORMAL	manectric.freedm:30000	2
+14	ELECTION	manectric.freedm:30000	2
+14	REORGANIZATION	raichu.freedm:30000	1
+14	NORMAL	raichu.freedm:30000	1
+15	ELECTION	raichu.freedm:30000	1
+15	REORGANIZATION	raichu.freedm:30000	1
+15	NORMAL	manectric.freedm:30000	2
+17	ELECTION	manectric.freedm:30000	2
+17	REORGANIZATION	raichu.freedm:30000	1
+17	NORMAL	raichu.freedm:30000	1
+19	ELECTION	raichu.freedm:30000	1
+19	REORGANIZATION	raichu.freedm:30000	1
+20	NORMAL	raichu.freedm:30000	1
+21	ELECTION	raichu.freedm:30000	1
+21	REORGANIZATION	raichu.freedm:30000	1
+21	NORMAL	manectric.freedm:30000	2
+25	ELECTION	manectric.freedm:30000	2
+25	REORGANIZATION	raichu.freedm:30000	1
+25	NORMAL	raichu.freedm:30000	1
+26	ELECTION	raichu.freedm:30000	1
+26	REORGANIZATION	raichu.freedm:30000	1
+27	NORMAL	raichu.freedm:30000	1
+27	ELECTION	raichu.freedm:30000	1
+27	REORGANIZATION	raichu.freedm:30000	1
+27	NORMAL	manectric.freedm:30000	2
+30	ELECTION	manectric.freedm:30000	2
+30	REORGANIZATION	raichu.freedm:30000	1
+30	NORMAL	raichu.freedm:30000	1
+31	ELECTION	raichu.freedm:30000	1
+31	REORGANIZATION	raichu.freedm:30000	1
+31	NORMAL	manectric.freedm:30000	2
+34	ELECTION	manectric.freedm:30000	2
+34	REORGANIZATION	raichu.freedm:30000	1
+34	NORMAL	raichu.freedm:30000	1
+35	ELECTION	raichu.freedm:30000	1
+35	REORGANIZATION	raichu.freedm:30000	1
+35	NORMAL	manectric.freedm:30000	2
+36	ELECTION	manectric.freedm:30000	2
+36	REORGANIZATION	raichu.freedm:30000	1
+36	NORMAL	raichu.freedm:30000	1
+40	ELECTION	raichu.freedm:30000	1
+40	REORGANIZATION	raichu.freedm:30000	1
+40	NORMAL	manectric.freedm:30000	2
+41	ELECTION	manectric.freedm:30000	2
+41	REORGANIZATION	raichu.freedm:30000	1
+41	NORMAL	raichu.freedm:30000	1
+42	ELECTION	raichu.freedm:30000	1
+42	REORGANIZATION	raichu.freedm:30000	1
+42	NORMAL	manectric.freedm:30000	2
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 12:20:19.775367
+## STAGE: [95]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 12:20:35.800765
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+4	ELECTION	raichu.freedm:30000	1
+4	REORGANIZATION	raichu.freedm:30000	1
+4	NORMAL	manectric.freedm:30000	2
+11	ELECTION	manectric.freedm:30000	2
+11	REORGANIZATION	raichu.freedm:30000	1
+11	NORMAL	raichu.freedm:30000	1
+14	ELECTION	raichu.freedm:30000	1
+14	REORGANIZATION	raichu.freedm:30000	1
+14	NORMAL	manectric.freedm:30000	2
+21	ELECTION	manectric.freedm:30000	2
+21	REORGANIZATION	raichu.freedm:30000	1
+21	NORMAL	raichu.freedm:30000	1
+24	ELECTION	raichu.freedm:30000	1
+24	REORGANIZATION	raichu.freedm:30000	1
+24	NORMAL	manectric.freedm:30000	2
+32	ELECTION	manectric.freedm:30000	2
+32	REORGANIZATION	raichu.freedm:30000	1
+32	NORMAL	raichu.freedm:30000	1
+33	ELECTION	raichu.freedm:30000	1
+33	REORGANIZATION	raichu.freedm:30000	1
+33	NORMAL	manectric.freedm:30000	2
+37	ELECTION	manectric.freedm:30000	2
+37	REORGANIZATION	raichu.freedm:30000	1
+37	NORMAL	raichu.freedm:30000	1
+38	ELECTION	raichu.freedm:30000	1
+38	REORGANIZATION	raichu.freedm:30000	1
+38	NORMAL	manectric.freedm:30000	2
+41	ELECTION	manectric.freedm:30000	2
+41	REORGANIZATION	raichu.freedm:30000	1
+41	NORMAL	raichu.freedm:30000	1
+42	ELECTION	raichu.freedm:30000	1
+42	REORGANIZATION	raichu.freedm:30000	1
+42	NORMAL	manectric.freedm:30000	2
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 12:30:31.689659
+## STAGE: [100]
+** LOG START raichu.freedm:30000 2 2015-Jan-08 12:30:49.001083
+2	ELECTION		1
+2	REORGANIZATION	raichu.freedm:30000	1
+2	NORMAL	raichu.freedm:30000	1
+3	ELECTION	raichu.freedm:30000	1
+3	REORGANIZATION	raichu.freedm:30000	1
+3	NORMAL	manectric.freedm:30000	2
+** LOG STOP raichu.freedm:30000 42 2015-Jan-08 12:40:43.591689
