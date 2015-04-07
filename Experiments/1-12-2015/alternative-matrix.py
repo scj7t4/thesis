@@ -6,6 +6,7 @@ def tokenize_log(fname):
     with open(fname) as fp:
         current_exp = []
         for line in fp:
+            
             if line.find("##") == 0:
                 # This line shows the stage that the program is on
                 p = line.split('[')
@@ -17,18 +18,19 @@ def tokenize_log(fname):
                     #print "!!! START {}".format(stage)
                     current_exp = []
                 elif line.find("STOP") != -1:
-                    (tick, state, leader, size) = current_exp[-1]
+                    (tick, state, leader, size, fn) = current_exp[-1]
                     spl = line.split()
                     stoptick = int(spl[4])
-                    current_exp.append( (stoptick, state, leader, size) )
+                    current_exp.append( (stoptick, state, leader, size, fn) )
                     try:
                         stages[stage/100.0].append(current_exp)
                     except KeyError:
                         stages[stage/100.0] = [current_exp]
             else:
+                print line
                 try:
-                    (tick, state, leader, size) = line.split()
-                    current_exp.append( (int(tick), state, leader, int(size)) )
+                    (tick, state, leader, size, fn) = line.split('\t')
+                    current_exp.append( (int(tick), state, leader, int(size), fn) )
                 except ValueError:
                     continue # This is an unusable startup entry.
     return stages
@@ -38,8 +40,8 @@ def exp2stream(exp):
     exp = list(exp)
     pstate = exp.pop(0)
     for s in exp:
-        (ptick, pstate, pleader, psize) = pstate
-        (tick, state, leader, size) = s
+        (ptick, pstate, pleader, psize,fn) = pstate
+        (tick, state, leader, size, fn) = s
         token = (pstate, psize)
         duration = tick-ptick
         for _ in range(duration):
@@ -50,15 +52,11 @@ def exp2stream(exp):
 def convertstream(stream):
     stream = list(stream)
     result = []
-    p = 1
     for s in stream: 
-        if p == 1 and s[1] == 2:
-            result.append('Interim')
-        elif s[1] == 2:
+        if s[1] == 2:
             result.append('Group')
         elif s[1] == 1:
             result.append('Solo')
-        p = s[1]
     return result
 
 def stream2matrix(stream):
