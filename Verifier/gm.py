@@ -91,23 +91,18 @@ class GM(object):
         if self.is_leader():
             for peer in self.expected:
                 if peer in self.group:
-                    print "LEADER REMOVE {}".format(peer)
                     self.group.remove(peer)
                     groupchange = True
             for peer in self.coordinators:
                 if peer in self.group:
-                    print "LEADER REMOVE {}".format(peer)
                     self.group.remove(peer)
                     groupchange = True
             if groupchange:
-                print "LEADER READY {}".format(self.group)
                 self.ready()
             if not self.coordinators or min(self.coordinators) > self.uuid:
                 for peer in self.coordinators:
                     self.connmgr.channel(self.uuid,peer).send(peer, ("Invite", self.groupid))
         elif self.expected:
-            print "DEPARTURE"
-            print self.expected
             self.recover()
 
     def ready(self):
@@ -125,7 +120,7 @@ class GM(object):
             if peer == self.uuid:
                 continue
             for msg in self.connmgr.channel(self.uuid,peer).read(peer):
-                print "From: {} To: {} : {}".format(peer, self.uuid, msg)
+                #print "From: {} To: {} : {}".format(peer, self.uuid, msg)
                 self.receive(peer,msg)        
                 readsome = True
         return readsome
@@ -133,7 +128,6 @@ class GM(object):
     
     def receive(self, sender, message):
         if random.random() >= self.p:
-            print "DROPPED"
             return
         if message[0] == "AreYouCoordinator":
             if self.is_leader():
@@ -196,7 +190,6 @@ def chainify(obs):
         statetot[k] = 0
     for k,k2 in obs:
         statetot[k] += obs[(k,k2)]
-    print statetot
     mkov = {}
     for k,k2 in obs:
         mkov[(k,k2)] = obs[(k,k2)]/(statetot[k]*1.0)
@@ -206,29 +199,34 @@ def pretty(d):
     for k in d:
         print "{} : {}".format(k,d[k])
 
-def make_chain():
+def applyonce(procs):
+    for p in procs:
+        p.check()
+    readuntilempty(procs)
+    for p in procs:
+        p.merge() 
+    readuntilempty(procs)
+    for p in procs:
+        p.ready()  
+    readuntilempty(procs)   
+  
+ 
+def make_chain(procs,prob):
     cm = ConnectionManager()
-    procs = [ GM(x,cm,p=p) for (x,p) in zip("ABCDE",[.65]*5) ]
+    procs = [ GM(x,cm,p=p) for (x,p) in zip(range(procs),[prob]*procs) ]
     print procs
     observations = []
-    for _ in range(100000):
-        for p in procs:
-            p.check()
-        readuntilempty(procs)
-        for p in procs:
-            p.merge() 
-        readuntilempty(procs)
-        for p in procs:
-            p.ready()  
-        readuntilempty(procs)
-        print procs
+    
+    for _ in range(10000000):
+        if _ % 10000 == 0:
+            print _
+        applyonce(procs)
         observations.append( len(procs[0].group)+1 )
-    print observations
+        
     o = observe(observations)
-    print o
     c = chainify(o)
     pretty(c)
     return c
     
 if __name__ == "__main__":
-    print make_chain()
+    print make_chain(3,.65)

@@ -4,14 +4,12 @@ import functools
 import collections
 import functools
 
-MIXINGVALUE = 2
-SPVALUE = 3
+MIXINGVALUE = 3
+SPVALUE = {}
 
-def setvals(mix, sp):
+def setvals(valued):
     global SPVALUE
-    global MIXINGVALUE
-    MIXINGVALUE = mix
-    SPVALUE = sp
+    SPVALUE = valued
 
 class memoized(object):
    '''Decorator. Caches a function's return value each time it is called.
@@ -196,11 +194,10 @@ def detection(lgroup, p):
     fails = 0
     noparticipate = 0
     p0,p1 = p ** 3, p**4
-    sp = p**SPVALUE #1 - (1.0 / ( 1 + (p0/(1-p1))))
+    sp = p**SPVALUE[lgroup] #1 - (1.0 / ( 1 + (p0/(1-p1))))
     fp = 1 - sp
     d = {}
     for combo in itertools.product([True,False], repeat=pingroup):
-        print combo
         stay = 0
         leave = 0
         stayp = 1
@@ -219,7 +216,6 @@ def detection(lgroup, p):
     for stay in d:
         r.append( (stay+1, pingroup-stay,d[stay]) )
     assert abs(1-CORRECTNESS) < 0.00001
-    print r
     return r
    
 def election_outcomes(leaders, p):
