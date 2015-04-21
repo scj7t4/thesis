@@ -4,12 +4,13 @@ import functools
 import collections
 import functools
 
-MIXINGVALUE = 3
-SPVALUE = {}
+MIXINGVALUE = 0
+SPVALUE = {1: 3.0, 2: 3.0, 3: 3.0, 4: 3.0, 5: 3.0, 6: 3.0}
 
-def setvals(valued):
+def setvals(valued, mix=30):
     global SPVALUE
     SPVALUE = valued
+    MIXINGVALUE = mix
 
 class memoized(object):
    '''Decorator. Caches a function's return value each time it is called.
@@ -84,7 +85,12 @@ def project_transitions(p):
     power = MIXINGVALUE
     v = pykov.Vector()
     v[('1,1')] = 1.0
-    ss = T.pow(v,int(power))
+    if MIXINGVALUE > 0:
+        ss = T.pow(v,int(power))
+    else:
+        ss = v
+    print "2CASESS {}".format(ss)
+    #ss = T.steady()
     # We then need to transform the steady state into the probability you're in
     # state x v y
     normalsteady = {}
@@ -161,7 +167,10 @@ def sys_config(procs, p):
         #print "POWER: {}".format(power)
         v = pykov.Vector()
         v[1] = 1.0
-        ss = T.pow(v,int(power))
+        if MIXINGVALUE > 0:
+            ss = T.pow(v,int(power))
+        else:
+            ss = v        
         #ss = T.steady()
     else:
         ss = {1:1}
@@ -226,14 +235,18 @@ def election_outcomes(leaders, p):
         gp = sp ** sum([ 1 for c in combo if c ])
         bp = fp ** sum([ 1 for c in combo if not c])
         r.append( (combo,gp*bp) )
+    if leaders == 2:
+        print r
+    assert(sum(map(lambda x: x[1], r)) == 1)
     return r
   
 def transition(lgroup, config, p):
     #param lgroup integer - size of the leaders group
     #param config list of integers - size of each other group in the system.
     #This is a list of all AYC/AYT outcomes for the leaders group
-    #print "LGROUP: {}".format(lgroup)
-    #print "CONFIG: {}".format(config)
+    if lgroup == 1:
+        print "LGROUP: {}".format(lgroup)
+        print "CONFIG: {}".format(config)
     ldrs = detection(lgroup, p)
     cmb = [ ]
     # For each group in the configuration, make a list of AYC/AYT outcomes.
@@ -248,21 +261,24 @@ def transition(lgroup, config, p):
     # To get all possible interleavings of successes & failures.
     for combo in itertools.product( *cmb ):
         # Combo is a tuple of type ((stay, leave, p), (stay, leave, p)...)
-        #print "COMBO {}".format(combo)
+        if lgroup == 1:
+            print "COMBO {}".format(combo)
         for ldr in ldrs:
             # For each remaining group, check to see if the election succeeds.
             ele = election_outcomes(len(config),p)
             # outcome will be a T,F list of if the groups will join with the leader
             # outp is the chance that happens
             for outcome, outp in ele:
-                #print "OUTCOME {}".format(outcome)
-                #print "OUTP {}".format(outp)
+                if lgroup == 1:
+                    print "OUTCOME {}".format(outcome)
+                    print "OUTP {}".format(outp)
                 solos = ldr[1] # Processes that leave the leader's group
                 mygroup = ldr[0] # The processes in my group to start
                 mygroup_p = outp*ldr[2] # The probability this election works
                 r = zip(outcome,combo) # Mapping it with each possible leader's observed procs
                 for sr in r:
-                    #print "SR: {}".format(sr)
+                    if lgroup == 1:
+                        print "SR: {}".format(sr)
                     if sr[0]:
                         mygroup += sr[1][0]
                     mygroup_p *= sr[1][2]
@@ -304,6 +320,8 @@ def design(procs, p):
             goneto = {}
             if remain:
                 for (conf,confp) in remain:
+                    if main_group == 1:
+                        print "CONF: {} CONFP {}".format(conf,confp)
                     for dest, destp in transition(main_group, conf, p):
                         #print "DEST: {}".format(dest)
                         try:
@@ -368,5 +386,4 @@ def verify_design(d):
             
             
             
-            
-#print design(4,.65) 
+print design(3,.95) 

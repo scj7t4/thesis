@@ -83,7 +83,7 @@ class GM(object):
                 self.expected.append(peer)
         else:
             self.expected.append(self.leader)
-            self.connmgr.channel(self.uuid,self.leader).send(self.leader, ("AreYouThere", self.uuid))
+            self.connmgr.channel(self.uuid,self.leader).send(self.leader, ("AreYouThere", self.groupid))
 
     def merge(self):
         self.pending = []
@@ -97,17 +97,22 @@ class GM(object):
                 if peer in self.group:
                     self.group.remove(peer)
                     groupchange = True
-            if groupchange:
-                self.ready()
+            #if groupchange:
+            #    self.ready()
             if not self.coordinators or min(self.coordinators) > self.uuid:
                 for peer in self.coordinators:
                     self.connmgr.channel(self.uuid,peer).send(peer, ("Invite", self.groupid))
+                self.pending = self.group
         elif self.expected:
             self.recover()
 
     def ready(self):
         if self.pending:
             self.group = self.pending
+            self.group = list(set(self.group))
+            self.groupid = newgid()
+            if self.uuid in self.group:
+                self.group.remove(uuid)
             for peer in self.group:
                 self.connmgr.channel(self.uuid,peer).send(peer, ("Ready", list(self.group)))
 
@@ -127,8 +132,13 @@ class GM(object):
     
     
     def receive(self, sender, message):
+        #print "MSG F: {} T: {} -- {}".format(sender, self.uuid, message),
         if random.random() >= self.p:
+            #print " !! Dropped"
             return
+        else:
+            #print ""
+            pass
         if message[0] == "AreYouCoordinator":
             if self.is_leader():
                 resp = True
@@ -151,11 +161,14 @@ class GM(object):
 
         elif message[0] == "Accept":
             self.pending.append(sender)
-            self.pending += message[1]
+            l = list(message[1])
+            if self.uuid in l:
+                l.remove(self.uuid)
+            self.pending += l
 
         elif message[0] == "Ready":
             self.leader = sender
-            self.group = message[1]
+            self.group = list(message[1])
             self.groupid = self.pendingid
     
         elif message[0] == "AYCResponse":
@@ -182,17 +195,34 @@ def observe(obs):
         prev = o
     return d
     
+def observe2nd(obs):
+    d = {}
+    p2 = obs[0]
+    p1 = obs[1]
+    for o in obs[2:]:
+        try:
+            d[((p2,p1),o)] += 1
+        except KeyError:
+            d[((p2,p1),o)] = 1
+        p2 = p1
+        p1 = o
+    return d
+        
 def chainify(obs):
     states = []
     statetot = {}
     for k,_ in obs:
         states.append(k)
         statetot[k] = 0
-    for k,k2 in obs:
-        statetot[k] += obs[(k,k2)]
     mkov = {}
     for k,k2 in obs:
-        mkov[(k,k2)] = obs[(k,k2)]/(statetot[k]*1.0)
+        if k == 'X' or k[0] == 'X' or k[1] == 'X' or k2 == 'X':
+            continue
+        statetot[k] += obs[(k,k2)]
+    for k,k2 in obs:
+        if k == 'X' or k[0] == 'X' or k[1] == 'X' or k2 == 'X':
+            continue
+        mkov[(k,k2)] = obs[(k,k2)] / (statetot[k] * 1.0)
     return mkov
     
 def pretty(d):
@@ -212,21 +242,27 @@ def applyonce(procs):
   
  
 def make_chain(procs,prob):
-    cm = ConnectionManager()
-    procs = [ GM(x,cm,p=p) for (x,p) in zip(range(procs),[prob]*procs) ]
-    print procs
+
     observations = []
     
-    for _ in range(10000000):
-        if _ % 10000 == 0:
-            print _
-        applyonce(procs)
-        observations.append( len(procs[0].group)+1 )
+    
+    for _ in range(10):
+        cm = ConnectionManager()
+        syst = [ GM(x,cm,p=p) for (x,p) in zip(range(procs),[prob]*procs) ]
+        observations.append(1)
+        for __ in range(10000000):
+            #print syst
+            applyonce(syst)
+            #print syst
+            observations.append( len(syst[0].group)+1 )
+        observations.append('X')
         
-    o = observe(observations)
+
+    o = observe2nd(observations)
+    pretty(o)
     c = chainify(o)
     pretty(c)
-    return c
+    return o
     
 if __name__ == "__main__":
-    print make_chain(3,.65)
+    print make_chain(3,.95)

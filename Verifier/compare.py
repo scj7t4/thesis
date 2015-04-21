@@ -4,13 +4,18 @@ import gm
 EF = 100
 
 def error(design, chain):
-    s = set([k for k in chain])
-    for k in design:
-        s.add(k)
+    tots = {}
     error = {}
+    s = set([k for k in design])
+    for k in chain:
+        s.add(k)
     for k in s:
-        dv = EF * design[k] if k in design else 0.0
-        cv = EF * chain[k] if k in chain else 0.0
+        tots[k[0]] = 0
+    for k in chain:
+        tots[k[0]] += chain[k]
+    for k in s:
+        dv = tots[k[0]] * design[k] if k in design else 0.0
+        cv = chain[k] if k in chain else 0.0
         if dv != 0:
             error[k] = (dv-cv)**2 / dv
         else:
@@ -32,9 +37,9 @@ if __name__ == "__main__":
     #CHAIN 5 c = {(1, 2): 0.22940900011749502, (3, 2): 0.5040083652840711, (1, 3): 0.029491246622018564, (3, 3): 0.06936214708957825, (3, 4): 0.0003485535029627048, (4, 2): 0.43478260869565216, (3, 1): 0.42628093412338797, (4, 4): 0.018633540372670808, (2, 1): 0.5710624740268735, (1, 1): 0.7390289037715897, (1, 5): 7.343437903889085e-05, (4, 1): 0.3416149068322981, (2, 3): 0.02171353373043358, (1, 4): 0.001997415109857831, (4, 3): 0.20496894409937888, (2, 2): 0.4064967447014822, (5, 1): 0.4, (5, 2): 0.2, (2, 4): 0.000727247541210694, (5, 3): 0.4}
     for p in range(5,100,5):
         p /= 100.0
-        c = gm.make_chain(5,.65)
-        chain.setvals({1:3.0, 2: 3.0, 3: 3.0, 4: 3.0, 5:3.0})
-        d = chain.design(5,.65)
+        c = gm.make_chain(5,p)
+        chain.setvals({1:3.0, 2: 3.0, 3: 3.0, 4: 3.0, 5:3.0, 6:3.0})
+        d = chain.design(5,p)
         print "DESIGN {}".format(d)
         e = sumdict(error(d,c))
         print e
