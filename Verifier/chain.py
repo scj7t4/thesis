@@ -5,7 +5,7 @@ import collections
 import functools
 
 MIXINGVALUE = 0
-SPVALUE = {1: 3.0, 2: 3.0, 3: 3.0, 4: 3.0, 5: 3.0, 6: 3.0}
+SPVALUE = {1: 2.0, 2: 2.0, 3: 2.0, 4: 2.0, 5: 2.0, 6: 2.0}
 
 def setvals(valued, mix=30):
     global SPVALUE
@@ -89,7 +89,6 @@ def project_transitions(p):
         ss = T.pow(v,int(power))
     else:
         ss = v
-    print "2CASESS {}".format(ss)
     #ss = T.steady()
     # We then need to transform the steady state into the probability you're in
     # state x v y
@@ -228,25 +227,21 @@ def detection(lgroup, p):
     return r
    
 def election_outcomes(leaders, p):
-    sp = (p ** 4) * (p ** 2)
+    sp = (p ** 4) * (p ** 4)
     fp = 1 - sp
     r = []
     for combo in itertools.product([True, False], repeat=leaders):
         gp = sp ** sum([ 1 for c in combo if c ])
         bp = fp ** sum([ 1 for c in combo if not c])
         r.append( (combo,gp*bp) )
-    if leaders == 2:
-        print r
-    assert(sum(map(lambda x: x[1], r)) == 1)
+    #if leaders == 2:
+    #    print r
     return r
   
 def transition(lgroup, config, p):
     #param lgroup integer - size of the leaders group
     #param config list of integers - size of each other group in the system.
     #This is a list of all AYC/AYT outcomes for the leaders group
-    if lgroup == 1:
-        print "LGROUP: {}".format(lgroup)
-        print "CONFIG: {}".format(config)
     ldrs = detection(lgroup, p)
     cmb = [ ]
     # For each group in the configuration, make a list of AYC/AYT outcomes.
@@ -261,24 +256,17 @@ def transition(lgroup, config, p):
     # To get all possible interleavings of successes & failures.
     for combo in itertools.product( *cmb ):
         # Combo is a tuple of type ((stay, leave, p), (stay, leave, p)...)
-        if lgroup == 1:
-            print "COMBO {}".format(combo)
         for ldr in ldrs:
             # For each remaining group, check to see if the election succeeds.
             ele = election_outcomes(len(config),p)
             # outcome will be a T,F list of if the groups will join with the leader
             # outp is the chance that happens
             for outcome, outp in ele:
-                if lgroup == 1:
-                    print "OUTCOME {}".format(outcome)
-                    print "OUTP {}".format(outp)
                 solos = ldr[1] # Processes that leave the leader's group
                 mygroup = ldr[0] # The processes in my group to start
                 mygroup_p = outp*ldr[2] # The probability this election works
                 r = zip(outcome,combo) # Mapping it with each possible leader's observed procs
                 for sr in r:
-                    if lgroup == 1:
-                        print "SR: {}".format(sr)
                     if sr[0]:
                         mygroup += sr[1][0]
                     mygroup_p *= sr[1][2]
@@ -320,8 +308,6 @@ def design(procs, p):
             goneto = {}
             if remain:
                 for (conf,confp) in remain:
-                    if main_group == 1:
-                        print "CONF: {} CONFP {}".format(conf,confp)
                     for dest, destp in transition(main_group, conf, p):
                         #print "DEST: {}".format(dest)
                         try:
@@ -386,4 +372,5 @@ def verify_design(d):
             
             
             
-print design(3,.95) 
+if __name__ == "__main__":
+    print design(3,.95) 

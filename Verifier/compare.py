@@ -19,7 +19,6 @@ def error(design, chain):
         if dv != 0:
             error[k] = (dv-cv)**2 / dv
         else:
-            print "ERROR {}".format(k)
             assert cv == 0.0
     return error
 
@@ -27,6 +26,12 @@ def sumdict(d):
     s = 0
     for k in d:
         s += d[k]
+    return s
+
+def dictpp(d):
+    s = ""
+    for k in d:
+         s += "{}: {}\n".format(k, d[k])
     return s
     
 if __name__ == "__main__":
@@ -37,13 +42,15 @@ if __name__ == "__main__":
     #CHAIN 5 c = {(1, 2): 0.22940900011749502, (3, 2): 0.5040083652840711, (1, 3): 0.029491246622018564, (3, 3): 0.06936214708957825, (3, 4): 0.0003485535029627048, (4, 2): 0.43478260869565216, (3, 1): 0.42628093412338797, (4, 4): 0.018633540372670808, (2, 1): 0.5710624740268735, (1, 1): 0.7390289037715897, (1, 5): 7.343437903889085e-05, (4, 1): 0.3416149068322981, (2, 3): 0.02171353373043358, (1, 4): 0.001997415109857831, (4, 3): 0.20496894409937888, (2, 2): 0.4064967447014822, (5, 1): 0.4, (5, 2): 0.2, (2, 4): 0.000727247541210694, (5, 3): 0.4}
     for p in range(5,100,5):
         p /= 100.0
-        c = gm.make_chain(5,p)
-        chain.setvals({1:3.0, 2: 3.0, 3: 3.0, 4: 3.0, 5:3.0, 6:3.0})
-        d = chain.design(5,p)
-        print "DESIGN {}".format(d)
-        e = sumdict(error(d,c))
-        print e
-        r[p] = e
+        c = gm.make_chain(4,p)
+        print "PROB {}".format(p)
+        print "CHAIN\n{}".format(dictpp(gm.chainify(c)))
+        #chain.setvals({1:3.0, 2: 3.0, 3: 3.0, 4: 3.0, 5:3.0, 6:3.0})
+        d = chain.design(4,p)
+        print "DESIGN\n{}".format(dictpp(d))
+        e = error(d,c)
+        print "ERROR\n{}".format(dictpp(e))
+        r[p] = sumdict(e)
         
     for p in r:
         print "{} : {}".format(p, r[p])
