@@ -23,5 +23,11 @@ Where $n_{i}$ is the number of times the state $i$ was observed in the input seq
 The summation is distributed as $\Chi^2$ with $m(m-1)$ degrees of freedom if all entries in $P_{ij}$ are non-zero.
 In this work, the profile Markov chain $P$ is always complete when $0<p<1.0$.
 This property implies all probabilites in $P$ are non-zero, although the probability of that transition may be extremely small.
+The $\Chi^2$ value was compared to a critical value (CV) that gave a measure of how likely it was that $H_{0}$ could not be rejected.
+This work selected an $\alpha = 0.05$ significance level to accept the hypothesis that $T=P$.
 
+If the hypothesis $H_{0}$ were to be rejected, it would indicate the test chain and profile chain differ significantly.
+As a consequence of rejecting the hypothesis, the implementation would be presenting different behavior from the generated closed form solution.
+We also perform a secondary, log-likelihood test to confirm $H_{0}$.
 
+PUT IN A COOL TABLE THAT TAKES UP A WHOLE PAGE?
