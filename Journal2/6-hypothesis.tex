@@ -1,0 +1,27 @@
+%State the hypotheis of the test. H0 and H1
+%State the test.
+%State the number from the summation and how the degrees of freedm is calculated. State how the critical value is selected. State how the how test is conducted. State that the resulting data doesn’t allow us to reject H0
+%State what rejection would mean. State additional tests are needed to confirm the awesomeness of the chain
+
+\section{Goodness of Fit Test}
+
+To verify the test chain $T$ is equivalent to the profile chain $P$, a $\Chi^2$ goodness-of-fit test is employed.
+The null-hypothesis of this test ($H_{0)$) asserts that the profile chain $P$ is equivalent to the test chain $T$:
+
+\[ H_{0}: T = P \]
+
+With an alternative hypothesis that the two chains are not equivalent:
+
+\[ H_{1}: T \neq P \]
+
+The $\Chi^2$ test measures the goodness of fit for a complete chain by combining the measurements of goodness of fit for the transitions away from each state.
+Therefore, the goodness of fit test for the chain is a summation of tests for each state:
+
+\[ \Chi^2 \sum_{i}^{m} \sum_{j}^{m} = \frac{n_{i}(P_{ij}-T_{ij})^2}{P_{ij}} \]
+
+Where $n_{i}$ is the number of times the state $i$ was observed in the input sequence used to construct the test chain $T$.
+The summation is distributed as $\Chi^2$ with $m(m-1)$ degrees of freedom if all entries in $P_{ij}$ are non-zero.
+In this work, the profile Markov chain $P$ is always complete when $0<p<1.0$.
+This property implies all probabilites in $P$ are non-zero, although the probability of that transition may be extremely small.
+
+

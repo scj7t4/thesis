@@ -1,0 +1,66 @@
+\section{Background}
+
+\subsection{Group Management}
+
+The DGI uses the leader election algorithm, ``Invitation Election Algorithm,'' written by Garcia-Molina \cite{INVITATIONELECTION}.
+Originally published in 1982, this algorithm provides a robust election  procedure that allows for transient partitions.
+Transient partitions are formed when a faulty link between two or more clusters of DGIs causes the groups to divide temporarily.
+These transient partitions merge when the link becomes more reliable.
+The election algorithm allows for failures that disconnect two distinct sub-networks.
+These sub networks are fully connected, but connectivity between the two sub-networks is limited by an unreliable link.
+
+Many election algorithms have been created. 
+Each algorithm is designed to be well-suited to the circumstances it will deployed in.
+Specialized algorithms exist for wireless sensor networks \cite{LE-WSN-1}\cite{LE-WSN-2}, and other special circumstances \cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}.
+Work on leader elections has been incorporated into a variety of distributed frameworks: Isis \cite{ISISTOOLKIT}, Horus \cite{HORUSTOOLKIT}, Totem \cite{TOTEMTOOLKIT}, Transis \cite{TRANSISTOOLKIT}, and Spread \cite{SPREADTOOLKIT} all have methods for creating groups.
+Despite this wide array of work, the fundamentals of leader election are similar across all implementations.
+Processes arrive at a consensus of a single peer that coordinates the group.
+Processes that fail are detected and removed from the group. 
+
+The elected leader is responsible for making work assignments, and identifying and merging with other coordinators when they are found, as well as maintaining an up-to-date list of peers for the members of his group. 
+Group members monitor the group leader by periodically checking if the group leader is still alive by sending a message. 
+If the leader fails to respond, the querying nodes will enter a recovery state and operate alone until
+they can identify another coordinator.
+Therefore, a leader and each of the members maintain a set of processes which are currently reachable, a subset of all known processes in the system.
+
+Leader election can also be classified as a failure detector \cite{LEADERELECTIONEVAL}.
+Failure detectors are algorithms which detect the failure of processes within a system; they maintain a list of processes that they suspect have crashed.
+This informal description gives the failure detector strong ties to the leader election process. 
+The group management module maintains a list of suspected processes which can be determined from the set of all processes and the current membership.
+
+The leader and the members have separate roles to play in the failure detection process.
+Leaders use a periodic search to locate other leaders in order to merge groups.
+This serves as a ping / response query for detecting failures within the system.
+The member sends a query to its leader.
+The member will only suspect the leader, and not the other processes in their group.
+
+\subsection{Markov Chain}
+
+%When markov chains work to model a system. Something about order of markov chain. State what a markov chain and the properties of the markov chain. State what states mean. state what transition probabilies mean. State what ergodicity is. State what stationarity is. State how we generate the sequence of states. 
+
+A Markov chain is a collection of states and probabilistic transitions between those states.
+States in a Markov chain are mutually exclusive.
+In a Markov chain, when a system is some state $i$ it has some probability of transitioning to some other state $j$ at the next time-step.
+A Markov chain is a first order chain if the probability of transitioning from $i$ to $j$ does not depend of the history of transitions that lead to the state $i$.
+First order chains are described as having a memoryless property or Markov property that formalizes the independence of the next state from the history of previous states.
+The Markov property can be formalized by describing a Markov chain as a sequence of random variables $X_{1}, X_{2}, X_{3}...$
+
+\[ \Pr(X_{n+1}=x\mid X_1=x_1, X_2=x_2, \ldots, X_n=x_n) = \Pr(X_{n+1}=x\mid X_n=x_n) \]
+
+An ergodic Markov chain is a chain where it is possible, in some finite number of time-steps, to go from any state to any other state.
+An ergodic Markov chain is also commonly referred to as a irreducible Markov chain.
+A stationary Markov chain is one where the transition probabilities do not change over time.
+In a stationary Markov chain, the $n$th visit to a state is indistinguishable from the $n+1$th visit to a state.
+
+Therefore, a Markov chain is a suitable model for a memoryless random process with a finite number states which is observed at fixed time intervals. 
+By utilizing a Markov chain, a variety of statistical analyses can be performed on these modeled system.
+For example, a Markov chain with the stationary and ergodic properties can be analyzed for its steady state probabilities.
+The steady state describes the probability that random observation of a process will observe some state $i$.
+A Markov chain can also be used to predict what state a process will be in at some point in the the future.
+Given a initial state and a number of time steps it is a simple matrix operation will yield the likelihood of the process being in each state after the time interval has passed.
+The mean passage time, a measure of how many time-steps will pass before a process returns or arrives to some state, can also be calculated from a Markov chain.
+
+We model an leader election algorithm with a closed form representation of the behavior of the algorithm.
+This closed form representation is a profile Markov chain.
+The profile Markov chain is validated against a chain generated from execution of the algorithm.
+The chain constructed from sampled data is known as a test chain.
