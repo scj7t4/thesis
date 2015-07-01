@@ -5,16 +5,19 @@
 
 \section{Introduction}
 
-Future Renewable Electric Energy Delivery and Management is a smart grid project focused on the future of the electrical grid.
-Major proposed features of the FREEDM network include the solid state transformer, distributed local energy storage, and distributed local energy generation \cite{FREEDMMIGRATION}.
+The Future Renewable Electric Energy Delivery and Management (FREEDM) project is a smart grid project focused on the future of the electrical grid.
+Major proposed features of the FREEDM cyber-physical network include the solid state transformer, distributed local energy storage, and distributed local energy generation \cite{FREEDMMIGRATION}.
 This vein of research emphasizes decentralizing the power grid, making it more reliable by distributing energy production resources.
-Part of this design requires the system to operate in islanded mode, where portions of the distribution network are partitioned from each other.
+The Distributed Grid Intelligence (DGI) is a critical component of this system.
+The DGI allows for automatic distributed configuration and  management of power resources to manage an electrical grid.
+
+Part of FREEDM's design requires the system to operate in islanded mode, where portions of the distribution network are partitioned from each other.
 The effects of these partitions are still not well understood.
 This is particularly true in a distributed cyber-physical system, in which partitions may occur in both the cyber and physical domains.
-Related work\cite{HARINI}\cite{TSG} has indicated that cyber faults can cause a physical system to apply unstable settings.
+Related work\cite{HARINI}\cite{TSG} has indicated cyber faults can cause a physical system to apply unstable settings.
 
 This work presents a distributed leader election algorithm and Markov model of that algorithm.
-The presented algorithm maintains the Markov property for the observations of the leader despite omission failures
+The presented algorithm maintains the Markov property for the observations of the leader despite omission failures.
 This approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems. 
 This discussion presents an approach that utilizes Markov chain to model a system's grouping behavior.
 These chains produce expectations of how long a system can be expected to stay in a particular state as well as how much time it will be able to spend coordinating and doing useful work over a period of time. 

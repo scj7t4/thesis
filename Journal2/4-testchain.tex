@@ -2,14 +2,15 @@
 %State what the test chainge means for a run of the DGI. explain how the chain is extracted (maximum likelihood estimates aka the obvious way)
 % sampling the test chains
 
-The profile chain is a stationary Markov chain.
+\section{Creating a Test Chain of Implemented Algorithm}
+
 To verify the profile chain describes the behavior of the algorithm, it must be compared to the algorithm.
 By constructing a test chain from the execution of the algorithm, we can verify the profile chain describes the algorithm.
-The test chain, $T$, is constructed by executing the algorithm in the DGI environment and recording a priori process' observations of group size.
+The test chain, $T$, is constructed by executing the algorithm in the DGI environment and recording a process' observations of group size.
 The implementation of the election algorithm was executed for a sufficient number of steps to collect observations to estimate the transition matrix $T$.
 The collected observations form a sequence of states.
 A transition probability matrix can be extracted from that sequence, using a maximum likelihood estimates approach.
-Let $n_{ij}$ be the number of observed transitions from state $i$ to state $j$. Let $n_{i}=\sum_{j=1}^{m} n_{ij}$ where m is the number of states.
+Let $n_{ij}$ be the number of observed transitions from state $i$ to state $j$. Let $n_{i}=\sum_{j=1}^{m} n_{ij}$ where $m$ is the number of states.
 The transition probability for each transition in the test matrix $T$ can be written as:
 
 \[ T_{ij} = \frac{n_{ij}}{n_{i}} \]

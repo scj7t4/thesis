@@ -354,9 +354,9 @@ def correct_design(d):
         # Anything less is residue from float multiplies and we'll just
         # correct for them the to get rid of them.
         if diff > 0.0:
-            d[f,t] -= diff
+            d[(s,s)] -= diff
         if diff < 0.0:
-            d[f,t] += diff
+            d[(s,s)] += diff
     return d
         
 def verify_design(d):
