@@ -5,7 +5,9 @@ import collections
 import functools
 
 MIXINGVALUE = 0
-SPVALUE = {1: 2.0, 2: 2.0, 3: 2.0, 4: 2.0, 5: 2.0, 6: 2.0}
+SPVALUE = {}
+for i in range(2000):
+    SPVALUE[i] = 2.0
 
 def setvals(valued, mix=30):
     global SPVALUE
@@ -373,4 +375,4 @@ def verify_design(d):
             
             
 if __name__ == "__main__":
-    print design(3,.95) 
+    print design(3,.75) 

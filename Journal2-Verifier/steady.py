@@ -1,7 +1,7 @@
 import chain
 import pykov
 
-PROCS = 5
+PROCS = 100
 
 def inspect(d):
     # This is the amount that I actually care about for error
@@ -43,4 +43,4 @@ for p in range(5,100,5):
     v = [ str(ss[s]) for s in ss ]
     print "{}\t{}".format(p,"\t".join(v))
     
-    
+  
