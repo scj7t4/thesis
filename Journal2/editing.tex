@@ -1,0 +1,48 @@
+\documentclass[12pt,oneside]{article}
+
+\usepackage{comment} % multi-line comments
+\usepackage{graphicx} % necessary for inclusion of .eps for figures
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage[margin=1in]{geometry}
+\usepackage{times}
+\usepackage{setspace}
+\usepackage{subcaption}
+\doublespacing
+
+\graphicspath{ {./drawings/} {./charts/} }
+
+\newcommand{\IEEEPARstart}[2]{#1#2}
+
+\begin{document}
+
+\title{Markov Models of Leader Elections in a Smart Grid System}
+\author{Stephen Jackson}
+\date{June 1, 2015}
+\maketitle
+
+\input{1-abstract.tex}
+\input{2-introduction.tex}
+\input{2.1-background.tex}
+\input{3-modeling.tex}
+\input{4-testchain.tex}
+\input{5-analysis.tex}
+\input{6-hypothesis.tex}
+\input{6.1-application.tex}
+\input{8-conclusion.tex}
+
+\bibliographystyle{plain}
+\bibliography{latex_bibliography}
+\end{document}
+
+%TODO 6-7-2015
+% (DONE) Editing read through for quotes
+% (DONE) Editing read through for the word which
+% (DONE) Editing read through for the worh that
+% (DONE) Editing read through for its/it's
+% Write conclusion
+% Write Abstract
+% (DONE) Describe how a matrix store the Markov Chain
+% (DONE) Describe a state distribution vector and what it means
+% (DONE) Describe how the chain describes a model of the DGI behavior.
+% (DONE) Check for consistency Node/Peer/Process

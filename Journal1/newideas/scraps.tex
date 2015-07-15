@@ -1,0 +1,32 @@
+In a ditributed system information cannot be instantenously spread throughout the system.
+A process can only make localized observations.
+In this work, we attempt to model what a process will observe as a result of omission failure.
+Therefore, it is important that observations that a process makes hold to the Markov property.
+In the original algorithm, there are several portions that, when projected to the leader's observation, do not meet the Markov property.
+The following sections state the portions of the algorithm where the observation of the leader process does not yield the probability of next transition.
+
+Leader selection is performed apriori-- only process 0 may become a group coordinator.
+In this work, the consequence of this is that only process 0 may become the leader of a multiprocess group.
+This simplification was applied because the configuration of the system with a larger number of processes depended on the configuration of the other processes.
+A process
+
+The changes added a third message to completing an election -- a ready acknowledge message.
+This message is sent by a member after receiving the ready message from the coordinator.
+This allows the coordinator to be certain of the member's status before the next round.
+Without the ready acknowledgement, the member may not receive the ready message and the coordinator will observe the member is a part of the group.
+As a consequence, the probability that a member remains in a group in the first round after an election has a different probability than each subsequent round.
+
+By adding the extra message, the observation of the coordinator of the state, must be the state of the member of the group.
+The sequence presented in figure _____ is not possible and as a consequence, the probability a member remains in a group in the first round after an election is a fixed value.
+
+Members cannot leave a group without the leader's permission.
+Members do not suspect the coordinator has failed, only the coordinator may suspect the members.
+For the purpose of starting an election, an Are You There message and it's negative response are considered equivalent to a Are You Coordinator message and a postive response.
+On receipt of the negative response, the member will immediately recover and become a leader.
+
+This change leads to a livelock situation in a crash failure, where the group's leader crashes and does not return and as a consequence the remaining members are trapped in a group without a leader.
+For the purpose of this work, we have disregarded these live lock scenarios.
+However, one should note that the livelock could be avoided if the member can detect that it has not received an "Are You Coordinator" message in a round.
+When the process fails to receive the message, the coordinator must have also removed the member from their group since they could not have received a "Are You Coordinator" response message.
+
+
