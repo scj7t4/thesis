@@ -22,8 +22,8 @@ Network congestion is a typical culprit.
 Routers may drop packets or delay their delivery when there is a large amount of traffic or a network issue.
 In a real-time environment, packets that are delayed to miss real-time deadlines will have the same appearance as a dropped packet.
 The execution environment for the election algorithm has a omission failure occurrence modeled as a Bernoulli trial.
-In this model, each message has some probability $p$ of being delivered within the timing restraints imposed by the real-time schedule.
-For the purpose of analyzing the affects of omission failures, processes are not subject to other faults.
+In this model, each message has some probability $p$ of being delivered within the timing constraints imposed by the real-time schedule.
+For the purpose of analyzing the effects of omission failures, processes are not subject to other faults.
 A process will not crash or halt during execution.
 
 \subsection{Election Algorithm}
@@ -206,7 +206,7 @@ Processes can only form groups if their clocks are sufficiently in sync with ano
 In a distributed system information cannot be instantaneously spread throughout the system.
 A process can only make local observations.
 In this work, we attempt to model what a process will observe as a result of omission failure.
-Therefore, it is important a process' observations hold to the Markov property.
+Therefore, it is important a process's observations hold to the Markov property.
 In the original algorithm, there are several portions where the leader's observation does not meet the Markov property.
 The following sections state the portions of the algorithm where the observation of the leader process does not yield the probability of next transition.
 
