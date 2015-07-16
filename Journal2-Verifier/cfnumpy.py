@@ -5,6 +5,7 @@ import sys
 import json
 import collections
 import functools
+import numpy as np
 
 MULTI_P = 0
 MULTI_N = 0
@@ -34,6 +35,43 @@ class memoized(object):
    def __get__(self, obj, objtype):
       '''Support instance methods.'''
       return functools.partial(self.__call__, obj)
+
+@memoized
+def combtable(dim):
+    cols = itertools.chain(*itertools.repeat(xrange(dim),dim))
+    rows = itertools.chain(*itertools.imap(lambda x: itertools.repeat(x,dim), range(dim)))
+    ns = np.fromiter(rows, np.dtype('d'))
+    ks = np.fromiter(cols, np.dtype('d'))
+    o = comb(ns,ks)
+    return np.reshape(o,(dim,dim))
+
+def np_prob(dim,p,power):
+    a = np.full(dim, p**power)
+    b = np.full((dim,dim), (1-p**power))
+    r = np.fromiter(xrange(dim), np.dtype('d'))
+    a = np.power(a, r)
+    bp = np.reshape(r, (dim,1))-r
+    b = np.power(b, bp)
+    return b*a*combtable(dim)
+
+@memoized
+def np_probayc(dim,p):
+    return np_prob(dim,p,2)
+
+@memoized
+def np_probelect(dim,p):
+    return np_prob(dim,p,8)
+
+def np_probtrans(p, s, sp, n):
+    ayc = np_probayc(n,p)
+    elect = np_probelect(n,p)
+    ayc_slice = ayc[s-1,:]
+    print ayc_slice
+    #This needs to get sliced to select parts of it. and then padded.
+    elect_slice = elect[n-s,:][sp-s:sp-1]
+    np.pad(elect_slice,
+    print elect_slice
+    return np.sum(ayc_slice*elect_slice)
 
 @memoized
 def probayc(p,m,k):
