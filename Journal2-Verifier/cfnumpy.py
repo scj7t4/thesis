@@ -51,6 +51,7 @@ def np_prob(dim,p,power):
     r = np.fromiter(xrange(dim), np.dtype('d'))
     a = np.power(a, r)
     bp = np.reshape(r, (dim,1))-r
+    bp = bp.clip(0)
     b = np.power(b, bp)
     return b*a*combtable(dim)
 
@@ -66,11 +67,12 @@ def np_probtrans(p, s, sp, n):
     ayc = np_probayc(n,p)
     elect = np_probelect(n,p)
     ayc_slice = ayc[s-1,:]
-    print ayc_slice
+    slicelen = s #(sp-1)-(sp-s)
     #This needs to get sliced to select parts of it. and then padded.
-    elect_slice = elect[n-s,:][sp-s:sp-1]
-    np.pad(elect_slice,
-    print elect_slice
+    elect_slice = elect[n-s,:]
+    elect_slice = elect_slice[max(0,sp-s):sp]
+    les = elect_slice.shape[0]
+    elect_slice = np.pad(elect_slice,(n-les,0),'constant')[::-1] # defaults to 0
     return np.sum(ayc_slice*elect_slice)
 
 @memoized
@@ -103,6 +105,19 @@ def probtrans(p,s,sp,n):
     return v
     """
 
+def VERIFY(n):
+    c = 0
+    for PROB in [0.75,0.5,0.95,0.1]:
+        for s in range(1,n+1):
+            for sp in range(1,n+1):
+                c+=1
+                r1 = probtrans(PROB, s, sp, n)
+                r2 = np_probtrans(PROB, s, sp, n)
+                delta = abs(r1-r2)
+                if abs(r1-r2) > 0.00000001:
+                    print "BAD RESULT {}->{} n={} delta={}".format(s,sp,n,delta)
+    print "Verified {} designs".format(c)
+    
 def multiprob(x):
     i,j = x
     return ("({},{})".format(i,j), probtrans(MULTI_P,i,j,MULTI_N))
@@ -121,11 +136,22 @@ def matrix(p,n):
     
     c = dict(r)
     return c
+    
+def np_matrix(p,n):
+    vfunc = np.vectorize(np_probtrans,excluded=(0,3),otypes=(np.dtype('d'),))
+    return np.fromfunction(lambda s,sp: vfunc(p,s+1, sp+1, n),(n,n))
 
+def np_matrix_star(t):
+    return np_matrix(t[0], t[1])
+    
 if __name__ == "__main__":
     r = {}
-    for p in range(5,100,5):
-        p = p/100.0
-        r[p] = matrix(p,int(sys.argv[1]))
+    p = range(5,100,5)
+    p = map(lambda x: x/100.0, p)
+    args = zip(p,itertools.repeat(int(sys.argv[1])))
+    workers = Pool()
+    r = workers.map(np_matrix_star, args)
+    r = zip(p, map(lambda x: x.tolist(), r))
+    o = dict(r)
     with open('{}.dat'.format(sys.argv[1]), 'w+') as fp:
-        json.dump(r,fp, indent=2)
+        json.dump(o,fp, indent=2)

@@ -2,6 +2,7 @@ import chain
 import pykov
 import json
 import sys
+import itertools
 
 def inspect(d):
     # This is the amount that I actually care about for error
@@ -38,7 +39,14 @@ def entuple(d):
     for k in d:
         o[eval(k)] = d[k]
     return o
-
+    
+def dictify(l2d):
+    d = {}
+    s = len(l2d)
+    lg = itertools.chain(*l2d)
+    indexes = itertools.product(range(1,s+1), repeat=2)
+    return dict(itertools.izip(indexes, lg))
+    
 def everything(d):
     maxk = max(d.iterkeys())
     l = [ 0 for _ in range(maxk) ]
@@ -51,7 +59,12 @@ with open(sys.argv[1]) as fp:
     c = json.load(fp)
     
 for p in c:
-    T = pykov.Chain(entuple(c[p]))
+    #print p
+    d = dictify(c[p])
+    #print d
+    #print inspect(d)
+    d[(1,1)] -= 0.000000000001
+    T = pykov.Chain(d)
     ss = T.steady()
     v = [ str(x) for x in everything(ss) ]
     print "{}\t{}".format(p,"\t".join(v))
