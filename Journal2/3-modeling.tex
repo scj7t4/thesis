@@ -59,7 +59,7 @@ If processes fail to reply to received message before a timeout, they will leave
 Leaving the group can either be caused by the coordinator removing the process, or the process can enter a recovery state and leave the group, forming a new group by itself.
 
 For a variety of reasons modeling this algorithm is very difficult.
-Previous work, \cite{CRITIS2012}, showed that observations of an implementation of the algorithm display a large amount of variance. 
+Previous work, \cite{CRITIS2012}, showed that observations of an implementation of the algorithm display a large amount of variance.
 In a distributed system information cannot be instantaneously spread throughout the system.
 As a consequence, omission failure will can cause a process to miss out on information distributed by other processes.
 In particular, the receipt of ready messages by group members is uncertain to the coordinator.

@@ -236,6 +236,26 @@ def observe(obs):
             d[(prev,o)] = 1
         prev = o
     return d
+
+def likely_observe(obs):
+    d = {}
+    prev = obs[0]
+    c = 0
+    for o in obs[1:]:
+        if o == 'X':
+            prev = 'X'
+            continue
+        if prev == 'X':
+            prev = o
+            c = 0
+            continue
+        try:
+            d[(c,prev,o)] += 1
+        except KeyError:
+            d[(c,prev,o)] = 1
+        prev = o
+        c += 1
+    return d
     
 def observe2nd(obs):
     d = {}
@@ -266,7 +286,8 @@ def chainify(obs):
             continue
         mkov[(k,k2)] = obs[(k,k2)] / (statetot[k] * 1.0)
     return mkov
-    
+
+ 
 def pretty(d):
     for k in d:
         print "{} : {}".format(k,d[k])
@@ -289,11 +310,11 @@ def make_chain(procs,prob):
     observations = []
     
     
-    for _ in range(100):
+    for _ in range(1):
         cm = ConnectionManager()
         syst = [ GM(x,cm,p=p) for (x,p) in zip(range(procs),[prob]*procs) ]
         observations.append(1)
-        for __ in range(100):
+        for __ in range(10000):
             #print syst
             applyonce(syst)
             observations.append( len(syst[0].group)+1 )
@@ -305,7 +326,7 @@ def make_chain(procs,prob):
     pretty(o)
     c = chainify(o)
     pretty(c)
-    return o
+    return (o, likely_observe(observations))
     
 if __name__ == "__main__":
     print make_chain(3,.95)
