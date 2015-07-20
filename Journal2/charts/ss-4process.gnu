@@ -1,9 +1,9 @@
 reset
 procs = 4
 filename = 'ss-'.procs.'process'
-plottitle = ''.procs.' Process' 
+plottitle = ''.procs.' Process'
 
-set terminal epslatex size SIZE_X,SIZE_Y color colortext 
+set terminal epslatex size SIZE_X,SIZE_Y color colortext
 set output filename.'.tex'
 set boxwidth 3 absolute
 set key invert reverse top left inside
@@ -19,4 +19,4 @@ set style histogram rowstacked
 set style fill pattern border
 set boxwidth 0.75
 plot filename.'.dat' using 3:xticlabels(1) lc rgbcolor "black" title '2',\
-     for [i=4:(procs+1)] '' using i lc rgbcolor "black" title ''.(i-1)
+     for [i=4:(procs+1)] '' using i lc rgbcolor "black" title 'Group Size '.(i-1)

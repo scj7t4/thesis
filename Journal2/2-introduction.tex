@@ -1,24 +1,34 @@
 %Paragraph about research topic and what is being modelled. Statement about why this being modelled is important
-%Research in a similar area. Why this is important. Why what you are measuring is important. 
+%Research in a similar area. Why this is important. Why what you are measuring is important.
 %In this paper, what are we doing. What are we using. What is this thing we are using, and how cool it is. Limitations of the thing we are using
 %What the markov chain can help us learn about what we are modelling
 
 \section{Introduction}
 
 The Future Renewable Electric Energy Delivery and Management (FREEDM) project is a smart grid project focused on the future of the electrical grid.
+This smart grid project is an advanced cyber-physical system: it couples distributed cyber controllers with physical resources.
 Major proposed features of the FREEDM cyber-physical network include the solid state transformer, distributed local energy storage, and distributed local energy generation \cite{FREEDMMIGRATION}.
 This vein of research emphasizes decentralizing the power grid, making it more reliable by distributing energy production resources.
 The Distributed Grid Intelligence (DGI) is a critical component of this system.
-The DGI allows for automatic distributed configuration and  management of power resources to manage an electrical grid.
+The DGI performs automatic distributed configuration and management of power resources to manage an electrical grid.
 
 Part of FREEDM's design requires the system to operate in islanded mode, where portions of the distribution network are partitioned from each other.
 The effects of these partitions are still not well understood.
-This is particularly true in a distributed cyber-physical system, in which partitions may occur in both the cyber and physical domains.
-Related work\cite{HARINI}\cite{TSG} has indicated cyber faults can cause a physical system to apply unstable settings.
+These partitions can be caused by physical or cyber faults.
+To ensure the correct operation of the smart grid, two factors are of particular concern: the ability to do work, and the ability to do correct work.
+Since resources are distributed, they can only be used effectively when multiple processes can coordinate to manage those resources.
+If processes are unable to group together, then energy can't be migrated between DGI's and their physical devices.
+Additionally, network faults can cause the cyber system to give commands to the physical system that put in an unstable state.
+Related work\cite{HARINI}\cite{TSG} has indicated this is an important concern for a smart-grid system.
 
 This work presents a distributed leader election algorithm and Markov model of that algorithm.
 The presented algorithm maintains the Markov property for the observations of the leader despite omission failures.
-This approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems. 
-This discussion presents an approach that utilizes Markov chain to model a system's grouping behavior.
-These chains produce expectations of how long a system can be expected to stay in a particular state as well as how much time it will be able to spend coordinating and doing useful work over a period of time. 
+This approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems.
+These models produce expectations of how much time the DGI will be able to spend coordinating and doing useful work over.
 Using these measures, the behavior of the control system for the physical devices can be adjusted to prevent faults.
+These techniques allow the DGI to anticipate behavior during a fault and allow it to pre-emptively harden itself against the fault.
+
+Similar work is limited: \cite{LEADERELECTIONEVAL} analyzes the consistency of the configuration during fault conditions.
+Modeling distributed systems is a challenging task, due to the complex interactions between processes.
+By modifying an algorithm to maintain a common property of Markov chains, some of these interactions can be tamed.
+This yields a practical and useful technique for describing distributed systems.

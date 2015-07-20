@@ -7,10 +7,6 @@
 
 \section{Profile Chain Applications}
 
-The profile chain can be used to ensure the FREEDM smart-grid is able to continue operating despite network issues.
-The profile chain can be combined with different message sending strategies to maintain service.
-For example, the DGI can change to a slower mode of operation to ensure operation continues normally despite connectivity issues.
-By selecting different strategies depending on the message delivery probability the DGI can offer high performance in good network conditions and an acceptable level of service during faults.
 
 The DGI focuses on managing power resources in a microgrid environment.
 Resources can only be managed effectively when multiple DGI coordinate together to manage those resources.
@@ -22,6 +18,13 @@ Let $\pi=Steady(P)$ for some profile chain.
 The IGT is the sum of all states in $\pi$, save the first state where the process is alone:
 
 \[ IGT = \sum_{i=2}^{m} \pi_i \]
+
+The IGT is a number between 0 and 1.
+It represents the probability a random observation sees a group of at least two members.
+The steady state distributions are presented as stacked bar graphs in Figures \ref{fig:3process}, \ref{fig:4process}, \ref{fig:5process} and \ref{fig:6process}.
+Each complete bar in the graph indicates the IGT.
+The components of each bar represent the probability the system is in a specific state for a random observation of the system.
+The height of the component represents the relative probability of observing that state when in a group.
 
 \begin{figure}
     \centering
@@ -51,5 +54,7 @@ The IGT is the sum of all states in $\pi$, save the first state where the proces
     \label{fig:ss-6process}
 \end{figure}
 
-The steady state distributions are presented in Figures \ref{fig:3process}, \ref{fig:4process}, \ref{fig:5process} and \ref{fig:6process} show the steady state distribution for the configurations where the process is not alone.
-The size of the complete stack indicates the IGT, while the components of each stack represent the probability of observing a specific configuration.
+The profile chain can be used to ensure the FREEDM smart-grid is able to continue operating despite network issues.
+The profile chain can be combined with different message sending strategies to maintain service.
+For example, the DGI can change to a slower mode of operation to ensure operation continues normally despite connectivity issues.
+By selecting different strategies depending on the message delivery probability the DGI can offer high performance in good network conditions and an acceptable level of service during faults.

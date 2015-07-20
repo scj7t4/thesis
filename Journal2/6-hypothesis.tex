@@ -1,11 +1,11 @@
 %State the hypotheis of the test. H0 and H1
 %State the test.
-%State the number from the summation and how the degrees of freedm is calculated. State how the critical value is selected. State how the how test is conducted. State that the resulting data doesn’t allow us to reject H0
+%State the number from the summation and how the degrees of freedm is calculated. State how the critical value is selected. State how the how test is conducted. State that the resulting data doesnï¿½t allow us to reject H0
 %State what rejection would mean. State additional tests are needed to confirm the awesomeness of the chain
 
 \section{Model Validation}
 
-%State that verification of the profile chain via statistical tests is important. State that if P and T are ergodic stochastic sources and can generate similar sequences if they have the same transition probabilities. State that statistical tests can identify if two chains are different at some significant level. 
+%State that verification of the profile chain via statistical tests is important. State that if P and T are ergodic stochastic sources and can generate similar sequences if they have the same transition probabilities. State that statistical tests can identify if two chains are different at some significant level.
 
 To assert the closed form profile chain accurately represents the implementation of the algorithm, it must be validated.
 Since $T$ and $P$ are ergodic, they can be checked for equivalence using a goodness-of-fit test.
@@ -36,51 +36,22 @@ This work selected an $\alpha = 0.05$ significance level to accept the hypothesi
 If the hypothesis $H_{0}$ were to be rejected, it would indicate the test chain and profile chain differ significantly.
 As a consequence of rejecting the hypothesis, the implementation would have behavior from the generated closed form solution.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.65\textwidth]{3process.pdf}
-    \caption{Observed error comparing test chains (T) to profile chains (P) with 3 processes.}
-    \label{fig:3process}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.65\textwidth]{4process.pdf}
-    \caption{Observed error comparing test chains (T) to profile chains (P) with 4 processes.}
-    \label{fig:4process}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.65\textwidth]{5process.pdf}
-    \caption{Observed error comparing test chains (T) to profile chains (P) with 5 processes.}
-    \label{fig:5process}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.65\textwidth]{6process.pdf}
-    \caption{Observed error comparing test chains (T) to profile chains (P) with 6 processes.}
-    \label{fig:6process}
-\end{figure}
-
-Figures \ref{fig:3process}, \ref{fig:4process}, \ref{fig:5process} and \ref{fig:6process} show the observed error for message delivery probabilities between 0.05 and 0.95.
-The dotted line in each figure indicates the critical level where $H_{0}$ should be rejected.
-Since all of the plotted points are below and not close to the dotted line, we cannot reject $H_{0}$ at the 0.05 significance.
-Table \ref{tab:chisummary} shows the p-value for the worst observed error for each number of processes.
-This indicates the profile chains ($P$) are representative of the behavior of the algorithm's implementation.
+To verify the model, it was compared to runs of an implementation of the algorithm.
+Test data was collected for systems with 3, 4, 5 and 6 processes.
+Information was collected from sufficiently long runs of the system with an omission rates between 0.05 and 0.95 tested at intervals of 0.05.
+Table \ref{tab:chisummary} shows the measured error and p-value for the worst observed error for each number of processes.
+Since the measured error is less than the critical value and the p-value is greater than 0.05, the profile chains ($P$) are representative of the behavior of the algorithm's implementation.
 
 \begin{table}
 \centering
-\begin{tabular}{ c | c c c c}
+\begin{tabular}{ c | c c c c c}
   \hline
-  Processes & Degrees of Freedom & Worst Error & $\Pr(WorstError)$ & p-value \\ \hline
-  3 & 6 & 8.90 & 0.80 & 0.18 \\
-  4 & 12 & 14.55 & 0.75 & 0.27 \\
-  5 & 20 & 23.47 & 0.65 & 0.27 \\
-  6 & 30 & 32.69 & 0.85 & 0.34 \\
+  Processes & Degrees of Freedom & Critical Value (CV) & Worst Error & $\Pr(WorstError)$ &  p-value \\ \hline
+  3 & 6 & 12.6 & 8.90 & 0.80 & 0.18 \\
+  4 & 12 & 21.0 & 14.55 & 0.75 & 0.27 \\
+  5 & 20 & 31.4 & 23.47 & 0.65 & 0.27 \\
+  6 & 30 & 43.8 & 32.69 & 0.85 & 0.34 \\
 \end{tabular}
 \caption{Summary of $\chi^2$ tests performed.}
 \label{tab:chisummary}
 \end{table}
-
