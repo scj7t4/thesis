@@ -14,8 +14,6 @@ Execution occurs in a real-time synchronized environment.
 Processes synchronize their clocks and execute steps of the election algorithm at predefined intervals.
 Processes with clocks that are not sufficiently synchronized cannot form groups.
 For this work, process execution occurs in an environment where the clocks are sufficiently synchronized to consistently form groups.
-The execution model of this algorithm assumes a round-robin scheduler.
-At a predetermined time and following predetermined intervals the algorithm executes at each process.
 
 The execution environment is subject to omission failures.
 In an omission failure, a message sent by one process to another process is lost in transit.
@@ -29,16 +27,16 @@ For the purpose of analyzing the effects of omission failures, processes are not
 
 \subsection{Election Algorithm}
 
-A state machine for the election portion of the election algorithm is shown in figure \ref{fig:statemachine}.
+A state machine for the election portion of the election algorithm is shown in Figure \ref{fig:statemachine}.
 In the normal state, the election algorithm regularly searches for other coordinators to join with.
 When another coordinator is identified, all other processes will yield to their future coordinator.
 The method of selecting which process becomes the coordinator of the new group differentiates the invitation election algorithm from other approaches.
 Regardless of the algorithm, the selection of the coordinator is always a race-condition and is difficult to model.
 
-In the invitation election algorithm, processes are assigned a priority based on their process id.
+In the invitation election algorithm, processes are assigned a priority based on their process ID.
 The coordinator with the highest priority is the first to send invites.
 After a brief delay, if it appears the coordinator did not send their invites, the next highest process will send their invites.
-Once the coordinator has been selected, that process will send out invites to the coordinators that yielded to it.
+Coordinators that receive invites will forward the invite to its group members.
 Those processes will accept the invite.
 Once a timeout expires, the coordinator will send a ready message with a list of peers to all processes that accepted the invite.
 The invited processes have timeouts for when they expect the ready message to arrive.
@@ -52,20 +50,26 @@ If the message does not arrive in time, the process will enter the recovery stat
 
 Once a group is formed it must be maintained.
 To do this, processes occasionally exchange messages to verify the other is still reachable.
-This interaction is shown in figure \ref{fig:statemachine2}.
+This interaction is shown in Figure \ref{fig:statemachine2}.
 Coordinators send "Are You Coordinator" messages to members of its group to check if the process has left the group.
 Group members send "Are You There" messages to the coordinator to verify they haven't been kicked out of the group.
 If processes fail to reply to received message before a timeout, they will leave the group.
 Leaving the group can either be caused by the coordinator removing the process, or the process can enter a recovery state and leave the group, forming a new group by itself.
 
+\begin{figure}
+\includegraphics[width=\linewidth]{MaintainStateDiagram.pdf}
+\caption{State machine of maintaining a group. The ``Are You Coordinator'' messages are the same as those in figure \ref{fig:statemachine}. ``Are You Coordinator'' and ``Are You There'' are periodically sent by processes.}
+\label{fig:statemachine}
+\end{figure}
+
 For a variety of reasons modeling this algorithm is very difficult.
-Previous work, \cite{CRITIS2012}, showed that observations of an implementation of the algorithm display a large amount of variance.
+Previous work, \cite{CRITIS2012}, showed that data collected of an implementation of the algorithm display have a large amount of variance.
 In a distributed system information cannot be instantaneously spread throughout the system.
 As a consequence, omission failure will can cause a process to miss out on information distributed by other processes.
 In particular, the receipt of ready messages by group members is uncertain to the coordinator.
-This missing information normally causes the coordinators observation of the group to be "out-of-date."
+This missing information normally causes the coordinators observation of the group to be ``out-of-date.''
 Since the state of the group is incorrect, it cannot be used with a Markov chain, as it does not describe the actual state of the system.
-The original ``Are You There'' approach for detecting failure detection (Figure \ref{fig:statemachine2}) also causes a similiar affect.
+The original ``Are You There'' approach for detecting failure detection (Figure \ref{fig:statemachine2}) also causes a similar effect.
 Additionally, the election algorithm has an inherent race condition that is part of its normal operation.
 This race condition can make the selection of the group leader inconsistent: the highest priority process may not always win the election.
 For the purpose of analyzing the system, having a consistent leader is important for collecting data to verify the model.
@@ -74,7 +78,6 @@ In this work, we model what a process will observe as a result of omission failu
 Therefore, it is important a process' observations hold to the Markov property.
 The original Garcia-Molina algorithm has been modified so the observations of the coordinator process have the Markov property.
 The full modified algorithm is presented in Appendix REFERENCE.
-In the original algorithm, there are several portions where the leader's observation does not meet the Markov property.
 The following sections state the portions of the algorithm where the observation of the leader process does not yield the probability of next transition.
 Changes to the algorithm relieved race conditions when selecting a leader, and made the state of the members a certainty for the coordinator.
 
@@ -90,12 +93,12 @@ As a consequence the state of the rest of the system and the likelihood of formi
 \begin{figure}
 \begin{subfigure}{0.45\textwidth}
 \includegraphics[width=\linewidth]{Individuals.pdf}
-\caption{When processes are alone they will join the group with $\Pr=p^8$} \label{fig:groupinga}
+\caption{When processes are alone they will join the group after exchanging 7 messages.\label{fig:groupinga}
 \end{subfigure}
 \hspace*{\fill} % separation between the subfigures
 \begin{subfigure}{0.45\textwidth}
 \includegraphics[width=\linewidth]{ForwardedInvites.pdf}
-\caption{As a member of P2's group, P3 has a $\Pr=p^6$ of joining P1's group.} \label{fig:groupingb}
+\caption{As a member of P2's group, P3 has a higher probability of joining P1's group, since it requires two fewer messages.} \label{fig:groupingb}
 \end{subfigure}
 \caption{The grouping processes effects the outcome of elections} \label{fig:grouping}
 \end{figure}
@@ -110,7 +113,7 @@ As a consequence the state of the system depends on the number of steps since th
 
 In Figure \ref{fig:grouping}, the probability of grouping depends on the state of the processes.
 Suppose P1 fails to detect P2 and P3 multiple times.
-The probability P2 has grouped with P3 could then be modeled as a two process sub-case of this 3 process case.
+The probability P2 has grouped with P3 could then be modeled as a two process sub-case of this three process case.
 Let this two process sub-case be described with a profile chain $P_{sub}$.
 The probability of P2 and P3 joining P1's group depends on the state of the sub-case.
 Additionally the probability distribution of an observation of the sub-case depends how many steps the sub-case has completed.

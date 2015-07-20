@@ -1,0 +1,166 @@
+\begin{algorithmic}
+
+\State $AllPeers \gets \{ 1, 2, ..., N \}$
+\State $Coordinators \gets \emptyset$
+\State $UpPeers \gets { Me }$
+\State $State \gets Normal$
+\State $Coordinator \gets Me$
+\State $Responses \gets \emptyset$
+\State $Counter \gets$ A random initial identifier
+\State $GroupID \gets (Me,Counter)$
+
+\State
+
+\Function{Check}{}
+    \State This function is called at the start of a round by the leader
+    \If {$State = Normal$ and $Coordinator \gets Me$}
+        \State $Responses \gets \emptyset$
+        \State $TempSet \gets \emptyset$
+        \For {$j = (AllPeers - \{Me\})$}
+            \State $AreYouCoordinator(j)$
+            \State $TempSet \gets TempSet \cup j$
+        \EndFor
+        \State Peers which respond "Yes" to $AreYouCoordinator$ are put into the $Responses$ set.
+        \State When an $AreYouThere$ response is "No" and this process is a coordinator, the querying process is put in the $Responses$ set.
+        \State Wait for $Timeout(CheckTimeout)$, Peers that do not respond are removed from UpPeers.
+        \State $UpPeers \gets (TempSet-Responses) \cup {Me}$
+        \If {$Responses = \emptyset$}
+            \Return
+        \EndIf
+        \State $p \gets \max(Responses)$
+        \If $Me > p$
+            \State Wait time proportional to me-p
+        \EndIf
+        \Call{Merge}{Responses}
+    \EndIf
+    \State The next call to this is after Timeout(CheckTimeout)
+\EndFunction
+
+\State
+
+\Function{Timeout}{}
+    \State This function is called at the start of a round by the group members
+    \If {$Coordinator = Me$}
+        \Return
+    \Else
+        \Call{AreYouThere}{Coordinator,GroupID,Me}
+        \If{Response is No}
+            \Call{Recovery}{}
+        \EndIf
+    \EndIf
+    \State The next call to this is after Timeout(TimeoutTimeout)
+\EndFunction
+
+\State
+
+\Function{Merge}{Coordinators}
+    \State This function invites all coordinators in Coordinators to join a group led by Me
+    \State $State \gets Election$
+    \State Stop work
+    \State $Counter \gets Counter+1$
+    \State $GroupID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $TempSet \gets UpPeers - {Me}$
+    \State $UpPeers \gets \emptyset$
+    \For {$j \in Coordinators$}
+        \Call{Invite}{j,Coordinator,GroupID}
+    \EndFor
+    \For {$j \in TempSet$}
+        \Call{Invite}{j,Coordinator,GroupID}
+    \EndFor
+    \State Wait for $Timeout(InviteTimeout)$, Peers that accept the invite are added to UpPeers
+    \State $State \gets Reorganization$
+    \For {$j \in UpPeers$}
+        \Call{Ready}{j,Coordinator,GroupID,UpPeers}
+    \EndFor
+    \State $Acknowledge \gets UpPeers$
+    \State Wait for $Timeout(ReadyTimeout)$, Peers that do not acknowledge are removed from UpPeers
+    \State $UpPeers \gets UpPeers - Acknowledge$
+    \State $State \gets Normal$
+\EndFunction
+
+\State
+
+\Function{ReceiveReady}{Sender,Leader, Identifier, Peers}
+    \If {$State = Reorganization$ and $GroupID = Identifier$}
+        \State $UpPeers \gets Peers$
+        \State $State \gets Normal$
+        \State Respond Ready Acknowledge
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouCoordinator}{Sender}
+    \If {$State = Normal$ and $Coordinator = Me$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouThere}{Sender, Identifier}
+    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpPeers$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+        \State Add sender to $Responses$ set for $Check()$ if this process is a coordinator.
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveInvitation}{Sender,Leader,Identifier}
+    \If {$State \neq Normal$}
+        \Return
+    \EndIf
+    \If {$Sender \neq 0$}
+        \Return
+    \EndIf
+    \State Stop Work
+    \State $Temp \gets Coordinator$
+    \State $TempSet \gets UpPeers$
+    \State $State \gets Election$
+    \State $Coordinator \gets Leader$
+    \State $GroupID \gets Identifier$
+    \If {$Temp = Me$}
+        \State Forward invite to old group members
+        \For $j \in TempSet$
+            \State $Invite(j,Coordinator,GroupID)$
+        \EndFor
+    \EndIf
+    \State $Accept(Coordinator,GroupID)$
+    \State $State \gets Reorganization$
+    \If {$Timeout(ReadyTimeout)$ expires before $Ready$ is received}
+        \State $Recovery()$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAccept}{Sender,Leader,Identifier}
+    \If {$State \gets Election$ and $GroupID = Identifier$ and $Coordinator = Leader$}
+        \State $UpPeers \gets UpPeers \cup {Sender}$
+    \EndIf
+\EndFunction
+
+\Function{ReceiveReadyAcknowledge}{Sender}
+    \State $Sender$ is removed from $Acknowledge$ in $Merge()$
+\EndFunction
+
+\State
+
+\Function{Recovery}{}
+    \State $State \gets Election$
+    \State Stop Work
+    \State $Counter \gets Counter + 1$
+    \State $GroupID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $UpPeers \gets {Me}$
+    \State $State \gets Reorganization$
+    \State $State \gets Normal$
+\EndFunction
+
+\end{algorithmic}

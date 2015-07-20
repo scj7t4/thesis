@@ -8,7 +8,7 @@ Transient partitions are formed when a faulty link between two or more clusters 
 These transient partitions merge when the link becomes more reliable.
 
 Many election algorithms have been created.
-Specialized algorithms exist for wireless sensor networks \cite{LE-WSN-1}\cite{LE-WSN-2} and other special circumstances \cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}.
+Specialized algorithms exist for wireless sensor networks \cite{LE-WSN-1}\cite{LE-WSN-2} and other special circumstances\cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}.
 Work on leader elections has been incorporated into a variety of distributed frameworks: Isis \cite{ISISTOOLKIT}, Horus \cite{HORUSTOOLKIT}, Totem \cite{TOTEMTOOLKIT}, Transis \cite{TRANSISTOOLKIT}, and Spread \cite{SPREADTOOLKIT} all have methods for creating groups.
 Despite this wide array of work, the fundamentals of leader election are similar.
 Processes arrive at a consensus of a single peer that coordinates the group.
@@ -20,9 +20,10 @@ If the leader fails to respond, the querying peers will enter a recovery state a
 Therefore, a leader and each of the members maintain a set of processes that are currently reachable, a subset of all known processes in the system.
 
 Using a leader election algorithm allows the FREEDM system to autonomously reconfigure rapidly in the event of a fault.
-Cyber-components are tightly coupled with the physical components, fault reaction is not limited to the cyber domain.
+Cyber-components are tightly coupled with the physical components, and fault reaction is not limited to the cyber domain.
 Processes automatically react to crash-stop failures, network issues, and power system faults.
 The automatic reconfiguration allows processes to react immediately to issues, faster than a human operator, without relying on a central configuration point.
+However, it is important the configuration leader election supplies is one where the system can do viable work without causing physical faults\cite{HARINI}.
 
 \subsection{Markov Chain}
 
@@ -66,7 +67,6 @@ The steady state can by found via a system of equations: \cite{MARKOV3}
 
 where $\pi$ is a vector with a length equal to the number of states in the Markov chain.
 In the following sections, the computation of the steady state will be noted as $Steady()$.
-
 A Markov chain can also be used to predict what state a process will be in at some point in the the future.
 Given a initial state and a number of time-steps a matrix operation will yield the likelihood of the process being in each state after the time interval has passed.
 The mean passage time, a measure of how many time-steps will pass before a process returns or arrives to some state, can also be calculated.
