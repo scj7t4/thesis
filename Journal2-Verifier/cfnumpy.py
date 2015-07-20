@@ -53,7 +53,8 @@ def np_prob(dim,p,power):
     bp = np.reshape(r, (dim,1))-r
     bp = bp.clip(0)
     b = np.power(b, bp)
-    return b*a*combtable(dim)
+    s1 = b*a
+    return s1*combtable(dim)
 
 @memoized
 def np_probayc(dim,p):

@@ -63,7 +63,7 @@ for p in c:
     d = dictify(c[p])
     #print d
     #print inspect(d)
-    d[(1,1)] -= 0.000000000001
+    d[(1,1)] -= 1e-200
     T = pykov.Chain(d)
     ss = T.steady()
     v = [ str(x) for x in everything(ss) ]
