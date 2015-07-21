@@ -21,7 +21,7 @@ The IGT is the sum of all states in $\pi$, save the first state where the proces
 
 The IGT is a number between 0 and 1.
 It represents the probability a random observation sees a group of at least two members.
-The steady state distributions are presented as stacked bar graphs in Figures \ref{fig:3process}, \ref{fig:4process}, \ref{fig:5process} and \ref{fig:6process}.
+The steady state distributions are presented as stacked bar graphs in Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process}.
 Each complete bar in the graph indicates the IGT.
 The components of each bar represent the probability the system is in a specific state for a random observation of the system.
 The height of the component represents the relative probability of observing that state when in a group.
@@ -54,7 +54,26 @@ The height of the component represents the relative probability of observing tha
     \label{fig:ss-6process}
 \end{figure}
 
-The profile chain can be used to ensure the FREEDM smart-grid is able to continue operating despite network issues.
+The profile chain can be used to ensure the FREEDM smart grid is able to continue operating despite network issues.
 The profile chain can be combined with different message sending strategies to maintain service.
 For example, the DGI can change to a slower mode of operation to ensure operation continues normally despite connectivity issues.
 By selecting different strategies depending on the message delivery probability the DGI can offer high performance in good network conditions and an acceptable level of service during faults.
+The profile chain can be extended to an arbitrary number of processes as shown in Figure \ref{fig:ss-means}.
+Interestingly, the average group size has a linear relationship between the number of processes and the omission rate.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.65\textwidth]{ss-means.pdf}
+    \caption{Average group size as a percentage of all processes in the system for larger systems.}
+    \label{fig:ss-means}
+\end{figure}
+
+This information can also be used to anticipate faults and mitigate them before they occur.
+Modern routers can supply an expected congestion notification as part of the IP header\cite{ECN2}.
+When congestion is anticipated, the coordinator can preemptively split the group to reduce congestion.
+This is possible because the algorithm's message complexity is $O(n^2)$.
+If dropped messages account for an omission rate of even 0.15 from future congestion, performing a coordinated group division can potentially save several rounds of transient states.
+Breaking the large groups into smaller sets can drastically reduce the number of messages transmitted and help relieve congestion.
+Additionally, the coordinator can design the split to ensure work can continue when the groups are split, by mixing supply and demand processes.
+The division can also account for the placement of congested routers for targeted congestion relief.
+Furthermore, since the required execution time is a function of group size, the DGI can use the additional execution time within the same real time schedule to use more reliable techniques to deliver messages.

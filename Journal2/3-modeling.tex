@@ -59,18 +59,18 @@ Leaving the group can either be caused by the coordinator removing the process, 
 \begin{figure}
 \includegraphics[width=\linewidth]{MaintainStateDiagram.pdf}
 \caption{State machine of maintaining a group. The ``Are You Coordinator'' messages are the same as those in figure \ref{fig:statemachine}. ``Are You Coordinator'' and ``Are You There'' are periodically sent by processes.}
-\label{fig:statemachine}
+\label{fig:statemachine2}
 \end{figure}
 
 For a variety of reasons modeling this algorithm is very difficult.
-Previous work, \cite{CRITIS2012}, showed that data collected of an implementation of the algorithm display have a large amount of variance.
+Previous work, \cite{CRITIS2012}, showed data collected of an implementation of the algorithm display have a large amount of variance.
 In a distributed system information cannot be instantaneously spread throughout the system.
 As a consequence, omission failure will can cause a process to miss out on information distributed by other processes.
 In particular, the receipt of ready messages by group members is uncertain to the coordinator.
 This missing information normally causes the coordinators observation of the group to be ``out-of-date.''
 Since the state of the group is incorrect, it cannot be used with a Markov chain, as it does not describe the actual state of the system.
 The original ``Are You There'' approach for detecting failure detection (Figure \ref{fig:statemachine2}) also causes a similar effect.
-Additionally, the election algorithm has an inherent race condition that is part of its normal operation.
+Additionally, the election algorithm has an inherent race condition as part of its normal operation.
 This race condition can make the selection of the group leader inconsistent: the highest priority process may not always win the election.
 For the purpose of analyzing the system, having a consistent leader is important for collecting data to verify the model.
 
@@ -89,29 +89,11 @@ This simplification was applied because the configuration of the system with a l
 Without this simplification, the state of the rest of the system would not have the memoryless property.
 The state of the processes that are not in the observers group would change each round.
 As a consequence the state of the rest of the system and the likelihood of forming a specific group size would change each step if other processes could become leader.
-
-\begin{figure}
-\begin{subfigure}{0.45\textwidth}
-\includegraphics[width=\linewidth]{Individuals.pdf}
-\caption{When processes are alone they will join the group after exchanging 7 messages.\label{fig:groupinga}
-\end{subfigure}
-\hspace*{\fill} % separation between the subfigures
-\begin{subfigure}{0.45\textwidth}
-\includegraphics[width=\linewidth]{ForwardedInvites.pdf}
-\caption{As a member of P2's group, P3 has a higher probability of joining P1's group, since it requires two fewer messages.} \label{fig:groupingb}
-\end{subfigure}
-\caption{The grouping processes effects the outcome of elections} \label{fig:grouping}
-\end{figure}
-
-Figure \ref{fig:grouping}, shows an example of how the grouping of the processes would affect the distribution of election outcomes.
-To the considered process ($P$), the probability of transitioning to a given observed group size would depend on the grouping of other processes in the system.
-In order to be able to predict this information, the considered process would need either complete information of the state of the system or would need to predict what state the system is in probabilistically.
 A probabilistic prediction would depend on how long the processes have been separated.
 After a long enough period of time the distribution of states for the processes could be found using a steady-state analysis.
 However, when processes uses $Recovery()$ they are deterministically placed in the alone state.
 As a consequence the state of the system depends on the number of steps since the last reconfiguration, which violates the memoryless property.
 
-In Figure \ref{fig:grouping}, the probability of grouping depends on the state of the processes.
 Suppose P1 fails to detect P2 and P3 multiple times.
 The probability P2 has grouped with P3 could then be modeled as a two process sub-case of this three process case.
 Let this two process sub-case be described with a profile chain $P_{sub}$.
@@ -168,7 +150,7 @@ The cardinality of $UpPeers$ directly mapped to the state in the Markov Chain.
 For example given the membership set $S=\{P1,P2,P3\}$, then $\left | S \right |=3$ and the state of the system in the Markov chain is also $i=3$.
 
 The profile Markov chain for the algorithm was constructed as a closed form representation of the algorithm's behavior.
-Each round, the behavior is described by two components: maintaining a group that already exists, and inviting other processes into the group.
+Each round, the behavior is described by two components: maintaining a group and inviting other processes into the group.
 The coordinator will exchange a ``Are You Coordinator'' message and the peer will respond to verify is still available.
 To maintain a group of $m$ other processes, the probability is defined as a random variable with the following probability distribution (pdf):
 

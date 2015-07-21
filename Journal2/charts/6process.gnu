@@ -15,5 +15,5 @@ set xlabel "Probability of Delivery"
 set yrange [ 0.00000 : (criticalvalue*1.25) ] noreverse nowriteback
 set style line 1 lt 1 lc rgb "black" lw 1
 set style line 2 lt 1 lc rgb "black" lw 1
-plot filename.'.dat' using 1:2 with points ls 2 title 'Measured Error', \
+plot 'data/'.filename.'.dat' using 1:2 with points ls 2 title 'Measured Error', \
 	 f(x) title 'Critical Value' with lines ls 1 dashtype 2

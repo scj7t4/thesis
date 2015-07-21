@@ -17,7 +17,7 @@ Processes that fail are detected and removed from the group.
 The elected leader is responsible for making work assignments, identifying and merging with other coordinators when they are found, and maintaining an up-to-date list of peers.
 Group members monitor the group leader by periodically checking if the group leader is still alive by sending a message.
 If the leader fails to respond, the querying peers will enter a recovery state and operate alone until they can identify another coordinator.
-Therefore, a leader and each of the members maintain a set of processes that are currently reachable, a subset of all known processes in the system.
+Therefore, a leader and each of the members maintain a set of currently reachable processes, a subset of all known processes in the system.
 
 Using a leader election algorithm allows the FREEDM system to autonomously reconfigure rapidly in the event of a fault.
 Cyber-components are tightly coupled with the physical components, and fault reaction is not limited to the cyber domain.
@@ -46,7 +46,7 @@ In a stationary Markov chain, the $n$th visit to a state is indistinguishable fr
 A Markov chain with $m$ states can be represented by a $m\times m$ matrix.
 For simplicity when creating the model, matrices in this work are 1-indexed.
 In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $i$ to $j$.
-It should be obvious that the sum of each row in the matrix is equal to one:
+It should be obvious the sum of each row in the matrix is equal to one:
 
 \[ \sum_{i=1}^{m} P_{ij} = 1 \]
 
