@@ -1,4 +1,7 @@
 import random
+import logging
+import numpy as np
+import pickle
 
 GROUPCOUNTER = 0
 
@@ -50,7 +53,10 @@ class Connection(object):
             yield dest.pop(0)
             
 def readuntilempty(procs):
-    while any([ p.read() for p in procs]):
+    order = list(procs)
+    random.shuffle(order)
+    while any([ p.read() for p in order]):
+        random.shuffle(order)
         pass
 
 class GM(object):
@@ -70,28 +76,33 @@ class GM(object):
         self.pending = []
         self.expected = []
         self.pendingid = 0
-        
+        self.pendingldr = self.uuid
+        self.sawayc = False    
+    
     def __repr__(self):
         return "PROC {} - G({}): {} L: {}".format(self.uuid, self.groupid, self.group, self.leader)
 
     def check(self):
+        self.sawayc = False
         self.expected = []
         self.coordinators = []
         self.groupchange = False
+        self.pendingldr = self.uuid
+        self.pendingid = 0
         if self.is_leader():
             for peer in self.connmgr.peers:
                 if self.uuid == peer:
                     continue
-                self.connmgr.channel(self.uuid,peer).send(peer, ("AreYouCoordinator", self.uuid))
+                self.connmgr.channel(self.uuid,peer).send(peer, {'msg': "AreYouCoordinator"})
                 self.expected.append(peer)
         else:
             self.expected.append(self.leader)
-            self.connmgr.channel(self.uuid,self.leader).send(self.leader, ("AreYouThere", self.groupid))
+            self.connmgr.channel(self.uuid,self.leader).send(self.leader, {'msg':"AreYouThere", 'groupid': self.groupid})
 
     def merge(self):
         self.pending = []
         groupchange = False
-        if self.is_leader():
+        if self.is_leader() and self.pendingldr >= self.uuid:
             for peer in self.expected:
                 if peer in self.group:
                     self.group.remove(peer)
@@ -102,12 +113,15 @@ class GM(object):
                     groupchange = True
             #if groupchange:
             #    self.ready()
-            self.pendingid = newgid()
-            if not self.coordinators or min(self.coordinators) > self.uuid:
+            if self.coordinators:
+                self.pendingid = newgid()
+                self.pendingldr = self.uuid
                 for peer in self.coordinators:
                     if peer in self.expected:
                         continue
-                    self.connmgr.channel(self.uuid,peer).send(peer, ("Invite", self.pendingid))
+                    if peer < self.uuid:
+                        continue
+                    self.connmgr.channel(self.uuid,peer).send(peer, {'msg': "Invite", 'pendingid': self.pendingid, 'leader': self.uuid})
                 self.pending = list(self.group)
         elif self.expected:
             #self.recover()
@@ -115,19 +129,19 @@ class GM(object):
 
     def ready(self):
         self.expected = []
-        if self.pending and self.pending != self.group:
+        # Always send ready
+        if self.is_leader() and self.pendingldr == self.uuid:
             oldgroup = list(self.group)
-            self.group = list(self.pending)
-            self.group = list(set(self.group))
-            self.groupid = self.pendingid
+            if self.pending:
+                self.group = list(set(self.pending))
+                self.groupid = self.pendingid
+            else:
+                self.group = list(set(self.group))
             if self.uuid in self.group:
                 self.group.remove(uuid)
             self.expected = list(self.group)
-            #print "OLD {} NEW {} EXPECTED {}".format(oldgroup, self.group, self.expected)
-            for peer in oldgroup:
-                self.expected.remove(peer)
             for peer in self.group:
-                self.connmgr.channel(self.uuid,peer).send(peer, ("Ready", self.groupid, list(self.group)))
+                self.connmgr.channel(self.uuid,peer).send(peer, {'msg': "Ready", 'groupid': self.groupid, 'members': list(self.group)})
     
     def cleanup(self):
         if self.is_leader():
@@ -136,6 +150,10 @@ class GM(object):
         self.expected = []
         self.coordinators = []
         self.pending = []
+        self.pendingldr = self.uuid
+        self.pendingid = 0
+        #if self.sawayc == False:
+        #    self.recover()
 
     def is_leader(self):
         return self.leader == self.uuid
@@ -154,66 +172,70 @@ class GM(object):
     
     def receive(self, sender, message):
         prnt = False #self.uuid == 0 or sender == 0
-        if prnt:
-            print "MSG F: {} T: {} -- {}".format(sender, self.uuid, message),
-        if random.random() >= self.p:
-            if prnt:
-                print " !! Dropped"
+        drop = np.random.binomial(1, 1.0-self.p)
+        dbg = "MSG F: {} T: {} -- {} {}".format(sender, self.uuid, message, "!! Dropped" if drop else ""),
+        logging.debug(dbg)
+        if drop:
             return
-        else:
-            if prnt:
-                print ""
-            pass
-        if message[0] == "AreYouCoordinator":
+        if 'msg' not in message:
+            raise KeyError("Bad message {}".format(message))
+        if message['msg'] == "AreYouCoordinator":
             if self.is_leader():
                 resp = True
             else:
                 resp = False
-            self.connmgr.channel(self.uuid,sender).send(sender, ("AYCResponse", resp))
+            self.connmgr.channel(self.uuid,sender).send(sender, {'msg':"AYCResponse",'resp':resp, 'leader': self.leader})
 
-        elif message[0] == "AreYouThere":
+        elif message['msg'] == "AreYouThere":
             if sender in self.group:
                 resp = True
             else:
                 resp = False
                 self.coordinators.append(sender)
-            self.connmgr.channel(self.uuid,sender).send(sender, ("AYTResponse", resp, self.groupid, list(self.group)))
+            self.connmgr.channel(self.uuid,sender).send(sender, {'msg': "AYTResponse", 'resp': resp, 'groupid': self.groupid, 'members': list(self.group)})
                 
-        elif message[0] == "Invite":
-            if MINLEADER in self.coordinators and sender == MINLEADER: #(self.coordinators and sender == min(self.coordinators) and sender < self.uuid):
-                assert(self.leader == self.uuid)    
-                self.pendingid = message[1]
-                self.connmgr.channel(self.uuid,sender).send(sender, ("Accept", list(self.group)))
+        elif message['msg'] == "Invite":
+            if ((sender < self.uuid) and (message['leader'] <= self.leader)
+             and (self.pendingldr > message['leader']) and (sender in self.coordinators)):
+                self.pendingid = message['pendingid']
+                self.pendingldr = message['leader']
+                self.connmgr.channel(self.uuid,sender).send(sender, {'msg': "Accept"})
 
-        elif message[0] == "Accept":
+        elif message['msg'] == "Accept":
             self.pending.append(sender)
-            l = list(message[1])
-            if self.uuid in l:
-                l.remove(self.uuid)
-            self.pending += l
+            # l = list(message[1])
+            # if self.uuid in l:
+            #   l.remove(self.uuid)
+            # self.pending += l
 
-        elif message[0] == "Ready":
-            self.leader = sender
-            self.group = list(message[2])
-            self.groupid = message[1]
-            assert(not self.is_leader() or self.groupid == self.pendingid)
-            self.connmgr.channel(self.uuid,sender).send(sender, ("ReadyAck", self.groupid))
+        elif message['msg'] == "Ready":
+            if self.pendingldr == sender or self.leader == sender:
+                self.leader = sender
+                self.group = list(message['members'])
+                self.groupid = message['groupid']
+                assert(not self.is_leader() or self.groupid == self.pendingid)
+                self.connmgr.channel(self.uuid,sender).send(sender, {'msg': "ReadyAck", 'groupid': self.groupid})
+            else:
+                #ignore, this isn't the best process.
+                pass
     
-        elif message[0] == "AYCResponse":
+        elif message['msg'] == "AYCResponse":
             self.expected.remove(sender)
-            if message[1]:
+            if message['leader'] != self.uuid:
+                if sender in self.group:
+                    self.group.remove(sender)
                 self.coordinators.append(sender) 
 
-        elif message[0] == "AYTResponse":
+        elif message['msg'] == "AYTResponse":
             self.expected.remove(sender)
-            if not message[1]:
+            if not message['resp']:
                 self.recover()
                 self.coordinators.append(sender)
             else:
-                self.groupid = message[2]
-                self.group = list(message[3])
+                self.groupid = message['groupid']
+                self.group = list(message['members'])
         
-        elif message[0] == "ReadyAck":
+        elif message['msg'] == "ReadyAck":
             if sender in self.expected:
                 self.expected.remove(sender)
 
@@ -305,20 +327,22 @@ def applyonce(procs):
     for p in procs:
         p.cleanup()  
  
-def make_chain(procs,prob):
-
+def make_chain(procs,prob,sets=1,iters=10000):
     observations = []
-    
-    
-    for _ in range(1):
+    for _ in range(sets):
         cm = ConnectionManager()
         syst = [ GM(x,cm,p=p) for (x,p) in zip(range(procs),[prob]*procs) ]
         observations.append(1)
-        for __ in range(10000):
-            #print syst
+        for __ in range(iters):
+            logging.info(str(syst))
             applyonce(syst)
-            observations.append( len(syst[0].group)+1 )
-        #print syst
+            ob = len(syst[0].group)+1
+            if ob == 2 and True:
+                with open('scenario.pickle','w+') as cfp:
+                    pickle.dump(syst, cfp)
+                exit()
+            observations.append( ob )
+        logging.info(str(syst))
         observations.append('X')
         
 
@@ -329,4 +353,5 @@ def make_chain(procs,prob):
     return (o, likely_observe(observations))
     
 if __name__ == "__main__":
-    print make_chain(3,.95)
+    logging.basicConfig(level=logging.DEBUG)
+    make_chain(2,0.75,sets=10000,iters=2)
