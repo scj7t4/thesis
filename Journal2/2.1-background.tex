@@ -2,14 +2,14 @@
 
 \subsection{Group Management}
 
-The DGI uses the leader election algorithm, ``Invitation Election Algorithm,'' written by Garcia-Molina \cite{INVITATIONELECTION}.
+The DGI uses the leader election algorithm, ``Invitation Election Algorithm,'' written by Garcia-Molina\cite{INVITATIONELECTION}.
 This algorithm provides a robust election procedure which allows for transient partitions.
 Transient partitions are formed when a faulty link between two or more clusters of processes causes the groups to divide temporarily.
 These transient partitions merge when the link becomes more reliable.
 
 Many election algorithms have been created.
-Specialized algorithms exist for wireless sensor networks \cite{LE-WSN-1}\cite{LE-WSN-2} and other special circumstances\cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}.
-Work on leader elections has been incorporated into a variety of distributed frameworks: Isis \cite{ISISTOOLKIT}, Horus \cite{HORUSTOOLKIT}, Totem \cite{TOTEMTOOLKIT}, Transis \cite{TRANSISTOOLKIT}, and Spread \cite{SPREADTOOLKIT} all have methods for creating groups.
+Specialized algorithms exist for wireless sensor networks\cite{LE-WSN-1}\cite{LE-WSN-2} and other special circumstances\cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}.
+Work on leader elections has been incorporated into a variety of distributed frameworks: Isis\cite{ISISTOOLKIT}, Horus\cite{HORUSTOOLKIT}, Totem\cite{TOTEMTOOLKIT}, Transis\cite{TRANSISTOOLKIT}, and Spread\cite{SPREADTOOLKIT} all have methods for creating groups.
 Despite this wide array of work, the fundamentals of leader election are similar.
 Processes arrive at a consensus of a single peer that coordinates the group.
 Processes that fail are detected and removed from the group.

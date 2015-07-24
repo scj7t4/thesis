@@ -30,12 +30,18 @@ editing: editing.tex latex_bibliography.bib
 	$(LATEX_COMMAND) editing.tex
 	$(LATEX_COMMAND) editing.tex
 
+journal: journal.tex latex_bibliography.bib
+	$(LATEX_COMMAND) journal.tex
+	$(BIBTEX_COMMAND) journal.aux
+	$(LATEX_COMMAND) journal.tex
+	$(LATEX_COMMAND) journal.tex
+
 view: all
 	$(VIEWER) $(SOURCE).pdf
 
 plots:
-	#make -C ./charts clean
-	make -C ./charts all SIZE_X=5 SIZE_Y=3.5
+	make -C ./charts clean
+	make -C ./charts all SIZE_X=4 SIZE_Y=3
 
 clean:
 	rm -f $(SOURCE).{aux,bbl,blg,dvi,glg,glo,gls,idx,ist,fff,nlo,nls,ilg}
