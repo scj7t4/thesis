@@ -3,6 +3,8 @@ import logging
 import numpy as np
 import pickle
 
+from collections import deque
+
 GROUPCOUNTER = 0
 
 def newgid():
@@ -74,7 +76,7 @@ class GM(object):
         self.groupid = newgid()
         self.coordinators = []
         self.pending = []
-        self.expected = []
+        #self.expected = []
         self.pendingid = 0
         self.pendingldr = self.uuid
         self.sawayc = False    
@@ -96,8 +98,16 @@ class GM(object):
                 self.connmgr.channel(self.uuid,peer).send(peer, {'msg': "AreYouCoordinator"})
                 self.expected.append(peer)
         else:
+            for peer in self.connmgr.peers:
+                if peer >= self.uuid:
+                    continue
+                if peer == self.leader:
+                    continue
+                self.connmgr.channel(self.uuid,peer).send(peer, {'msg': "AreYouCoordinator"})
+                self.expected.append(peer)
             self.expected.append(self.leader)
             self.connmgr.channel(self.uuid,self.leader).send(self.leader, {'msg':"AreYouThere", 'groupid': self.groupid})
+            #print "Member {} expects {}".format(self.uuid, self.expected)
 
     def merge(self):
         self.pending = []
@@ -123,9 +133,10 @@ class GM(object):
                         continue
                     self.connmgr.channel(self.uuid,peer).send(peer, {'msg': "Invite", 'pendingid': self.pendingid, 'leader': self.uuid})
                 self.pending = list(self.group)
-        elif self.expected:
+        elif self.leader in self.expected:
             #self.recover()
             pass
+        self.expected = []
 
     def ready(self):
         self.expected = []
@@ -220,6 +231,7 @@ class GM(object):
                 pass
     
         elif message['msg'] == "AYCResponse":
+            #print "{} r-expects {}".format(self.uuid, self.expected)
             self.expected.remove(sender)
             if message['leader'] != self.uuid:
                 if sender in self.group:
@@ -326,6 +338,43 @@ def applyonce(procs):
     readuntilempty(procs)   
     for p in procs:
         p.cleanup()  
+
+def mkv_state(syst):
+    return len(syst[0].group)+1
+
+def sys_state(syst):
+    return tuple([ tuple(x.group) for x in syst])
+
+def make_chain_2(procs, prob, applications=10):
+    cm = ConnectionManager()
+    syst = [ GM(x,cm,p=p) for (x,p) in zip(range(procs),[prob]*procs) ]
+    queue = deque([])
+    states = set()
+    states.add(sys_state(syst)) 
+    queue.append(pickle.dumps(syst))
+    observations = []
+    c = 0
+    while queue:
+        c += 1
+        if c % 10 == 0:
+            print "c={} q={}".format(c,len(queue)) 
+        pick = queue.popleft()
+        for _ in range(applications):
+            syst = pickle.loads(pick)
+            ob = mkv_state(syst)
+            observations.append(ob)
+            applyonce(syst)
+            ob = mkv_state(syst)
+            observations.append( ob )
+            observations.append('X')
+            if sys_state(syst) not in states:
+                states.add(sys_state(syst))
+                queue.append(pickle.dumps(syst))
+    o = observe(observations)
+    pretty(o)
+    c = chainify(o)
+    pretty(c)
+    return (o, likely_observe(observations))
  
 def make_chain(procs,prob,sets=1,iters=10000):
     observations = []
@@ -337,10 +386,10 @@ def make_chain(procs,prob,sets=1,iters=10000):
             logging.info(str(syst))
             applyonce(syst)
             ob = len(syst[0].group)+1
-            if ob == 2 and True:
-                with open('scenario.pickle','w+') as cfp:
-                    pickle.dump(syst, cfp)
-                exit()
+            # if ob == 2 and True:
+                # with open('scenario.pickle','w+') as cfp:
+                    # pickle.dump(syst, cfp)
+                # exit()
             observations.append( ob )
         logging.info(str(syst))
         observations.append('X')
@@ -354,4 +403,4 @@ def make_chain(procs,prob,sets=1,iters=10000):
     
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    make_chain(2,0.75,sets=10000,iters=2)
+    make_chain(5,0.75)
