@@ -10,7 +10,7 @@
 
 \subsection{Execution Environment}
 
-Execution occurs in a real-time synchronized environment.
+Execution occurs in a real-time partially synchronous environment.
 Processes synchronize their clocks and execute steps of the election algorithm at predefined intervals.
 Processes with clocks that are not sufficiently synchronized cannot form groups.
 For this work, process execution occurs in an environment where the clocks are sufficiently synchronized to consistently form groups.
@@ -44,7 +44,7 @@ If the message does not arrive in time, the process will enter the recovery stat
 
 \begin{figure*}[!t]
 \includegraphics[width=\linewidth]{LeaderElectionStateDiagram.pdf}
-\caption{State machine of a leader election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to ``Are You Coordinator'' messages they receive.}
+\caption{State machine of a leader election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to ``Are You Coordinator'' (AYC) messages they receive. The algorithm was modified by adding a ``Ready Acknowledgment'' message as the final step of completing the election. Additionally, processes only accept invites if they have received an ``AYC Response'' message from the inviting process.}
 \label{fig:statemachine}
 \end{figure*}
 
@@ -52,27 +52,29 @@ Once a group is formed it must be maintained.
 To do this, processes occasionally exchange messages to verify the other is still reachable.
 This interaction is shown in Figure \ref{fig:statemachine2}.
 Coordinators send ``Are You Coordinator'' messages to members of its group to check if the process has left the group.
-Group members send ``Are You There'' messages to the coordinator to verify they haven't been kicked out of the group, and to ensure the coordinator is still alive.
+Group members send ``Are You There'' messages to the coordinator to verify they haven't been removed from the group, and to ensure the coordinator is still alive.
 If processes fail to reply to received message before a timeout, they will leave the group.
 Leaving the group can either be caused by the coordinator removing the process, or the process can enter a recovery state and leave the group, forming a new group by itself.
 
 \begin{figure*}[!t]
 \includegraphics[width=\linewidth]{MaintainStateDiagram.pdf}
-\caption{State machine of maintaining a group. The ``Are You Coordinator'' messages are the same as those in Figure \ref{fig:statemachine}. ``Are You Coordinator'' and ``Are You There'' are periodically sent by processes, and responses to those messages are immediately sent by the receiving process.}
+\caption{State machine of maintaining a group. The ``Are You Coordinator'' (AYC) messages are the same as those in Figure \ref{fig:statemachine}. AYC and ``Are You There'' (AYT) are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
 \label{fig:statemachine2}
 \end{figure*}
 
 For a variety of reasons modeling this algorithm is very difficult.
-Previous work, \cite{CRITIS2012}, showed data collected of an implementation of the algorithm display have a large amount of variance.
+Previous work, \cite{CRITIS2012}, showed data collected from an implementation of the algorithm displays a large amount of variance.
 In a distributed system information cannot be instantaneously spread throughout the system.
-As a consequence, omission failure will cause a process to miss out on information distributed by other processes.
-In particular, the receipt of ``Ready'' messages by group members is uncertain to the coordinator.
-This missing information normally causes the coordinators observation of the group to be out-of-date.
-Since the state of the group is incorrect, it cannot be used with a Markov chain, as it does not describe the actual state of the system.
-The original ``Are You There'' approach for detecting failure detection (Figure \ref{fig:statemachine2}) also causes a similar effect.
+As a consequence, an omission failure will cause a process to miss out on information distributed by other processes.
+In particular, an omission of a ``Ready'' message sent to group members cannot be known to the coordinator without an additional message.
+This missing information normally causes the coordinator's observation of the group to be out-of-date.
+Since the state of the group is incorrect, it cannot be used in a Markov chain with perfect information, as it does not describe the actual state of the system.
+In the modified algorithm, members have uncertainty with respect to their membership, and the coordinator has perfect information about members that definitely a part of the group.
+The original ``Are You There'' approach for detecting failure (Figure \ref{fig:statemachine2}) also causes a similar effect.
 Additionally, the election algorithm has an inherent race condition as part of its normal operation.
 This race condition can make the selection of the group leader inconsistent: the highest priority process may not always win the election.
-For the purpose of analyzing the system, having a consistent leader is important for collecting data to verify the model.
+For the purpose of analyzing the system, having a consistent leader is important for capturing a consistent view of grouping.
+Additionally, the resulting leader of a normal election is difficult to model since it would necessitate capturing a race-condition in the model.
 
 In this work, we model what a process will observe as a result of omission failure.
 Therefore, it is important a process' observations hold to the Markov property.
@@ -83,8 +85,9 @@ Changes to the algorithm relieved race conditions when selecting a leader, and m
 
 \subsection{Leader Selection}
 
-To alleviate the inherit race condition of leader selection, a fixed leader process was selected.
+To alleviate the inherit race condition of leader selection, without loss of generality, a fixed leader process was selected.
 This process was the only one that could become the leader of a multiprocess group.
+This is shown in Figure \ref{fig:statemachine}, where only the selected process can send invite messages.
 This simplification was applied because the configuration of the system with a larger number of processes depended on the configuration of the other processes.
 Without this simplification, the state of the rest of the system would not have the memoryless property.
 The state of the processes that are not in the observers group would change each round.
@@ -102,7 +105,7 @@ Additionally the probability distribution of an observation of the sub-case depe
 If $P_{sub}$ is ergodic, then $Steady(P_{sub}{}) \neq [1.0 \quad 0]$.
 Each step of the sub-case ($n$) will move its distribution asymptotically closer to the steady-state:
 
-\[ [1.0 \quad 0] * \lim_{n \to \infty}P_{sub}^n = Steady(P_{sub}) \]
+\begin{equation} [1.0 \quad 0] * \lim_{n \to \infty}P_{sub}^n = Steady(P_{sub}) \end{equation}
 
 Since the initial state of the algorithm in the sub-case must be un-grouped ($[1.0 \quad 0]$), and the process is ergodic, the probability distribution of the sub-case depends on the number of steps ($n$).
 As a consequence, the distribution for any $n$ must be different from the distribution of $n-1$.
@@ -111,7 +114,7 @@ Therefore, to make the algorithm memoryless, only a selected process may lead a 
 
 \subsection{Ready Acknowledgment}
 
-The changes added a third message to completing an election -- a ready acknowledge message.
+The changes added a third message to completing an election -- a ready acknowledge message, shown in Figure \ref{fig:statemachine}.
 This message is sent by a member after receiving the ready message from the coordinator.
 This allows the coordinator to be certain of the member's status before the next round.
 Without the ready acknowledgment, the member may not receive the ready message and the coordinator will observe the member is a part of the group.
@@ -130,6 +133,7 @@ As a consequence, the probability a member remains in a group in the first round
 
 Members cannot leave a group without the leader's permission.
 Members do not suspect the coordinator has failed, only the coordinator may suspect the members.
+This change is shown in Figure \ref{fig:statemachine2}.
 For the purpose of starting an election, an ``Are You There'' message and its negative response are considered equivalent to a ``Are You Coordinator'' message and a positive response.
 On receipt of the negative response, the member will immediately recover and become a leader.
 This assumption relies on ``Are You Coordinator'' and ``Are You There'' messages being sent at roughly the same time.
@@ -154,13 +158,13 @@ Each round, the behavior is described by two components: maintaining a group and
 The coordinator will exchange a ``Are You Coordinator'' message and the peer will respond to verify is still available.
 To maintain a group of $m$ other processes, the probability is defined as a random variable with the following probability distribution (pdf):
 
-\[
+\begin{equation}
  \Pr_{M}(X=k; m) =
    \begin{cases}
-    \binom{m}{k} p^{2k}(1-p^2)^{m-k} & \quad \text{if } 0 \leq k \leq m \\
-    0                                & \quad \text{otherwise} \\
+    \binom{m}{k} p^{2k}(1-p^2)^{m-k}, & \text{if } 0 \leq k \leq m \\
+    0,                                & \text{otherwise} \\
   \end{cases}
-\]
+\end{equation}
 
 Where $k$ is the number of processes remaining in a group selected from $m$ processes.
 A process will leave a group if, from the considered process' perspective, they do not respond to an ``Are You Coordinator'' message.
@@ -170,17 +174,18 @@ To invite other processes to the group, the two processes ultimately exchange up
 In a round, a single process can invite many other processes to its group.
 From a selection of $n$ other coordinators, the probability distribution for joining a new group with $k$ of the $n$ processes is:
 
-\[
+\begin{equation}
 	\Pr_{I}(Y=k; n) =
 	\begin{cases}
-		\binom{n}{k} p^{8k}(1-p^8)^{n-k} & \quad \text{if } 0 \leq k \leq n \\
-		0                                & \quad \text{otherwise} \\
+		\binom{n}{k} p^{8k}(1-p^8)^{n-k}, & \text{if } 0 \leq k \leq n \\
+		0,                                & \text{otherwise} \\
 	\end{cases}
-\]
+\end{equation}
 
 In the profile chain, in a state $s$ that describes the number of processes in a group, the probability of transitioning from $s$ to $s'$ with $n$ total processes (including the considered process) is:
 
-\[ \Pr_{T}(Z=s'; n; s) = \sum_{i=0}^{s-1} \Pr_{M}(X=i; s-1) \Pr_{I}(X=s'-i; n-s-1) \]
+\begin{align} \Pr_{T}(Z=s'; n; s) = \sum_{i=0}^{s-1} &\Pr_{M}(X=i; s-1) \cdot
+\nonumber \\ &\Pr_{I}(X=s'-i; n-s-1) \end{align}
 
 From this distribution, a set of transition probabilities can be calculated for a given omission rate $p$ and number of processes $n$.
 This set of transition probabilities forms a profile Markov chain $P$, which can be evaluated to for any number of processes $n$ and omission rate $p$.

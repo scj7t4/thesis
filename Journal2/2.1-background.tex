@@ -20,7 +20,7 @@ If the leader fails to respond, the querying peers will enter a recovery state a
 Therefore, a leader and each of the members maintain a set of currently reachable processes, a subset of all known processes in the system.
 
 Using a leader election algorithm allows the FREEDM system to autonomously reconfigure rapidly in the event of a fault.
-Cyber-components are tightly coupled with the physical components, and fault reaction is not limited to the cyber domain.
+Cyber-components are tightly coupled with the physical components, and reaction to faults is not limited to faults originating in the cyber domain.
 Processes automatically react to crash-stop failures, network issues, and power system faults.
 The automatic reconfiguration allows processes to react immediately to issues, faster than a human operator, without relying on a central configuration point.
 However, it is important the configuration leader election supplies is one where the system can do viable work without causing physical faults\cite{HARINI}.
@@ -35,9 +35,10 @@ In a Markov chain, when a system is some state $i$ it has some probability of tr
 A Markov chain is a first order chain if the probability of transitioning from $i$ to $j$ does not depend of the history of transitions that lead to state $i$.
 First order chains are described as having a memoryless or Markov property.
 This formalizes the independence of the next state from the history of previous states.
-The Markov property describes a Markov chain as a sequence of random variables $X_{1}, X_{2}, X_{3}...$ and states the value of $X_{n+1}$ only depends $X_{n}$: \cite{MARKOV3}
+The Markov property describes a Markov chain as a sequence of random variables $X_{1}, X_{2}, X_{3}, ...$ and states the value of $X_{n+1}$ only depends $X_{n}$: \cite{MARKOV3}
 
-\[ \Pr(X_{n+1}=x\mid X_1=x_1, X_2=x_2, \ldots, X_n=x_n) = \Pr(X_{n+1}=x\mid X_n=x_n) \]
+\begin{align} \Pr(X_{n+1}&=x\mid X_1=x_1, X_2=x_2, \ldots, X_n=x_n)
+\nonumber \\ &= \Pr(X_{n+1}=x\mid X_n=x_n). \end{align}
 
 An ergodic Markov chain is a chain where it is possible, in some finite number of steps, to go from any state to any other state.
 A stationary Markov chain is one where the transition probabilities do not change over time.
@@ -48,24 +49,25 @@ For simplicity when creating the model, matrices in this work are 1-indexed.
 In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $i$ to $j$.
 It should be obvious the sum of each row in the matrix is equal to one:
 
-\[ \sum_{i=1}^{m} P_{ij} = 1 \]
+\begin{equation} \sum_{i=1}^{m} P_{ij} = 1. \end{equation}
 
-A useful companion to the transition matrix is a state-distribution vector.
-This $m$-dimensional vector (indexed from 1) describes the probability of observing a system state at a given moment.
-The $i$th entry in the vector corresponds to the probability of observing state $i$.
-For example, if an observation always observes a two state system in state $i=1$ the state-distribution would be noted as $[1.0 \quad 0]$.
+A useful companion to the transition matrix is a state distribution vector.
+While the transition matrix describes how system will transition between states, the state distribution vector describes the probability of observing a given state.
+A state distribution vector is an $m$-dimensional vector composed of probability of observing each state in the system at a given instant: $[P_{1} P_{2} \ldots P_{m} ]$.
+Where $P_{i}$ corresponds to the probability of observing state $i$.
 
 A Markov chain is a suitable model for a memoryless random process with a finite number states which is observed at fixed time intervals.
 By utilizing a Markov chain, a variety of statistical analyses can be performed on these modeled system.
 For example, a Markov chain with the stationary and ergodic properties can be analyzed for its steady state probabilities.
-The steady state describes the probability a random observation of a running process will observe some state $i$.
+The steady state is a state distribution vector that describes the probability a random observation of a long-running process will observe some state $i$.
 The steady state can by found via a system of equations: \cite{MARKOV3}
 
-\[  0\leq\pi_j\leq1.0 \]
-\[	\sum_{j = 1}^{m}\pi_j = 1.0 \]
-\[	\pi_j = \sum_{i=1}^{m} \pi_i p_{ij} \]
+\begin{align}
+0\leq\pi_j\leq1.0 \\
+\sum_{j = 1}^{m}\pi_j = 1.0 \\
+\pi_j = \sum_{i=1}^{m} \pi_i p_{ij}
+\end{align}
 
-where $\pi$ is a vector with a length equal to the number of states in the Markov chain.
 In the following sections, the computation of the steady state will be noted as $Steady()$.
 A Markov chain can also be used to predict what state a process will be in at some point in the the future.
 Given a initial state and a number of time-steps a matrix operation will yield the likelihood of the process being in each state after the time interval has passed.

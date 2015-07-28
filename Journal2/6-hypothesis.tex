@@ -15,16 +15,16 @@ Therefore, generated $P$ chains can be used to analyze the behavior of the algor
 To verify the test chain $T$ is equivalent to the profile chain $P$, a $\chi^2$ goodness-of-fit test is employed.
 The null-hypothesis of this test ($H_{0}$) asserts the profile chain $P$ is equivalent to the test chain $T$:
 
-\[ H_{0}: T = P \]
+\begin{equation} H_{0}: T = P \end{equation}
 
-With an alternative hypothesis that the two chains are not equivalent:
+with an alternative hypothesis that the two chains are not equivalent:
 
-\[ H_{1}: T \neq P \]
+\begin{equation} H_{1}: T \neq P \end{equation}
 
 The $\chi^2$ test measures the goodness-of-fit for a complete chain by combining the measurements of goodness of fit for the transitions away from each state.
 Therefore, the goodness of fit test for the chain is a summation of tests for each state:\cite{MARKOV3}
 
-\[ \chi^2 = \sum_{i}^{m} \sum_{j}^{m} = \frac{n_{i}(P_{ij}-T_{ij})^2}{P_{ij}} \]
+\begin{equation} \chi^2 = \sum_{i}^{m} \sum_{j}^{m} = \frac{n_{i}(P_{ij}-T_{ij})^2}{P_{ij}} \end{equation}
 
 Where $n_{i}$ is the number of times the state $i$ was observed in the input sequence used to construct the test chain $T$.
 The summation is distributed as $\chi^2$ with $m(m-1)$ degrees of freedom if all entries in $P_{ij}$ are non-zero.

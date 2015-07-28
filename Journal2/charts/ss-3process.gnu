@@ -18,5 +18,6 @@ set style data histogram
 set style histogram rowstacked
 set style fill pattern border
 set boxwidth 0.75
-plot 'data/'.filename.'.dat' using 3:xticlabels(1) lc rgbcolor "black" title 'Group Size 2',\
+everyother(col) = (int(column(col)*100-5) % 10 == 0) ? stringcolumn(1) : ""
+plot 'data/'.filename.'.dat' using 3:xticlabels(everyother(1)) lc rgbcolor "black" title 'Group Size 2',\
      for [i=4:(procs+1)] '' using i lc rgbcolor "black" title 'Group Size '.(i-1)

@@ -4,7 +4,9 @@
 
 In this work we presented a new approach to modeling the behavior of a distributed algorithm.
 By modifying the algorithm so the observations of a process are memoryless, the system can be modeled as Markov chain.
-While these changes do limit the capabilities of the algorithm, they do establish a new approach to designing distributed algorithms.
+These changes do limit the capabilities of the algorithm.
+Only one process can lead groups, and the algorithm could live-lock in the event of a crash-failure of the selected process.
+However, it does establish a new approach to designing distributed algorithms.
 These models accurately represent the behavior of the algorithm during omission failures.
 Steady-state analysis of these models yields predictions for how much time a group can spend working.
 This measured "In Group Time" can be used to adjust the schedule of a real-time system using the algorithm to ensure it can continue to do work.

@@ -11,9 +11,12 @@ Major proposed features of the FREEDM cyber-physical network include the solid s
 This vein of research emphasizes decentralizing the power grid, making it more reliable by distributing energy production resources.
 The Distributed Grid Intelligence (DGI) is a critical component of this system.
 The DGI performs automatic distributed configuration and management of power resources to manage an electrical grid.
+Energy management algorithms, a core feature of the DGI\cite{LOADBALANCING}, balance power in a smart-grid CPS.
+In order to do this, the algorithm must have access to a set of available processes to work with.
+Automatic reconfiguration using a group management algorithm allows algorithms like \cite{LOADBALANCING} to autonomously manage the grid.
 
-Part of FREEDM's design requires the system to operate in islanded mode, where portions of the distribution network are partitioned from each other.
-The effects of these partitions are still not well understood.
+Part of FREEDM's design requires the system to operate as a microgrid when portions of the distribution network are partitioned from each other.
+The effects of these partitions on the physical components of the CPS are still not well understood.
 These partitions can be caused by physical or cyber faults.
 To ensure the correct operation of the smart grid, two factors are of particular concern: the ability to do work, and the ability to do correct work.
 Since resources are distributed, they can only be used effectively when multiple processes can coordinate to manage those resources.
@@ -23,11 +26,11 @@ Related work\cite{HARINI}\cite{TSG} has indicated this is an important concern f
 This work presents a distributed leader election algorithm and Markov model of that algorithm.
 The presented algorithm maintains the Markov property for the observations of the leader despite omission failures.
 This approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems.
-These models produce expectations of how much time the DGI will be able to spend coordinating and doing useful work over.
-Using these measures, the behavior of the control system for the physical devices can be adjusted to prevent faults.
-These techniques allow the DGI to anticipate behavior during a fault and allow it to pre-emptively harden itself against the fault.
+These models produce expectations of how much time the DGI will be able to spend coordinating and doing useful work.
+Using these measures, the behavior of the control system for the physical devices can be adjusted to prevent faults in the physical network.
 
-Similar work is limited: \cite{LEADERELECTIONEVAL} analyzes the consistency of the configuration during fault conditions.
+Similar work is very limited: \cite{LEADERELECTIONEVAL} analyzes the consistency of the configuration with many crash-failures.
+It only provides an analysis of how many messages are exchanged for that level of consistency, and does not provide a predictive model.
 Modeling distributed systems is a challenging task, due to the complex interactions between processes.
 By modifying an algorithm to maintain a common property of Markov chains, some of these interactions can be tamed.
 This yields a practical and useful technique for describing distributed systems.

@@ -59,6 +59,8 @@ The profile chain can be combined with different message sending strategies to m
 For example, the DGI can change to a slower mode of operation to ensure operation continues normally despite connectivity issues.
 By selecting different strategies depending on the message delivery probability the DGI can offer high performance in good network conditions and an acceptable level of service during faults.
 The profile chain can be extended to an arbitrary number of processes as shown in Figure \ref{fig:ss-means}.
+In Figure \ref{fig:ss-means}, the steady-state of the system is used to compute a weighted average of the group size.
+To compare the produced steady states, the weighted average was plotted as a percentage of all processes in the system.
 Interestingly, the average group size has a linear relationship between the number of processes and the omission rate.
 
 \begin{figure}
@@ -77,3 +79,5 @@ Breaking the large groups into smaller sets can drastically reduce the number of
 Additionally, the coordinator can design the split to ensure work can continue when the groups are split, by mixing supply and demand processes.
 The division can also account for the placement of congested routers for targeted congestion relief.
 Furthermore, since the required execution time is a function of group size, the DGI can use the additional execution time within the same real time schedule to use more reliable techniques to deliver messages.
+
+%These techniques allow the DGI to anticipate behavior during a fault and allow it to pre-emptively harden itself against the fault.
