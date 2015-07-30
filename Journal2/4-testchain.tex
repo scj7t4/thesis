@@ -8,8 +8,12 @@ To verify the profile chain describes the behavior of the algorithm, it must be 
 By constructing a test chain from the execution of the algorithm, we can verify the profile chain describes the algorithm.
 The test chain, $T$, is constructed by executing the algorithm in the DGI environment and recording a process's observations of group size.
 The implementation of the election algorithm was executed for a sufficient number of steps to collect observations to estimate the transition matrix $T$.
-Data was collected by running an implementation of the algorithm in the DGI software on a group of Pentium 4 computers connected on a gigabit network with clocks synchronized by NTP, and a fine synchronization technique used in the DGI.
-For each test-case the DGI was run for 5,000 rounds to collect a sufficient number of observations.
+Data was collected by running an implementation of the algorithm in the DGI software\ref{FREEDMGITHUB}.
+Each process ran on its own Intel Core 2 Duo E4600 CPU, running Debian GNU/Linux 7.8 (wheezy) and the 3.2.65 RT kernel.
+Computers connected on a gigabit network with clocks synchronized by NTP, and a fine synchronization technique used in the DGI.
+DGI was compiled with Boost\cite{BOOST} 1.49 and Google's Protocol Buffers\cite{PROTOBUF} 2.4.1.
+Messages were sent as UDP Datagrams and dropped by the receiver based on a Bernoulli trial from the Boost library.
+For each test-case the DGI was run for 5,000 time-steps to collect a sufficient number of observations.
 The collected observations form a sequence of states.
 A transition probability matrix can be extracted from that sequence, using a maximum likelihood estimates approach.
 Let $n_{ij}$ be the number of observed transitions from state $i$ to state $j$. Let $n_{i}=\sum_{j=1}^{m} n_{ij}$ where $m$ is the number of states.

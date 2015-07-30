@@ -20,7 +20,8 @@ In an omission failure, a message sent by one process to another process is lost
 Omission failures can occur for many reasons.
 Network congestion is a typical culprit.
 Routers may drop packets or delay their delivery when there is a large amount of traffic or a network issue.
-In a real-time environment, packets that are delayed to miss real-time deadlines will have the same appearance as a dropped packet.
+In a real-time environment, messages that are delayed to miss real-time deadlines will have the same appearance as an omitted message.
+Process delay can also cause a similar effect.
 The execution environment for the election algorithm has a omission failure occurrence modeled as a Bernoulli trial.
 In this model, each message has some probability $p$ of being delivered within the timing constraints imposed by the real-time schedule.
 For the purpose of analyzing the effects of omission failures, processes are not subject to other faults.
@@ -77,9 +78,9 @@ For the purpose of analyzing the system, having a consistent leader is important
 Additionally, the resulting leader of a normal election is difficult to model since it would necessitate capturing a race-condition in the model.
 
 In this work, we model what a process will observe as a result of omission failure.
-Therefore, it is important a process' observations hold to the Markov property.
+Therefore, it is important a process's observations hold to the Markov property.
 The original Garcia-Molina algorithm has been modified so the observations of the coordinator process have the Markov property.
-The full modified algorithm is presented in Appendix REFERENCE.
+The full modified algorithm is presented in Appendix \ref{apdx:algorithm}.
 The following sections state the portions of the algorithm where the observation of the leader process does not yield the probability of next transition.
 Changes to the algorithm relieved race conditions when selecting a leader, and made the state of the members a certainty for the coordinator.
 
@@ -167,7 +168,7 @@ To maintain a group of $m$ other processes, the probability is defined as a rand
 \end{equation}
 
 Where $k$ is the number of processes remaining in a group selected from $m$ processes.
-A process will leave a group if, from the considered process' perspective, they do not respond to an ``Are You Coordinator'' message.
+A process will leave a group if, from the considered process's perspective, they do not respond to an ``Are You Coordinator'' message.
 Members cannot change their state without coordinating with the leader.
 
 To invite other processes to the group, the two processes ultimately exchange up to 8 messages.
