@@ -1,7 +1,53 @@
 \section{Modified Leader Election Algorithm}
 
+\makeatletter
+\newlength{\continueindent}
+\setlength{\continueindent}{4em}
+
+\renewenvironment{algorithmic}[1][0]%
+   {%
+   \edef\ALG@numberfreq{#1}%
+   \def\@currentlabel{\theALG@line}%
+   %
+   \setcounter{ALG@line}{0}%
+   \setcounter{ALG@rem}{0}%
+   %
+   \let\\\algbreak%
+   %
+   \expandafter\edef\csname ALG@currentblock@\theALG@nested\endcsname{0}%
+   \expandafter\let\csname ALG@currentlifetime@\theALG@nested\endcsname\relax%
+   %
+   \begin{list}%
+      {\ALG@step}%
+      {%
+      \rightmargin\z@%
+      \itemsep\z@ \itemindent\z@ \listparindent2em%
+      \partopsep\z@ \parskip\z@ \parsep\z@%
+      \labelsep 0.5em \topsep 0.2em%\skip 1.2em 
+      \ifthenelse{\equal{#1}{0}}%
+         {\labelwidth 0.5em}%
+         {\labelwidth 1.2em}%
+       \leftmargin\labelwidth \addtolength{\leftmargin}{\labelsep}
+      \ALG@tlm\z@%
+      }%
+      \parshape 2 \leftmargin \linewidth \continueindent \dimexpr\linewidth-\continueindent\relax
+   \setcounter{ALG@nested}{0}%
+   \ALG@beginalgorithmic%
+   }%
+   {% end{algorithmic}
+   % check if all blocks are closed
+   \ALG@closeloops%
+   \expandafter\ifnum\csname ALG@currentblock@\theALG@nested\endcsname=0\relax%
+   \else%
+      \PackageError{algorithmicx}{Some blocks are not closed!!!}{}%
+   \fi%
+   \ALG@endalgorithmic%
+   \end{list}%
+   }%
+\makeatother
+
 \begin{flushleft}
-\begin{algorithmic}[H]
+\begin{algorithmic}[1]
 
 \State $AllPeers \gets \{ 1, 2, ..., N \}$
 \State $Coordinators \gets \emptyset$
@@ -115,7 +161,7 @@
 
 \State
 
-\Function{ReceiveInvitation}{Sender,Leader,Identifier}
+\Function{ReceiveInvite}{Sender,Leader,Identifier}
     \If {$State \neq Normal$}
         \Return
     \EndIf
@@ -125,7 +171,6 @@
     \State Stop Work
     \State $PendingID \gets Identifier$
     \State $State \gets Election$
-    \State $PendingID \gets Identifier$
     \State $Accept(Coordinator,Identifier)$
     \State $State \gets Reorganization$
     \If {$Ready$ is not received}
