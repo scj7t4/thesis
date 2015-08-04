@@ -64,25 +64,27 @@
 \State
 
 \Function{Check}{}
-    \State This function is called at the start of a round by a leader
-    \If {$State = Normal$ and $Coordinator \gets Me$}
-        \State $Expected \gets \emptyset$
-        \For {$j \in (AllPeers - \{Me\})$}
-            \State $AreYouCoordinator(j)$
-            \State $Expected \gets Expected \cup j$
-        \EndFor
-        \State Peers which respond ``Yes'' to $AreYouCoordinator$ are put into the $Coordinators$ set.
-		\State Processes that respond are removed from $Expected$.
-        \State When an $AreYouThere$ response is ``No'' and this process is a coordinator, the querying process is put in the $Coordinators$ set.
-        \State Wait for responses, Peers that do not respond are removed from UpPeers.
-        \State $UpPeers \gets (UpPeers-Expected) \cup {Me}$
-		\State $UpPeers \gets (UpPeers-Coordinators) \cup {Me}$
-        \If {$Responses = \emptyset$}
-            \Return
-        \EndIf
-        \If $Me = SelectedProcess$
-			\Call{Merge}{Responses}
-        \EndIf
+    \Comment This function is called at the start of a round by a leader
+    \If {$State \neq Normal$ or $Coordinator \neq Me$}
+        \Return
+    \EndIf
+    \State $Expected \gets \emptyset$
+    \For {$j \in (AllPeers - \{Me\})$}
+        \State $AreYouCoordinator(j)$
+        \State $Expected \gets Expected \cup j$
+    \EndFor
+    \State Peers which respond ``Yes'' to $AreYouCoordinator$ are put into the $Coordinators$ set.
+    \State Processes that respond are removed from $Expected$.
+    \State When an $AreYouThere$ response is ``No'' and this process is a coordinator, the querying process is put in the $Coordinators$ set.
+    \State Wait for responses, Peers that do not respond are removed from UpPeers.
+    \State $UpPeers \gets (UpPeers-Expected) \cup {Me}$
+    \State $UpPeers \gets (UpPeers-Coordinators) \cup {Me}$
+    \If {$Responses = \emptyset$}
+        \Return
+    \EndIf
+    \If {$Me = SelectedProcess$}
+        \State
+        \Call{Merge}{Responses}
     \EndIf
 \EndFunction
 
