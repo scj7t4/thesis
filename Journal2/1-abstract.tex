@@ -1,4 +1,4 @@
-This work presents an approach for modeling an election algorithm subject to omission failures in the cyber and network domains using Markov chains.
+This work presents an approach for modeling an election algorithm among distributed processes subject to omission failures in the cyber and network domains using Markov chains.
 Modeling distributed systems when messages are lost is difficult because the interactions often result in race conditions.
 Additionally, when messages are lost, the state observed by processes can differ from an omniscient view of the system.
 By modifying the algorithm to remove the race conditions and to ensure the leader always has an accurate view of the group's membership, the algorithm can be modeled with a Markov chain.
@@ -6,8 +6,8 @@ To accomplish this a modified version of the ``Invitation Election Algorithm'' b
 In this modified algorithm, the observations of a pre-selected process's group size were memoryless.
 By taking advantage of this memorylessness an accurate closed form representation of the behavior of the algorithm was captured.
 This model allowed the analysis of the system's steady-state probabilities.
-In a smart-grid system, this analysis is invaluable because it is a critical infrastructure and ensuring the power-grid is not disabled during cyber fault conditions is paramount.
+In the context of a smart-grid system, this analysis is invaluable because it is a critical infrastructure.
+Ensuring the power-grid will not fail (with a blackout or a voltage instability, for example) during cyber and network fault conditions is paramount.
 These values were used to measure how much work the the smart-grid system could do while experiencing failure.
-Results can be coupled with networking technologies like explicit congestion notification (ECN).
 As a result, this method for autonomously configuring resources can anticipate failure and preemptively select the best configuration for issues that are about to arise.
 
