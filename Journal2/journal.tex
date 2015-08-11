@@ -366,6 +366,9 @@
 \usepackage{setspace}
 \usepackage{cases}
 \usepackage{float}
+\usepackage{amsthm}
+
+\newtheorem{pdef}{Definition}
 
 \graphicspath{ {./drawings/} {./charts/} {./images/} }
 
@@ -390,7 +393,7 @@
 %
 
 \author{Stephen~Jackson,~\IEEEmembership{Member,~IEEE,}
-        Bruce McMillin,~\IEEEmembership{Senior Fellow,~IEE,}
+        Bruce McMillin,~\IEEEmembership{Senior Member,~IEEE,}
 \thanks{S. Jackson and B. McMillin arewith the Department
 of Computer Science, Missouri University of Science \& Technology, Rolla,
 MO, 65401 e-mail: \{scj7t4,ff\}@mst.edu.}% <-this % stops a space
@@ -587,12 +590,11 @@ COMPUTERS, WORDS
 % footnotes above bottom floats. This can be corrected via the
 % \fnbelowfloat command of the stfloats package.
 
-\input{2.1-background.tex}
-\input{3-modeling.tex}
-\input{4-testchain.tex}
-\input{5-analysis.tex}
+\input{3-background.tex}
+\input{4-modeling.tex}
+\input{5-testchain.tex}
 \input{6-hypothesis.tex}
-\input{6.1-application.tex}
+\input{7-application.tex}
 
 
 
@@ -625,9 +627,10 @@ COMPUTERS, WORDS
 % use section* for acknowledgment
 \section*{Acknowledgment}
 
-
-The authors would like to thank...
-
+The authors acknowledge the support of the Future Renewable
+Electric Energy Delivery and Management Center,
+a National Science Foundation supported Engineering Research
+Center under grant NSF EEC-081212, and the United States Department of Education GAANN program.
 
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.
@@ -676,7 +679,7 @@ The authors would like to thank...
 %\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
 % or if you just want to reserve a space for a photo:
 
-\newpage
+%\newpage
 
 \begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{sjackson}}]{Stephen Jackson}
 Received a BS in Computer Engineering and Computer Science from Missouri University of Science \& Technology in 2010. He is currently pursuing a PhD in Computer Science at Missouri S\&T. He is a member of the Critical Infrastructure Protection Laboratory at S\&T, and a recipient of the Information-Assurance GAANN fellowship. His research interests include distributed systems, cyber-physical systems, and system reliability.
@@ -695,6 +698,8 @@ the distributed grid intelligence project of the Future
 Renewables Engineering Research Center.
 \end{IEEEbiography}
 
+\vfill
+
 % insert where needed to balance the two columns on the last page with
 % biographies
 %\newpage
@@ -705,7 +710,7 @@ Renewables Engineering Research Center.
 % on the last page and whether or not the columns
 % are being equalized.
 
-\vfill
+%\vfill
 
 % Can be used to pull up biographies so that the bottom of the last one
 % is flush with the other column.

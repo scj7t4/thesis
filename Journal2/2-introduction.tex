@@ -13,24 +13,33 @@ The Distributed Grid Intelligence (DGI) is a critical component of this system.
 The DGI performs automatic distributed configuration and management of power resources to manage an electrical grid.
 Energy management algorithms, a core feature of the DGI\cite{LOADBALANCING}, balance power in a smart-grid CPS.
 In order to do this, the algorithm must have access to a set of available processes to work with.
-Automatic reconfiguration using a group management algorithm allows algorithms like \cite{LOADBALANCING} to autonomously manage the grid.
+Automatic reconfiguration using a group management algorithm allows algorithms like \cite{LOADBALANCING}\cite{ICC1}\cite{MOYEEN} to autonomously control distributed power devices.
 
 Part of FREEDM's design requires the system to operate as a microgrid when portions of the distribution network are partitioned from each other.
 The effects of these partitions on the physical components of the CPS are still not well understood.
 These partitions can be caused by physical or cyber faults.
 To ensure the correct operation of the smart grid, two factors are of particular concern: the ability to do work, and the ability to do correct work.
 Since resources are distributed, they can only be used effectively when multiple processes can coordinate to manage those resources.
-Additionally, network faults can cause the cyber system to give commands to the physical system that put in an unstable state.
-Related work, \cite{HARINI}\cite{TSG}, has indicated this is an important concern for a smart-grid system.
+Additionally, network and cyber faults can cause the cyber system to give commands to the physical system that put in an unstable state.
+Related work, \cite{HARINI}\cite{TSG}\cite{ICC2}\cite{SGNETFAULT}, has indicated this is an important concern for a smart-grid system.
+
+Omission failures cause a dangerous lack of information in any real-time system.
+Automatic configuration and management of physical entities has additional applications outside of smart-grid.
+Other CPS with similar physical control and configuration aspects include vehicle ad-hoc networks (VANETS)\cite{CARS1}\cite{CARS2} and air traffic control systems\cite{AIRTRAFFIC1}.
+Both control critical infrastructure where human lives could be affected by a incorrect physical action.
+In a VANET CPS, a large number of controls that affect the safety of the driver can be manipulated, with factors like physical speed, the direction of the vehicle, etc.
+Tight CPS integration with air traffic control involves tracking a variety of features, such as airspeed and heading, for a large number of aircraft approaching an airport\cite{AIRTRAFFIC2}.
+Incomplete information in either system could lead could lead to a collision or other accident.
 
 This work presents a distributed leader election algorithm and Markov model of that algorithm.
 The presented algorithm maintains the Markov property for the observations of the leader despite omission\cite{OMISSIONFAILURES} failures.
 This approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems.
 These models produce expectations of how much time the DGI will be able to spend coordinating and doing useful work.
-Using these measures, the behavior of the control system for the physical devices can be adjusted to prevent faults in the physical network.
+Using these measures, the behavior of the control system for the physical devices can be adjusted to prevent faults, like blackouts and voltage collapse, in the physical network.
 
-Similar work is very limited: \cite{LEADERELECTIONEVAL} analyzes the consistency of the configuration with many crash-failures.
+The literature contains limited similar work: \cite{LEADERELECTIONEVAL} analyzes the consistency of the configuration with many crash-failures.
 It only provides an analysis of how many messages are exchanged for that level of consistency, and does not provide a predictive model.
 Modeling distributed systems is a challenging task, due to the complex interactions between processes.
+Previous work, \cite{CRITIS2012}, showed data collected from an implementation of the algorithm displays a large amount of variance.
 By modifying an algorithm to maintain a common property of Markov chains, some of these interactions can be tamed.
 This yields a practical and useful technique for describing distributed systems.

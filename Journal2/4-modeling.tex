@@ -20,7 +20,7 @@ In an omission failure, a message sent by one process to another process is lost
 Omission failures can occur for many reasons.
 Network congestion is a typical culprit.
 Routers may drop packets or delay their delivery when there is a large amount of traffic or a network issue.
-In a real-time environment, messages that are delayed to miss real-time deadlines will have the same appearance as an omitted message.
+In a real-time environment, messages that are delayed and miss their real-time deadlines will have the same appearance as an omitted message.
 Process delay can also cause a similar effect.
 The execution environment for the election algorithm has a omission failure occurrence modeled as a Bernoulli trial.
 In this model, each message has some probability $p$ of being delivered within the timing constraints imposed by the real-time schedule.
@@ -64,12 +64,11 @@ Leaving the group can either be caused by the coordinator removing the process, 
 \end{figure*}
 
 For a variety of reasons modeling this algorithm is very difficult.
-Previous work, \cite{CRITIS2012}, showed data collected from an implementation of the algorithm displays a large amount of variance.
 In a distributed system information cannot be instantaneously spread throughout the system.
 As a consequence, an omission failure will cause a process to miss out on information distributed by other processes.
 In particular, an omission of a ``Ready'' message sent to group members cannot be known to the coordinator without an additional message.
 This missing information normally causes the coordinator's observation of the group to be out-of-date.
-Since the state of the group is incorrect, it cannot be used in a Markov chain with perfect information, as it does not describe the actual state of the system.
+Since the observed state of the group is incorrect, it cannot be used in a Markov chain with perfect information, as it does not describe the actual state of the system.
 In the modified algorithm, members have uncertainty with respect to their membership, and the coordinator has perfect information about members that definitely a part of the group.
 The original ``Are You There'' approach for detecting failure (Figure \ref{fig:statemachine2}) also causes a similar effect.
 Additionally, the election algorithm has an inherent race condition as part of its normal operation.

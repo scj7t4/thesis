@@ -1,14 +1,14 @@
-%State that the profile chain is stationary. State a that a test input sequence is the realization of a run of a system as a Markov chain T. State that we generate test matrices for sequences of input chains.
+	 %State that the profile chain is stationary. State a that a test input sequence is the realization of a run of a system as a Markov chain T. State that we generate test matrices for sequences of input chains.
 %State what the test chainge means for a run of the DGI. explain how the chain is extracted (maximum likelihood estimates aka the obvious way)
 % sampling the test chains
 
 \section{Creating a Test Chain of Implemented Algorithm}
 
-To verify the profile chain describes the behavior of the algorithm, it must be compared to the algorithm.
-By constructing a test chain from the execution of the algorithm, we can verify the profile chain describes the algorithm.
+Statistical inference was used to ensure the model describes the algorithm.
+By constructing a test chain from the execution of the algorithm, we can infer the profile chain describes the algorithm.
 The test chain, $T$, is constructed by executing the algorithm in the DGI environment and recording a process's observations of group size.
 The implementation of the election algorithm was executed for a sufficient number of steps to collect observations to estimate the transition matrix $T$.
-Data was collected by running an implementation of the algorithm in the DGI software\ref{FREEDMGITHUB}.
+Data was collected by running an implementation of the algorithm in the DGI software\cite{FREEDMGITHUB}.
 Each process ran on its own Intel Core 2 Duo E4600 CPU, running Debian GNU/Linux 7.8 (wheezy) and the 3.2.65 RT kernel.
 Computers connected on a gigabit network with clocks synchronized by NTP, and a fine synchronization technique used in the DGI.
 DGI was compiled with Boost\cite{BOOST} 1.49 and Google's Protocol Buffers\cite{PROTOBUF} 2.4.1.

@@ -4,7 +4,7 @@
 
 The DGI uses the leader election algorithm, ``Invitation Election Algorithm,'' written by Garcia-Molina\cite{INVITATIONELECTION}.
 This algorithm provides a robust election procedure which allows for transient partitions.
-Transient partitions are formed when a faulty link between two or more clusters of processes causes the groups to divide temporarily.
+Transient partitions are formed when a faulty link between inside a group of processes causes the group to divide temporarily.
 These transient partitions merge when the link becomes more reliable.
 
 Many election algorithms have been created.
@@ -23,7 +23,7 @@ Using a leader election algorithm allows the FREEDM system to autonomously recon
 Cyber-components are tightly coupled with the physical components, and reaction to faults is not limited to faults originating in the cyber domain.
 Processes automatically react to crash-stop failures, network issues, and power system faults.
 The automatic reconfiguration allows processes to react immediately to issues, faster than a human operator, without relying on a central configuration point.
-However, it is important the configuration leader election supplies is one where the system can do viable work without causing physical faults\cite{HARINI}.
+However, it is important the configuration leader election supplies is one where the system can do viable work without causing physical faults like voltage collapse or blackouts\cite{HARINI}.
 
 \subsection{Markov Chain}
 
@@ -53,8 +53,11 @@ It should be obvious the sum of each row in the matrix is equal to one:
 
 A useful companion to the transition matrix is a state distribution vector.
 While the transition matrix describes how system will transition between states, the state distribution vector describes the probability of observing a given state.
-A state distribution vector is an $m$-dimensional vector composed of probability of observing each state in the system at a given instant: $[P_{1} P_{2} \ldots P_{m} ]$.
+\begin{pdef}
+A state distribution vector is an $m$-dimensional vector composed of probability of observing each state in the system at a given instant:
+\[ [P_{1} \quad P_{2} \quad \ldots \quad P_{m} ] \]
 Where $P_{i}$ corresponds to the probability of observing state $i$.
+\end{pdef}
 
 A Markov chain is a suitable model for a memoryless random process with a finite number states which is observed at fixed time intervals.
 By utilizing a Markov chain, a variety of statistical analyses can be performed on these modeled system.

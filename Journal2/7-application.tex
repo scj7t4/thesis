@@ -17,7 +17,7 @@ In this work, we define IGT based on the steady state of the profile chain.
 Let $\pi=Steady(P)$ for some profile chain.
 The IGT is the sum of all states in $\pi$, save the first state where the process is alone:
 
-\[ IGT = \sum_{i=2}^{m} \pi_i \]
+\begin{equation} IGT = \sum_{i=2}^{m} \pi_i \end{equation}
 
 The IGT is a number between 0 and 1.
 It represents the probability a random observation sees a group of at least two members.
@@ -61,7 +61,13 @@ By selecting different strategies depending on the message delivery probability 
 The profile chain can be extended to an arbitrary number of processes as shown in Figure \ref{fig:ss-means}.
 In Figure \ref{fig:ss-means}, the steady-state of the system is used to compute a weighted average of the group size.
 To compare the produced steady states, the weighted average was plotted as a percentage of all processes in the system.
-Interestingly, the average group size has a linear relationship between the number of processes and the omission rate.
+Let $P$ be the steady-state distribution vector for some number of processes, $n$, and a given omission rate:
+
+\begin{equation} y = \frac{\sum_{i=1}^{n} P_{i}*i}{n} * 100\% \end{equation}
+
+where $y$ is the plotted value.
+Therefore, Figure \ref{fig:ss-means}, shows the average percentage of total processes that will be in the group in a steady-state system.
+Interestingly, the average group size as percentage of the total processes seems to be converging asymptotically, to a fixed value for each plotted probability as the number of processes increases.
 
 \begin{figure}
     \centering
