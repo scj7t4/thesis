@@ -68,8 +68,13 @@ In a distributed system information cannot be instantaneously spread throughout 
 As a consequence, an omission failure will cause a process to miss out on information distributed by other processes.
 In particular, an omission of a ``Ready'' message sent to group members cannot be known to the coordinator without an additional message.
 This missing information normally causes the coordinator's observation of the group to be out-of-date.
-Since the observed state of the group is incorrect, it cannot be used in a Markov chain with perfect information, as it does not describe the actual state of the system.
-In the modified algorithm, members have uncertainty with respect to their membership, and the coordinator has perfect information about members that definitely a part of the group.
+If the observed state of the group is incorrect, it cannot be used in a Markov chain with perfect information.
+When the coordinator's observation of the group is out-of-date, a state observed by the coordinator would conflict with one observed by a member.
+In this case, the state observed the member is closer to the true state of the system.
+This situation is not favorable to modeling the formation of groups.
+This is true because, for the purpose managing the group, the observations of the coordinator are much more valuable than those of the members.
+
+In the modified algorithm, members have uncertainty with respect to their membership, and the coordinator has perfect information about members that definitely are a part of the group.
 The original ``Are You There'' approach for detecting failure (Figure \ref{fig:statemachine2}) also causes a similar effect.
 Additionally, the election algorithm has an inherent race condition as part of its normal operation.
 This race condition can make the selection of the group leader inconsistent: the highest priority process may not always win the election.
@@ -133,7 +138,7 @@ As a consequence, the probability a member remains in a group in the first round
 
 Members cannot leave a group without the leader's permission.
 Members do not suspect the coordinator has failed, only the coordinator may suspect the members.
-This change is shown in Figure \ref{fig:statemachine2}.
+This change is shown in Figure \ref{fig:statemachine2}, denoted by the elements marked with an asterisk.
 For the purpose of starting an election, an ``Are You There'' message and its negative response are considered equivalent to a ``Are You Coordinator'' message and a positive response.
 On receipt of the negative response, the member will immediately recover and become a leader.
 This assumption relies on ``Are You Coordinator'' and ``Are You There'' messages being sent at roughly the same time.

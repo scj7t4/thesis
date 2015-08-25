@@ -23,34 +23,41 @@ The IGT is a number between 0 and 1.
 It represents the probability a random observation sees a group of at least two members.
 The steady state distributions are presented as stacked bar graphs in Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process}.
 Each complete bar in the graph indicates the IGT.
+Additionally, Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process} also contain the average group size (AGS), when the system has reached the steady-state, plotted as a fraction of the total number of processes.
+Let $P$ be the steady-state distribution vector for some number of processes, $n$, and a given omission rate:
+
+\begin{equation} y = \frac{\sum_{i=1}^{n} P_{i}*i}{n} \label{eq:ss-means} \end{equation}
+
+where $y$ is the plotted AGS as a fraction.
+
 The components of each bar represent the probability the system is in a specific state for a random observation of the system.
 The height of the component represents the relative probability of observing that state when in a group.
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{ss-3process.pdf}
-    \caption{Steady state distribution for 3 processes.}
+    \caption{Steady state distribution for 3 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
     \label{fig:ss-3process}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{ss-4process.pdf}
-    \caption{Steady state distribution for 4 processes.}
+    \caption{Steady state distribution for 4 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
     \label{fig:ss-4process}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{ss-5process.pdf}
-    \caption{Steady state distribution for 5 processes.}
+    \caption{Steady state distribution for 5 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
     \label{fig:ss-5process}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{ss-6process.pdf}
-    \caption{Steady state distribution for 6 processes.}
+    \caption{Steady state distribution for 6 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
     \label{fig:ss-6process}
 \end{figure}
 
@@ -61,13 +68,9 @@ By selecting different strategies depending on the message delivery probability 
 The profile chain can be extended to an arbitrary number of processes as shown in Figure \ref{fig:ss-means}.
 In Figure \ref{fig:ss-means}, the steady-state of the system is used to compute a weighted average of the group size.
 To compare the produced steady states, the weighted average was plotted as a percentage of all processes in the system.
-Let $P$ be the steady-state distribution vector for some number of processes, $n$, and a given omission rate:
-
-\begin{equation} y = \frac{\sum_{i=1}^{n} P_{i}*i}{n} * 100\% \end{equation}
-
-where $y$ is the plotted value.
+Values in Figure \ref{fig:ss-means}, were plotted using Equation \ref{eq:ss-means}.
 Therefore, Figure \ref{fig:ss-means}, shows the average percentage of total processes that will be in the group in a steady-state system.
-Interestingly, the average group size as percentage of the total processes seems to be converging asymptotically, to a fixed value for each plotted probability as the number of processes increases.
+%Interestingly, the average group size as percentage of the total processes seems to be converging asymptotically, to a fixed value for each plotted probability as the number of processes increases.
 
 \begin{figure}
     \centering
