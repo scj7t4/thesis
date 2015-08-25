@@ -67,7 +67,7 @@ For a variety of reasons modeling this algorithm is very difficult.
 In a distributed system information cannot be instantaneously spread throughout the system.
 As a consequence, an omission failure will cause a process to miss out on information distributed by other processes.
 In particular, an omission of a ``Ready'' message sent to group members cannot be known to the coordinator without an additional message.
-This missing information normally causes the coordinator's observation of the group to be out-of-date.
+This missing information causes the coordinator's observation of the group to be out-of-date.
 If the observed state of the group is incorrect, it cannot be used in a Markov chain with perfect information.
 When the coordinator's observation of the group is out-of-date, a state observed by the coordinator would conflict with one observed by a member.
 In this case, the state observed the member is closer to the true state of the system.
