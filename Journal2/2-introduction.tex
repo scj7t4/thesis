@@ -5,9 +5,9 @@
 
 \section{Introduction}
 
-\IEEEPARstart{T}{he} Future Renewable Electric Energy Delivery and Management (FREEDM) project is a smart grid project focused on the future of the electrical grid.
+\IEEEPARstart{T}{he} Future Renewable Electric Energy Delivery and Management (FREEDM) smart grid is a project focused on the future of the electrical grid.
 This smart grid project is an advanced cyber-physical system: it couples distributed cyber controllers with physical resources.
-Major proposed features of the FREEDM cyber-physical network include the solid state transformer, distributed local energy storage, and distributed local energy generation \cite{FREEDMMIGRATION}.
+Major proposed features of the FREEDM cyber-physical system (CPS) include the solid state transformer, distributed local energy storage, and distributed local energy generation \cite{FREEDMMIGRATION}.
 This vein of research emphasizes decentralizing the power grid, making it more reliable by distributing energy production resources.
 The Distributed Grid Intelligence (DGI) is a critical component of this system.
 The DGI performs automatic distributed configuration and management of power resources to manage an electrical grid.
@@ -20,11 +20,11 @@ The effects of these partitions on the physical components of the CPS are still 
 These partitions can be caused by physical or cyber faults.
 To ensure the correct operation of the smart grid, two factors are of particular concern: the ability to do work, and the ability to do correct work.
 Since resources are distributed, they can only be used effectively when multiple processes can coordinate to manage those resources.
-Additionally, network and cyber faults can cause the cyber system to give commands to the physical system that put in an unstable state.
+Additionally, network and cyber faults can cause the cyber system to give commands to the physical system that put in a physically unstable state.
 Related work, \cite{HARINI}\cite{TSG}\cite{ICC2}\cite{SGNETFAULT}, has indicated this is an important concern for a smart-grid system.
 
 Omission failures cause a dangerous lack of information in any real-time system.
-Automatic configuration and management of physical entities has additional applications outside of smart-grid.
+Automatic configuration and management of physical entities has additional applications outside of the smart-grid.
 Other CPS with similar physical control and configuration aspects include vehicle ad-hoc networks (VANETS)\cite{CARS1}\cite{CARS2} and air traffic control systems\cite{AIRTRAFFIC1}.
 Both control critical infrastructure where human lives could be affected by a incorrect physical action.
 In a VANET CPS, a large number of controls that affect the safety of the driver can be manipulated, with factors like physical speed, the direction of the vehicle, etc.
@@ -37,7 +37,7 @@ This approach to considering how a distributed system interacts during a fault c
 These models produce expectations of how much time the DGI will be able to spend coordinating and doing useful work.
 Using these measures, the behavior of the control system for the physical devices can be adjusted to prevent faults, like blackouts and voltage collapse, in the physical network.
 
-The literature contains limited similar work: \cite{LEADERELECTIONEVAL} analyzes the consistency of the configuration with many crash-failures.
+The literature contains limited similar work: \cite{LEADERELECTIONEVAL} analyzes the consistency of the configuration the grouping with crash-failures.
 It only provides an analysis of how many messages are exchanged for that level of consistency, and does not provide a predictive model.
 Modeling distributed systems is a challenging task, due to the complex interactions between processes.
 Previous work, \cite{CRITIS2012}, showed data collected from an implementation of the algorithm displays a large amount of variance.

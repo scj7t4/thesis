@@ -11,7 +11,7 @@ set title 'Steady State For '.plottitle.' Model'
 #set xrange [ -.0500000 : 1.050000 ] noreverse nowriteback
 set auto x
 set xtics nomirror rotate by -45 scale 0
-set ylabel "Probability of State"
+set ylabel "Probability of State\nAverage Group Size (AGS) as a Fraction"
 set xlabel "Probability of Delivery"
 set yrange [ 0.00000 : 1.10 ] noreverse nowriteback
 set style data histogram

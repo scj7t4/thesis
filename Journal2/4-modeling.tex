@@ -81,7 +81,7 @@ This race condition can make the selection of the group leader inconsistent: the
 For the purpose of analyzing the system, having a consistent leader is important for capturing a consistent view of grouping.
 Additionally, the resulting leader of a normal election is difficult to model since it would necessitate capturing a race-condition in the model.
 
-In this work, we model what a process will observe as a result of omission failure.
+In this work, we modeled what a process will observe as a result of omission failure.
 Therefore, it is important a process's observations hold to the Markov property.
 The original Garcia-Molina algorithm has been modified so the observations of the coordinator process have the Markov property.
 The full modified algorithm is presented in Appendix \ref{apdx:algorithm}.
@@ -99,7 +99,7 @@ The state of the processes that are not in the observers group would change each
 As a consequence the state of the rest of the system and the likelihood of forming a specific group size would change each step if other processes could become leader.
 A probabilistic prediction would depend on how long the processes have been separated.
 After a long enough period of time the distribution of states for the processes could be found using a steady-state analysis.
-However, when processes enters the ``Recovery'' state they are deterministically placed in the alone state.
+However, when processes enter the ``Recovery'' state they are deterministically placed in the alone state.
 As a consequence the state of the system depends on the number of steps since the last reconfiguration, which violates the memoryless property.
 
 Suppose P1 fails to detect P2 and P3 multiple times.
@@ -119,9 +119,9 @@ Therefore, to make the algorithm memoryless, only a selected process may lead a 
 
 \subsection{Ready Acknowledgment}
 
-The changes added a third message to completing an election -- a ready acknowledge message, shown in Figure \ref{fig:statemachine}.
+The changes added a third message to completing an election -- a ``Ready ACK'' message, shown in Figure \ref{fig:statemachine}.
 This message is sent by a member after receiving the ready message from the coordinator.
-This allows the coordinator to be certain of the member's status before the next round.
+This message induces a causality that allows the coordinator to be certain of the member's status before the next round.
 Without the ready acknowledgment, the member may not receive the ready message and the coordinator will observe the member is a part of the group.
 This interaction is shown in Figure \ref{fig:lostready}.
 
@@ -159,8 +159,8 @@ The cardinality of $UpPeers$ directly mapped to the state in the Markov Chain.
 For example given the membership set $S=\{P1,P2,P3\}$, then $\left | S \right |=3$ and the state of the system in the Markov chain is also $i=3$.
 
 The profile Markov chain for the algorithm was constructed as a closed form representation of the algorithm's behavior.
-Each round, the behavior is described by two components: maintaining a group and inviting other processes into the group.
-The coordinator will exchange a ``Are You Coordinator'' message and the peer will respond to verify is still available.
+In each round, the behavior is described by two components: maintaining a group and inviting other processes into the group.
+The coordinator will exchange an ``Are You Coordinator'' message and the peer will respond to verify is still available.
 To maintain a group of $m$ other processes, the probability is defined as a random variable with the following probability distribution (pdf):
 
 \begin{equation}

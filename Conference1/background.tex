@@ -1,0 +1,29 @@
+% BACKGROUND
+% - What technology is the project based on?
+%   - Describe the concept of the FREEDM smart-grid
+%   - Introduce the idea of using GM to coordinate power resources
+%   - Introduce LB as the algorithm that acctually applies the transactions and migrates power
+%       - Describe as a flow control algorithm
+%   - Motivate Problems further
+%       - Problem 1 - Groups being unable to form prevents the smart grid from accomplishing anything. Cite previous work as examples of exploration in this area.
+%       - Problem 2 - However the configuration is value because:
+%           - It detects resources that are no longer reachable or may be difficult to reach
+%           - We care about this because related work indicates that k messages (failed migrations) are bad
+%           - Diagram a failed migration
+%           - Physical networks can handle some predetermined number of k based on their characteristics before they crash
+%   - RED/ECN as a network management technique
+%       - RED tries to maintain an everage queue size for a packet queue in a network device.
+%       - Packets arriving after the queue is at a certain threshold may be randomly dropped or flagged to signal to the sender that queue is filling
+%       - This probability is governed by things.
+%       - At a hard limit packets are droped at rate x.
+%       - RED also has a gentle mode where the hard rate has a second probability rate up to 2X max threshold.
+%       - Packets are always dropped when the queue is full
+%       - Used with ECN - a technique for managing congestion. RED can also set an ECN bit in the TCP header instead of dropping.
+%       - ECN is typically limited to TCP applications.
+%       - Our work tries to apply it to a UDP application to show its usefulness in a CPS.
+%   - DGI Theory
+%       - Real-time power management
+%       - One and done UDP packet transmission with algorithm design that tolerates omission failures.
+%       - Load-balancing basic theory.
+%       - GM basic theory.
+

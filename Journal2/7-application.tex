@@ -7,9 +7,8 @@
 
 \section{Profile Chain Applications}
 
-
 The DGI focuses on managing power resources in a microgrid environment.
-Resources can only be managed effectively when multiple DGI coordinate together to manage those resources.
+Resources can only be managed effectively when multiple DGIs coordinate together to manage those resources.
 Without another DGI to coordinate with, the DGI has a limited range of options to manage power generation, storage and loads.
 Therefore, the amount of time DGI will spend coordinating with another process is of particular interest.
 \cite{CRITIS2012} defines an ``In Group Time'' (IGT) metric to measure the amount of time a DGI process spends coordinating with at least one other process.
@@ -70,6 +69,24 @@ In Figure \ref{fig:ss-means}, the steady-state of the system is used to compute 
 To compare the produced steady states, the weighted average was plotted as a percentage of all processes in the system.
 Values in Figure \ref{fig:ss-means}, were plotted using Equation \ref{eq:ss-means}.
 Therefore, Figure \ref{fig:ss-means}, shows the average percentage of total processes that will be in the group in a steady-state system.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{schedule.pdf}
+    \caption{Example DGI schedule. Processes execute the selected module simultaneously.}
+    \label{fig:schedule}
+\end{figure}
+
+The DGI employed a round-robin schedule where each module is given a predetermined amount of time to execute.
+This schedule was determined by the number of DGI that could be grouped together and the expected cyber network conditions.
+Additionally, the Load Balance module, which managed the power resources was scheduled to run multiple times in a long block before the group was evaluated for failure.
+This schedule is depicted in \ref{fig:schedule}.
+The system began by using group management to organize groups.
+Next load balancing runs to manage power resources in the created group.
+Finally, state collection collected a casually consistent state to be used for reporting and offline analysis.
+
+The outcome of an election had a direct effect on how effectively the DGI can manage resources.
+Therefore the steady-state analysis gives a good indication of how well the DGI could manage those resources in the future.
 %Interestingly, the average group size as percentage of the total processes seems to be converging asymptotically, to a fixed value for each plotted probability as the number of processes increases.
 
 \begin{figure}
@@ -83,10 +100,20 @@ This information can also be used to anticipate faults and mitigate them before 
 Modern routers can supply an expected congestion notification as part of the IP header\cite{ECN2}.
 When congestion is anticipated, the coordinator can preemptively split the group to reduce congestion.
 This is possible because the algorithm's message complexity is $O(n^2)$.
+Future work will combine this analysis with ECN techniques to pre-emptively change the behavior of DGI to ensure a good level of service.
 If dropped messages account for an omission rate of even 0.15 from future congestion, performing a coordinated group division can potentially save several rounds of transient states.
 Breaking the large groups into smaller sets can drastically reduce the number of messages transmitted and help relieve congestion.
 Additionally, the coordinator can design the split to ensure work can continue when the groups are split, by mixing supply and demand processes.
 The division can also account for the placement of congested routers for targeted congestion relief.
 Furthermore, since the required execution time is a function of group size, the DGI can use the additional execution time within the same real time schedule to use more reliable techniques to deliver messages.
+
+
+In Figure \ref{fig:schedule}, Group Management's execution is broken into four steps: check, merge, ready, and cleanup.
+Between each step, the DGI waits while messages and their replies are delivered.
+The leader election algorithm expects that all replies arrive before the next step of the algorithm is executed.
+If a message does not arrive during the wait period, before the next step of execution the message is considered lost.
+If it arrives later, it is ignored by the algorithm.
+While dynamically adjusting the synchronized schedule is not feasible during failure, adjusting the number of messages sent (by sending fewer "Are You Coordinator" messages, for example) is.
+By sending fewer messages, the number of packets in the communication network is reduced, and the savings in processing can allow multiple delivery attempts in the scheduled wait time.
 
 %These techniques allow the DGI to anticipate behavior during a fault and allow it to pre-emptively harden itself against the fault.

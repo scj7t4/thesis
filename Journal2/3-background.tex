@@ -19,11 +19,11 @@ Group members monitor the group leader by periodically checking if the group lea
 If the leader fails to respond, the querying peers will enter a recovery state and operate alone until they can identify another coordinator.
 Therefore, a leader and each of the members maintain a set of currently reachable processes, a subset of all known processes in the system.
 
-Using a leader election algorithm allows the FREEDM system to autonomously reconfigure rapidly in the event of a fault.
+Using a leader election algorithm allows the FREEDM system to autonomously reconfigure rapidly in the event of a failure.
 Cyber-components are tightly coupled with the physical components, and reaction to faults is not limited to faults originating in the cyber domain.
 Processes automatically react to crash-stop failures, network issues, and power system faults.
 The automatic reconfiguration allows processes to react immediately to issues, faster than a human operator, without relying on a central configuration point.
-However, it is important the configuration leader election supplies is one where the system can do viable work without causing physical faults like voltage collapse or blackouts\cite{HARINI}.
+However, it is important the configuration a leader election supplies is one where the system can do viable work without causing physical faults like voltage collapse or blackouts\cite{HARINI}.
 
 \subsection{Markov Chain}
 
@@ -32,7 +32,7 @@ However, it is important the configuration leader election supplies is one where
 A Markov chain is a collection of states and probabilistic transitions between those states.
 States in a Markov chain are mutually exclusive.
 In a Markov chain, when a system is some state $i$ it has some probability of transitioning to some other state $j$ at the next time-step.
-A Markov chain is a first order chain if the probability of transitioning from $i$ to $j$ does not depend of the history of transitions that lead to state $i$.
+A Markov chain is a first order chain if the probability of transitioning from $i$ to $j$ does not depend on the history of transitions that lead to state $i$.
 First order chains are described as having a memoryless or Markov property.
 This formalizes the independence of the next state from the history of previous states.
 The Markov property describes a Markov chain as a sequence of random variables $X_{1}, X_{2}, X_{3}, ...$ and states the value of $X_{n+1}$ only depends $X_{n}$: \cite{MARKOV3}
