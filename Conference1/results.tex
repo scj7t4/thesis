@@ -2,3 +2,31 @@
 %   - Show the unbounded Queue Graph and the mess it makes of LB and GM
 %   - Show soft ECVN allows more work to be done, possibly at the cost of accumulating K.
 %   - Shwo that HARD ecn allows the best operation -- work gets done and less K is accumlated.
+
+% Show a control. 
+% Normal operation. Highlight the bursty peaks from the DGI algorithm running
+% Point out the average queue size as a second line.
+% State a relationship between the average queue size and the message delay.
+
+% Introduce a sufficent amount of traffic to make the queue drain off slowly, recreating the previous figure
+% State again that as the amount of other traffic increases the time to drain the queue starts to increase
+% State that this does not affect normal operation because the DGI has slack built into the schedule to ensure that a normal amount of background traffic does not cripple the DGI.
+% State that as the traffic increases further, eventually it will over flow the queue
+% Show the unbounded queue growth for a drop tail queue.
+
+% Introduce the RED queue.
+% Show that the RED queue, without notifying the DGI can do some management, but it isn't sufficent to keep the groups together.
+% Show that based on the control, less work gets done and the groups change more frequently.
+
+% Introduce the ECN notification
+% If the RED queue allows DGI traffic to pass (making the RED queue more like a drop-tail for DGI traffic) show that it improves on the previous scenario.
+% Show that however, eventually the traffic reaches a threshold where the stratedgy is not sufficent to prevent issues.
+% Introduce the DGI reacting to the notifications.
+% Show that when the DGI goes into a maintain mode the average traffic drops.
+% Show that this allows a large group to be maintained and the migrations to proceed as normal (with the time reduced schedule).
+
+% Introduce HARD groupbreaks.
+% Show that a hard group break greatly reduces traffic (even more than previously) & that this allows the DGI to determine how to split.
+% Demonstrate a worst-case scenario where the group break is not optimal.
+% Show that a planned hard break allows that group to continue operating.
+

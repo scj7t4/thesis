@@ -4,13 +4,6 @@
 %   - Introduce the idea of using GM to coordinate power resources
 %   - Introduce LB as the algorithm that acctually applies the transactions and migrates power
 %       - Describe as a flow control algorithm
-%   - Motivate Problems further
-%       - Problem 1 - Groups being unable to form prevents the smart grid from accomplishing anything. Cite previous work as examples of exploration in this area.
-%       - Problem 2 - However the configuration is value because:
-%           - It detects resources that are no longer reachable or may be difficult to reach
-%           - We care about this because related work indicates that k messages (failed migrations) are bad
-%           - Diagram a failed migration
-%           - Physical networks can handle some predetermined number of k based on their characteristics before they crash
 %   - RED/ECN as a network management technique
 %       - RED tries to maintain an everage queue size for a packet queue in a network device.
 %       - Packets arriving after the queue is at a certain threshold may be randomly dropped or flagged to signal to the sender that queue is filling
@@ -26,4 +19,80 @@
 %       - One and done UDP packet transmission with algorithm design that tolerates omission failures.
 %       - Load-balancing basic theory.
 %       - GM basic theory.
+%   - Motivate Problems further
+%       - Problem 1 - Groups being unable to form prevents the smart grid from accomplishing anything. Cite previous work as examples of exploration in this area.
+%       - Problem 2 - However the configuration is value because:
+%           - It detects resources that are no longer reachable or may be difficult to reach
+%           - We care about this because related work indicates that k messages (failed migrations) are bad
+%           - Diagram a failed migration
+%           - Physical networks can handle some predetermined number of k based on their characteristics before they crash
+
+\section{Background}
+
+\subsection{DGI}
+
+The DGI uses the leader election algorithm, ``Invitation Election Algorithm,'' written by Garcia-Molina\cite{INVITATIONELECTION}.
+This algorithm provides a robust election procedure which allows for transient partitions.
+Transient partitions are formed when a faulty link inside a group of processes causes the group to divide temporarily.
+These transient partitions merge when the link becomes more reliable.
+
+The elected leader is responsible for making work assignments, identifying and merging with other coordinators when they are found, and maintaining an up-to-date list of peers.
+Group members monitor the group leader by periodically checking if the group leader is still alive by sending a message.
+If the leader fails to respond, the querying peers will enter a recovery state and operate alone until they can identify another coordinator.
+Therefore, a leader and each of the members maintain a set of currently reachable processes, a subset of all known processes in the system.
+
+Using a leader election algorithm allows the FREEDM system to autonomously reconfigure rapidly in the event of a failure.
+Cyber-components are tightly coupled with the physical components, and reaction to faults is not limited to faults originating in the cyber domain.
+Processes automatically react to crash-stop failures, network issues, and power system faults.
+The automatic reconfiguration allows processes to react immediately to issues, faster than a human operator, without relying on a central configuration point.
+However, it is important the configuration a leader election supplies is one where the system can do viable work without causing physical faults like voltage collapse or blackouts\cite{HARINI}.
+
+In this work we utilize the load balancing algorithm from CITE RAVI.
+The load balancing algorithm manages power resources by using a sequence of migrations.
+In each migration, a sequence of message exchanges identify processes whose power resources are not sufficient to meet their local demand and other processes supply them with power by utilizing a shared bus.
+To do this, first processes that cannot meet their demand announce their need to all other processes.
+Processes with resources that exceed their demand offer their power to processes that announced their need.
+The processes perform a three-way handshake.
+At the end of the handshake, the two processes have issued commands to their attached resources to supply power from the shared bus and to draw power from the shared bus.
+
+The DGI executes these modules using a round-robin real-time schedule.
+Processes synchronize their clocks and execute modules semi-synchronously.
+Each time the load balancing module is scheduled to execute it performs multiple migrations during it's execution phase.
+This schedule is depicted in Figure X.
+In the figure, each time the load balancing module runs it has the opportunity to complete a fixed number of migrations during its execution window.
+The schedule for the DGI is decided before the process is started and does not change when the DGI is running.
+All DGI processes that can potentially group together use the same schedule.
+
+The DGI algorithms can tolerate packet loss and is implemented using UDP to pass messages between DGI processes.
+Effects of packet loss on the DGI's group management module have been explored in CRITIS and JOURNAL.
+The load balancing algorithm can tolerate some message loss, but lost messages can cause migrations to only partially complete, which can cause instability in the physical network.
+A failed migration is diagrammed in Figure X.
+
+\subsection{Random Early Detection}
+The RED queueing algorithm is a popular queueing algorithm for network devices.
+It uses a probabilistic model and an exponentially weighted moving average (EWMA) to determine if the average queue size exceeds predefined values.
+These values are used to identify potential congestion and manage it.
+This is accomplished by determining the average size of the queue, and then probabilistically dropping packets to maintain the size of the queue.
+In RED, when the average queue size $avg$ exceeds a minimum threshold ($min_{th})$), but is less than a maximum threshold ($max_{th}$), new packets arriving at the queue may be ``marked''.
+The probability that a packet is marked is based on the following relation between $p_{b}$ and $p_{a}$ where $p_{a}$ is the final probability a packet will be marked.
+
+\[ p_{b} = max_p (avg - min_{th}) / (max_{th}-min_{th}) \]
+\[ p_{a} = p_{b} / (1-count * p_b) \]
+
+Where $max_p$ is the maximum probability that a packet will be marked when the queue size is between $min_{th}$ and $max_{th}$ and $count$ is the number of packets since the last marked packet.
+With this approach, $p_{b}$ varies linearly with the average queue size, and the $p_{a}$ is a function of that probability and the time since the last packet was marked.
+If $avg$ is greater than $max_{th}$, in the gentle variation of the algorithm, the probability of marking increases from $max_p$ to 1 as the average queue size approaches $2*max_{th}$
+In this work, we follow the recommendation of the authors and use the gentle variation.
+In the event that the queue fills completely, the RED queue operates as a drop-tail queue.
+
+In a simple implementation of the RED algorithm, marked packets are dropped.
+For a TCP application, the result of the dropped packets causes the slow-start congestion control strategy to reduce the rate that packets are sent.
+A more advanced implementation, using ECN, sets specific bits in the TCP header to indicate congestion.
+By using ECN, TCP connections can reduce their transmission rate without re-transmitting packets.
+
+UDP applications have not typically utilized ECN.
+Although the ECN standard has flags in the IPv4 header, access to the IPv4 header is not possible on most system, most notably linux.
+Furthermore, there is not a "one size fits all" solution to congestion in UDP algorithms.
+However, for the DGI and a class of similiar real-time processes, congestion notification has great potential.
+If processes can adjust the amount of traffic they send based on the anticipated congestion (by disabling features, for example), they can decrease the effects of that congestion.
 

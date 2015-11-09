@@ -6,3 +6,28 @@
 % - Describe the setup -- Network layout, DGI placement at nodes, Random seeds?
 % - Describe the quantites we are looking at? What the graphs will mean. Establish the control-- normal operation.
 % - Network behavior during the experiments.
+
+\section{Experimental Setup}
+
+Experiments were run in a NS3.23 test environment.
+The simulation time replaced the wall clock time in the DGI for the purpose of triggering real-time events.
+As a result, the computation time on the DGIs for processing and preparing messages was neglected.
+However, to compensate for the lack of processing time, the synchronization of the DGIs was instead distributed as a Gaussian distribution.
+This was done to introduce realism to ensure that evens did not occur simultaneously as that is a physical impossibility.
+Additionally, the real-time schedules used by the DGI were adjusted to remove the processing time that was neglected in the simulation.
+
+The DGIs were place into a partitioned environment.
+The test included 30 DGI.
+Two sets of 15 DGI were each connect to a switch and each switch was in turn connected to a router.
+This network is pictured in Figure X.
+
+The links between the router and the switches had a RED enabled queue placed on both network interfaces.
+The RED parameters for all queues were set identically.
+A summary of RED parameters are listed in Table X.
+All links in the simulation were 100Mbps links with a 1ms delay.
+RED was used in packet count mode to determine congestion.
+ARP tables were populated before the simulation began.
+
+To introduce traffic, a process attached to each of the switches attempted to send a high volume of messages to each other across the router.
+Due to the bottleneck due to the properties of the network links, the greatest queueing effect occurred at the switch where the packets originated.
+
