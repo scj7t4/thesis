@@ -58,10 +58,15 @@ At the end of the handshake, the two processes have issued commands to their att
 The DGI executes these modules using a round-robin real-time schedule.
 Processes synchronize their clocks and execute modules semi-synchronously.
 Each time the load balancing module is scheduled to execute it performs multiple migrations during it's execution phase.
-This schedule is depicted in Figure X.
+This schedule is depicted in Figure \ref{fig:normal-schedule}.
 In the figure, each time the load balancing module runs it has the opportunity to complete a fixed number of migrations during its execution window.
 The schedule for the DGI is decided before the process is started and does not change when the DGI is running.
 All DGI processes that can potentially group together use the same schedule.
+
+\begin{figure}
+\includegraphics[width=\linewidth]{NormalDGISchedule}
+\caption{Example of DGI schedule. Processes attempt a fixed number of migrations each round.} \label{fig:normal-schdule}
+\end{figure}
 
 The DGI algorithms can tolerate packet loss and is implemented using UDP to pass messages between DGI processes.
 Effects of packet loss on the DGI's group management module have been explored in CRITIS and JOURNAL.
@@ -76,8 +81,12 @@ This is accomplished by determining the average size of the queue, and then prob
 In RED, when the average queue size $avg$ exceeds a minimum threshold ($min_{th})$), but is less than a maximum threshold ($max_{th}$), new packets arriving at the queue may be ``marked''.
 The probability that a packet is marked is based on the following relation between $p_{b}$ and $p_{a}$ where $p_{a}$ is the final probability a packet will be marked.
 
-\[ p_{b} = max_p (avg - min_{th}) / (max_{th}-min_{th}) \]
-\[ p_{a} = p_{b} / (1-count * p_b) \]
+\begin{equation}
+p_{b} = max_p (avg - min_{th}) / (max_{th}-min_{th})
+\end{equation}
+\begin{equation}
+p_{a} = p_{b} / (1-count * p_b)
+\end{equation}
 
 Where $max_p$ is the maximum probability that a packet will be marked when the queue size is between $min_{th}$ and $max_{th}$ and $count$ is the number of packets since the last marked packet.
 With this approach, $p_{b}$ varies linearly with the average queue size, and the $p_{a}$ is a function of that probability and the time since the last packet was marked.
