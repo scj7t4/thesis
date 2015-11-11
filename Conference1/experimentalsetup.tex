@@ -17,16 +17,35 @@ This was done to introduce realism to ensure that evens did not occur simultaneo
 Additionally, the real-time schedules used by the DGI were adjusted to remove the processing time that was neglected in the simulation.
 
 The DGIs were place into a partitioned environment.
-The test included 30 DGI.
-Two sets of 15 DGI were each connect to a switch and each switch was in turn connected to a router.
+The test included 30 nodes.
+Each of the nodes ran one DGI process.
+Two sets of 15 DGI were each connect to a switch and each switch was in turn connected to the router.
 This network is pictured in Figure X.
+Node identifiers were randomly assigned to nodes in the simulation and used as the process identifier for the DGI.
 
 The links between the router and the switches had a RED enabled queue placed on both network interfaces.
 The RED parameters for all queues were set identically.
 A summary of RED parameters are listed in Table X.
-All links in the simulation were 100Mbps links with a 1ms delay.
+All links in the simulation were 100Mbps links with a 0.5ms delay.
 RED was used in packet count mode to determine congestion.
 ARP tables were populated before the simulation began.
+
+\begin{table*}
+\begin{tabular}{ | l | l | } \hline
+Parameter & Value         \\ \hline
+RED Queueing Mode & Packet\\ \hline 
+RED Gentle Mode & True    \\ \hline
+RED $Q_{w}$ & 0.002       \\ \hline
+RED Wait Mode & True      \\ \hline
+RED Min Threshold & 90    \\ \hline
+RED Max Threshold & 130   \\ \hline
+Maximum Queue Size & 1000 \\ \hline
+RED Link Speed & 100 Mbps \\ \hline
+RED Link Delay & 0.5 ms   \\ \hline
+\end{tabular}
+\caption{Summary of RED paramters. Unspecified values default to the NS3 implementation default value}
+\label{tab:red-parameters}
+\end{table*}
 
 To introduce traffic, a process attached to each of the switches attempted to send a high volume of messages to each other across the router.
 Due to the bottleneck due to the properties of the network links, the greatest queueing effect occurred at the switch where the packets originated.
