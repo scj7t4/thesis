@@ -35,13 +35,13 @@
 
 \begin{figure}
 \includegraphics[width=\linewidth]{a-qsizeot-notraffic-all.pdf}
-\caption{Plot of the queue size for a queue used to send traffic from switch A to the router. In this scenario, the only traffic is created by the \ac{DGI}.}
+\caption{Plot of the queue size for a queue used to send traffic from switch A to the router. In this scenario, the only traffic is created by the \ac{DGI}. The largest peaks are created by the execution of the Group Management module. Load Balancing migrations produce each of the smaller peaks.}
 \label{fig:plota}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{b-qsizeot-notraffic-120s-130s.pdf}
-\caption{Detailed view of Figure \ref{fig:plota}.}
+\caption{Detailed view of Figure \ref{fig:plota}. The left most peak is from the maintence of a group, and the 3 smaller peaks are from Load Balancing migrations. The average queue size is only updated with a new packet is enqueued.}
 \label{fig:plotb}
 \end{figure}
 
@@ -70,7 +70,7 @@ The number of migrations completed is a good metric for how much work can be per
 
 \begin{figure}
 \includegraphics[width=\linewidth]{e-qsizeot-nonotifications-2mbpstraffic-120s-130s.pdf}
-\caption{Detailed view of the affect on queue size as other network traffic is introduced.}
+\caption{Detailed view of the affect on queue size as other network traffic is introduced. Compared to Figure \ref{fig:plotb}, the peaks are taller and wider. Background traffic causes the average queue size to be updated more frequently, however, the average queue size is not significantly affected by the added traffic.}
 \label{fig:plote}
 \end{figure}
 
@@ -81,13 +81,13 @@ This slack gives the network devices the opportunity to identify when the networ
 
 \begin{figure}
 \includegraphics[width=\linewidth]{f-qsizeot-nonotifications-4mbpstraffic-120s-130s.pdf}
-\caption{Detailed view of the affect on queue size as other network traffic is introduced.}
+\caption{Detailed view of the affect on queue size as other network traffic is introduced. With no \ac{ECN} notifications, the peak from Group Management is much larger. The congestion is sufficent that at this moment in the simulation, 9 processes have left the primary group, leading to the smaller load balancing peaks.}
 \label{fig:plotf}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{g-lostm-nonotifications-4mbpstraffic-all.pdf}
-\caption{Count of lost migrations from all processes over time. As migrations proceed, some migrations are counted as lost until the second process confirms it has been completed.}
+\caption{Count of lost migrations from all processes over time. As migrations proceed, some migrations are counted as lost until the second process confirms it has been completed. In this scenario without congestion management, a large number of migrations are lost as a result of message delay.}
 \label{fig:plotg}
 \end{figure}
 
@@ -99,7 +99,7 @@ Figure \ref{fig:plotg} plots the count of failed migrations over time.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{i-qsizeot-softnotifications-4mbpstraffic-120s-130s.pdf}
-\caption{Detailed view of the affect on queue size as other network traffic is introduced.}
+\caption{Detailed view of the affect on queue size as other network traffic is introduced. In this scenario, the ECN notifications put Group Management into a maintence mode that reduces its message complexity and switches Load Balancing to slower migration schedule. As a result, the average queue size stay closer to 200 packets, the primary group does not split, and no migrations are lost.}
 \label{fig:ploti}
 \end{figure}
 
@@ -108,7 +108,7 @@ Compared to the scenario in Figure \ref{fig:plotf}, the \ac{ECN} algorithm succe
 
 \begin{figure}
 \includegraphics[width=\linewidth]{l-qsizeot-allnotifications-64mbpstraffic-120s-130s.pdf}
-\caption{Detailed view of the affect on queue size as a large amount of network traffic is introduced.}
+\caption{Detailed view of the affect on queue size as a large amount of network traffic is introduced. In this scenario, hard notifications cause the groups to divide. }
 \label{fig:plotl}
 \end{figure}
 
