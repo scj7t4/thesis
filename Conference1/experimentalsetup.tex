@@ -9,23 +9,23 @@
 
 \section{Experimental Setup}
 
-Experiments were run in a Network Simulator 3.23 test environment.
+Experiments were run in a Network Simulator 3.23\cite{NS3} test environment.
 The simulation time replaced the wall clock time in the \ac{DGI} for the purpose of triggering real-time events.
 As a result, the computation time on the \ac{DGI}s for processing and preparing messages was neglected.
 However, to compensate for the lack of processing time, the synchronization of the \ac{DGI}s was instead distributed as a Gaussian distribution.
-This was done to introduce realism to ensure that evens did not occur simultaneously as that is a physical impossibility.
+This was done to introduce realism to ensure events did not occur simultaneously.
 Additionally, the real-time schedules used by the \ac{DGI} were adjusted to remove the processing time that was neglected in the simulation.
 
-The \ac{DGI}s were place into a partitioned environment.
+The \ac{DGI}s were placed into a partitioned environment.
 The test included 30 nodes.
 Each of the nodes ran one \ac{DGI} process.
 Two sets of 15 \ac{DGI} were each connect to a switch and each switch was in turn connected to the router.
-This network is pictured in Figure X.
+This network is pictured in Figure \ref{fig:network-layout}.
 Node identifiers were randomly assigned to nodes in the simulation and used as the process identifier for the \ac{DGI}.
 
 The links between the router and the switches had a \ac{RED} enabled queue placed on both network interfaces.
 The \ac{RED} parameters for all queues were set identically.
-A summary of \ac{RED} parameters are listed in Table X.
+A summary of \ac{RED} parameters are listed in Table \ref{tab:red-parameters}.
 All links in the simulation were 100Mbps links with a 0.5ms delay.
 RED was used in packet count mode to determine congestion.
 ARP tables were populated before the simulation began.
@@ -47,6 +47,6 @@ RED Link Delay & 0.5 ms   \\ \hline
 \label{tab:red-parameters}
 \end{table*}
 
-To introduce traffic, a process attached to each of the switches attempted to send a high volume of messages to each other across the router.
-Due to the bottleneck due to the properties of the network links, the greatest queueing effect occurred at the switch where the packets originated.
+To introduce traffic, processes attached to each of the switches attempted to send a high volume of messages to each other across the router.
+Due to the bottleneck due to the properties of the network links, the greatest queueing effect occurred at the switches.
 

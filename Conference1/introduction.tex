@@ -5,6 +5,8 @@
 % - Why does this problem matter
 % - What techniques do we use to solve the problem
 
+\section{Introduction}
+
 The \ac{FREEDM} smart grid is a project focused on the future of the electrical grid.
 This smart grid project is an advanced cyber-physical system: it couples distributed cyber controllers with physical resources.
 Major proposed features of the \ac{FREEDM} \ac{CPS} include the solid state transformer, distributed local energy storage, and distributed local energy generation \cite{FREEDMMIGRATION}.
@@ -15,35 +17,35 @@ Energy management algorithms, a core feature of the \ac{DGI}\cite{LOADBALANCING}
 In order to do this, the algorithm must have access to a set of available processes to work with.
 Automatic reconfiguration using a group management algorithm allows algorithms like \cite{LOADBALANCING}\cite{ICC1}\cite{MOYEEN} to autonomously control distributed power devices.
 
-Because the \ac{FREEDM} smart-grid manages critical infrastructure in a distributed manner, its behavior during fault conditions of particular interest.
+Because the \ac{FREEDM} smart-grid manages critical infrastructure in a distributed manner, its behavior during cyber or network fault conditions of particular interest.
 In this work, we consider the effects of congestion on a cyber communication network used by the \ac{FREEDM} smart-grid.
-We create a model version of a large number of \ac{DGI} processes in a simple clustered setup.
-By applying traffic this network, we create a situation where the network devices' queues could are completely filled or real-time deadlines are missed due to queueing delays.
+We create a model version of a large number of \ac{DGI} processes in a simple partitioned setup.
+By applying traffic to this network, we create a situation where the network devices' queues could are completely filled or real-time deadlines are missed due to queuing delays.
 In an actual implementation of the \ac{FREEDM} smart-grid, the consequences of this congestion could result in several problematic scenarios.
 First, if the congestion prevents the \ac{DGI} from autonomously configuring using its group management system, processes cannot work together to manage power resources.
-Secondly, if messages arrive too late, or are lost, the \ac{DGI} could apply unstable settings to the attached power devices, potentially disrupting the physical network.
+Secondly, if messages arrive too late, or are lost, the \ac{DGI} could apply settings to the attached power devices that drive the physical network to instability.
 These unstable settings could lead to problems in the power-grid like brown-outs, blackouts, and voltage collapse.
 
-Additionally, this work has applications for other wide-area distributed systems.
-For example, in \ac{VANET}s, an attacker could overwhelm the ad-hoc network and prevent critical information about vehicle position and speed from being delivered in a timely manner.
-As a consequence, the affected vehicles could collide endangering the passengers.
-Similarly, in a scenario with drone control or air-traffic control, denying the delivery of important messages through the use of congestion could cripple that infrastructure.
+Additionally, this work has applications for other distributed systems.
+For example, in \ac{VANET}s\cite{CARS1}\cite{CARS2}, an attacker could overwhelm the ad-hoc network and prevent critical information about vehicle position and speed from being delivered in a timely manner.
+As a consequence, the affected vehicles could collide, endangering the passengers.
+Similarly, in a scenario with drone control or air-traffic control\cite{AIRTRAFFIC1}\cite{AIRTRAFFIC2}, denying the delivery of important messages through the use of congestion could cripple that infrastructure.
 
 In this work, we propose a technique to inform distributed processes of congestion.
 These processes act on this information to change their behavior in anticipation of message delays or loss.
 This behavior allows them to harden themselves against the congestion, and allows them to continue operating as normally as possible during the congestion.
-This technique involves changing the behavior of both the autonomous configuration and power management algorithm during congestion.
+This technique involves changing the behavior of both the leader election and load balancing algorithm during congestion.
 
 % RFC 7514  (Cite as joke??)
-To accomplish this, we extend existing networking concepts: \ac{RED}, \ac{ECN}, and ICMP source quench.
+To accomplish this, we extend existing networking concepts: \ac{RED}, \ac{ECN}\cite{RFCECN}, and ICMP source quench\cite{RFCSOURCEQUENCH}.
 When a network device detects congestion, it notifies processes that the network is experiencing congestion and they should react appropriately.
 Congestion management techniques have historically only been applied to TCP connections.
 We propose a practical application for these techniques in scenarios where the message delay is a primary concern, not the rate at which data is sent.
 By using a rate limited UDP multicast beacon, processes are informed of the congestion level.
 With this information, they can adjust their behavior to compensate for the detected congestion.
 
-In this work we demonstrate an implementation of the \ac{FREEDM} \ac{DGI} in a \ac{NS3} simulation environment with our congestion detection feature.
-The \ac{DGI} operates normally until the simulation introduces a traffic flow which congests the network devices in the simulation.
+In this work we demonstrate an implementation of the \ac{FREEDM} \ac{DGI} in a \ac{NS3} simulation environment\cite{NS3} with our congestion detection feature.
+The \ac{DGI} operates normally until the simulation introduces a traffic flow that congests the network devices in the simulation.
 After congestion has been identified by the \ac{RED} queueing algorithm, the \ac{DGI}s are informed via UDP multicast.
-We show that when the congestion notifications are introduced, the \ac{DGI} maintain configurations which they would normally be unable to maintain during that congestion.
-Additionally, we show that a greater amount of work can be done without that work causing unstable power settings to be applied.
+We show that when the congestion notifications are introduced, the \ac{DGI} maintain configurations which they would normally be unable to maintain during congestion.
+Additionally, we show a greater amount of work can be done without the work causing unstable power settings to be applied.
