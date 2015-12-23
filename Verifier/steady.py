@@ -1,7 +1,7 @@
 import chain
 import pykov
 
-PROCS = 5
+PROCS = 15
 
 def inspect(d):
     # This is the amount that I actually care about for error
