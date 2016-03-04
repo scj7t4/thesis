@@ -1,5 +1,5 @@
 #Specify the file to work on
-SOURCE=journal
+SOURCE=journal2
 LATEX=pdflatex
 LATEX_ARGS=-halt-on-error 
 BIBTEX=bibtex
@@ -35,6 +35,12 @@ journal: journal.tex latex_bibliography.bib
 	$(BIBTEX_COMMAND) journal.aux
 	$(LATEX_COMMAND) journal.tex
 	$(LATEX_COMMAND) journal.tex
+
+journal2: journal2.tex latex_bibliography.bib
+	$(LATEX_COMMAND) journal2.tex
+	$(BIBTEX_COMMAND) journal2.aux
+	$(LATEX_COMMAND) journal2.tex
+	$(LATEX_COMMAND) journal2.tex
 
 view: all
 	$(VIEWER) $(SOURCE).pdf
