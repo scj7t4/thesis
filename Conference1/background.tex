@@ -45,7 +45,8 @@ The schedule for the \ac{DGI} is decided before the process is started and does 
 All \ac{DGI} processes that can potentially group together use the same schedule.
 
 \begin{figure}
-\includegraphics[width=\linewidth]{NormalDGISchedule}
+\centering
+\includegraphics[width=0.85\linewidth]{NormalDGISchedule}
 \caption{Example of a \ac{DGI} schedule. During the execution of the Load Balancing module, work is performed to manage power devices.} \label{fig:normal-schedule}
 \end{figure}
 
@@ -87,7 +88,7 @@ If processes fail to reply to received message before a timeout, they will leave
 Leaving the group can either be caused by the coordinator removing the process, or the process can enter a recovery state and leave the group, forming a new group by itself.
 
 This modified algorithm allows the interactions of the processes in our semi-synchronous system to be modeled with a Markov chain.
-A version of this algorithm with a restriction on what processes could become coordinator is presented in \cite{JOURNALANON}.
+A version of this algorithm with a restriction on what processes could become coordinator is presented in \cite{JOURNAL}.
 %This version also removes the potential live-lock due to crash failure, although crash-failure is not considered in this work.
 We elected to use an improved version of the algorithm in this work because of its easy-to-follow group state.
 %Other algorithms could be more efficient and less bursty during normal operation, however they are more inconsistent during network congestion and omission.
@@ -103,18 +104,20 @@ These processes perform a three-way handshake.
 At the end of the handshake, the two processes have issued commands to their attached devices to supply power from the shared bus and to draw power from the shared bus.
 
 The \ac{DGI} algorithms can tolerate packet loss and is implemented using UDP to pass messages between \ac{DGI} processes.
-Effects of packet loss on the \ac{DGI}'s group management module have been explored in \cite{CRITIS2012ANON} and \cite{JOURNALANON}.
+Effects of packet loss on the \ac{DGI}'s group management module have been explored in \cite{CRITIS2012} and \cite{JOURNAL}.
 The load balancing algorithm can tolerate some message loss, but lost messages can cause migrations to only partially complete, which can cause instability in the physical network.
 A failed migration is diagrammed in Figures \ref{fig:failed-migration-1} and \ref{fig:failed-migration-2}.
 
 \begin{figure}
-\includegraphics[width=\linewidth]{FailedMigration1}
+\centering
+\includegraphics[width=0.95\textwidth]{FailedMigration1}
 \caption{Example of a failed migration. (*) and (**) mark moments when power devices change state to complete the physical component of the migration. In this scenario, the message confirming the demand side made the physical is lost, leaving the supply node uncertain.}
 \label{fig:failed-migration-1}
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=\linewidth]{FailedMigration2}
+\centering
+\includegraphics[width=0.95\textwidth]{FailedMigration2}
 \caption{Example of a failed migration. (*) marks a moment when power devices change state to complete the physical component of the migration. In this scenario, the supply process changes its device state, but the demand process does not.}
 \label{fig:failed-migration-2}
 \end{figure}

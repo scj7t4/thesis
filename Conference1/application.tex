@@ -52,7 +52,8 @@ In this scenario, the queue completely fills and no messages can be distributed.
 The \ac{RED} algorithm and \ac{ECN} are used to delay or prevent the queue from reaching this critical threshold.
 
 \begin{figure}
-\includegraphics[width=\linewidth]{QueueStacked}
+\centering
+\includegraphics[width=0.4\linewidth]{QueueStacked}
 \caption{
 Example of network queueing during \ac{DGI} operation. \ac{DGI} modules are semi-synchronous, and create bursty traffic on the network.
 When there is no other traffic on the network (solid line), the bursty traffic causes a large number of packets to queue quickly, but the queue empties at a similar rate.
@@ -62,10 +63,10 @@ When the background traffic reaches a certain threshold (dotted line), the queue
 \label{fig:queue-types}
 \end{figure}
 
-For this work, the algorithm from \cite{JOURNALANON} was used.
+For this work, the algorithm from \cite{JOURNAL} was used.
 This algorithm has a higher message complexity when in a group than the Garcia-Molina algorithm it is based on.
 However, it does possess a desirable memoryless property that makes it easy to analyze.
-This work uses an improved version of the algorithm which removes the restrictions in \cite{JOURNALANON} where only one process could become the leader.
+This work uses an improved version of the algorithm which removes the restrictions in \cite{JOURNAL} where only one process could become the leader.
 
 \subsubsection{Soft \ac{ECN}}
 
@@ -86,7 +87,8 @@ Splitting the group reduces the number of messages sent across the router for mo
 For larger groups, splitting them provides a significant savings in the number of messages that must be queued by the router, especially since the traffic is very bursty.
 
 \begin{figure}
-\includegraphics[width=\linewidth]{NetworkLayout}
+\centering
+\includegraphics[width=0.35\textwidth]{NetworkLayout}
 \caption{Example of process organization used in this paper. Two groups of processes are connected by a router.} \label{fig:network-layout}
 \end{figure}
 
@@ -237,4 +239,4 @@ Where, from Equation \ref{eq:origin}, $DequeueRate * \Delta t$ is less than or e
 Solving for $F(x)$ gives a worst case estimate of the omission rate for a specific algorithmic or network circumstance.
 $DequeueRate$ is affected by the amount of traffic in the system. 
 It should be obvious a greater amount of background traffic corresponds to a greater average queue size.
-From an relationship between the background traffic and the average queue size and the results presented in \cite{JOURNALANON}, Equation \ref{eq:prob-est} can be used to select the ECN parameters.
+From an relationship between the background traffic and the average queue size and the results presented in \cite{JOURNAL}, Equation \ref{eq:prob-est} can be used to select the ECN parameters.

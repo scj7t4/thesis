@@ -356,28 +356,19 @@ Instead, consider a simple algorithm to reach consensus for a system with no byz
 
 So far the models have described the probability of a particular outcome of a message exchange and the consensus those models arrive at. However, for a longer algorithm with multiple exchanges and states, it is not sufficient to use the consensus probability to determine the state, for an overall view of the system because the state of the system is a probability distribution and not a fixed state.
 
-Consider the simple consensus algorithm from before. While all the processes that receive $\varphi$ can construct the same model, that model is not sufficient for any process to determine the state of the system. However, if all the processes are stable, and a confirmation message $\varphi_{1,i}$ is sent by each process that received $\varphi_0$ then the original sender knows for certain the state of each process that sent $\varphi_{1,i}$. 
+Consider the simple consensus algorithm from before. While all the processes that receive $\varphi$ can construct the same model, that model is not sufficient for any process to determine the state of the system. However, if all the processes are stable, and a confirmation message $\varphi_{1,i}$ is sent by each process that received $\varphi_0$ then the original sender knows for certain the state of each process that sent $\varphi_{1,i}$. Therefore, the original process ($a$) is certain of a portion of the processes ($i=1,2...n$) that have leaked $\varphi_{1,i}$ to it, assuming that $B_a \varphi_{1,i} \rightarrow w \vDash V_{\varphi_1,i}^i(w)$ for the current world, $w$.
 
-Therefore, the original process is certain of a portion of the processes that have leaked $\varphi_{1,i}$ to it.  I need to justify the correctness of the algorithm for if the originator discards part of the state.
+However, this approach is limited because of the set of $\varphi_{1,i}$ that $a$ believes is potentially a subset of all the process that have a valuation function for $\varphi_{1,i}$ if any of the messages are lost in transit. Based on the information flows presented here and previously, if there is no response mechanism in the algorithm, after the transmission of $\varphi_0$, $a$ has a set of processes which believe might have received $\varphi_0$, but can make no determination of the actual state of the system. If there is an acknowledgment mechanism then $a$ can determine a subset of the total system state. 
 
-% Construct a markov chain off the states. Show that the chain for the secure direction is incorrect?
-% If A is the secure process and knows for certain what B will do
-% If B is the insecure process and doesn't know what A will do. If B constructs a model
-% of A's likelyhood to attack based on B's knowledge of the probability the messenger was
-% not captured.
-% If A and B have the same knowledge about the probability of delivery, A can construct
-% the same model as B.
-% BUT if the messenger is lost, both processes are secure.
+Constructing a model based on a subset of the complete state may seem like a mistake, but recall that A does not believe that those other entities believe $\varphi_0$. Assume a simple system where A is attempting to ensure every process believes $\varphi_0$. If the actions of the agents are divided into discrete steps, then each step A distributes $\varphi_0$ to each of the processes that A has not received $\varphi_{1,i}$ from. A markov chain can easily be constructed for the probability of eventually arriving at state where every process believes $\varphi_0$. Indeed, this algorithm is a special case of the coin flipping leader election algorithm.
 
-%For two parties, we can follow the same construction as the Two Armies problem: if it is assumed that the two armies exchange a fixed number messages to determine when to attack, if a messenger is captured they cannot be certain of the other general's intention to attack. Then, by a logical extension, if a general knows the probability that a messenger is captured in transit (a message is lost), and the other general acts on the last agreement they sent $(\varphi_n)$, they can determine the probability that the attack will succeed. In this case, the MSDND secure general can construct a model of the behavior of the unsecure general.
+SHOW THAT COINFLIPPING 
 
-%Consider the case where the generals send a predetermined number of messengers and all the messengers deliver their message. If the final message was delivered to A, B is insecure to A. Let P(b) be the probability that, to B, the message arrived successfully at A. Now B can construct a model of the probability tomorrow's attack will succeed. A knows that the message did arrive, and, assuming A also knows P(b), A can construct the same model as B.
+Each round, the transfer of $\varphi_0$ to active processes is line 3 of the algorithm. The receive step is equivalent to the expected response. The other process's $b(i)$ value is decided by the receipt of $\varphi_0$ from A. Processes go idle on the receipt of $\varphi_0$, as if they had randomly selected a 0. If the other processes do not receive $\varphi_0$ it is logically equivalent to them holding a 1. If their confirmation is not received by A, it is logically equivalent to that process successfully sending a 1 to A. However, this approach has the advantage of being able to evaluate, (given the omission rate) approximately how many rounds it will take for every process to acknowledge $\varphi_0$. This construction is presented below in Figure XX, which shows the structure of the chain A could generate for the remaining steps in the election.
 
-%In the case where a messenger is lost, both processes are secure on the atom that the messenger was carrying. Assuming once again that both processes know P(b), Process B can construct a model that is messenger arrives at A. A's best model would be constructed based on the uncertainty of their message arriving at B (Noted P(a)) and the response being lost (A cannot know which event occured). However, B will also know this uncertainity and can still construct the same model as A.
+FIGURE HERE.
 
-%However, when there are more parties $(n>2)$, construction is not nearly as direct. Assuming there is no ability to multicast message delivery.
-%everything goes tits up.
-
+The anonymous coin flipping algorithm is a useful starting point for the sorts of analysis that can be done, but presents a limited view into the potential of this type of reasoning about distributed systems. This is particularly true because of the limited practicality of the coin-flipping algorithm: each election takes approximately $log(n)$ rounds to complete, where $n$ is the total number of processes. Instead, it is more useful to do similar analysis on non-homogeneous election systems. In the following sections we present applications of this technique on an more popular election algorithm and highlight some of the potential benefits of this analysis.
 
 \section{Application}
 
