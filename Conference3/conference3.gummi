@@ -1,0 +1,7 @@
+version=0.6.0
+typesetter=pdflatex
+steps=texpdf
+root=/home/scj7t4/thesis/Conference3/conference.tex
+
+file=/home/scj7t4/thesis/Conference3/editing.tex
+file=/home/scj7t4/thesis/Conference3/contents.tex

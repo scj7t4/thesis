@@ -13,8 +13,7 @@ Major proposed features of the \ac{FREEDM} \ac{CPS} rely on distributed local en
 This vein of research emphasizes decentralizing the power grid, making it more reliable by distributing energy production devices.
 The \ac{DGI} is a critical component of this system.
 The \ac{DGI} performs automatic distributed configuration and management of power devices to manage an electrical grid.
-Energy management algorithms, a core feature of the \ac{DGI}\cite{LOADBALANCING}, balance power in a smart-grid \ac{CPS}.
-These algorithms must have access to a set of available processes to work with.
+Energy management algorithms, a core feature of the \ac{DGI}\cite{LOADBALANCING}, must have access to a set of available processes to work with.
 Automatic reconfiguration using a group management algorithm allows algorithms like \cite{LOADBALANCING}\cite{ICC1}\cite{MOYEEN} to autonomously control distributed power devices.
 
 Because the \ac{FREEDM} smart-grid manages critical infrastructure in a distributed manner, its behavior during cyber or network fault conditions is of particular interest.
@@ -27,9 +26,8 @@ Secondly, if messages arrive too late, or are lost, the \ac{DGI} could apply set
 These unstable settings could lead to problems in the power-grid like frequency instability, blackouts, and voltage collapse.
 
 Additionally, this work has applications for other distributed systems.
-For example, in \ac{VANET}s\cite{CARS1}\cite{CARS2}, an attacker could overwhelm the ad-hoc network and prevent critical information about vehicle position and speed from being delivered in a timely manner.
+For example, in \ac{VANET}s\cite{CARS1}\cite{CARS2}, Drone Control and Air Traffic Control\cite{AIRTRAFFIC1}\cite{AIRTRAFFIC2},  an attacker could overwhelm the communication network and prevent critical information about vehicle position and speed from being delivered in a timely manner.
 As a consequence, the affected vehicles could collide, endangering the passengers.
-Similarly, in a scenario with drone control or air-traffic control\cite{AIRTRAFFIC1}\cite{AIRTRAFFIC2}, congestion denies the delivery of important messages and could cripple that infrastructure.
 
 In this work, we propose a technique to inform distributed processes of congestion.
 These processes act on this information to change their behavior in anticipation of message delays or loss.
@@ -50,8 +48,8 @@ After congestion has been identified by the \ac{RED} queueing algorithm, the \ac
 We show that when the congestion notifications are introduced, the \ac{DGI} maintains configurations which they would normally be unable to maintain during congestion.
 Additionally, we show a greater amount of work can be done without the work causing unstable power settings to be applied.
 
-In Section \ref{sect:background}, we discuss technologies and techniques used in this work.
-Section \ref{sect:application} describes the implementation of the hardening technique and justifies the changes in terms of the message complexity and behavior of the system.
-Section \ref{sect:experimentalsetup} describes the experimental setup used to validate the techniques in this paper.
-Section \ref{sect:results} lists the results from our experiments.
-Finally, \ref{sect:conclusion} summarizes our results.
+%In Section \ref{sect:background}, we discuss technologies and techniques used in this work.
+%Section \ref{sect:application} describes the implementation of the hardening technique and justifies the changes in terms of the message complexity and behavior of the system.
+%Section \ref{sect:experimentalsetup} describes the experimental setup used to validate the techniques in this paper.
+%Section \ref{sect:results} lists the results from our experiments.
+%Finally, \ref{sect:conclusion} summarizes our results.
