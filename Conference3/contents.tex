@@ -1,6 +1,6 @@
 \section{Introduction}
 
-The design of stochastic models of distributed system has a long history as a challenging area of interest. Models of distributed systems have to deal with a number of factors. These factors include the various types of failure the system could experience, a lack of tightly synchronized execution, and a large complex state space when there are a high number of agents\cite{DISTRIBUTED}\cite{distributed-challenges}.  However, the concept of distributed systems plays a central role in many of the future visions for how critical infrastructure will operate in the near future. Computational systems already play a critical role in most critical infrastructures, and as demands for security features such as availability increase, distributed systems become an increasingly favorable choice for the computational needs for these systems \cite{SMARTGRIDBENEFITS}.
+The design of stochastic models of distributed system has a long history as a challenging area of interest. Models of distributed systems have to deal with a number of factors. These factors include the various types of failure the system could experience, a lack of tightly synchronized execution, and a large complex state space when there are a high number of agents\cite{DISTRIBUTED}\cite{distributed-challenges}.  However, the concept of distributed systems plays a central role in many of the future visions for how critical infrastructure will operate in the near future. Computational systems already play a critical role in most critical infrastructures, and as demands for security features such as acessibility increase, distributed systems become an increasingly favorable choice for the computational needs for these systems \cite{SMARTGRIDBENEFITS}.
 
 The \ac{FREEDM}\cite{FREEDM} smart-grid project follows this vision. The \ac{FREEDM} center, an NSF funded ERC envisions a future power-grid where widely distributed renewable power generation and storage is closely coupled with a distributed system that facilitates the dispatch of power across those areas. Other systems like \ac{VANET}s\cite{CARS1}\cite{CARS2} and Air traffic control \cite{AIRTRAFFIC1}\cite{AIRTRAFFIC2} also propose similar control systems where many computers must co-operate to ensure both smooth operation, and the safety of the people using those systems. Because of this, ensuring the behavior of the computer systems that control these infrastructures behaves correctly during failure is critical, especially when those computer systems rely on their interaction with other computers to operate.
 
@@ -170,7 +170,7 @@ A Markov chain can also be used to predict what state an agent will be in at som
 Given a initial state and a number of time-steps a matrix operation will yield the likelihood of the agent being in each state after the time interval has passed.
 The mean passage time, a measure of how many time-steps will pass before an agent returns or arrives to some state, can also be calculated.
 
-Typically construction of a Markov chain requires significant knowledge of the system being constructed. There are other approaches, such as Hidden Markov Models, where a portion of the states are hidden from the model. However, in a Hidden Markov Models, the output (depending on the hidden state) is visible to an observer. Therefore, the HMM is useful for constructing the likeliest path for arriving at a particular observation.
+Typically construction of a Markov chain requires significant knowledge of the system being constructed. There are other approaches, such as \ac{HMM}, where a portion of the states are hidden from the model. However, in a \ac{HMM}, the output (depending on the hidden state) is visible to an observer. Therefore, the \ac{HMM} is useful for constructing the likeliest path for arriving at a particular observation.
 
 Therefore, it is necessary for the purpose of constructing a model, the creator must have as much information about the system being modeled as possible in order to construct an accurate model. This poses two problems for a distributed system. First, since each agent has its own set of variables, a complete naive model might necessitate a large state space (for all potential combinations of local variables). Second, in order to use the model to do online analysis, complete knowledge of the changes in state variables would be needed to determine the state of the model if it was created online (if, for example, the agent with the model wanted to predict what it was likely to experience in the near future.)
 
@@ -186,11 +186,9 @@ No agent can directly access a logical atom outside of its domain.
 The authenticity of any information transfer (Using modal operator $I_{i,j}$) is never not trusted. However, the Trust ($T_{i,j}$) operator is still used to describe a message that is lost in transit: in all logical formulas presented the Trust operator describes this circumstance.
 agents do not exhibit Byzantine failure, nor do they crash, only messages may be omitted.
 
-\subsection{Centralizing Certainty}
-
 If no information is passed between agents, they are MSDND secure (ignoring any sort of leakage from interactions in the physical world). As information is passed, aspects of the agents state are leaked. However, depending on when messages are sent, the agent can be left in doubt as to the state of the other agent. This has a common analogy to the two armies problem. 
 
-\subsubsection{Two Armies Problem}
+\section{Two Armies Problem}
 
 In the two armies problem, two agents, which are generals of their respective armies must cooperate to attack an enemy city. However, the two armies are physically separated by the enemy city and must send messengers to each other to coordinate their plan. If the generals do not make an agreement on the attack, the attack will fail. However, the generals must come to an agreement when their channel for communication (a messenger) is unreliable (they can be captured by the enemy).
 
@@ -265,6 +263,7 @@ Every message exchange where some atom $\varphi_0$ is sent, followed by any numb
 
 \begin{thm}
 If a messenger is captured, if the message is not resent, both agents will be secure on the last successfully delivered message atom $\varphi_{n}$ or $\varphi_0$ if the first messenger is captured.
+\label{thm:captured}
 \end{thm}
 
 \begin{case}
@@ -285,7 +284,7 @@ Suppose General A sends $\varphi_{n-1}$ to B. It should be obvious that on the d
 %An agent $i$ is certain of a portion of an agent's ($j$'s) state, $\varphi$ iff $I_{i,j} \varphi \wedge B_i I_{i,j} \varphi \wedge T_{i,j} \varphi$ if agent $j$ is stable for $\varphi$.
 %\end{pdef}
 
-\subsubsection{More Parties}
+\section{Byzantine Generals}
 
 If General A is attempting to coordinate with multiple armies, the problem becomes more complex. If we extend the messenger analogy to cover faulty generals (ones that send incorrect information or omit messengers), the generals can reach consensus if for every faulty general, there are three generals that work correctly. This is a well known result known as the Byzantine Generals problem.
 
@@ -293,24 +292,26 @@ If General A is attempting to coordinate with multiple armies, the problem becom
 In any message exchange that conforms to the constraints of the Byzantine Generals problem, all agents are MSDND insecure on the consensus'd plan $\varphi$.
 \end{thm}
 
-Proof: Suppose agent i decides to use plan $\varphi$ to attack. Suppose that there is some set of Byzantine Generals $T$ and some set of loyal generals $L$ ($i \in L$). If $|L| > 3|T|$, the algorithm executes successfully, and $B_x \varphi : \forall x \in L $. Therefore, every general in L can valuate $\varphi$ and the variable is insecure.
+Proof: Suppose agent i decides to use plan $\varphi$ to attack. Suppose that there is some set of Byzantine Generals $T$ and some set of loyal generals $G$ ($i \in G$). If $|G| > 3|T|$, the algorithm executes successfully, and $B_x \varphi : \forall x \in G $. Therefore, every general in $G$ can valuate $\varphi$ and the variable is insecure.
 
 It is worth noting, however, that if all generals intend to behave well (they are non-byzantine) and messages are lost in transit, consensus can only be reached if the initial distribution of $\varphi$ is delivered to all parties, and each general still receives enough messages to determine the majority consensus. In general, this would be impractical to ensure in an actual application.
 
 \subsubsection{State Determination}
 
-When an agent uses the information transfer operator ($I_{i,j}$) to pass information to another agent in the system, it intends for that agent to believe the passed wff. When an agent distributes a wff to many processes with the information transfer operator, it leads to a set of beliefs about the beliefs of the receiving agent. This set $N_i$ is the set of beliefs agent $i$ can have if all the wffs it passed to the other agents are believed. For example, if an agent distributes a wff $\varphi$ to a set of agents $Ag$ ($i \not \in Ag$), then $N_i = \{ B_i B_j \varphi : \forall j \in Ag \}$. Since the belief of each $B_j \varphi$ is outside of the domain of $i$, the agent $i$ can only valuate a wff in $S$ which has been leaked to $i$.
+When an agent uses the information transfer operator ($I_{i,j}$) to pass information to another agent in the system, it intends for that agent to believe the passed wff. When an agent distributes a wff to many agents with the information transfer operator, it leads to a set of beliefs about the beliefs of the receiving agent. This set $N_i$ is the set of beliefs agent $i$ can have if all the wffs it passed to the other agents are believed. For example, if an agent distributes a wff $\varphi$ to a set of agents $Ag$ ($i \not \in Ag$), then $N_i = \{ B_i B_j \varphi : \forall j \in Ag \}$. Since the belief of each $B_j \varphi$ is outside of the domain of $i$, the agent $i$ can only valuate a wff in $N_i$ which has been leaked to $i$.
 
-Let the set $L_i$ be the subset of $N_i$ for which a valuation function exists in a domain $i$. $L_i$ can be populated either by direct information transfer or information leakage from interactions with agents. We can similarly define a set $M_i$ which is the subset of $N_i$ and superset of $L_i$ if the agent $i$ had perfect knowledge of the beliefs of information it passed to other processes ($L_i \subseteq M_i \subseteq N_i$). 
+Let the set $L_i$ be the subset of $N_i$ for which a valuation function exists in a domain $i$. $L_i$ can be populated either by direct information transfer or information leakage from interactions with agents. We can similarly define a set $M_i$ which is the subset of $N_i$ and superset of $L_i$ if the agent $i$ had perfect knowledge of the beliefs of information it passed to other agents ($L_i \subseteq M_i \subseteq N_i$). 
 
 The complete set of atoms and beliefs available in a particular domain may not be necessary to construct the desired model nor may it be the state the model uses. Let $Im(D_i, w)$ define an image function for a particular domain $i$, and world. The image function produces a state suitable for use in a Markov chain. We assume that in our system, any beliefs an agent hold stem from information transfer from another agent. Therefore, we can assert that the beliefs in $L_i$ for any process $i$ must have a traceable history that stems from a process having a valuation for the referenced atom that aligns with the belief process $i$ holds about that wff. Furthermore, wffs in $N_i$ but not $L_i$ do not have valuation in domain $D_i$ and cannot be used in the construction of the image.
 
 \begin{pdef}
-If for any sequence of worlds $w_0, w_1, w_2, ... w_n$ and pair of images $Im(D_x, w_0)=I_1$ and $Im(D_i, w_n)=I_2$ where $I_2$ is an immediate successor of $I_1$ in a Markov chain constructed based on the system. A wff $\varphi$ is stable if after $i$ informs any other process of the value of $\varphi$ in any world $w_k$ the value of $\varphi$ does not change in any subsequent world up to, but not including $w_n$. Expressed logically, $V^i_{w_k} \varphi$ = $V^i_{w_x} \varphi \forall x \in \{k, k+1, ... n-1\}$
+If for any sequence of worlds $w_0, w_1, w_2, ... w_n$ and pair of images $Im(D_x, w_0)=I_1$ and $Im(D_i, w_n)=I_2$ where $I_2$ is an immediate successor of $I_1$ in a Markov chain constructed based on the system. A wff $\varphi$ is stable for $i$ if after $i$ informs any other process of the value of $\varphi$ in any world $w_k$ the value of $\varphi$ does not change in any subsequent world up to, but not including $w_n$. Expressed logically, $V^i_{w_k} \varphi$ = $V^i_{w_x} \varphi \forall x \in \{k, k+1, ... n-1\}$
 \end{pdef}
 
+Does this definition work? Suppose we consider the model of our group management system. The image is taken initially in the groupsize=1 state ($I_1$). Lets skip forward and call $\varphi_j$ a logical variable that says $j$ is a part of $i$'s group. Ready acknowledge is $I_{i,j} \varphi_j \rightarrow B_i \varphi_j$ the cardinality of $B_i \varphi_j$'s that $i$ has. This value is not transmitted by $i$, but if it is stable for $j$ because $j$ doesn't crash, then by the next theorem its also stable for $i$. After $i$ collects all the $\varphi_j$, $i$ takes image $I_2$. At this point, $i$ can do whatever it likes: it can decide not to believe $\varphi_j$ at some point and force $j$ to prove $\varphi_j$ to $i$ again, before it takes $I_3$.
+
 \begin{thm}
-If $\varphi$ is stable, and $i$ is not byzantine and $I_{j,i} \varphi \rightarrow B_j \varphi$, then $B_j \varphi$ is also stable.
+If $\varphi$ is stable for $i$, and $i$ is not byzantine and $I_{j,i} \varphi \rightarrow B_j \varphi$, then $B_j \varphi$ is stable for $j$.
 \end{thm}
 
 Proof: Since $\varphi$ is stable, the output of the valuation function for that wff at $i$ does not change after $i$ has informed $j$ of $\varphi$. Since $i$ is not byzantine, $i$ can only transfer the same value to $j$ as it did in $w_k$. Additionally, the restriction $I_{j,i} \varphi \rightarrow B_j \varphi$ precludes $j$ from arbitrarily changing belief. Therefore, once $j$ believes $\varphi$ it will continue to believe $\varphi$ until at least $w_n$.
@@ -351,15 +352,12 @@ The case where $L_i = M_i = N_i$ (No messages have been lost).
 If no messages are lost, the sequence of worlds that a process goes through between states depends only on the ordering of events in the system. 
 
 \begin{case}
-The case where $L_i \subseteq M_i \subseteq N_i$.
+The case where $L_i \subseteq M_i \subseteq N_i$, but not $L_i = M_i = N_i$
 \end{case}
 
 Since the output of the imaging function is limited to the knowledge of the domain of a given process, the output of the imaging function does not assign value to wff's in $N_i$ but not $L_i$. Since these wff's have no value they cannot be used to construct a valid image, as the image may not correspond to a world $w$ in the set of worlds $W$.
 
-
-\subsubsection{Model Construction}
-
-In the two armies problem, assume that both generals know the probability that a messenger successfully makes the trip between the two armies to deliver the message, $p$. When General A dispatches the messenger with $\varphi_0$ General A can infer the probability the attack will succeed to the probability the messenger delivers $\varphi_0$ to General B ($p$). Since General B knows that A's model depends only on the delivery of $\varphi_0$ to B, B can deduce A's certainty that the attack will succeed. If B sends a confirmation $\varphi_1$, an identical constructed model emerges.
+\subsection{Example With Two Armies}
 
 If we enforce a requirement that a General cannot reconsider a plan (in this case, $\varphi_0$) because they are stable. Then, while the receiver of the last message, $\varphi_n$, can construct the same model of the probability to attack as the sender, the recipient can construct a more accurate model given that the message delivery event has occurred. In fact, if the sender is committed to a proposed plan, for this problem the recipient the recipient can be certain the attack will succeed.
 
@@ -369,11 +367,11 @@ However, for a longer algorithm with multiple exchanges and states, it is not su
 
 Instead we obligate the design of the algorithm to rely on its underestimate of the system state $L$ and not on the overestimate for determining the actions taking back the algorithm in the next step. For a leader election this is a good construct: with the correct message passing, the other agent can immediately infer that it was not a part of $L$ if it receives $\varphi_0$ again. 
 
-Consider the simple consensus algorithm from before. While all the agents that receive $\varphi$ can construct the same model, that model is not sufficient for any agent to determine the state of the system. However, if all the agents are stable, and a confirmation message $\varphi_{1,i}$ is sent by each agent that received $\varphi_0$ then the original sender can be certain of the state of each agent that sent $\varphi_{1,i}$. Therefore, the original agent ($a$) is certain of a portion of the agents ($i=1,2...n$) that have leaked $\varphi_{1,i}$ to it, assuming that $B_a \varphi_{1,i} \rightarrow w \vDash V_{\varphi_1,i}^i(w)$ for the current world, $w$.
+Consider the simple consensus algorithm from before. While all the agents that receive $\varphi$ can construct the same model, that model is not sufficient for any agent to determine the state of the system. However, if all the agents are stable, and a confirmation message $\varphi_{1,i}$ is sent by each agent that received $\varphi_0$ then the original sender knows for certain the state of each agent that sent $\varphi_{1,i}$. Therefore, the original agent ($a$) is certain of a portion of the agents ($i=1,2...n$) that have leaked $\varphi_{1,i}$ to it, assuming that $B_a \varphi_{1,i} \rightarrow w \vDash V_{\varphi_1,i}^i(w)$ for the current world, $w$.
 
 However, this approach is limited because of the set of $\varphi_{1,i}$ that $a$ believes is potentially a subset of all the agent that have a valuation function for $\varphi_{1,i}$ if any of the messages are lost in transit. Based on the information flows presented here and previously, if there is no response mechanism in the algorithm, after the transmission of $\varphi_0$, $a$ has a set of agents which believe might have received $\varphi_0$, but can make no determination of the actual state of the system. If there is an acknowledgment mechanism then $a$ can determine a subset of the total system state. 
 
-Constructing a model based on a subset of the complete state may seem like a mistake, but recall that A does not believe that those other entities believe $\varphi_0$. Assume a simple system where A is attempting to ensure every agent believes $\varphi_0$. If the actions of the agents are divided into discrete steps, then each step A distributes $\varphi_0$ to each of the agents that A has not received $\varphi_{1,i}$ from. A Markov chain can easily be constructed for the probability of eventually arriving at state where every agent believes $\varphi_0$. Indeed, this algorithm is a special case of the coin flipping leader election algorithm, an algorithm for leader elections in anonymous networks\cite{DISTRIBUTED}.
+Constructing a model based on a subset of the complete state may seem like a mistake, but recall that A does not believe that those other entities believe $\varphi_0$. Assume a simple system where A is attempting to ensure every agent believes $\varphi_0$. If the actions of the agents are divided into discrete steps, then each step A distributes $\varphi_0$ to each of the agents that A has not received $\varphi_{1,i}$ from. A markov chain can easily be constructed for the probability of eventually arriving at state where every agent believes $\varphi_0$. Indeed, this algorithm is a special case of the coin flipping leader election algorithm, an algorithm for leader elections in anonymous networks.
 
 \begin{algorithmic}[1]
 \small
@@ -382,12 +380,12 @@ Constructing a model based on a subset of the complete state may seem like a mis
 \State Receive $b$ from every active neighbor
 \If {$b(i) = 1 \wedge \forall j \neq i : b(j)=0$}
 	\State $i$ is the leader.
-\ElsIf {$(b(i) = 1 \wedge \exists j \neq i : b(j) = 1 \vee (\forall k : b(k) = 0))$}
-	\State $b(i) = random(0,1)$
-	\State Go to next round
-\ElsIf {$b(i) = 0 \wedge \exists j : b(j) = 1 : b(j) = 1$}
-	\State Become passive.
-\EndIf
+	\ElsIf {$(b(i) = 1 \wedge \exists j \neq i : b(j) = 1 \vee (\forall k : b(k) = 0))$}
+		\State $b(i) = random(0,1)$
+		\State Go to next round
+	\ElsIf {$b(i) = 0 \wedge \exists j : b(j) = 1 : b(j) = 1$}
+		\State Become passive.
+	\EndIf
 \end{algorithmic}
 
 Each round, the transfer of $\varphi_0$ to active agents is line 3 of the algorithm. The receive step is equivalent to the expected response. The other agent's $b(i)$ value is decided by the receipt of $\varphi_0$ from A. Agents go idle on the receipt of $\varphi_0$, as if they had randomly selected a 0. If the other agents do not receive $\varphi_0$ it is logically equivalent to them holding a 1. If their confirmation is not received by A, it is logically equivalent to that agent successfully sending a 1 to A. However, this approach has the advantage of being able to evaluate, (given the omission rate) approximately how many rounds it will take for every agent to acknowledge $\varphi_0$. This construction is presented below in Figure \ref{fig:markovstates}, which shows the structure of the chain A could generate for the remaining steps in the election.
@@ -400,31 +398,72 @@ Each round, the transfer of $\varphi_0$ to active agents is line 3 of the algori
 \end{centering}
 \end{figure}
 
+\section{Election in an Anonymous Complete Network}
 
-The anonymous coin flipping algorithm is a useful starting point for the sorts of analysis that can be done, but presents a limited view into the potential of this type of reasoning about distributed systems. This is particularly true because of the limited practicality of the coin-flipping algorithm: each election takes approximately $log(n)$ rounds to complete, where $n$ is the total number of agents. Instead, it is more useful to do similar analysis on non-homogeneous election systems. In the following sections we present applications of this technique on an more popular election algorithm and highlight some of the potential benefits of this analysis.
-With this approach we seek to have the algorithm and the interactions between agents be memoryless so that their interactions depend only on the current state. 
+Consider a version of the "coin-flipping" leader election, expressed in terms of BIT logic.
+This algorithm is functionally identical, but contains additional gaurds on the conditionals as an additional expression of the knowlege of the agents executing the algorithm.
+Additionally, note that the construct of labeling each $\varphi$ that an agent receives is simply assigning labels to make the algorithm easier to reason about.
+The algorithm only considers the complete collection of $\varphi$s for execution and not the source of any of the $\varphi$ used.
 
-\section{Application}
+Additionally, let $\psi_i$ be the state where an agent completes the algorithm as the leader, and $\gamma_i$ is the state where the an agent has terminated the algorithm.
+Correct operation is where $\{\gamma_i : \forall i \}$ is true in the same round of execution and exactly one $\psi$ is true ($\sum_i \psi_i = 1$).
+
+\begin{algorithmic}[1]
+\small
+\State $\varphi_i \gets random(T,F)$
+\State $\psi_i \gets F$
+\State Send $\varphi_i$ to every active neighbor ($\forall j \neq i\ : I_j,i \varphi_i$)
+\State Receive $\varphi_j$ from every active neighbor 
+\If {$\varphi_i \wedge (\forall j \neq i, w \vDash V_{\varphi_j}^i(w) : \neg \varphi_j)$}
+	\State $\psi_i \gets T$
+	\State $\gamma_i \gets T$
+\ElsIf {$(\varphi_i \wedge \exists j \neq i, w \vDash V_{\varphi_j}^i( \varphi_j)(w) : \varphi_j) \vee (\forall k$ s.t. $w \vDash V_{\varphi_k}^i(w) : \neg \varphi_k$}
+	\State $\varphi_i \gets random(T,F)$
+	\State Go to next round
+\ElsIf {$\exists j \neq i, w \vDash V_{\varphi_j}^i(w) : \varphi_j$}
+	\State $\gamma_i \gets T$
+\EndIf
+\end{algorithmic}
+
+\begin{thm}
+The coinflipping algorithm may not terminate correctly unless there is detectable, perfect information transfer to all parties in the algorithm.
+\end{thm}
+
+Proof: Let $i$ be the agent that would correctly terminate as the leader. Let $j$ be a process that has selected $\varphi_j = F$.
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\linewidth}{l X X}
+% Revise me to have some dots in me so the last step resolves n.
+1. & $\varphi_i = T, \varphi_j = F$ & Initial conditions \\
+2a.& $I_{j,i} \varphi_i$ & $i$ sends $\varphi_i$ to $j$ \\
+2b.& $I_{i,j} \varphi_j$ & $j$ sends $\varphi_j$ to $i$ \\
+3a.& $\neg (B_j I_{j,i} \varphi_i \wedge T_{j,i} \varphi_j)$ & $j$ does not receive $\varphi_i$. \\
+3b.& $B_i I_{i,j} \varphi_j \wedge T_{i,j} \varphi_i$ & $i$ receives $\varphi_j$. \\
+4a.& $\neg w \vDash V_{\varphi_i}{j}(w)$ & $j$ cannot valuate $\varphi_i$. \\
+4b.& $B_i \varphi_j$ & By C1. \\
+5a. & $\not \exists V_{\varphi_i}^j(w) \wedge \neg \varphi_j \rightarrow (\varphi \gets T)$ & $j$ Cannot determine that $i$ can terminate and incorrectly changes $\varphi$. \\
+5b. & $\varphi_i \wedge w \vDash V_{\varphi_j}^i(w) \wedge \neg \varphi_j \rightarrow \psi_i$ & $i$ incorrectly terminates as the leader. \\
+
+\end{tabularx} \\~\\
+Therefore, $i$ will terminate before $j$ decides to go passive.
+\label{tab:annonymityproof}
+\end{table}
+
+Which agrees with results from similar analysis CITE.
+As with the Byzantine Generals problem, algorithms similiar to Byzantine agreement can be constructed for the anonymous networks.
+These algorithms terminate if the number of agents that omit information are less than a specific threshold. 
+
+\section{Election in Semi-Synchronous Network}
+
 Analysis is presented in the context of the \ac{FREEDM} \ac{DGI}. The \ac{FREEDM} \ac{DGI} is a portion of the \ac{FREEDM} project focusing on creating a distributed intelligence for controlling power electronics. As a consequence of managing the physical network of a critical infrastructure, the \ac{DGI} must execute in real-time: certain actions and tasks performed by the \ac{DGI} have to be completed in a specific time from.
 
 To organize these agents, the system relies on existing clock synchronization techniques to put the system into a semi-synchronous execution environment. The \ac{DGI} is divided into several modules which focus on various tasks like autonomous configuration, managing power devices and collecting data from the system. \ac{DGI}s rely on synchronized clocks to begin the execution of the various tasks at the same time. This allows the message passing portions to specify deadlines to ensure that well-behaved participating agents are all working on similar tasks at the same time. For example, under the execution model as part of the autonomous configuration module, all agents begin the Leader Election Invitation Algorithm at the same time.
 
 When reasoning about the system within the structure of the Markov Chains and MSDND security, this is a boon. An agent which is too out of sync will not be able to participate effectively and so is ignored for the purpose of this work. This effectively limits the state space of the complete naive model (as all agents are in roughly the same step of the algorithm). Furthermore, an agent can be sure that if message deliveries are timely (which is enforced by the real-time constraints) they can be certain of the lifetime of the inferred state.
 
-This execution model has one major benefit: if, in order to participate in the algorithm, the agent must synchronize their actions (even if that synchronization is loose), the lifetime of a model is well established. In the case of a leader election algorithm, the agent that becomes the leader and constructs the model of the lifetime of the group can know for certain that another agent cannot come online and attempt to take over it's group until the next round of execution begins. A depiction of the algorithm is presented in Figures \ref{fig:statemachine} and \ref{fig:statemachine2}.
-
-\begin{figure}[!t]
-\includegraphics[width=\linewidth]{LeaderElectionStateDiagram.pdf}
-\caption{State machine of a leader election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to ``Are You Coordinator'' (AYC) messages they receive. The algorithm was modified by adding a ``Ready Acknowledgment'' message as the final step of completing the election. Additionally, processes only accept invites if they have received an ``AYC Response'' message from the inviting process.}
-\label{fig:statemachine}
-\end{figure}
-
-\begin{figure}[!t]
-\includegraphics[width=\linewidth]{MaintainStateDiagram.pdf}
-\caption{State machine of maintaining a group. The ``Are You Coordinator'' (AYC) messages are the same as those in Figure \ref{fig:statemachine}. AYC and ``Are You There'' (AYT) are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
-\label{fig:statemachine2}
-\end{figure}
-
+This execution model has one major benefit: if, in order to participate in the algorithm, the agent must synchronize their actions (even if that synchronization is loose), the lifetime of a model is well established. In the case of a leader election algorithm, the agent that becomes the leader and constructs the model of the lifetime of the group can know for certain that another agent cannot come online and attempt to take over it's group until the next round of execution begins.
 
 In the following portions of the paper we present an analysis of the information leakage for the original Garcia-Molina Invitation election algorithm and present how our modified version uses the MSDND information leakage to place certainty at one agent in order to construct a Markov model. In particular, we wish to use the MSDND model to show that the changes show that the coordinator can infer if each agent in the group considers itself a part of that agent's group.
 
@@ -434,288 +473,80 @@ Since any coordinated actions by a group must be initialized by the coordinator,
 
 The original and modified Garcia-Molina invitation election algorithms both use a common set of variables at each agent to track the state of the system.
 
-\begin{algorithmic}[1]
-\small
-\State $AllNodes \gets \{ 1, 2, ..., N \}$
-\State $Coordinators \gets \emptyset$
-\State $UpNodes \gets { Me }$
-\State $State \gets Normal$
-\State $Coordinator \gets Me$
-\State $Responses \gets \emptyset$
-\State $Counter \gets$ A random initial identifier
-\State $GroupID \gets (Me,Counter)$
-
-\end{algorithmic}
-
 Additionally, both versions use a recovery algorithm to abandon failed elections and groups.
-
-\begin{algorithmic}[1]
-\small
-\Function{Recovery}{}
-    \State $State \gets Election$
-    \State Stop Work
-    \State $Counter \gets Counter + 1$
-    \State $GroupID \gets (Me,Counter)$
-    \State $Coordinator \gets Me$
-    \State $UpNodes \gets {Me}$
-    \State $State \gets Reorganization$
-    \State $State \gets Normal$
-\EndFunction
-\end{algorithmic}
 
 \subsubsection{Original Algorithm}
 
-\begin{algorithmic}[1]
-\small
-\Function{Check}{}
-    \State This function is called periodically by the leader
-    \If {$State = Normal$ and $Coordinator \gets Me$}
-        \State $Responses \gets \emptyset$
-        \State $TempSet \gets \emptyset$
-        \For {$j = (AllNodes - \{Me\})$}
-            \State $AreYouCoordinator(j)$
-            \State $TempSet \gets TempSet \cup j$
-        \EndFor
-        \State Nodes which respond "Yes" to $AreYouCoordinator$ are put into the $Responses$ set. When all nodes have responded or after $Timeout(CheckTimeout)$, Nodes that do not respond are removed from UpNodes and execution continues
-        \State $UpNodes \gets (TempSet-Responses) \cup {Me}$
-        \If {$Responses = \emptyset$}
-            \Return
-        \EndIf
-        \State $p \gets \max(Responses)$
-        \If $Me < P$
-            \State Wait time proportional to p-i
-        \EndIf
-        \Call{Merge}{Responses}
-    \EndIf
-    \State The next call to this is after Timeout(CheckTimeout)
-\EndFunction
+The \ac{AYC} message serves as a failure detector for crashed agents. In the models presented in this paper, crash failures are ignored as part of the modeled system.
 
-\State
-
-\Function{RecieveAreYouCoordinator}{Sender}
-    \If {$State = Normal$ and $Coordinator = Me$}
-        \State Respond Yes
-    \Else
-        \State Respond No
-    \EndIf
-\EndFunction
-
-\end{algorithmic}
-
-The "Are Coordinator" message serves as a failure detector for crashed processes. In the models presented in this paper, crash failures are ignored as part of the modeled system.
-
-\begin{algorithmic}[1]
-\small
-\Function{Timeout}{}
-    \State This function is called periodically by the group members
-    \If {$Coordinator = Me$}
-        \Return
-    \Else
-        \Call{AreYouThere}{Coordinator,GroupID,Me}
-        \If{Response is No or after $Timeout(TimeoutTimeout)$}
-            \Call{Recovery}{}
-        \EndIf
-    \EndIf
-    \State The next call to this is after Timeout(TimeoutTimeout)
-\EndFunction
-
-\State
-
-\Function{RecieveAreYouThere}{Sender, Identifier}
-    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpNodes$}
-        \State Respond Yes
-    \Else
-        \State Respond No
-    \EndIf
-\EndFunction
-
-\end{algorithmic}
-
-The "Are You There" message serves as a check for the "Ready" message sent by the group leader at the end of the election algorithm. Are you there verifies the leader considers the sending process a part of its group.
+The \ac{AYT} message serves as a check for the ``Ready'' message sent by the group leader at the end of the election algorithm. \ac{AYC} verifies the leader considers the sending process a part of its group.
 
 \subsubsection{Modified Algorithm}
-In the maintenance portion of the algorithm, the leader acts on the set $L$, attempting to invite the agents not in its group into the group. Agents in $M$ but not $L$ will be re-invited. From the messages they receive from the leader the agents in $M-L$ will be able to infer that they are not a part of $L$. To accomplish this, the membership state of the process can be provided to the recipient as part of the "Are You Coordinator" message or it can be inferred from the process based on the response from an AYT message.
 
-\begin{algorithmic}[1]
+\begin{thm}
+In a synchronous system a process in $M$ but not $L$ can determine its exclusion and act as though it was not in $M$, for the purpose of discovering leaders.
+\end{thm}
+
+An agent's membership in $M$ but not $L$ is secure to the agent in $M$ to the coordinator and from the coordinator to the agent. Let $\varphi_i$ indicate $j$'s membership in $i$'s group. The proof is identical to Theorem \ref{thm:captured}.
+
+However, membership in $M$ is leaked by the next ``Are You There Message'' the agent sends.
+
+\begin{table}[h!]
+\centering
 \small
-\Function{Check}{}
-    \State This function is called at the start of a round by a leader
-    \If {$State \neq Normal$ or $Coordinator \neq Me$}
-        \Return
-    \EndIf
-    \State $Expected \gets \emptyset$
-    \For {$j \in (AllPeers - \{Me\})$}
-        \State $AreYouCoordinator(j)$
-        \State $Expected \gets Expected \cup j$
-    \EndFor
-    \State Peers which respond ``Yes'' to $AreYouCoordinator$ are put into the $Coordinators$ set.
-    \State Processes that respond are removed from $Expected$.
-    \State When an $AreYouThere$ response is ``No'' and this process is a coordinator, the querying process is put in the $Coordinators$ set.
-    \State Wait for responses, Peers that do not respond are removed from UpPeers.
-    \State $UpPeers \gets (UpPeers-Expected) \cup {Me}$
-    \State $UpPeers \gets (UpPeers-Coordinators) \cup {Me}$
-    \If {$Responses = \emptyset$}
-        \Return
-    \EndIf
-    \If {$Me < min(Responses)$}
-        \State
-        \Call{Merge}{Responses}
-    \EndIf
-\EndFunction
+\begin{tabularx}{\linewidth}{l X X}
+1. & $I_{i,j} \varphi_{AYT}$ & $j$ sends an AYT message to $i$. \\
+2. & $B_i I_{i,j} \varphi_{AYT} \wedge T_{i,j} \varphi_{AYT}$ & $i$ Trusts the message from j. \\
+3. & $(j \not \in L \wedge j \in N \wedge \varphi_{AYT}) \rightarrow j \in M $ & Valuation membership. \\ 
+\end{tabularx} \\~\\
+$i$ knows $j$ is in $N_i$, but recieving the $AYT$ message leaks that $j$ considers itself part of $L_i$. Since $j$ is not a part of $L_i$, but considers itself to be, $j$ must be in $M$. Any message that implies $j$ belief in it's membership of $L_i$ is sufficent to include $j$ in $M$.
+\end{table}
 
-\State
+Algorithms can potential update $L$ based on information flow to include those agents in $M$.
 
-\Function{ReceiveAreYouThere}{Sender, Identifier}
-    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpPeers$}
-        \State Respond Yes
-    \Else
-        \State Respond No
-        \State $Coordinators \gets Sender$
-    \EndIf
-\EndFunction
-\end{algorithmic}
+\begin{thm}
+A process in $M$ but not $L$ has the same likelihood of being in the next group as a process in not in $M$.
+\end{thm}
+
+In the maintenance portion of the algorithm, the leader acts on the set $L$, attempting to invite the agents not in its group into the group. Agents in $M$ but not $L$ will be re-invited. From the messages they receive from the leader the agents in $M-L$ will be able to infer that they are not a part of $L$. To accomplish this, the membership state of the process can be provided to the recipient as part of the \ac{AYC} message or it can be inferred from the process based on the response from an \ac{AYT} message.
 
 This approach allows the memorylessness property for the imaging to be upheld. If an agent is not in $L$ that agent will be able to determine it is not in $L$. This allows the same number of messages to be exchanged regardless of an agent's membership in $L$. If the probability that any given message sent to a process has a consistent probability of being delivered, the sequences of worlds that merge two coordinators has the same distribution of probable outcomes as the sequences of worlds that a process in $M$ but not $L$ is invited to the group.
 
-
 \subsection{Coordinator Priority}
 
-Because elections can be triggered simultaneously, (and they always are in a synchronized execution model), a race condition exists in selecting the coordinator. In the original algorithm, the race condition was resolved using the agent id and a wait sequence. The agent that believed it had the lowest identification would immediately send invites, all other agents would wait some period of time before before sending theirs, in case the sender crashed. Our approach uses the maintenance and discovery phase to determine if an agent is the highest priority.
+Because elections can be triggered simultaneously, (and they always are in a synchronized execution model), a race condition exists in selecting the coordinator. In the original algorithm, the race condition was resolved using the agent identifier and a wait sequence. The agent that believed it had the lowest identification would immediately send invites, all other agents would wait some period of time before before sending theirs, in case the sender crashed. Our approach uses the maintenance and discovery phase to determine if an agent is the highest priority.
 
 \subsubsection{Original Algorithm}
 
-In the original algorithm, the break the race condition, each coordinator that has identified other coordinators to merge will determine if it should wait or immediately invite each process it has identified as another coordinator. This action allows the processes to avoid sending all their invites at the same time.
+In the original algorithm, the break the race condition, each coordinator that has identified other coordinators to merge will determine if it should wait or immediately invite each agent it has identified as another coordinator. This action allows the agents to avoid sending all their invites at the same time.
 
-The original text is vague on how this condition should be determined: if the coordinators should determine their wait time based on the global list of processes that could potential become leaders or if should be determined from the set of coordinators that that agent has identified as a fellow coordinator. In either case, the selection of when to send the invites influenced heavily by timing differences between the processes leading to non-deterministic behavior in many scenarios.
+The original text is vague on how this condition should be determined: if the coordinators should determine their wait time based on the global list of agents that could potential become leaders or if should be determined from the set of coordinators that that agent has identified as a fellow coordinator. In either case, the selection of when to send the invites influenced heavily by timing differences between the agents leading to non-deterministic behavior in many scenarios.
 
 \subsubsection{Modified Algorithm}
 
+\begin{thm}
+With perfect information transfer, agents can determine the exact coordinator priority for each participating coordinator.
+\end{thm}
+
+If every agent has a unique identifier, then an algorithm that sends that identifier to each other process and receives and identifier from each other process, then that agent will know every identity in the network and will be able to determine it's priority relative to other participants.
+
+\begin{thm}
+Deterministic selection allows the likelihood of a particular invite being accepted to be computable for each agent.
+\end{thm}
+
 Querying an agent to see if they are a coordinator implies that the sending agent is a coordinator and implies that if that agent is not in a group with that agent and the querying agent is a coordinator, the receiving agent should expect to receive an invite from that agent, and will accept it if it is not already in a higher priority group, and it does not receive a message from a higher priority agent.
 
-This approach of identifying priority during the group discovery phases allows the processes to determine when to send invites based on a deterministic measure rather than a probabilistic one based on execution ordering. A process can decide which invite it wishes to accept before the invites are sent out. There is a potential for live-lock in this approach if the highest priority process always crashes after other processes have determined they should accept that processes invite, but a similar scenario also exists in the original algorithm.
+This approach of identifying priority during the group discovery phases allows the agents to determine when to send invites based on a deterministic measure rather than a probabilistic one based on execution ordering. A process can decide which invite it wishes to accept before the invites are sent out. There is a potential for live-lock in this approach if the highest priority process always crashes after other agents have determined they should accept that agents invite, but a similar scenario also exists in the original algorithm.
 
 \subsection{Invitations}
 
 \subsubsection{Original Algorithm}
 
-\begin{algorithmic}[1]
-\small
-\Function{Merge}{Coordinators}
-    \State This function invites all coordinators in Coordinators to join a group led by Me
-    \State $State \gets Election$
-    \State Stop work
-    \State $Counter \gets Counter+1$
-    \State $GroupID \gets (Me,Counter)$
-    \State $Coordinator \gets Me$
-    \State $TempSet \gets UpNodes - {Me}$
-    \State $UpNodes \gets \emptyset$
-    \For {$j \in Coordinators$}
-        \Call{Invite}{j,Coordinator,GroupID}
-    \EndFor
-    \For {$j \in TempSet$}
-        \Call{Invite}{j,Coordinator,GroupID}
-    \EndFor
-    \State Wait for $Timeout(InviteTimeout)$, Nodes that accept the invite are added to UpNodes
-    \State $State \gets Reorganization$
-    \For {$j \in UpNodes$}
-        \Call{Ready}{j,Coordinator,GroupID,UpNodes}
-    \EndFor
-    \State $State \gets Normal$
-\EndFunction
-
-\State
-
-\Function{RecieveInvitation}{Sender,Leader,Identifier}
-    \If {$State \neq Normal$}
-        \Return
-    \EndIf
-    \State Stop Work
-    \State $Temp \gets Coordinator$
-    \State $TempSet \gets UpNodes$
-    \State $State \gets Election$
-    \State $Coordinator \gets Leader$
-    \State $GroupID \gets Identifier$
-    \If {$Temp = Me$}
-        \State Forward invite to old group members
-        \For $j \in TempSet$
-            \State $Invite(j,Coordinator,GroupID)$
-        \EndFor
-    \EndIf
-    \State $Accept(Coordinator,GroupID)$
-    \State $State \gets Reorganization$
-    \If {$Timeout(ReadyTimeout)$ expires before $Ready$ is recieved}
-        \State $Recovery()$
-    \EndIf
-\EndFunction
-
-\Function{RecieveAccept}{Sender,Leader,Identifier}
-    \If {$State \gets Election$ and $GroupID = Identifier$ and $Coordinator = Leader$}
-        \State $UpNodes \gets UpNodes \cup {Sender}$
-    \EndIf
-\EndFunction
-
-\State
-
-\end{algorithmic}
+In the original algorithm, a process accepts the first invitation it receives and does not accept any subsequent invitations.
 
 \subsubsection{Modified Algorithm}
 
 In the invitation portion of the algorithm, the sender of the invite is confident the agent has accepted the invite because the accept message arrives. The group list that the new leader prepares for the ready message is an $N$ set of the potential group members. The list is distributed to the new members. Agents that do not receive $N$ or fail to send a receipt message are not in $L$. Algorithms that depend on the the set of agents in the group will act on $N$. There is a potential that to the leader the agents in $N$ but not $L$ will act as though they are part of the group. Algorithmically, the the leader can then expand $L$ to cover the information leaked by that agent acting as though it is holds a state that makes it part of $L$.
-
-\begin{algorithmic}[1]
-\small
-\Function{Merge}{Coordinators}
-    \State This function invites all coordinators in Coordinators to join a group led by Me
-    \State $State \gets Election$
-    \State Stop work
-    \State $Counter \gets Counter+1$
-    \State $PendingID \gets (Me,Counter)$
-    \State $Coordinator \gets Me$
-    \State $Pending \gets UpPeers - {Me}$
-    \For {$j \in Coordinators$}
-        \Call{Invite}{j,Coordinator,PendingID}
-    \EndFor
-    \State Wait for responses, Peers that accept the invite are added to $Pending$.
-    \State $State \gets Reorganization$
-	\State $GroupID \gets PendingID$
-	\State $UpPeers \gets Pending$
-    \For {$j \in UpPeers$}
-        \Call{Ready}{j,Coordinator,GroupID,UpPeers}
-    \EndFor
-    \State $Expected \gets UpPeers$
-    \State Wait for responses, Peers that acknowledge are removed from $Expected$
-    \State $UpPeers \gets UpPeers - Expected$
-    \State $State \gets Normal$
-\EndFunction
-
-\Function{ReceiveInvitation}{Sender,Leader,Identifier}
-    \If {$State \neq Normal$}
-        \Return
-    \EndIf
-    \If {$Sender < Coordinator$}
-        \Return
-    \EndIf
-    \State Stop Work
-    \State $PendingID \gets Identifier$
-    \State $State \gets Election$
-    \State $Accept(Coordinator,Identifier)$
-    \State $State \gets Reorganization$
-    \If {$Ready$ is not received}
-        \State $Recovery()$
-    \EndIf
-\EndFunction
-
-\Function{ReceiveAccept}{Sender,Leader,Identifier}
-    \If {$State \gets Election$ and $PendingID = Identifier$}
-        \State $Pending \gets Pending \cup {Sender}$
-    \EndIf
-\EndFunction
-
-\Function{ReceiveReadyAcknowledge}{Sender}
-    \State $Pending \gets Pending \cup {Sender}$
-\EndFunction
-
-\end{algorithmic}
 
 An agent can determine the likelihood that its group will form in a particular configuration if it is the highest priority agent. The determination of coordinator priority is determined during the check phase, then an agent can determine if it is the highest priority agent. If an agent determines it is the highest priority, it can then easily determine the probability that any given agent receives it's invite message and that the response to that invite message returns to that agent.
 
@@ -729,42 +560,40 @@ Alternatively, if the determination of the coordinator priority reveals that an 
 
 \subsubsection{Original Algorithm}
 
-In the original algorithm the list of processes in the group is distributed as part of the ready message. Based on analysis presented earlier in the paper, since there is no confirmation of receipt for the ready message, the leader cannot determine the actual state of the group has it only has the un-valuate-able set of wffs describing the group state $N_i$.
+In the original algorithm the list of agents in the group is distributed as part of the ready message. Based on analysis presented earlier in the paper, since there is no confirmation of receipt for the ready message, the leader cannot determine the actual state of the group has it only has the unvaluateable set of wffs describing the group state $N_i$.
 
 \subsubsection{Modified Algorithm}
 
-In the modified algorithm, the processes that receive the ready message reply with confirmation. This allows the leader of the group to determine $L_i$, a set of processes that have definitely received the ready message. By coupling this with the other modifications to the algorithm, for the semi-synchronous execution environment used by the \ac{DGI}, the states observed by the leader are memoryless.
+\begin{thm}
+Ready and Ready Acknowledge result in the leader holding and $L$ state and the members holding a $N$ state.
+\end{thm}
+
+Proof: This result is based partially on the non-deducibility results presented previously in the Two-Armies problem. Let $I_{i,j} \psi_j$ be an agent $j$ sending an invite accept to agent $i$.
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\linewidth}{l X X}
+1. & $I_{i,j} \psi_k \forall j $ & Each agent $j$ that accepts the invite does so.  \\
+2. & $I_{j,i} \{ \varphi_k \forall k \}$ & $i$ sends $\varphi_i$ to $j$ (Ready Message). \\
+3.a. & $w \not \vDash V_{B_j \varphi_k}^i(w) $ & $i$ has no means of determining if $j$ received the ready message. \\
+3.b. & $B_{j}I_{j,i} \varphi_k \wedge T_{j,i} \varphi_k \forall \varphi_k$ & $j$ Trusts the contents of the Ready message. \\
+4.b & $B_j B_i \varphi_k \forall \varphi_k$ & By C1. \\
+5. & $w \vDash V_{B_i \varphi_k}^j(w)$ & $j$ believes that $i$ believes $k$ is part of the group. \\
+6. & $I_{i,j} \gamma_j \wedge B_i I_{i,j} \gamma_j \wedge T_{i,j} \gamma_j$ & $i$ receives the Ready Acknowledge. \\
+7. & $B_i \gamma_j \rightarrow w \vDash V_{B_j \varphi_k}^{i}(w) \wedge B_i \varphi_j$ & $i$ knows that $j$ believes the $N_i$ set and knows that $j$ is a part of the $L_i$ set. \\
+\end{tabularx} \\~\\
+The proof repeats for each $j$ that successfully delivers an invite accept message to $i$. Therefore, $j$ has the $N_i$ set and $i$ has the $L_i$ set.
+\label{tab:annonymityproof}
+\end{table}
+
+In the modified algorithm, the agents that receive the ready message reply with confirmation. This allows the leader of the group to determine $L_i$, a set of agents that have definitely received the ready message. By coupling this with the other modifications to the algorithm, for the semi-synchronous execution environment used by the \ac{DGI}, the states observed by the leader are memoryless.
 
 \subsection{Expression As Markov Chain}
 
 In the specified execution environment, each time before the coordinator runs the the check portion of the election algorithm it produces an image of the current world to use as the first state of the constructed Markov chain. Each agent in the system has the stability property. As part of the stability property any wffs whose information was transferred after the last image was taken cannot change until the process takes the newest image. For the election algorithm, this causes the leader to doubt the values in $L$.
 
-If a process is not in $L$ it will have to go through the election procedure even though it may be in $M$. This ensures that the sequence of changes necessary to bring that agent into the group is identical whether regardless of the agent's membership in $M$, ensuring the memorylessness property.
-
-% TODO: CORRECT THE NUMBERS
-
-\begin{equation}
- \Pr_{M}(X=k; m) =
-   \begin{cases}
-    \binom{m}{k} p^{2k}(1-p^2)^{m-k}, & \text{if } 0 \leq k \leq m \\
-    0,                                & \text{otherwise} \\
-  \end{cases}
-\end{equation}
-
-\begin{equation}
-	\Pr_{I}(Y=k; n) =
-	\begin{cases}
-		\binom{n}{k} p^{8k}(1-p^8)^{n-k}, & \text{if } 0 \leq k \leq n \\
-		0,                                & \text{otherwise} \\
-	\end{cases}
-\end{equation}
-
-Where $k$ is the number of agents remaining in a group selected from the $m$ agents in $L$. For the $n$ agents not in $L$, the $Pr_{I}(Y=k; n)$ is the probability than $k$ of those agents are in the next $L$. By making the determination of leader priority deterministic and a property of the leader discovery phase, the probability of a particular leader successfully inviting a given process is determined by the probability that each agent with higher priority failed to invite the a given agent.
-
-\begin{align} \Pr_{T}(Z=s'; n; s) = \sum_{i=0}^{s-1} &\Pr_{M}(X=i; s-1) \cdot
-\nonumber \\ &\Pr_{I}(X=s'-i; n-s-1) \end{align}
-
-Previous work \cite{JOURNAL} demonstrates these formulas accurately describing the behavior of an implementation of this algorithm.
+If a process is not in $L$ it will have to go through the election procedure even though it may be in $M$. This ensures that the sequence of changes necessary to bring that agent into the group is identical whether regardless of the agent's membership in $M$, ensuring the memorylessness property. Previous work \cite{JOURNAL} describes this algorithm and shows a Markov chain accurately describing the behavior of an implementation of this algorithm.
 
 \section{Conclusion}
 

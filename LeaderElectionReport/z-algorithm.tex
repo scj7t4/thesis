@@ -1,0 +1,210 @@
+\section{Modified Leader Election Algorithm}
+\label{apdx:algorithm}
+
+\makeatletter
+\newlength{\continueindent}
+\setlength{\continueindent}{4em}
+
+\renewenvironment{algorithmic}[1][0]%
+   {%
+   \edef\ALG@numberfreq{#1}%
+   \def\@currentlabel{\theALG@line}%
+   %
+   \setcounter{ALG@line}{0}%
+   \setcounter{ALG@rem}{0}%
+   %
+   \let\\\algbreak%
+   %
+   \expandafter\edef\csname ALG@currentblock@\theALG@nested\endcsname{0}%
+   \expandafter\let\csname ALG@currentlifetime@\theALG@nested\endcsname\relax%
+   %
+   \begin{list}%
+      {\ALG@step}%
+      {%
+      \rightmargin\z@%
+      \itemsep\z@ \itemindent\z@ \listparindent2em%
+      \partopsep\z@ \parskip\z@ \parsep\z@%
+      \labelsep 0.5em \topsep 0.2em%\skip 1.2em 
+      \ifthenelse{\equal{#1}{0}}%
+         {\labelwidth 0.5em}%
+         {\labelwidth 1.2em}%
+       \leftmargin\labelwidth \addtolength{\leftmargin}{\labelsep}
+      \ALG@tlm\z@%
+      }%
+      \parshape 2 \leftmargin \linewidth \continueindent \dimexpr\linewidth-\continueindent\relax
+   \setcounter{ALG@nested}{0}%
+   \ALG@beginalgorithmic%
+   }%
+   {% end{algorithmic}
+   % check if all blocks are closed
+   \ALG@closeloops%
+   \expandafter\ifnum\csname ALG@currentblock@\theALG@nested\endcsname=0\relax%
+   \else%
+      \PackageError{algorithmicx}{Some blocks are not closed!!!}{}%
+   \fi%
+   \ALG@endalgorithmic%
+   \end{list}%
+   }%
+\makeatother
+
+\begin{flushleft}
+\begin{algorithmic}[1]
+
+\State $AllPeers \gets \{ 1, 2, ..., N \}$
+\State $Coordinators \gets \emptyset$
+\State $UpPeers \gets { Me }$
+\State $State \gets Normal$
+\State $Coordinator \gets Me$
+\State $Expected \gets \emptyset$
+\State $Counter \gets$ A random initial identifier
+\State $GroupID \gets (Me,Counter)$
+\State $PendingID \gets (Me, -1)$
+\State $Pending \gets \emptyset$
+
+\State
+
+\Function{Check}{}
+    \State This function is called at the start of a round by a leader
+    \If {$State \neq Normal$ or $Coordinator \neq Me$}
+        \Return
+    \EndIf
+    \State $Expected \gets \emptyset$
+    \For {$j \in (AllPeers - \{Me\})$}
+        \State $AreYouCoordinator(j)$
+        \State $Expected \gets Expected \cup j$
+    \EndFor
+    \State Peers which respond ``Yes'' to $AreYouCoordinator$ are put into the $Coordinators$ set.
+    \State Processes that respond are removed from $Expected$.
+    \State When an $AreYouThere$ response is ``No'' and this process is a coordinator, the querying process is put in the $Coordinators$ set.
+    \State Wait for responses, Peers that do not respond are removed from UpPeers.
+    \State $UpPeers \gets (UpPeers-Expected) \cup {Me}$
+    \State $UpPeers \gets (UpPeers-Coordinators) \cup {Me}$
+    \If {$Responses = \emptyset$}
+        \Return
+    \EndIf
+    \If {$Me = SelectedProcess$}
+        \State
+        \Call{Merge}{Responses}
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{Timeout}{}
+    \State This function is called at the start of a round by the group members
+    \If {$Coordinator = Me$}
+        \Return
+    \Else
+        \Call{AreYouThere}{Coordinator,GroupID,Me}
+        \If{Response is No}
+            \Call{Recovery}{}
+			\State $Coordinators \gets Coordinator$
+        \EndIf
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{Merge}{Coordinators}
+    \State This function invites all coordinators in Coordinators to join a group led by Me
+    \State $State \gets Election$
+    \State Stop work
+    \State $Counter \gets Counter+1$
+    \State $PendingID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $Pending \gets UpPeers - {Me}$
+    \For {$j \in Coordinators$}
+        \Call{Invite}{j,Coordinator,PendingID}
+    \EndFor
+    \State Wait for responses, Peers that accept the invite are added to $Pending$.
+    \State $State \gets Reorganization$
+	\State $GroupID \gets PendingID$
+	\State $UpPeers \gets Pending$
+    \For {$j \in UpPeers$}
+        \Call{Ready}{j,Coordinator,GroupID,UpPeers}
+    \EndFor
+    \State $Expected \gets UpPeers$
+    \State Wait for responses, Peers that acknowledge are removed from $Expected$
+    \State $UpPeers \gets UpPeers - Expected$
+    \State $State \gets Normal$
+\EndFunction
+
+\State
+
+\Function{ReceiveReady}{Sender, Leader, Identifier, Peers}
+    \If {$State = Reorganization$ and $PendingID = Identifier$}
+        \State $UpPeers \gets Peers$
+        \State $State \gets Normal$
+		\State $Coordinator \gets Leader$
+		\State $GroupID \gets Identifier$
+        \Call{ReadyAcknowledge}{Leader,Identifier}
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouCoordinator}{Sender}
+    \If {$State = Normal$ and $Coordinator = Me$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouThere}{Sender, Identifier}
+    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpPeers$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+        \State $Coordinators \gets Sender$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveInvite}{Sender,Leader,Identifier}
+    \If {$State \neq Normal$}
+        \Return
+    \EndIf
+    \If {$Sender \neq SelectedProcess$}
+        \Return
+    \EndIf
+    \State Stop Work
+    \State $PendingID \gets Identifier$
+    \State $State \gets Election$
+    \State $Accept(Coordinator,Identifier)$
+    \State $State \gets Reorganization$
+    \If {$Ready$ is not received}
+        \State $Recovery()$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAccept}{Sender,Leader,Identifier}
+    \If {$State \gets Election$ and $PendingID = Identifier$}
+        \State $Pending \gets Pending \cup {Sender}$
+    \EndIf
+\EndFunction
+
+\Function{ReceiveReadyAcknowledge}{Sender}
+    \State $Pending \gets Pending \cup {Sender}$
+\EndFunction
+
+\State
+
+\Function{Recovery}{}
+    \State $State \gets Election$
+    \State Stop Work
+    \State $Counter \gets Counter + 1$
+    \State $GroupID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $UpPeers \gets {Me}$
+    \State $State \gets Reorganization$
+    \State $State \gets Normal$
+\EndFunction
+
+\end{algorithmic}
+\end{flushleft}

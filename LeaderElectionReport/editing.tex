@@ -1,0 +1,41 @@
+\documentclass[12pt,oneside]{article}
+
+\usepackage{comment} % multi-line comments
+\usepackage{graphicx} % necessary for inclusion of .eps for figures
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage[margin=1in]{geometry}
+\usepackage{times}
+\usepackage{setspace}
+\usepackage{subcaption}
+\doublespacing
+
+\graphicspath{ {./drawings/} {./charts/} }
+
+\newcommand{\IEEEPARstart}[2]{#1#2}
+
+\begin{document}
+
+\title{Overview of the DGI Group Management Algorithm}
+\author{Stephen Jackson}
+\date{April 18, 2016}
+\maketitle
+
+\input{3-background.tex}
+\input{4-modeling.tex}
+
+\bibliographystyle{plain}
+\bibliography{latex_bibliography}
+\end{document}
+
+%TODO 6-7-2015
+% (DONE) Editing read through for quotes
+% (DONE) Editing read through for the word which
+% (DONE) Editing read through for the worh that
+% (DONE) Editing read through for its/it's
+% Write conclusion
+% Write Abstract
+% (DONE) Describe how a matrix store the Markov Chain
+% (DONE) Describe a state distribution vector and what it means
+% (DONE) Describe how the chain describes a model of the DGI behavior.
+% (DONE) Check for consistency Node/Peer/Process
