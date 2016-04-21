@@ -9,6 +9,7 @@ add_latex_document(main.tex
 		structure/*.tex
 		optional/*.tex
 		chapters/*.tex
+		info/*.tex
 	FORCE_PDF
 )
 	
