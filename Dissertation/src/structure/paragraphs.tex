@@ -1,0 +1,13 @@
+% Configures: Paragraphs
+%
+% Options in this file influence how latex sets up paragraphs. These influence how many
+% lines can be orphaned at the top or bottom of a page.
+
+% \windowpenalty prevents the first line of a paragraph from being alone at the bottom of a page.
+% It will either cause that line to move to the next page, or cause one line from the next page to join the lone line. 
+\widowpenalty=10000
+% \clubpenalty prevents the last line of a paragraph to be alone at the top of a page. At best it will force there to be two lines.
+\clubpenalty=10000   
+% For more info: http://en.wikibooks.org/wiki/LaTeX/Page_Layout#Widows_and_orphans
+% MS&T Office of Grad Studies says ``Need to have at least 2 lines at the top and at the bottom of every page. No lone headers at bottom of page.
+% see https://groups.google.com/d/msg/comp.text.tex/uN7tvjubk8o/kcUvevut0hEJ
