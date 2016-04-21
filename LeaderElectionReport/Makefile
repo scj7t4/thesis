@@ -1,5 +1,5 @@
 #Specify the file to work on
-SOURCE=journal2
+SOURCE=editing
 LATEX=pdflatex
 LATEX_ARGS=-halt-on-error 
 BIBTEX=bibtex

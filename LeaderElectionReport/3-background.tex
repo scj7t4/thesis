@@ -21,5 +21,10 @@ Using a leader election algorithm allows the FREEDM system to autonomously recon
 Cyber-components are tightly coupled with the physical components, and reaction to faults is not limited to faults originating in the cyber domain.
 Processes automatically react to crash-stop failures, network issues, and power system faults.
 The automatic reconfiguration allows processes to react immediately to issues, faster than a human operator, without relying on a central configuration point.
-However, it is important the configuration a leader election supplies is one where the system can do viable work without causing physical faults like voltage collapse or blackouts\cite{HARINI}.
+The configuration a leader election supplies has two important characteristics.
+First, the configuration should allow the system to perform ``work''.
+In the case of the DGI, this work is categorized as a grouping of DGI's where, with the given configuration, any Power/Energy management algorithms running in that group can sucessfully coordinate resources.
+Secondly, the leader election algorithm should avoid configurations where the system does ``bad'' work.
+In these configurations, the algorithms may attempt to coordinate resources but physical or cyber network failures cause the work performed to contribute to the destabilization of the system.
+This destabilization can lead to physical faults such as voltage collapse and blackouts\cite{HARINI}.
 

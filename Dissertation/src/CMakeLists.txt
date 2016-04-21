@@ -10,6 +10,7 @@ add_latex_document(main.tex
 		optional/*.tex
 		chapters/*.tex
 		info/*.tex
+		packages/*.tex
 		contents.tex
 	FORCE_PDF
 )

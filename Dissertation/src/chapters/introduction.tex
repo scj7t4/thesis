@@ -1,1 +1,30 @@
 % Introduce the contents of the paper and what will be presented
+\chapter{Introduction}
+A robust cyber-physical system should be able to survive and adapt to communication network outages in both the physical and cyber domains.
+When one of these outages occurs, the physical or cyber components must take corrective action to allow the rest of the system to continue operating normally.
+Additionally, processes may need to react to the state change of some other process.
+Managing and detecting when other processes have failed is commonly handled by a leader election algorithm and failure detector.
+
+In the smart grid domain, leader elections are an attractive option for autonomously configuring cyber components so processes can coordinate together to manage the physical system.
+Algorithms such as \cite{LOADBALANCING} and \cite{INCREMENTALCONSENSUS} are distributed algorithms for managing power in a smart grid that rely on an assumption that a group of processes will be able to coordinate together. 
+
+FREEDM (Future Renewable Electric Energy Delivery and Management) is a smart grid project focused on the future of the electrical grid.
+Major proposed features of the FREEDM network include the solid state transformer (SST), local energy storage, and local energy generation\cite{FREEDMMIGRATION}.
+This vein of research emphasizes decentralizing the power grid: making it more reliable by distributing energy production resources.
+Part of this design requires the system to operate in ``islanded mode'', where portions of the distribution network are segmented from each other.
+There is a major shortage of work on the effects cyber outages have on CPSs \cite{CYBERRESEARCHCALL} \cite{SMARTGRIDBENEFITS}.
+Research that has been done, such as \cite{HARINI} indicate that cyber faults can cause a physical system to apply unstable settings.
+
+This work begins with observations on the effects of network unreliability on the group management module of the Distributed Grid Intelligence (DGI) used by the FREEDM smart-grid project.
+This system uses a broker system architecture to coordinate several software modules that form a control system for a smart grid system.
+These modules include: group management, which handles coordinating processes via leader election; state collection, a module which captures a global system state; and load balancing which uses the captured global state to bring the system to a stable state.
+
+This work presents the initial steps to better understanding and planning for these faults.
+As part of an analysis of omission failures, this work presents an approach in modeling the grouping behavior of a system using Markov chains.
+These chains produce expectations of how long a system can be expected to stay in a particular state, or how much time it will be able to spend coordinating and doing useful work over a period of time.
+Using these measures, the behavior of the cyber system can be specified to prevent faults.
+
+Chapter 2 outlines the state of the art: other distributed frameworks and works similar to our own.
+Chapter 3 provides a background of the architecture of DGI and the properties of the created Markov models.
+Chapter 4 shows the results that have been collected so far.
+Chapter 5 summarizes the work and research goals.

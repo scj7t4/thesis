@@ -1,1 +1,111 @@
 % Overview of the information flow properties and applications.
+
+\chapter{Information Flow Security}
+
+\section{Modal Logic}
+
+Kripke frames\cite{kripke1959}\cite{blackburn2002modal} play a critical role in the development of this work. The essential concept of this work is that each global state of the distributed system at any given instant can be captured as a countably infinite set of propositional variables. A Kripke frame is a pair $<W,R>$\cite{french2006} such that W is a set of of possible versions of the global state over time, where each element in $W$ is known as a world. Each element of $R$ describes a binary relationship for how the described system can move from world to world as events occur in the described system.
+
+In the case of a distributed system, a world could be described as one the possible combinations of values of all boolean state variables $S=\{s_0, s_1, ... s_n\}$ in that system. As execution occurs, messages, time, or events cause these variables to change. Each change in boolean variables corresponds to a relationship in $R$\cite{Gehrke200565}. Therefore, a world $w$ is one possible valuation of all the variables in $S$ and a transition from $w$ to another $w'$ (with its own valuation) can be noted as $wRw'$. Without loss of generality, each relationship in $R$ must result in the change of at least one variable in $S$. Additionally, the set of world is complete: every possible combination is represented in the set of worlds. No relationship can lead to a world that does not exist.
+
+Additionally, we can define a set of valuation functions, $\{V\}$. Each function $V^i_{s_x}$ in $V$ describes the value observed by an agent $i$ of a boolean state variable $s_x$.  If a valuation function for a particular state variable is not defined for an agent, that agent cannot determine the value of that state variable, and cannot determine the value of any logical statement based on that variable. In the case of a distributed system, this concept is analogous to the isolation of memory for each agent. For example, an agent $i$, cannot simply determine the value of a variable for agent $j$.
+
+The combination of a Kripke Frame $< W,R >$ and a set of valuation functions ${V}$ is a Kripke Model $M = \{W, R, V\}$ sometimes known as a modal model. The complete model describes all the possible worlds, the relation between those worlds and the information available in the domains of the system.
+
+Let $\varphi \in \Phi_0$ be an atomic proposition in a set of countably many propositions. The set of well-formed formulas (wffs) as defined by the formulation rules in \ref{tab:axiomatic} is the least set containing $\Phi_0$. Additionally, we use the modal operator $\Box$ as an abbreviation for $\neg \Diamond \neg \varphi$. The complete axiomatic system is outlined in \ref{tab:wffs}. For the uninitiated, the modal box operator ($\Box$), ``it is necessary that'' states (in the case of $\Box \varphi$) that in every world $w$, $\varphi$ is true. As its dual, the diamond operator ($\Diamond$) states, that it is not the case that in every world, $\varphi$ is true.
+
+\begin{table}[]
+\small
+\centering
+\caption{Logical Statement Formulation Rules}
+\begin{tabular}{r l}
+1. & if $\varphi$ is a wff, so are $\neg \varphi$, $\Box \varphi$, and $\Diamond \varphi$. \\
+2. & if $\varphi$ is a wff, so are $B_i \varphi$ and $\neg B_i \varphi$ \\
+3. & if $\varphi$ is a wff, so are $T_{i,j} \varphi$ and $\neg T_{i,j} \varphi$ \\
+4. & if $\varphi$ is a wff, so are $I_{i,j} \varphi$ and $\neg I_{i,j} \varphi$ \\
+5. & if $\varphi$ and $\psi$ are both wff, so are $\varphi \wedge \psi$ \\
+6. & if $\varphi$ and $\psi$ are both wff, so are $\varphi \vee \psi$ \\
+\end{tabular}
+\label{tab:wffs}
+\end{table}
+
+\begin{table}[!t]
+\small
+\centering
+\caption{The Axiomatic System}
+Definition of logical and modal operators (abbreviations) \\
+\begin{tabular}{r l}
+D1. & $\varphi \wedge \psi \equiv \neg ( \neg \varphi \vee \neg \psi)$\\
+D2. & $\varphi \oplus \psi \equiv (\varphi \vee \psi) \wedge \neg(\varphi \wedge \psi)$ (exclusive or)\\
+D3. & $\varphi \rightarrow \psi \equiv \neg \varphi \vee \psi $\\
+D4. & $\varphi \leftrightarrow \psi \equiv (\varphi \rightarrow \psi) \wedge (\psi \rightarrow \varphi)$\\
+D5. & $\Diamond \psi \equiv \exists w \in W : w \vdash \varphi $\\
+D6. & $\Box \varphi \equiv \neg \Diamond \neg \varphi $\\
+D7. & $B_i \varphi$ agent $i$ believes the truth of $\varphi$\\
+D8. & $I_{i,j} \varphi$ agent $j$ informs $i$ that $\varphi \equiv \top$\\
+D9. & $T_{i,j} \varphi$ agent $i$ trusts the report from $j$ about $\varphi$ \\
+\end{tabular} \\~\\
+Axioms \\
+\begin{tabular}{r l}
+P. & All the tautologies from the propositional calculus.\\
+K. & $\Box (\varphi \rightarrow \psi) \rightarrow (\Box \varphi \rightarrow \Box \psi)$\\
+M. & $\Box \varphi \rightarrow \varphi$\\
+A1. & $\neg \Box \varphi \rightarrow \Box \neg \Box \varphi $\\
+A2. & $\Diamond (\varphi \vee \psi) \rightarrow \Diamond \varphi \vee \Diamond \psi $\\
+A3. & $\Box \varphi \wedge \Box \psi \rightarrow \Box (\varphi \wedge \psi)$ \\
+B1. & $(B_i \varphi \wedge B_i (\varphi \rightarrow \psi )) \rightarrow B_i \psi$ \\
+B2. & $\neg B_i \bot$\\
+B3. & $B_i \varphi \rightarrow B_i B_i \varphi$ \\
+B4. & $\neg B_i \varphi \rightarrow B_i \neg B_i \varphi$\\
+I1. & $(I_{i,j} \varphi \wedge I_{i,j} (\varphi \rightarrow \psi )) \rightarrow I_{i,j} \psi$\\
+I2. & $\neg I_{i,j} \bot$ \\
+C1. & ($B_i I_{i,j} \varphi \wedge T_{i,j} \varphi) \rightarrow B_i \varphi$ \\
+C2. & $T_{i,j} \varphi \equiv B_i T_{i,j} \varphi$ \\
+\end{tabular} \\~\\
+Rules of Inferrence \\
+\begin{tabular}{r l}
+R1. & From $\vdash \varphi$ and $\vdash \varphi \rightarrow \psi$ infer $\psi$ (Modus Ponens) \\
+R2. & $\neg (\varphi \wedge \psi) \equiv (\neg \varphi \vee \neg \psi)$ (DeMorgan's)\\
+R3. & From $\vdash \varphi$ infer $\vdash \Box \varphi$ (Generalization)\\
+R4. & From $\vdash \varphi \equiv \psi$ infer $\vdash \Box \varphi \equiv \Box \psi$\\
+R5. & From $\vdash \varphi \equiv \psi$ infer $\vdash T_{i,j} \varphi \equiv T_{i,j} \psi$\\
+\end{tabular} \\
+\label{tab:axiomatic}
+\end{table}
+
+\section{Non-Deducible (MSDND) Security}
+
+In the domain of security there are a wide variety of aspects worth protecting in every system. These are grouped into the core security concepts of integrity, accessibility and privacy. Many traditional security approaches rely heavily on cryptography to provide privacy. However accidental information leakage can still occur, which compromises the privacy of the system. For cyber-physical systems, the leakage is difficult to control. Unlike their cyber counterparts, the actions taken by the physical components cannot be hidden from a casual observer. For example, a plane changing altitude or a car turning or changing speed cannot be hidden from an observer. Other, more complicated systems, like the power grid, have actions that are more difficult to observe, but a well motivated attacker can potentially collect critical information about the behavior of the cyber components with observations of the physical network\cite{Roth2012}.
+
+Information Flow security models are invaluable for assessing what information, if any, is leaked by either the cyber of physical components of the \ac{CPS}. There are a number of information flow security models, all based off similar concepts. Typically, these models partition the system into two domains: the high security domain and the low security domain. However, the MSDND security model allows the system to partitioned into any number of domains. The MSDND model has been used to describe how the STUXNET attack was able to hide its malicious behavior from the operators. The MSDND security model is expressed using modal logic to determine what information in a domain is deducible to an observer in another domain. MSDND security exploits the possible worlds of modal logic to determine if there are worlds where the value of a logical atom is deducible by someone outside the domain.
+
+This information flow security model can be used to determine what an agent in a distributed system can determine about another agent. The exact specification of timing the distributed system becomes unnecessary as the modal model can express any combination of logical atoms in one of its worlds. \cite{Howser2012}\cite{STUXNET}\cite{Howser2013}
+
+The MSDND security model can be expressed as follows\cite{STUXNET}. Consider a pair of state variables $s_x$ and $s_y$ which may or may not be in the same security domain. The value of $s_x$ and $s_y$ have a logical xor relationship: if $s_x$ is true, $s_y$ must be false. Given an agent $i$ that does not have a valuation function for either of those two variables, the system is MSDND secure for that agent and pair of variables. Written formally:
+
+\begin{align}
+MSDND = \exists w \in W : w \vdash \Box [ (s_x \vee s_y) \wedge \neg(s_x \wedge s_y) ] 
+\nonumber \\ \wedge [ w \vDash ( \not \exists V_x^i (w) \wedge \not \exists V_y^i (w) ) ]
+\end{align}
+
+Of particular interest is the special case where $s_x$ and $s_y$ are relation on the same wff: $(s_x = \varphi$ and $s_y = \neg \varphi)$:
+
+\begin{align}
+MSDND = \exists w \in W : w \vdash \Box [ \varphi \oplus \neg \varphi ] 
+\nonumber \\ \wedge [ w \vDash ( \not \exists V_\varphi^i(w)) ]
+\end{align}
+
+In a system where the above logical relationship holds, the agent $i$ cannot determine the value of $s_x$ or $s_y$. However, if the relationship does not hold, there is some world where the agent can determine the value of $s_x$ and $s_y$.
+
+\section{Belief Logic}
+
+\ac{BIT} was developed by such and such to formalize a modal logic about belief and information transfer. \ac{BIT} logic has typically been applied to distributed systems, but also have played roles in \ac{CPS} security. The operations of the \ac{BIT} logic allow formal definition of how entities pass information, and how they will act on the information passed to them. \ac{BIT} logic utilizes several modal operators:
+
+\begin{itemize}
+\item $I_{i,j} \varphi$ defines the transfer of information directly from agent $j$ to an agent $i$. 
+\item $T_{i,j} \varphi$ defines trust an agent $i$ has in a report from $j$ that $\varphi$ is true.
+\item $B_i \varphi$ defines the belief that an agent $i$ has about $\varphi$. The actual value of $\varphi$ is irrelevant: the agent $i$ believes it to be true.
+\end{itemize}
+
+These operators allow reasoning about information transference between entities. In the context of a distributed system, these operators allow the division of the actual state held by some agent $i$ to what some other agent $j$ believes agent $i$'s state is.
+

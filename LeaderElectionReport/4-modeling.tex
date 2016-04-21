@@ -23,7 +23,7 @@ The method of selecting which process becomes the coordinator of the new group d
 Coordinators and group members begin in the normal state.
 Coordinators identify each other by sending out ``Are You Coordinator'' (AYC) messages.
 Receiving processes respond in the positive if they are a coordinator, or the negative if they are not.
-In the invitation election algorithm, processes are assigned a priority based on their process ID.
+In the invitation election algorithm, processes are assigned a priority based on their process ID\footnote{Using the process ID is an arbitrary selection, any metric with a total ordering can be used to assign priority}.
 Using the list of coordinators determined with the AYC message, each coordinator determines its relative priority with respect to the other processes that sent the invites.
 
 \begin{figure*}[!t]
