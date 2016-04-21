@@ -179,6 +179,7 @@ Therefore, it is necessary for the purpose of constructing a model, the creator 
 
 A model created for a distributed system must have sufficient information to create an accurate model. This information is difficult to obtain because of the circumstances many distributed systems run on. Without exact synchronization, an accurate global snapshot of the system cannot be taken. Instead of attempting to capture exact global snapshots, our approach relies on allowing an agent to reason about the state of the other agents in the system in order to allow that agent to construct a model which can then be distributed to other agents.
 
+
 To do this we propose the following structure for the execution environment of the distributed system:
 Each agent has some set logical atoms which it manipulates as its algorithms execute.
 Each agent belongs to domain unique to that agent (agent $i$ is the only member of logical domain $D_i$)
@@ -188,7 +189,11 @@ agents do not exhibit Byzantine failure, nor do they crash, only messages may be
 
 If no information is passed between agents, they are MSDND secure (ignoring any sort of leakage from interactions in the physical world). As information is passed, aspects of the agents state are leaked. However, depending on when messages are sent, the agent can be left in doubt as to the state of the other agent. This has a common analogy to the two armies problem. 
 
+In order to create algorithms that can be modeled with a Markov chain, first the algorithm must allow at least one agent participating in the algorithm to determine an ``Image'' of the current state of the algorithm. This image is descriptive enough to allow the agent to determine the probabilistic likelihood at arriving at the the next ``image'' of the state of the algorithm. Secondly, to create modelable algorithms, we restrict it to a class of algorithms where the sequences of worlds that lead from one image to the next is equally likely.
+
 \section{Two Armies Problem}
+
+First, we will show that information flow analysis can be used to determine what state information is deducible to a particular agent in the system. To begin, we use the common two-armies problem to begin an analysis into what states can be determined in a distributed system.
 
 In the two armies problem, two agents, which are generals of their respective armies must cooperate to attack an enemy city. However, the two armies are physically separated by the enemy city and must send messengers to each other to coordinate their plan. If the generals do not make an agreement on the attack, the attack will fail. However, the generals must come to an agreement when their channel for communication (a messenger) is unreliable (they can be captured by the enemy).
 
@@ -333,7 +338,21 @@ For any pair of worlds $w_1$ and $w_2$ where $Im(D_i, w_1)=I_1$ and $Im(D_i, w_2
 
 If this theorem is true, then the arrival at an imaged state $I_2$ depends only on the worlds which yield the Image $I_1$. Since the world contains the complete depiction of the state of the system, it is necessary that any additional information not used in the imaging function does not affect the likelihood of arriving at the next image in the model.
 
+Let $\Pr(w_{i}Rw_{i+1})$ be the probability of transitioning from state $i$ to state $i+1$. Let $\Pr(w_{i}Rw{i+1} \wedge w_{i+1}R... \wedge ...RW_{n})$ be the probability following a sequence of worlds from some world $i$ to some world $n$. There may be multiple sequences that lead from world $w_i$ to world $w_n$. Let $\Pr(w_i \rightarrow w_n)$ be the combined probability of any sequence of worlds that leads from a world $w_i$ to the first encounter of world $w_n$.
+
+To hold the memoryless property, given a pair of images $I_1$ and $I_2$, where $I_2$ is an immediate successor of $I_1$ in the Markov chain. Let $W_1 = \{ w_x | Im(D_i, w_x) = I_1 \}$ and $W_2 = \{ w_x | Im(D_i, w_x) = I_2 \}$. If $I_1 \neq I_2$, $W_1 \cap W_2 = \0$, since the images must not be equal. Furthermore, there exists a sequence of worlds for every $w_x \in W_1$ that leads to a member for $W_2$.
+
+Then, for every world $w_x \in W_1$ and for every $w_y \in W_2$ that can be reached from $w_x$ before any other member of $W_2$, $\Pr(w_x \rightarrow w_y) = \Pr(w_x` \rightarrow w_y`)$. Where $w_x'$ and $w_y'$ are another pair of world that fulfill the same requirements for $w_x$ and $w_y$.
+
+Additionally, for any $\Pr(w_x \rightarrow w_y)$, $\Pr(w_x \rightarrow w_y) = \Pr(w_x \rightarrow w_y | w_{z}R...Rw_{x})$, where $w_z$ is some other world that can reach $w_x$ through some sequence of worlds. As a consequence of this property the probability of encountering a sequence of the transitions is equally as likely regardless of the sequence that led up to that point.
+
+\begin{cor}
+Any sequence of worlds described by a Kripke Model that is complete fulfills the obligation that $\Pr(w_x \rightarrow w_y)$, $\Pr(w_x \rightarrow w_y) = \Pr(w_x \rightarrow w_y | w_{z}R...Rw_{x})$
+\end{cor}
+
 Proof by contradiction: If with this property, the model is not memoryless, then there must be information not contained in the worlds that affects the next world in the sequence of the system. However, the world must be complete, and if the there is information that is not in the world, the world must not be complete.
+
+For the sequences of worlds that connect the two worlds $w_x$ and $w_y$, we suppose there are two reasons for the differing available paths: 1) global message and execution ordering and 2) probabilistic logical departures. For type 1, we generally ignore these effects: messages that arrive within a deadline imposed by the agent running the algorithm, or the global total ordering of reactions to messages are not important. We define these then as equally likely transpositions of single path. The second type can be avoided by limiting non-determinism in the algorithms, and avoiding execution decisions influenced by type 1 sequences.
 
 \begin{thm}
 Any process that acts based on $N_i$ cannot be memoryless, unless the imaging function produces the same image for every world or no messages are lost.

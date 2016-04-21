@@ -1,0 +1,126 @@
+% original by Dr Kelly Homan
+
+% hosted project:
+% http://code.google.com/p/missouri-science-technology-latex-dissertation-thesis-template/
+
+% email list:
+% S&T Thesis/Dissertation LaTeX Template User Group <latextdt-grp@mst.edu>
+
+% google group:
+% https://groups.google.com/a/mst.edu/group/latextdt-grp/topics?hl=en
+
+% see http://grad.mst.edu/currentstudents/thesesdissertations/
+% for guidelines
+
+\documentclass[times,12pt,titlepage]{mstthesis} % 
+\doublespacing
+
+% Load all the requisite packages
+\input{structure/packages.tex} % Load all the packages
+\input{structure/fancyhdr.tex} % Configure fancyhdr
+\input{structure/algorithmicx.tex} % Configure algorithmicx
+\input{structure/footnotes.tex} % Configure footnote style
+\input{structure/hypenation.tex} % Custom hypenation options
+
+% \windowpenalty prevents the first line of a paragraph from being alone at the bottom of a page.
+% It will either cause that line to move to the next page, or cause one line from the next page to join the lone line. 
+\widowpenalty=10000
+% \clubpenalty prevents the last line of a paragraph to be alone at the top of a page. At best it will force there to be two lines.
+\clubpenalty=10000   
+% For more info: http://en.wikibooks.org/wiki/LaTeX/Page_Layout#Widows_and_orphans
+% MS&T Office of Grad Studies says ``Need to have at least 2 lines at the top and at the bottom of every page. No lone headers at bottom of page.
+% see https://groups.google.com/d/msg/comp.text.tex/uN7tvjubk8o/kcUvevut0hEJ
+
+% \brokenpenalty is meant to eliminate hyphenation of words at the end of a page. However, it may introduce non-uniform pages
+% https://groups.google.com/d/msg/comp.text.tex/pBSOMuQzOH0/innVfjc3ZG4J
+%\brokenpenalty=10000
+% Or
+\brokenpenalty10000\relax
+% having this causes page numbers to be incorrect in ToC. Not having it causes word breaks at end of page
+% better solution, as per Gerry Howser:
+%\raggedbottom
+% However, it doesn't fix hyphenation at end of page
+
+\makeindex
+\makeglossary  
+
+\begin{document}
+
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{0.5in}
+
+% Set to ms or phd
+\begin{ThesisTitlePage}{phd}
+
+\author{\MakeUppercase{Stephen Curtis Jackson}}
+
+\thesistitle{My Big Fat Thesis}
+
+\department{Computer Science}
+
+\degree{Doctor of Philosophy}
+
+%ps% ... thesis committee ...
+
+\ThesisAdviser{Dr. Bruce McMillin}
+
+%ps% If you have a co-advisor, enter the name in the
+%ps% curly braces below and uncomment.
+%ps% Otherwise, leave commented out.
+%ps%\cothadviser{} % If you have 2 thesis advisers
+
+\memberone{Dr. One}
+\membertwo{Dr. Two}
+\memberthree{Dr. Three}
+\memberfour{Dr. Four}
+
+%ps% ... Graduation date.  NOT your submission date! ...
+\graddate{2016}
+
+\end{ThesisTitlePage}
+
+\copyrightyear{2016}
+\ThesisCopyrightPage{true}
+
+%\input{optional/publicationoption.tex}
+
+% Abstract
+\begin{ThesisAbstract}
+Abstractual
+\end{ThesisAbstract}
+
+% Acknowledgements
+\begin{ThesisAcknowledgment}
+Acknowledge
+\end{ThesisAcknowledgment}
+
+% Table of contents and list of figures, tables etc.
+\begin{ThesisFrontMatter}
+\tableofcontents
+\listoffigures
+\listoftables
+\end{ThesisFrontMatter}
+
+% Thesis body.
+\begin{ThesisBody}
+
+There once was a man from nantucket
+
+\end{ThesisBody}
+
+
+%\input{optional/appendicies.tex}
+
+%\newpage\bibliographystyle{plainnat}
+%\newpage\bibliographystyle{unsrt}
+%\bibliography{biblio}
+
+\begin{Vita}
+Hello
+\end{Vita}
+
+%\input{optional/glossary.tex}
+%\input{optional/index.tex}
+
+\end{document}
+\endinput
