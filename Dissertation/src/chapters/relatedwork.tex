@@ -3,36 +3,6 @@
 
 \chapter{Related Work}
 
-\section{Failure Classification}
-
-Processes can fail in a variety of ways. In this work focuses on how cyber processes can fail. There are a variety of faults that have been classified. This work focuses on two different modes of failure:
-
-\subsection{Crash or Fail-Stop Failure}
-
-A crash failure or its more generalized form, a fail-stop failure, describes a failure in which a process stops executing.
-In general, this is considered to be an irreversible failure, since a process typically does not resume from a crashed state.
-There are categorizations of crash failures, called napping failure where a process will appear to have crashed for a finite amount of time before resuming normal operation.
-Crash failures are impossible to detect with absolute certainty in an asynchronous system.
-Processes can be suspected by other processes through the use of challenge/response messages or heartbeat messages that allow a process to prove that it has not crashed yet.
-A system that can handle a crash failure is implied to be able to handle a fail-stop failure.\cite{DISTRIBUTED}
-
-The fail-stop failure has three properties \cite{DISTRIBUTED}:
-
-\begin{enumerate}
-\item When a failure occurs the program execution is stopped.
-\item A process can detect when another fail-stop process has failed.
-\item Volatile storage is lost when the fail-stop process is stopped.
-\end{enumerate}
-
-\subsection{Omission Failure}
-
-An omission failure occurs when a message is never received by the receiver.
-Omission failures can occur when the communication medium is unavailable or when the latency of message exceeds a timeout for its expected delivery.
-Protocols like TCP do not tolerate omission failures: a packet is resent until it is acknowledged by the receiver.
-If the acknowledgment never comes, the connection is closed.
-As a contrast, UDP assumes that any datagram could be lost and it is the responsibility of the programmer to handle missing datagrams appropriately.
-An omission failure can have the same observable affects as a napping failure in some situations. \cite{DISTRIBUTED}
-
 \section{Virtual Synchrony}
 Virtual synchrony (and its original implementation, Isis\cite{ISISTOOLKIT}) is an execution model for distributed systems. Virtual synchrony is based on the idea of synchronous execution where each process acts based on a globally shared clock. Synchronous systems are the easiest to program for, but true synchrony is not feasible in most circumstances. Instead, the virtual synchrony execution model was developed. 
 
@@ -118,7 +88,9 @@ The DGI has also been implemented using message delivery schemes that are unicas
 
 Groups in DGI are not obligated to deliver any subset of the messages to any process in the system. Some of the employed algorithms in DGI need all of the messages to be delivered in a timely manner, but they do not require the same message to be delivered to every process in the current design of the system.
 
-\section{Isis (1989) and Horus (1996)}
+\section{Distributed Frameworks}
+
+\subsection{Isis (1989) and Horus (1996)}
 
 A product of Dr. Kenneth Birman and his group at Cornell, Isis \cite{ISISTOOLKIT} and Horus \cite{HORUSTOOLKIT} are two distributed frameworks which are comparable to the DGI. Although these projects are no longer actively developed, Isis is the foundation which all other virtual synchrony frameworks are based.
 
@@ -126,25 +98,23 @@ Isis was originally developed to create a reliable distributed framework for cre
 
 Both Horus and Isis are described as a group communications system. They provide a messaging architecture which clients use to deliver messages between processes. The frameworks provide a reliable distributed multicast, and a failure detection scheme. Horus offers a modular design with a variety of extensions which can change message characteristics and performance as needed by the project.
 
-\subsection{Group Model}
+\subsubsection{Group Model}
 In Horus and Isis, a group is a collection of processes that can communicate with one another to do work. Multicasts are directed to the view, and are guaranteed to be received by all members or no members.
 Over time, due to failure, the view will change. Since views are distributed concurrently and asynchronously, each process can have a different view. Horus is designed to have a modular communication structure composed of layers, which allows the communication channel to have different properties that will affect which messages will be delivered in the event of a view change. Horus' layers allow developers to go as far to not use the complete virtual synchrony model, if the programmer desires. For example, Horus' modules can implement total order using a token passing layer, or casual ordering using vector clocks.
 
 Isis has limited support for partitioning. In the event that a partition forms, dividing the large group into subgroups, only the primary group is allowed to continue operating. The primary group is selected by choosing the largest partition. Horus, on the other hand implements the extended virtual synchrony model and does not have that limitation.
 
-\section{Transis (1992)}
+\subsection{Transis (1992)}
 
 Transis \cite{TRANSISTOOLKIT} was developed as a more pragmatic approach to the creation of a distributed framework. Transis is developed with the key consideration that, while multicast is the most efficient for distributing information in a view or group of processors (as point to point quickly gives rise to N$^{2}$ message complexity, where $N$ is the number of processes. ) it can be impractical, especially over a wide area network to rely on broadcast to deliver messages. Transis, then considers two components for the network: a local area component and a wide area component.
 
 The local area component, Lansis, is responsible for the exchange of messages across a LAN. Transis uses gateways, called Xporters, to deliver messages between the local views. Transis uses a combination of acknowledgments, which are piggybacked on regular messages to identify lost messages. If a process observes a message being acknowledged that it does not receive then it sends a negative acknowledgment broadcast informing the other members of the view it did not receive that message. In Lansis, the acknowledgment signals that a process is ready to deliver a message. Lansis assumes that all messages can be casually related in a global, directed, acyclic graph and there are a number of schemes that deliver messages based on adherence to that graph.
 
- 
-
-\section{Totem (1996)}
+\subsection{Totem (1996)}
 
 Totem\cite{TOTEMTOOLKIT} is designed to use local area networks, connected by gateways. The local area networks use a token passing ring and multicast the messages, much like Isis and Horus. The gateways join these rings into a multi-ring topology. Messages are first delivered on the ring which they are sent, then forwarded by the gateway which connects the local ring to the wide area ring for delivery to the other rings. The message protocol gives the message total ordering using a token passing protocol. Topology changes are handled in the local ring, then forwarded through the gateway where the system determines if the local change necessitates a change in the wide area ring. Failure detection is also implemented to detect failed gateways.
                                              
-\section{Spread}
+\subsection{Spread}
 
 Spread\cite{SPREADTOOLKIT} is a modern distributed framework. It is designed as a series of daemons which communicate over a wide area network. Processes on the same LAN as the daemons connect to the daemon directly. This is analogous to the gateways in the other distributed toolkits, however, the daemon is a special, dedicated message passing process, rather than a participating process with a special role.
 
@@ -152,28 +122,37 @@ Using a dedicated daemon allows a Spread view to reconfigure less frequently whe
 
 Spread implements an extended virtual synchrony model. However, message ordering is performed at the daemon level, rather than at the group level. Total ordering is done using a token passing scheme among the daemons.
 
-\section{Failure Detectors}
+\section{Markov Models of Distributed Systems}
 
-Failure detectors \cite{FAILUREDETECTORS} (Sometimes referred to as unreliable failure detectors) are special class of processes in a distributed system that detect other failed processes. Distributed systems use failure detection to identify failed processes for group management routines. Because it isn't possible to directly detect a failed process in an asynchronous system, there has been a wide breadth of work related to different classifications of failure detectors, with different properties. Some of the properties include\cite{FAILUREDETECTORS}:
+CITE focus on examining the emergent behavior as a collection of processes in a grid computing scenario work to process a large dataset.
+In their work, the authors focus on analysis derived from a discrete time Markov chain discribing a single process completing a task.
+This chain describes how the process in the grid based system goes through the steps of the process acquiring a task to do, working on that task and subsequently either completing the task or failing.
+The created chains were ``absorbing'' chains, meaning that it had one or more states that the process could not leave once it had arrived in those states (task completed and task failed, for obvious reasons).
+Their analysis used minimal s-t cuts to determine critical paths for the ideal operation of the sytem.
+Using this analysis, they considered the Markov chain as a max-flow min-cut problem using the task complete or task failed absorbing states as sinks.
+By identifying the ``critical transitions'' of the graph, the areas that would most greatly affect the performance of the system could be identified.
 
-\begin{itemize}
-    \item Strong Completeness - Every faulty process is eventually suspected by
-        every other working process.
-    \item Weak Completeness - Every faulty process is eventually suspected by 
-        some other working process.
-    \item Strong Accuracy - No process is suspected before it actually fails.
-    \item Weak Accuracy - There exists some process is never suspected of failure.
-    \item Eventual Strong Accuracy - There is an initial period where strong
-        accuracy is not kept. Eventually, working processes are identified
-        as such, and are not suspected unless they actually fail.
-    \item Eventual Weak Accuracy - There is an initial period where weak
-        accuracy is not kept. Eventually, working processes are identified
-        as such, and there is some process that is never suspected of failing
-        again.
-\end{itemize} 
-
-One class of failure detectors, Omega class Failure detectors, are particularly interesting because of \cite{LEADERELECTIONEVAL}. An eventual weak failure (weak completeness and eventual weak accuracy) detector is the weakest detector which can still solve consensus. It is denoted several ways in various works including $\diamond \mathcal{W}$ \cite{FAILUREDETECTORS}, $\mathcal{W}$ \cite{WEAKESTFAILURE1} \cite{WEAKESTFAILURE2} and $\Omega$ (Omega) \cite{LEADERELECTIONEVAL}.
-
-\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++\cite{OMNET}, a network simulation software package. Instead of omission failures, however, it considers crash failures. Each configuration goes through a predefined sequence of crash failures. OmNet++ is used to count the number of messages sent by each of three different leader election algorithms. Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a complete and active state when all participants have consensus on a single leader.
+\section{Messaging Analysis of Failure Detectors}
 
 
+
+\section{Physical Faults Caused by Cyber Entities in CPS}
+
+Faults in \ac{CPS} can originate from many locations.
+First and most obviously, the traditional physical system being agumented by the CPS is subject to its own failures, either from component failure or the actions of an attacker.
+Secondly, the \ac{CPS} must employ sensors to detect the state of the physical components in the system.
+Again, like the physical components, these sensors are subject to component failure or the actions of an attacker.
+Lastly, if the \ac{CPS} communicates between entities using a communication network, the network can be distrupted by any number of isssues, including DDoS, attackers, or congestion caused by other users in a shared network.
+
+Several works have shown, that for a computer controlled smart grid, that failures originating at sensors or the communication network have the potential to cause the cyber entities controlling the physical networks to take incorrect actions.
+Work has been undertaken to identify faulty sensing components in a network, but the identification of bad sensing equipment may not always be possible.
+Additionally, it is not always possible to identify if the origin of an issue is a faulty sensor or an outside attacker.
+
+If the cyber entity itself has been compromised, it could potentially exhibit Byzantine behavior, causing it to try and trick other components into bad actions, or it may try to disrupt the physical network directly.
+Work has been done to try and identify when an entity in a cyber network is actively working to compromise the physical network by using the underlying physical invariants.
+However, even if a cyber entity is trying to behave correctly, disruptions to the communication network or the sensors it uses can cause it to take actions similar to a process that is actively attempting to destabilize the system.
+As before, these actions can be identifed by using the underlying invariants of the physical network after they have occured.
+However, it would be ideal to avoid situations where a ``good'' entity is forced to act badly.
+
+\section{Congestion in Cyber Physical Systems}
+Other, distantly related, work use cyber communication to avoid congestion in the physical network.

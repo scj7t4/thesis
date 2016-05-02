@@ -1,6 +1,9 @@
 default: all
 
-all:
+all: document
+
+document:
+	rm -f build/packages/__packages.generated
 	mkdir -p build
 	cd build; \
 	cmake ../src; \

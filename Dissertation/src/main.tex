@@ -11,7 +11,7 @@
 % Dissertation guidelines:
 % http://grad.mst.edu/currentstudents/thesesdissertations/
 
-\documentclass[times,12pt,titlepage]{mstthesis}
+\documentclass[times,12pt]{mstthesis}
 \doublespacing
 
 % Load all the requisite packages
@@ -21,8 +21,11 @@
 \input{structure/hypenation.tex} % Custom hypenation options
 \input{structure/paragraphs.tex} % Define the behavior of typesetting paragraphs
 
-\input{packages/fancyhdr.tex} % Configure fancyhdr
-\input{packages/algorithmicx.tex} % Configure algorithmicx
+% The build script will process all the .tex files in the packages directory
+% And generate this file as part of the build process.
+% It will automatically include all the .tex files into final document at
+% this point.
+\input{packages/__packages.generated}
 
 \makeindex
 \makeglossary  
@@ -67,9 +70,9 @@
 
 %\input{optional/appendicies.tex}
 
-%\newpage\bibliographystyle{plainnat}
-%\newpage\bibliographystyle{unsrt}
-%\bibliography{biblio}
+\bibliographystyle{plain}
+\newpage
+\bibliography{bibliography}
 
 \begin{Vita}
 \input{info/vita.tex}
