@@ -1,6 +1,6 @@
 \chapter{Algorithm and Model Creation}
 
-\subsection{Execution Environment}
+\section{Execution Environment}
 
 Execution occurs in a real-time partially synchronous environment.
 Processes synchronize their clocks and execute steps of the election algorithm at predefined intervals.
@@ -18,7 +18,7 @@ The execution environment for the election algorithm has a omission failure occu
 In this model, each message has some probability $p$ of being delivered within the timing constraints imposed by the real-time schedule.
 For the purpose of analyzing the effects of omission failures, processes are not subject to other faults.
 
-\subsection{Election Algorithm}
+\section{Election Algorithm}
 
 A state machine for the election portion of the election algorithm is shown in Figure \ref{fig:statemachine}.
 In the normal state, the election algorithm regularly searches for other coordinators to join with.
@@ -91,7 +91,7 @@ In the following portions of the paper we present an analysis of the information
 
 Since any coordinated actions by a group must be initialized by the coordinator, having a model of the system constructed by the coordinator is the most valuable in the context of the system. The model constructed by this approach follows the $L$ state of the system. The $L$ state logically underestimates the state of the system, which is more accurate with respect to determining the current state for the next step of the algorithm. For the formulas presented, the coordinator of each group constructs a model of the system based on the cardinality of the the $L$ set based on the information flows in the algorithm.
 
-\subsection{Group Maintenance and Leader Discovery}
+\section{Group Maintenance and Leader Discovery}
 
 The original and modified Garcia-Molina invitation election algorithms both use a common set of variables at each agent to track the state of the system.
 
@@ -106,13 +106,17 @@ This assumption relies on ``Are You Coordinator'' and ``Are You There'' messages
 This change leads to a live-lock situation in a crash failure, where the group's leader crashes and does not return and as a consequence the remaining members are trapped in a group without a leader.
 For the purpose of this work, we have disregarded these live lock scenarios.
 
-\subsubsection{Original Algorithm}
+\subsection{Original Algorithm}
 
 The \ac{AYC} message serves as a failure detector for crashed agents. In the models presented in this paper, crash failures are ignored as part of the modeled system.
 
 The \ac{AYT} message serves as a check for the ``Ready'' message sent by the group leader at the end of the election algorithm. \ac{AYC} verifies the leader considers the sending process a part of its group.
 
-\subsubsection{Modified Algorithm}
+\subsection{Modified Algorithm}
+
+\subsubsection{Memorylessness}
+
+\subsubsection{State Determination}
 
 \begin{thm}
 In a synchronous system a process in $M$ but not $L$ can determine its exclusion and act as though it was not in $M$, for the purpose of discovering leaders.
@@ -143,7 +147,7 @@ In the maintenance portion of the algorithm, the leader acts on the set $L$, att
 
 This approach allows the memorylessness property for the imaging to be upheld. If an agent is not in $L$ that agent will be able to determine it is not in $L$. This allows the same number of messages to be exchanged regardless of an agent's membership in $L$. If the probability that any given message sent to a process has a consistent probability of being delivered, the sequences of worlds that merge two coordinators has the same distribution of probable outcomes as the sequences of worlds that a process in $M$ but not $L$ is invited to the group.
 
-\subsection{Coordinator Priority}
+\section{Coordinator Priority}
 
 To alleviate the inherit race condition of leader selection, without loss of generality, a fixed leader process was selected.
 This process was the only one that could become the leader of a multiprocess group.
@@ -174,13 +178,17 @@ Therefore, to make the algorithm memoryless, only a selected process may lead a 
 
 Because elections can be triggered simultaneously, (and they always are in a synchronized execution model), a race condition exists in selecting the coordinator. In the original algorithm, the race condition was resolved using the agent identifier and a wait sequence. The agent that believed it had the lowest identification would immediately send invites, all other agents would wait some period of time before before sending theirs, in case the sender crashed. Our approach uses the maintenance and discovery phase to determine if an agent is the highest priority.
 
-\subsubsection{Original Algorithm}
+\subsection{Original Algorithm}
 
 In the original algorithm, the break the race condition, each coordinator that has identified other coordinators to merge will determine if it should wait or immediately invite each agent it has identified as another coordinator. This action allows the agents to avoid sending all their invites at the same time.
 
 The original text is vague on how this condition should be determined: if the coordinators should determine their wait time based on the global list of agents that could potential become leaders or if should be determined from the set of coordinators that that agent has identified as a fellow coordinator. In either case, the selection of when to send the invites influenced heavily by timing differences between the agents leading to non-deterministic behavior in many scenarios.
 
-\subsubsection{Modified Algorithm}
+\subsection{Modified Algorithm}
+
+\subsubsection{Memorylessness}
+
+\subsubsection{State Dtermination}
 
 \begin{thm}
 With perfect information transfer, agents can determine the exact coordinator priority for each participating coordinator.
@@ -196,13 +204,17 @@ Querying an agent to see if they are a coordinator implies that the sending agen
 
 This approach of identifying priority during the group discovery phases allows the agents to determine when to send invites based on a deterministic measure rather than a probabilistic one based on execution ordering. A process can decide which invite it wishes to accept before the invites are sent out. There is a potential for live-lock in this approach if the highest priority process always crashes after other agents have determined they should accept that agents invite, but a similar scenario also exists in the original algorithm.
 
-\subsection{Invitations}
+\section{Invitations}
 
-\subsubsection{Original Algorithm}
+\subsection{Original Algorithm}
 
 In the original algorithm, a process accepts the first invitation it receives and does not accept any subsequent invitations.
 
-\subsubsection{Modified Algorithm}
+\subsection{Modified Algorithm}
+
+\subsubsection{Memorylessess}
+
+\subsubsection{State Determination}
 
 In the invitation portion of the algorithm, the sender of the invite is confident the agent has accepted the invite because the accept message arrives. The group list that the new leader prepares for the ready message is an $N$ set of the potential group members. The list is distributed to the new members. Agents that do not receive $N$ or fail to send a receipt message are not in $L$. Algorithms that depend on the the set of agents in the group will act on $N$. There is a potential that to the leader the agents in $N$ but not $L$ will act as though they are part of the group. Algorithmically, the the leader can then expand $L$ to cover the information leaked by that agent acting as though it is holds a state that makes it part of $L$.
 
@@ -214,7 +226,7 @@ If the determination of the coordinator priority reveals that an agent has a low
 
 Alternatively, if the determination of the coordinator priority reveals that an agent has a lower priority than n ($n > 2$) other agents, the probability that some other agent will accept that agents invite is the probability that for each of the other agents ($n-1 ... 0$) the invited agent does not recognize that agent's priority.
 
-\subsection{Ready State}
+\section{Ready State}
 
 The changes added a third message to completing an election -- a ``Ready ACK'' message, shown in Figure \ref{fig:statemachine}.
 This message is sent by a member after receiving the ready message from the coordinator.
@@ -233,11 +245,15 @@ Without the ready acknowledgment message, the probability a member remains in a 
 By adding the extra message, the observation of the coordinator must be the state of the member of the group.
 As a consequence, the probability a member remains in a group in the first round after an election is identical to each subsequent round.
 
-\subsubsection{Original Algorithm}
+\subsection{Original Algorithm}
 
 In the original algorithm the list of agents in the group is distributed as part of the ready message. Based on analysis presented earlier in the paper, since there is no confirmation of receipt for the ready message, the leader cannot determine the actual state of the group has it only has the unvaluateable set of wffs describing the group state $N_i$.
 
-\subsubsection{Modified Algorithm}
+\subsection{Modified Algorithm}
+
+\subsubsection{Memorylessness}
+
+\subsubsection{State Determination}
 
 \begin{thm}
 Ready and Ready Acknowledge result in the leader holding and $L$ state and the members holding a $N$ state.
@@ -264,13 +280,19 @@ The proof repeats for each $j$ that successfully delivers an invite accept messa
 
 In the modified algorithm, the agents that receive the ready message reply with confirmation. This allows the leader of the group to determine $L_i$, a set of agents that have definitely received the ready message. By coupling this with the other modifications to the algorithm, for the semi-synchronous execution environment used by the \ac{DGI}, the states observed by the leader are memoryless.
 
+\section{Composed Algorithm}
+
 \subsection{Expression As Markov Chain}
+
+\subsubsection{Image Function}
+
+\subsubsection{Memorylessness}
 
 In the specified execution environment, each time before the coordinator runs the the check portion of the election algorithm it produces an image of the current world to use as the first state of the constructed Markov chain. Each agent in the system has the stability property. As part of the stability property any wffs whose information was transferred after the last image was taken cannot change until the process takes the newest image. For the election algorithm, this causes the leader to doubt the values in $L$.
 
 If a process is not in $L$ it will have to go through the election procedure even though it may be in $M$. This ensures that the sequence of changes necessary to bring that agent into the group is identical whether regardless of the agent's membership in $M$, ensuring the memorylessness property. Previous work \cite{JOURNAL} describes this algorithm and shows a Markov chain accurately describing the behavior of an implementation of this algorithm.
 
-\subsection{Creation of A Profile Chain}
+\subsubsection{Creation of A Profile Chain}
 
 The election algorithm produces and distributes a set of processes $UpPeers$ and a coordinator of that set.
 $UpPeers$ is distributed via message passing and maintained by the coordinator.
@@ -319,3 +341,115 @@ In the profile chain, in a state $s$ that describes the number of processes in a
 From this distribution, a set of transition probabilities can be calculated for a given omission rate $p$ and number of processes $n$.
 This set of transition probabilities forms a profile Markov chain $P$, which can be evaluated to for any number of processes $n$ and omission rate $p$.
 The generated profile chain is ergodic when $0<p<1.0$. The profile chain is a stationary Markov chain.
+
+\section{Profile Chain Validation}
+
+The DGI focuses on managing power resources in a microgrid environment.
+Resources can only be managed effectively when multiple DGIs coordinate together to manage those resources.
+Without another DGI to coordinate with, the DGI has a limited range of options to manage power generation, storage and loads.
+Therefore, the amount of time DGI will spend coordinating with another process is of particular interest.
+\cite{CRITIS2012} defines an ``In Group Time'' (IGT) metric to measure the amount of time a DGI process spends coordinating with at least one other process.
+In this work, we define IGT based on the steady state of the profile chain.
+Let $\pi=Steady(P)$ for some profile chain.
+The IGT is the sum of all states in $\pi$, save the first state where the process is alone:
+
+\begin{equation} IGT = \sum_{i=2}^{m} \pi_i \end{equation}
+
+The IGT is a number between 0 and 1.
+It represents the probability a random observation sees a group of at least two members.
+The steady state distributions are presented as stacked bar graphs in Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process}.
+Each complete bar in the graph indicates the IGT.
+Additionally, Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process} also contain the average group size (AGS), when the system has reached the steady-state, plotted as a fraction of the total number of processes.
+Let $P$ be the steady-state distribution vector for some number of processes, $n$, and a given omission rate:
+
+\begin{equation} y = \frac{\sum_{i=1}^{n} P_{i}*i}{n} \label{eq:ss-means} \end{equation}
+
+where $y$ is the plotted AGS as a fraction.
+
+The components of each bar represent the probability the system is in a specific state for a random observation of the system.
+The height of the component represents the relative probability of observing that state when in a group.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{ss-3process.pdf}
+    \caption{Steady state distribution for 3 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
+    \label{fig:ss-3process}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{ss-4process.pdf}
+    \caption{Steady state distribution for 4 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
+    \label{fig:ss-4process}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{ss-5process.pdf}
+    \caption{Steady state distribution for 5 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
+    \label{fig:ss-5process}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{ss-6process.pdf}
+    \caption{Steady state distribution for 6 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
+    \label{fig:ss-6process}
+\end{figure}
+
+The profile chain can be used to ensure the FREEDM smart grid is able to continue operating despite network issues.
+The profile chain can be combined with different message sending strategies to maintain service.
+For example, the DGI can change to a slower mode of operation to ensure operation continues normally despite connectivity issues.
+By selecting different strategies depending on the message delivery probability the DGI can offer high performance in good network conditions and an acceptable level of service during faults.
+The profile chain can be extended to an arbitrary number of processes as shown in Figure \ref{fig:ss-means}.
+In Figure \ref{fig:ss-means}, the steady-state of the system is used to compute a weighted average of the group size.
+To compare the produced steady states, the weighted average was plotted as a percentage of all processes in the system.
+Values in Figure \ref{fig:ss-means}, were plotted using Equation \ref{eq:ss-means}.
+Therefore, Figure \ref{fig:ss-means}, shows the average percentage of total processes that will be in the group in a steady-state system.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{schedule.pdf}
+    \caption{Example DGI schedule. Normal operation accounts for a fixed number of migrations each time the load balancing module runs. Message delays reduce the number of migrations that can be completed each round. However, reducing the group size allows more migrations to be completed (because fewer messages are being exchanged) at the cost of flexibility for how those migrations are completed.}
+    \label{fig:schedule}
+\end{figure}
+
+The DGI employed a round-robin schedule where each module is given a predetermined amount of time to execute.
+This schedule was determined by the number of DGI that could be grouped together and the expected cyber network conditions.
+Additionally, the Load Balance module, which managed the power resources was scheduled to run multiple times in a long block before the group was evaluated for failure.
+This schedule is depicted in \ref{fig:schedule}.
+The system began by using group management to organize groups.
+Next load balancing ran to manage power resources in the created group.
+Finally, state collection collected a casually consistent state to be used for reporting and offline analysis.
+If message delays occured, the number of migrations load balancing could perform was reduced.
+However, by reducing the group size, the number of messages sent by load balancing could be reduced, allowing for a greater amount of work to be done.
+The outcome of an election had a direct effect on how effectively the DGI can manage resources.
+Therefore the steady-state analysis gives a good indication of how well the DGI could manage those resources in the future.
+%Interestingly, the average group size as percentage of the total processes seems to be converging asymptotically, to a fixed value for each plotted probability as the number of processes increases.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{ss-means.pdf}
+    \caption{Average group size as a percentage of all processes in the system for larger systems.}
+    \label{fig:ss-means}
+\end{figure}
+
+This information can also be used to anticipate faults and mitigate them before they occur.
+Modern routers can supply an expected congestion notification as part of the IP header\cite{ECN2}.
+When congestion is anticipated, the coordinator can preemptively split the group to reduce congestion.
+This is possible because the algorithm's message complexity is $O(n^2)$.
+Future work will combine this analysis with ECN techniques to preemptively change the behavior of DGI to ensure a good level of service.
+If dropped messages account for an omission rate of even 0.15 from future congestion, performing a coordinated group division can potentially save several rounds of transient states.
+Breaking the large groups into smaller sets can drastically reduce the number of messages transmitted and help relieve congestion.
+Additionally, the coordinator can design the split to ensure work can continue when the groups are split, by mixing supply and demand processes.
+The division can also account for the placement of congested routers for targeted congestion relief.
+Furthermore, since the required execution time is a function of group size, the DGI can use the additional execution time within the same real time schedule to use more reliable techniques to deliver messages.
+
+
+In Figure \ref{fig:schedule}, Group Management's execution is broken into four steps: check, merge, ready, and cleanup.
+Between each step, the DGI waits while messages and their replies are delivered.
+The leader election algorithm expects that all replies arrive before the next step of the algorithm is executed.
+If a message does not arrive during the wait period, before the next step of execution the message is considered lost.
+If it arrives later, it is ignored by the algorithm.
+While dynamically adjusting the synchronized schedule is not feasible during failure, adjusting the number of messages sent (by sending fewer "Are You Coordinator" messages, for example) is.
+By sending fewer messages, the number of packets in the communication network is reduced, and the savings in processing can allow multiple delivery attempts in the scheduled wait time.

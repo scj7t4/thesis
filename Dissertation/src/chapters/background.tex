@@ -450,29 +450,6 @@ This algorithm provides a robust election procedure which allows for transient p
 Transient partitions are formed when a faulty link inside a group of processes causes the group to divide temporarily.
 These transient partitions merge when the link becomes more reliable.
 
-\subsection{Broker Architecture}
-
-The DGI software used in this designed around a broker architectural specification.
-Each core functionality of the system was implemented within a module that was provided access to core interfaces.
-These interfaces provided functionality such as scheduling requests, message passing, and a framework to manipulate physical devices.
-
-The Broker provided a common message passing interface that all modules could access.
-This interface was then used to pass information between modules. 
-For example, the list of peers in the group was sent as a message. 
-
-Several of the distributed algorithms used in the software required the use of ordered communication channels.
-DGI provided a reliable ordered communication protocol (The sequenced reliable connection or SRC).
-It also offered a ``best effort'' protocol (The sequenced unreliable connection or SUC).
-This protocol was also FIFO (first in, first out), but provided limited delivery guarantees.
-
-Simple message delivery schemes were used in order to avoid complexities introduced by using TCP.
-Constructing a TCP connection to a process that either had failed or was unreachable required a considerable amount of time.
-We elected to use UDP packets which do not have those issues, since the protocol is connectionless.
-UDP also allowed for the development of multiple protocols with various properties to evaluate which properties are desirable.
-Lightweight protocols which were best effort oriented were implemented to deliver messages within the requirements.
-The protocols listed here continued operating despite omission failures.
-They follow the assumption that not every message is critical to the operation of the DGI and that the channel did not need to halt entirely to deliver one of the messages.
-
 \subsection{Real Time}
 The DGI's specifications also called for real time reaction to events in the system.
 These real-time requirements are designed to enforce a tight upper bound on the amount of time used creating groups, discovering peers, collecting the global state, and performing migrations.
@@ -584,7 +561,7 @@ Leaving the group can either be caused by the coordinator removing the process, 
 This version also removes the potential live-lock due to crash failure, although crash-failure is not considered in this work.
 Other algorithms could be more efficient and less bursty during normal operation, however they are more inconsistent during network congestion and omission.
 
-\subsection{Power Management.}
+\subsection{Power Management}
 
 In this work we utilize the load balancing algorithm from \cite{LOADBALANCING}.
 The load balancing algorithm performs work by managing power devices with a sequence of migrations\cite{HILTESTBED}.
