@@ -76,7 +76,7 @@ Extended virtual synchrony places obligations on the message delivery service, d
 
 It also provides additional restrictions on the sending of messages between two different views (Item 2) and an obligation on the delivery of messages (Item 4). The concept of a primary view still exists within the extended virtual synchrony model and is still described by the notion of being the largest view. Since views can now partition and rejoin the primary partition the rules presented above also allow the history of the views with respect to the regular messages in the primary partition to be totally ordered. Additionally, two consecutive primary views have at least one process that was a member of each view.
 
-To join views, processes are first informed of a failure (or joinable partition) by a membership service. Processes maintain an obligation set of messages they have acknowledged but not yet delivered. After being informed of the need to change views, the processes begin buffering received messages and transition into a transitional view. In the transitional view messages are sent and delivered by the processes to fulfill the causality and ordering requirements listed above. Once all messages have be transmitted, received and delivered as needed and the process' obligation set is empty, the view transitions from a transitional view to a regular view and execution continues as normal.
+To join views, processes are first informed of a failure (or join-able partition) by a membership service. Processes maintain an obligation set of messages they have acknowledged but not yet delivered. After being informed of the need to change views, the processes begin buffering received messages and transition into a transitional view. In the transitional view messages are sent and delivered by the processes to fulfill the causality and ordering requirements listed above. Once all messages have be transmitted, received and delivered as needed and the process' obligation set is empty, the view transitions from a transitional view to a regular view and execution continues as normal.
 
 \subsection{Comparison To DGI}
 
@@ -125,10 +125,10 @@ Spread implements an extended virtual synchrony model. However, message ordering
 \section{Analysis of Distributed Systems}
 
 \cite{markov-distributed} focused on examining the emergent behavior as a collection of processes in a grid computing scenario work to process a large dataset.
-In their work, the authors focus on analysis derived from a discrete time Markov chain discribing a single process completing a task.
+In their work, the authors focus on analysis derived from a discrete time Markov chain describing a single process completing a task.
 This chain describes how the process in the grid based system goes through the steps of the process acquiring a task to do, working on that task and subsequently either completing the task or failing.
 The created chains were ``absorbing'' chains, meaning that it had one or more states that the process could not leave once it had arrived in those states (task completed and task failed, for obvious reasons).
-Their analysis used minimal s-t cuts to determine critical paths for the ideal operation of the sytem.
+Their analysis used minimal s-t cuts to determine critical paths for the ideal operation of the system.
 Using this analysis, they considered the Markov chain as a max-flow min-cut problem using the task complete or task failed absorbing states as sinks.
 By identifying the ``critical transitions'' of the graph, the areas that would most greatly affect the performance of the system could be identified.
 
@@ -137,10 +137,10 @@ By identifying the ``critical transitions'' of the graph, the areas that would m
 \section{Physical Faults Caused by Cyber Entities in CPS}
 
 Faults in \ac{CPS} can originate from many locations.
-First and most obviously, the traditional physical system being agumented by the CPS is subject to its own failures, either from component failure or the actions of an attacker.
+First and most obviously, the traditional physical system being augmented by the CPS is subject to its own failures, either from component failure or the actions of an attacker.
 Secondly, the \ac{CPS} must employ sensors to detect the state of the physical components in the system.
 Again, like the physical components, these sensors are subject to component failure or the actions of an attacker.
-Lastly, if the \ac{CPS} communicates between entities using a communication network, the network can be distrupted by any number of isssues, including DDoS, attackers, or congestion caused by other users in a shared network.
+Lastly, if the \ac{CPS} communicates between entities using a communication network, the network can be disrupted by any number of issues, including DDoS, attackers, or congestion caused by other users in a shared network.
 
 Several works have shown, that for a computer controlled smart grid, that failures originating at sensors or the communication network have the potential to cause the cyber entities controlling the physical networks to take incorrect actions.
 Work has been undertaken to identify faulty sensing components in a network, but the identification of bad sensing equipment may not always be possible.
@@ -149,6 +149,6 @@ Additionally, it is not always possible to identify if the origin of an issue is
 If the cyber entity itself has been compromised, it could potentially exhibit Byzantine behavior, causing it to try and trick other components into bad actions, or it may try to disrupt the physical network directly.
 Work has been done to try and identify when an entity in a cyber network is actively working to compromise the physical network by using the underlying physical invariants.
 However, even if a cyber entity is trying to behave correctly, disruptions to the communication network or the sensors it uses can cause it to take actions similar to a process that is actively attempting to destabilize the system.
-As before, these actions can be identifed by using the underlying invariants of the physical network after they have occured.
+As before, these actions can be identified by using the underlying invariants of the physical network after they have occurred.
 However, it would be ideal to avoid situations where a ``good'' entity is forced to act badly.
 

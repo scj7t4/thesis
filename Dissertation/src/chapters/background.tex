@@ -27,7 +27,7 @@ A channel is classified as reliable if it meets 3 axioms:
 
 \begin{axm}
     \label{axm:reliable-channel-delay}
-    Every message has an arbitrary but not infinite propgation delay.\cite{DISTRIBUTED}
+    Every message has an arbitrary but not infinite propagation delay.\cite{DISTRIBUTED}
 \end{axm}
 
 \begin{axm}
@@ -36,16 +36,16 @@ A channel is classified as reliable if it meets 3 axioms:
 \end{axm}
 
 These are often referred to as synchronous channels.
-In this work however, channels are not assumed to be perfectly reliabile.
+In this work however, channels are not assumed to be perfectly reliable.
 Instead, we respect Axiom \ref{axm:reliable-channel-fifo}, partially fulfill Axiom \ref{axm:reliable-channel-sender}, and disregard Axiom \ref{axm:reliable-channel-delay}.
-Therefore, we assume the following about communication channels in the systems modelled (replacing Axiom \ref{axm:reliable-channel-sender})
+Therefore, we assume the following about communication channels in the systems modeled (replacing Axiom \ref{axm:reliable-channel-sender})
 
 \begin{axm}
     Every message received by a receiver was sent by a sender in the system.
 \end{axm}
 
 As well as Axiom \ref{axm:reliable-channel-fifo}.
-Without the constrained propogation delay from \ref{axm:reliable-channel-delay}, this type of communication channel is typically referred to as an asynchronous channel.
+Without the constrained propagation delay from \ref{axm:reliable-channel-delay}, this type of communication channel is typically referred to as an asynchronous channel.
 
 Clocks are considered synchronized if every clock in the system reads the same time.
 Since it is impossible for independent clocks to tick at the same rate, weak synchronization is used to describe when clocks in the system have an upper bound on drift rate from each other.
@@ -53,7 +53,7 @@ Since it is impossible for independent clocks to tick at the same rate, weak syn
 The communication model can be synchronized or asynchronous.
 In the synchronous communication model, processes can only send a message when the receiving process is ready to receive it.
 Algorithmically, sending in a synchronous model is usually considered a ``blocking'' operation, meaning that once a process tries to send a message, it cannot proceed until the message is received.
-In this work, communication is asynchronus, meaning that a process does not wait for the successful delivery of a message.
+In this work, communication is asynchronous, meaning that a process does not wait for the successful delivery of a message.
 This is known as a non-blocking send.
 
 In a system with synchronous processes, processes execute in lockstep.
@@ -73,7 +73,7 @@ An error is a difference between what is considered ``correct'' output for a giv
 
 DEFINITION - FAULT
 
-The manefestation of an error in sofware, or an incident where a incorrect, step, or data definition is performed in a computer program.
+The manifestation of an error in software, or an incident where a incorrect, step, or data definition is performed in a computer program.
 
 DEFINITION - FAILURE
 
@@ -132,7 +132,7 @@ One class of failure detectors, Omega class Failure detectors, are particularly 
 \subsection{Byzantine Failures}
 
 In a Byzantine failure, processes in the distributed system intentionally send information that is incorrect or misleading to other processes.
-Contraints for detecting processing that exhibit Byzantine behavior is a famous result in distributed systems.\cite{byzantine-generals}
+Constraints for detecting processing that exhibit Byzantine behavior is a famous result in distributed systems.\cite{byzantine-generals}
 
 \section{Probability}
 
@@ -140,7 +140,7 @@ The expected value represents the long-term average output of a probability dist
 
 \begin{equation}E[X] = x_1 p_1 + x_2 p_2 + ... + x_k p_k \end{equation}
 
-Conceptually, the expected value is the weighted average of the outcomes of some stocastic system.
+Conceptually, the expected value is the weighted average of the outcomes of some stochastic system.
 
 Availability is the probability a system or component is operational and accessible when required for use, denoted $A$.
 
@@ -154,7 +154,11 @@ Where $R(t)$ is the probability that the system or component functions up until 
 
 \section{Markov Models}
 
-%When Markov chains work to model a system. Something about order of Markov chain. State what a Markov chain and the properties of the Markov chain. State what states mean. state what transition probabilies mean. State what ergodicity is. State what stationarity is. State how we generate the sequence of states.
+%When Markov chains work to model a system.
+%Something about order of Markov chain.
+%State what a Markov chain and the properties of the Markov chain.
+%State what states mean.
+%State what transition probabilities mean. State what ergodicity is. State what stationarity is. State how we generate the sequence of states.
 
 A Markov chain is a collection of states and probabilistic transitions between those states.
 States in a Markov chain are mutually exclusive.
@@ -203,7 +207,7 @@ The steady state can by found via a system of equations: \cite{MARKOV3}
 \end{align}
 
 In the following sections, the computation of the steady state will be noted as $Steady()$.
-A Markov chain can also be used to predict what state a process will be in at some point in the the future.
+A Markov chain can also be used to predict what state a process will be in at some point in the future.
 Given a initial state and a number of time-steps a matrix operation will yield the likelihood of the process being in each state after the time interval has passed.
 The mean passage time, a measure of how many time-steps will pass before a process returns or arrives to some state, can also be calculated.
 
@@ -212,11 +216,11 @@ This closed form representation is a profile Markov chain (noted as $P$).
 The profile Markov chain is validated against a chain generated from execution of the algorithm.
 The chain constructed from sampled data is known as a test chain (noted as $T$).
 
-\subsection{Continous Time Markov Chain}
+\subsection{Continuous Time Markov Chain}
 
 Transitions in a \ac{CTMC} depend on the amount of time spent in a given state.
 Let $X(s) = i$ indicate the model is in state $i$ at time $s$.
-If the model is time homogenous, then the probability of transitioning to state $j$ only depends on the time spent in that state ($t$).
+If the model is time homogeneous, then the probability of transitioning to state $j$ only depends on the time spent in that state ($t$).
 
 \begin{equation}
 P\{ X(s+t)=j | X(s) = i \} = P\{ X(t)=j | X(0) = i \}
@@ -224,7 +228,7 @@ P\{ X(s+t)=j | X(s) = i \} = P\{ X(t)=j | X(0) = i \}
 
 Each transition has some expected value or holding time which describes the amount of time before a transition occurs.
 Continuous time models do not have transitions that return to the same state since the expected value of the transition time describes when how long the system  remains in the same state.
-The probability density function (PDF) of the exponential distribution can be written as: \cite{MARKOV1}
+The \ac{pdf} of the exponential distribution can be written as: \cite{MARKOV1}
 
 \begin{equation}
 f(x;\lambda) = \begin{cases}
@@ -364,7 +368,7 @@ These operators allow reasoning about information transference between entities.
 
 \section{ECN}
 
-\ac{ECN} is a techinque for managing congestion in IP networks. 
+\ac{ECN} is a technique for managing congestion in IP networks. 
 When an \ac{ECN} capable network device detects congestion, it can drop the packets or it can signal senders using flags in the packet headers that the network is congested.
 For a TCP application, the result of the dropped packets causes the slow-start congestion control strategy to reduce the rate packets are sent.
 A more advanced implementation, using \ac{ECN}, sets specific bits in the TCP header to indicate congestion.
@@ -375,7 +379,7 @@ Although the \ac{ECN} standard has flags in the IPv4 header, access to the IPv4 
 Furthermore, there is not a ``one size fits all'' solution to congestion in UDP algorithms.
 
 \subsection{Random Early Detection}
-The \ac{RED} queueing algorithm is a popular queueing algorithm for switches and routers.
+The \ac{RED} queuing algorithm is a popular queuing algorithm for switches and routers.
 It uses a probabilistic model and an \ac{EWMA} to determine if the average queue size exceeds predefined values.
 These values are used to identify potential congestion and manage it.
 This is accomplished by determining the average size of the queue, and then probabilistically dropping packets to maintain the size of the queue.
@@ -406,7 +410,7 @@ DGI utilizes several modules to manage a distributed smart-grid system.
 Group management, the focus of this work, implements a leader election algorithm to discover which processes are reachable within the cyber domain.
 Other modules provide additional functionality, such as collecting global snapshots, negotiating the migrations, and giving commands to physical components.
 
-DGI is a real-time system; certain actions (and reactions) involving power system components need to be completed within a prespecified time-frame to keep the system stable.
+DGI is a real-time system; certain actions (and reactions) involving power system components need to be completed within a pre-specified time-frame to keep the system stable.
 It uses a round robin scheduler in which each module is given a predetermined window of execution which it may use to perform its duties.
 When a module's time period expires, the next module in the line is allowed to execute. 
 
@@ -416,7 +420,7 @@ Transient partitions are formed when a faulty link inside a group of processes c
 These transient partitions merge when the link becomes more reliable.
 
 \subsection{Real Time}
-The DGI's specifications also called for real time reaction to events in the system.
+The \ac{DGI}'s specifications also called for real time reaction to events in the system.
 These real-time requirements were designed to enforce a tight upper bound on the amount of time used creating groups, discovering peers, collecting the global state, and performing migrations.
 
 To enforce these bounds, the real-time DGI has distinct phases which modules were allowed to use for all processing.
@@ -463,7 +467,7 @@ This implied that a module that engaged in these activities has an upper-bound i
 
 The DGI uses the leader election algorithm, ``Invitation Election Algorithm,'' written by Garcia-Molina \cite{INVITATIONELECTION}.
 Originally published in 1982, this algorithm provides a robust election  procedure that allows for transient partitions.
-Transient partitions are formed when a faulty link between two or more clusters of DGIs causes the groups to divide temporarily.
+Transient partitions are formed when a faulty link between two or more clusters of \ac{DGI} causes the groups to divide temporarily.
 These transient partitions merge when the link becomes more reliable.
 The election algorithm allows for failures that disconnect two distinct sub-networks.
 These sub networks are fully connected, but connectivity between the two sub-networks is limited by an unreliable link.

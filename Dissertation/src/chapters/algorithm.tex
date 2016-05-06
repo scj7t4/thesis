@@ -37,7 +37,7 @@ If the message does not arrive in time, the process will enter the recovery stat
 
 \begin{figure*}[!t]
 \includegraphics[width=\linewidth]{LeaderElectionStateDiagram.pdf}
-\caption{State machine of a leader election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to ``Are You Coordinator'' (AYC) messages they receive. The algorithm was modified by adding a ``Ready Acknowledgment'' message as the final step of completing the election. Additionally, processes only accept invites if they have received an ``AYC Response'' message from the inviting process.}
+\caption{State machine of a leader election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to \ac{AYC} messages they receive. The algorithm was modified by adding a ``Ready Acknowledgment'' message as the final step of completing the election. Additionally, processes only accept invites if they have received an ``\ac{AYC} Response'' message from the inviting process.}
 \label{fig:statemachine}
 \end{figure*}
 
@@ -51,7 +51,7 @@ Leaving the group can either be caused by the coordinator removing the process, 
 
 \begin{figure*}[!t]
 \includegraphics[width=\linewidth]{MaintainStateDiagram.pdf}
-\caption{State machine of maintaining a group. The ``Are You Coordinator'' (AYC) messages are the same as those in Figure \ref{fig:statemachine}. AYC and ``Are You There'' (AYT) are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
+\caption{State machine of maintaining a group. The \ac{AYC} messages are the same as those in Figure \ref{fig:statemachine}. \ac{AYC} and \ac{AYT} are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
 \label{fig:statemachine2}
 \end{figure*}
 
@@ -100,9 +100,9 @@ Additionally, both versions use a recovery algorithm to abandon failed elections
 Members cannot leave a group without the leader's permission.
 Members do not suspect the coordinator has failed, only the coordinator may suspect the members.
 This change is shown in Figure \ref{fig:statemachine2}, denoted by the elements marked with an asterisk.
-For the purpose of starting an election, an ``Are You There'' message and its negative response are considered equivalent to a ``Are You Coordinator'' message and a positive response.
+For the purpose of starting an election, an \ac{AYT} message and its negative response are considered equivalent to a \ac{AYC} message and a positive response.
 On receipt of the negative response, the member will immediately recover and become a leader.
-This assumption relies on ``Are You Coordinator'' and ``Are You There'' messages being sent at roughly the same time.
+This assumption relies on \ac{AYC} and \ac{AYT} messages being sent at roughly the same time.
 This change leads to a live-lock situation in a crash failure, where the group's leader crashes and does not return and as a consequence the remaining members are trapped in a group without a leader.
 For the purpose of this work, we have disregarded these live lock scenarios.
 
@@ -111,12 +111,12 @@ For the purpose of this work, we have disregarded these live lock scenarios.
 The \ac{AYC} message serves as a failure detector for crashed agents. In the models presented in this paper, crash failures are ignored as part of the modeled system.
 
 The \ac{AYT} message serves as a check for the ``Ready'' message sent by the group leader at the end of the election algorithm. \ac{AYC} verifies the leader considers the sending process a part of its group.
-A negative response to the \ac{AYT} message would preven a process from participating in the current round of leader elections.
-This violated the memorylessness property as a process would be excluded from the current round of elections based on an event that occured the previous round.
+A negative response to the \ac{AYT} message would prevent a process from participating in the current round of leader elections.
+This violated the memorylessness property as a process would be excluded from the current round of elections based on an event that occurred the previous round.
 
 \subsection{Modified Algorithm}
 
-Algoritm \ref{alg:groupmnt} shows the modified components of the Invitation Election algorithm used for group maintenance and leader discovery.
+Algorithm \ref{alg:groupmnt} shows the modified components of the Invitation Election algorithm used for group maintenance and leader discovery.
 
 \begin{algorithm}
 \caption{Group Maintenance and Leader Discovery Functions}
@@ -177,7 +177,7 @@ However, membership in $M$ is leaked by the next ``Are You There Message'' the a
 2. & $B_i I_{i,j} \varphi_{AYT} \wedge T_{i,j} \varphi_{AYT}$ & $i$ Trusts the message from j. \\
 3. & $(j \not \in L \wedge j \in N \wedge \varphi_{AYT}) \rightarrow j \in M $ & Valuation membership. \\ 
 \end{tabularx} \\~\\
-$i$ knows $j$ is in $N_i$, but recieving the $AYT$ message leaks that $j$ considers itself part of $L_i$. Since $j$ is not a part of $L_i$, but considers itself to be, $j$ must be in $M$. Any message that implies $j$ belief in it's membership of $L_i$ is sufficent to include $j$ in $M$.
+$i$ knows $j$ is in $N_i$, but receiving the $AYT$ message leaks that $j$ considers itself part of $L_i$. Since $j$ is not a part of $L_i$, but considers itself to be, $j$ must be in $M$. Any message that implies $j$ belief in it's membership of $L_i$ is sufficient to include $j$ in $M$.
 \end{table}`
 
 Algorithms can potentially update $L_i$ based on information flow to include those agents in $M_i$.
@@ -218,7 +218,7 @@ Each step of the sub-case ($n$) will move its distribution asymptotically closer
 
 \begin{equation} [1.0 \quad 0] * \lim_{n \to \infty}P_{sub}^n = Steady(P_{sub}) \end{equation}
 
-Since the initial state of the algorithm in the sub-case must be un-grouped ($[1.0 \quad 0]$), and the process is ergodic, the probability distribution of the sub-case depends on the number of steps ($n$).
+Since the initial state of the algorithm in the sub-case must not be in a group ($[1.0 \quad 0]$), and the process is ergodic, the probability distribution of the sub-case depends on the number of steps ($n$).
 As a consequence, the distribution for any $n$ must be different from the distribution of $n-1$.
 Since the probability of P1 completing an election of P2 and P3 depends on the grouping of P2 and P3, the behavior of the full case cannot be memoryless, since it is a function of $n$.
 Therefore, to make the algorithm memoryless, only a selected process may lead a multiprocess group.
@@ -317,11 +317,7 @@ In the original algorithm, a process accepts the first invitation it receives an
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Memorylessess}
-
-\subsubsection{State Determination}
-
-In the invitation portion of the algorithm, the sender of the invite is confident the agent has accepted the invite because the accept message arrives. The group list that the new leader prepares for the ready message is an $N$ set of the potential group members. The list is distributed to the new members. Agents that do not receive $N$ or fail to send a receipt message are not in $L$. Algorithms that depend on the the set of agents in the group will act on $N$. There is a potential that to the leader the agents in $N$ but not $L$ will act as though they are part of the group. Algorithmically, the the leader can then expand $L$ to cover the information leaked by that agent acting as though it is holds a state that makes it part of $L$.
+In the invitation portion of the algorithm, the sender of the invite is confident the agent has accepted the invite because the accept message arrives. The group list that the new leader prepares for the ready message is an $N$ set of the potential group members. The list is distributed to the new members. Agents that do not receive $N$ or fail to send a receipt message are not in $L$. Algorithms that depend on the set of agents in the group will act on $N$. There is a potential that to the leader the agents in $N$ but not $L$ will act as though they are part of the group. Algorithmically, the leader can then expand $L$ to cover the information leaked by that agent acting as though it is holds a state that makes it part of $L$.
 
 An agent can determine the likelihood that its group will form in a particular configuration if it is the highest priority agent. The determination of coordinator priority is determined during the check phase, then an agent can determine if it is the highest priority agent. If an agent determines it is the highest priority, it can then easily determine the probability that any given agent receives it's invite message and that the response to that invite message returns to that agent.
 
@@ -329,7 +325,7 @@ An agent can determine the likelihood that its group will form a particular conf
 
 If the determination of the coordinator priority reveals that an agent has a lower priority than 1 other agent, the probability that an agent accepts and invite from the agent is the probability the other agent does not recognize the other agent's priority (which is based on the delivery of the check messages).
 
-Alternatively, if the determination of the coordinator priority reveals that an agent has a lower priority than n ($n > 2$) other agents, the probability that some other agent will accept that agents invite is the probability that for each of the other agents ($n-1 ... 0$) the invited agent does not recognize that agent's priority.
+Alternatively, if the determination of the coordinator priority reveals that an agent has a lower priority than $n$ ($n > 2$) other agents, the probability that some other agent will accept that agents invite is the probability that for each of the other agents ($n-1 ... 0$) the invited agent does not recognize that agent's priority.
 
 \section{Ready State}
 
@@ -352,7 +348,7 @@ As a consequence, the probability a member remains in a group in the first round
 
 \subsection{Original Algorithm}
 
-In the original algorithm the list of agents in the group is distributed as part of the ready message. Based on analysis presented earlier in the paper, since there is no confirmation of receipt for the ready message, the leader cannot determine the actual state of the group has it only has the unvaluateable set of wffs describing the group state $N_i$.
+In the original algorithm the list of agents in the group is distributed as part of the ready message. Based on analysis presented earlier in the paper, since there is no confirmation of receipt for the ready message, the leader cannot determine the actual state of the group has it only has the set of wffs with no valuation function describing the group state $N_i$.
 
 \subsection{Modified Algorithm}
 
@@ -383,7 +379,7 @@ In the modified algorithm, the agents that receive the ready message reply with 
 
 \section{Composed Algorithm}
 
-In the specified execution environment, each time before the coordinator runs the the check portion of the election algorithm it produces an image of the current world to use as the first state of the constructed Markov chain. Each agent in the system has the stability property. As part of the stability property any wffs whose information was transferred after the last image was taken cannot change until the process takes the newest image. For the election algorithm, this causes the leader to doubt the values in $L$.
+In the specified execution environment, each time before the coordinator runs the check portion of the election algorithm it produces an image of the current world to use as the first state of the constructed Markov chain. Each agent in the system has the stability property. As part of the stability property any wffs whose information was transferred after the last image was taken cannot change until the process takes the newest image. For the election algorithm, this causes the leader to doubt the values in $L$.
 
 If a process is not in $L$ it will have to go through the election procedure even though it may be in $M$. This ensures that the sequence of changes necessary to bring that agent into the group is identical whether regardless of the agent's membership in $M$, ensuring the memorylessness property. Previous work \cite{JOURNAL} describes this algorithm and shows a Markov chain accurately describing the behavior of an implementation of this algorithm.
 
@@ -402,7 +398,7 @@ For example given the membership set $S=\{P1,P2,P3\}$, then $\left | S \right |=
 The profile Markov chain for the algorithm was constructed as a closed form representation of the algorithm's behavior.
 In each round, the behavior is described by two components: maintaining a group and inviting other processes into the group.
 The coordinator will exchange an ``Are You Coordinator'' message and the peer will respond to verify is still available.
-To maintain a group of $m$ other processes, the probability is defined as a random variable with the following probability distribution (pdf):
+To maintain a group of $m$ other processes, the probability is defined as a random variable with the following \ac{pdf}:
 
 \begin{equation}
  \Pr_{M}(X=k; m) =
@@ -451,7 +447,7 @@ The null-hypothesis of this test ($H_{0}$) asserts the profile chain $P$ is equi
 
 \begin{equation} H_{0}: T = P \end{equation}
 
-with an alternative hypothesis that the two chains are not equivalent:
+With an alternative hypothesis that the two chains are not equivalent:
 
 \begin{equation} H_{1}: T \neq P \end{equation}
 
@@ -461,10 +457,10 @@ Therefore, the goodness of fit test for the chain is a summation of tests for ea
 \begin{equation} \chi^2 = \sum_{i}^{m} \sum_{j}^{m} = \frac{n_{i}(P_{ij}-T_{ij})^2}{P_{ij}} \end{equation}
 
 Where $n_{i}$ is the number of times the state $i$ was observed in the input sequence used to construct the test chain $T$.
-The summation is distributed as $\chi^2$ with $m(m-1)$ degrees of freedom (DF) if all entries in $P_{ij}$ are non-zero.
+The summation is distributed as $\chi^2$ with $m(m-1)$ \ac{DF} if all entries in $P_{ij}$ are non-zero.
 In this work, all transitions in the profile Markov chain $P$ are non-zero when $0<p<1.0$.
 However, the probability of some transitions may be extremely small.
-The $\chi^2$ value was compared to a critical value (CV) giving a measure of how likely it was $H_{0}$ could not be rejected.
+The $\chi^2$ value was compared to a \ac{CV} giving a measure of how likely it was $H_{0}$ could not be rejected.
 This work selected an $\alpha = 0.05$ significance level to reject the hypothesis $T=P$.
 
 If the hypothesis $H_{0}$ were to be rejected, it would indicate the test chain and profile chain differ significantly.
@@ -493,27 +489,26 @@ As a consequence, the profile chains ($P$) are representative of the behavior of
 
 \section{Profile Chain Analysis}
 
-The DGI focuses on managing power resources in a microgrid environment.
-Resources can only be managed effectively when multiple DGIs coordinate together to manage those resources.
+Resources can only be managed effectively when multiple \ac{DGI} coordinate together to manage those resources.
 Without another DGI to coordinate with, the DGI has a limited range of options to manage power generation, storage and loads.
 Therefore, the amount of time DGI will spend coordinating with another process is of particular interest.
-\cite{CRITIS2012} defines an ``In Group Time'' (IGT) metric to measure the amount of time a DGI process spends coordinating with at least one other process.
-In this work, we define IGT based on the steady state of the profile chain.
+\cite{CRITIS2012} defines an \ac{IGT} metric to measure the amount of time a DGI process spends coordinating with at least one other process.
+In this work, we define \ac{IGT} based on the steady state of the profile chain.
 Let $\pi=Steady(P)$ for some profile chain.
-The IGT is the sum of all states in $\pi$, save the first state where the process is alone:
+The \ac{IGT} is the sum of all states in $\pi$, save the first state where the process is alone:
 
 \begin{equation} IGT = \sum_{i=2}^{m} \pi_i \end{equation}
 
-The IGT is a number between 0 and 1.
+The \ac{IGT} is a number between 0 and 1.
 It represents the probability a random observation sees a group of at least two members.
 The steady state distributions are presented as stacked bar graphs in Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process}.
-Each complete bar in the graph indicates the IGT.
+Each complete bar in the graph indicates the \ac{IGT}.
 Additionally, Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process} also contain the average group size (AGS), when the system has reached the steady-state, plotted as a fraction of the total number of processes.
 Let $P$ be the steady-state distribution vector for some number of processes, $n$, and a given omission rate:
 
 \begin{equation} y = \frac{\sum_{i=1}^{n} P_{i}*i}{n} \label{eq:ss-means} \end{equation}
 
-where $y$ is the plotted AGS as a fraction.
+where $y$ is the plotted \ac{AGS} as a fraction.
 
 The components of each bar represent the probability the system is in a specific state for a random observation of the system.
 The height of the component represents the relative probability of observing that state when in a group.
@@ -521,32 +516,32 @@ The height of the component represents the relative probability of observing tha
 \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{ss-3process.pdf}
-    \caption{Steady state distribution for 3 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
+    \caption{Steady state distribution for 3 processes as well as the \ac{AGS} as a fraction of total processes.}
     \label{fig:ss-3process}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{ss-4process.pdf}
-    \caption{Steady state distribution for 4 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
+    \caption{Steady state distribution for 4 processes as well as the \ac{AGS} as a fraction of total processes.}
     \label{fig:ss-4process}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{ss-5process.pdf}
-    \caption{Steady state distribution for 5 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
+    \caption{Steady state distribution for 5 processes as well as the \ac{AGS} as a fraction of total processes.}
     \label{fig:ss-5process}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{ss-6process.pdf}
-    \caption{Steady state distribution for 6 processes as well as the Average Group Size (AGS) as a fraction of total processes.}
+    \caption{Steady state distribution for 6 processes as well as the \ac{AGS} as a fraction of total processes.}
     \label{fig:ss-6process}
 \end{figure}
 
-The profile chain can be used to ensure the FREEDM smart grid is able to continue operating despite network issues.
+The profile chain can be used to ensure the \ac{FREEDM} smart grid is able to continue operating despite network issues.
 The profile chain can be combined with different message sending strategies to maintain service.
 For example, the DGI can change to a slower mode of operation to ensure operation continues normally despite connectivity issues.
 By selecting different strategies depending on the message delivery probability the DGI can offer high performance in good network conditions and an acceptable level of service during faults.
@@ -570,7 +565,7 @@ This schedule is depicted in \ref{fig:schedule}.
 The system began by using group management to organize groups.
 Next load balancing ran to manage power resources in the created group.
 Finally, state collection collected a casually consistent state to be used for reporting and offline analysis.
-If message delays occured, the number of migrations load balancing could perform was reduced.
+If message delays occurred, the number of migrations load balancing could perform was reduced.
 However, by reducing the group size, the number of messages sent by load balancing could be reduced, allowing for a greater amount of work to be done.
 The outcome of an election had a direct effect on how effectively the DGI can manage resources.
 Therefore the steady-state analysis gives a good indication of how well the DGI could manage those resources in the future.
@@ -587,7 +582,7 @@ This information can also be used to anticipate faults and mitigate them before 
 Modern routers can supply an expected congestion notification as part of the IP header\cite{ECN2}.
 When congestion is anticipated, the coordinator can preemptively split the group to reduce congestion.
 This is possible because the algorithm's message complexity is $O(n^2)$.
-Future work will combine this analysis with ECN techniques to preemptively change the behavior of DGI to ensure a good level of service.
+Future work will combine this analysis with \ac{ECN} techniques to preemptively change the behavior of DGI to ensure a good level of service.
 If dropped messages account for an omission rate of even 0.15 from future congestion, performing a coordinated group division can potentially save several rounds of transient states.
 Breaking the large groups into smaller sets can drastically reduce the number of messages transmitted and help relieve congestion.
 Additionally, the coordinator can design the split to ensure work can continue when the groups are split, by mixing supply and demand processes.

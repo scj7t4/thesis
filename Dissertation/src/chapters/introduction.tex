@@ -7,7 +7,7 @@ These factors include the various types of failure the system could experience, 
 However, the concept of distributed systems plays a central role in many of the future visions for how critical infrastructure will operate.
 This critical infrastructures are physical networks whose operation are so vital that if those networks failed to operate correctly it would be highly detrimental to the population that rely on those systems.
 \ac{CPS} are the integration of computational systems with physical networks.
-Computational systems already play a critical role in most critical infrastructures, and as demands for security features such as acessibility increase, distributed systems become an increasingly favorable choice for the computational needs for these systems \cite{SMARTGRIDBENEFITS}.
+Computational systems already play a critical role in most critical infrastructures, and as demands for security features such as accessibility increase, distributed systems become an increasingly favorable choice for the computational needs for these systems \cite{SMARTGRIDBENEFITS}.
 
 The \ac{FREEDM}\cite{FREEDM} smart-grid project follows this vision.
 The \ac{FREEDM} center, an NSF funded ERC envisions a future power-grid where widely distributed renewable power generation and storage is closely coupled with a distributed system that facilitates the dispatch of power across those areas.
@@ -28,7 +28,7 @@ We present a framework for reasoning about inferable state in the context of a d
 
 We will show in this work that in a system with the correct information flows, an agent in a distributed system can infer the state of other agents in the system. With this information, that agent can then construct a reasonable model of the system to determine if the current behavior could lead to an undesirable situation with either the cyber or physical network. We formalize how this flows are created using information flow security models.
 
-Using this framework we present a leader election that is markov modelable for a set of known omission rates.
+Using this framework we present a leader election that can be modeled with a Markov chain for a set of known omission rates.
 The presented algorithm maintains the Markov property for the observations of the leader despite omission\cite{OMISSIONFAILURES} failures.
 This approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems.
 These models produce expectations of how much time the DGI will be able to spend coordinating and doing useful work.
@@ -48,7 +48,7 @@ With this information, they can adjust their behavior to compensate for the dete
 
 Additionally, we demonstrate an implementation of the \ac{FREEDM} \ac{DGI} in a \ac{NS3} simulation environment\cite{NS3} with our congestion detection feature.
 The \ac{DGI} operates normally until the simulation introduces a traffic flow that congests the network devices in the simulation.
-After congestion has been identified by the \ac{RED} queueing algorithm, the \ac{DGI}s are informed. %via UDP multicast.
+After congestion has been identified by the \ac{RED} queuing algorithm, the \ac{DGI}s are informed. %via UDP multicast.
 We show that when the congestion notifications are introduced, the \ac{DGI} maintains configurations which they would normally be unable to maintain during congestion.
 Additionally, we show a greater amount of work can be done without the work causing unstable power settings to be applied.
 

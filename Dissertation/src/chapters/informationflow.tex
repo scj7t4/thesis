@@ -15,11 +15,11 @@ Each agent has some set logical atoms which it manipulates as its algorithms exe
 Each agent belongs to domain unique to that agent (agent $i$ is the only member of logical domain $D_i$)
 No agent can directly access a logical atom outside of its domain.
 The authenticity of any information transfer (Using modal operator $I_{i,j}$) is never not trusted. However, the Trust ($T_{i,j}$) operator is still used to describe a message that is lost in transit: in all logical formulas presented the Trust operator describes this circumstance.
-agents do not exhibit Byzantine failure, nor do they crash, only messages may be omitted.
+Agents do not exhibit Byzantine failure, nor do they crash, only messages may be omitted.
 
 If no information is passed between agents, they are MSDND secure (ignoring any sort of leakage from interactions in the physical world). As information is passed, aspects of the agents state are leaked. However, depending on when messages are sent, the agent can be left in doubt as to the state of the other agent. This has a common analogy to the two armies problem. 
 
-In order to create algorithms that can be modeled with a Markov chain, first the algorithm must allow at least one agent participating in the algorithm to determine an ``Image'' of the current state of the algorithm. This image is descriptive enough to allow the agent to determine the probabilistic likelihood at arriving at the the next ``image'' of the state of the algorithm. Secondly, to create modelable algorithms, we restrict it to a class of algorithms where the sequences of worlds that lead from one image to the next is equally likely.
+In order to create algorithms that can be modeled with a Markov chain, first the algorithm must allow at least one agent participating in the algorithm to determine an ``Image'' of the current state of the algorithm. This image is descriptive enough to allow the agent to determine the probabilistic likelihood at arriving at the next ``image'' of the state of the algorithm. Secondly, to create modelable algorithms, we restrict it to a class of algorithms where the sequences of worlds that lead from one image to the next is equally likely.
 
 \section{Two Armies Problem}
 
@@ -124,10 +124,10 @@ Suppose General A sends $\varphi_{n-1}$ to B. It should be obvious that on the d
 If General A is attempting to coordinate with multiple armies, the problem becomes more complex. If we extend the messenger analogy to cover faulty generals (ones that send incorrect information or omit messengers), the generals can reach consensus if for every faulty general, there are three generals that work correctly. This is a well known result known as the Byzantine Generals problem.
 
 \begin{thm}
-In any message exchange that conforms to the constraints of the Byzantine Generals problem, all agents are MSDND insecure on the consensus'd plan $\varphi$.
+In any message exchange that conforms to the constraints of the Byzantine Generals problem, all agents are MSDND insecure on the plan $\varphi$.
 \end{thm}
 
-Proof: Suppose agent i decides to use plan $\varphi$ to attack. Suppose that there is some set of Byzantine Generals $T$ and some set of loyal generals $G$ ($i \in G$). If $|G| > 3|T|$, the algorithm executes successfully, and $B_x \varphi : \forall x \in G $. Therefore, every general in $G$ can valuate $\varphi$ and the variable is insecure.
+Proof: Suppose agent $i$ decides to use plan $\varphi$ to attack. Suppose that there is some set of Byzantine Generals $T$ and some set of loyal generals $G$ ($i \in G$). If $|G| > 3|T|$, the algorithm executes successfully, and $B_x \varphi : \forall x \in G $. Therefore, every general in $G$ can valuate $\varphi$ and the variable is insecure.
 
 It is worth noting, however, that if all generals intend to behave well (they are non-byzantine) and messages are lost in transit, consensus can only be reached if the initial distribution of $\varphi$ is delivered to all parties, and each general still receives enough messages to determine the majority consensus. In general, this would be impractical to ensure in an actual application.
 
@@ -151,7 +151,7 @@ Proof: Each wff in $L_i$ has a valuation function in the domain $i$.
 2. & $B_{j}I_{j,i} \varphi \wedge T_{j,i} \varphi$ & $j$ receives $\varphi$ and believes its authenticity \\
 3  & $B_j \varphi$ & By C1. \\
 4. & $I_{i,j} \varphi_{ack}$ & $j$ acknowledges $B_j \varphi$ \\
-5. & $B_{i}I_{j,i} \varphi_{ack} \wedge T_{i,j} \varphi_{ack}$ & $i$ recieves $\varphi_{ack}$ \\
+5. & $B_{i}I_{j,i} \varphi_{ack} \wedge T_{i,j} \varphi_{ack}$ & $i$ receives $\varphi_{ack}$ \\
 6. & $B_{i} \varphi_{ack}$ & By C1. \\
 7. & $B_{i} \varphi_{ack} \rightarrow B_i B_j \varphi$ & Because $j$ acknowledged $\varphi$, $i$ believes $j$ believes $\varphi$. \\
 8. & $w \vDash V_{B_i B_j \varphi}^{i}(w)$ & $i$ does believe $\varphi$ \\
@@ -179,7 +179,7 @@ The case where $j$ receives some wff $\varphi$ and is in $M_i$ but not $L_i$.
 2. & $B_{j}I_{j,i} \varphi \wedge T_{j,i} \varphi$ & $j$ receives $\varphi$ and believes its authenticity \\
 3  & $B_j \varphi$ & By C1. \\
 4. & $I_{i,j} \varphi_{ack}$ & $j$ acknowledges $B_j \varphi$ \\
-5. & $\neg(B_{i}I_{j,i} \varphi_{ack} \wedge T_{i,j} \varphi_{ack})$ & $i$ does not recieve $\varphi_{ack}$ \\
+5. & $\neg(B_{i}I_{j,i} \varphi_{ack} \wedge T_{i,j} \varphi_{ack})$ & $i$ does not receive $\varphi_{ack}$ \\
 6. & $w \neg \vDash V_{\varphi_ack}^{i}(w)$ & $i$ is uncertain if $B_j \varphi$ \\
 7. & $w \vDash V_{\varphi}^{j}(w)$ & Is always true %
 \end{tabularx} \\~\\
@@ -211,7 +211,7 @@ The complete set of atoms and beliefs available in a particular domain may not b
 If for any sequence of worlds $w_0, w_1, w_2, ... w_n$ and pair of images $Im(D_x, w_0)=I_1$ and $Im(D_i, w_n)=I_2$ where $I_2$ is an immediate successor of $I_1$ in a Markov chain constructed based on the system. A wff $\varphi$ is stable for $i$ if after $i$ informs any other process of the value of $\varphi$ in any world $w_k$ the value of $\varphi$ does not change in any subsequent world up to, but not including $w_n$. Expressed logically, $V^i_{w_k} \varphi$ = $V^i_{w_x} \varphi \forall x \in \{k, k+1, ... n-1\}$
 \end{pdef}
 
-Does this definition work? Suppose we consider the model of our group management system. The image is taken initially in the groupsize=1 state ($I_1$). Lets skip forward and call $\varphi_j$ a logical variable that says $j$ is a part of $i$'s group. Ready acknowledge is $I_{i,j} \varphi_j \rightarrow B_i \varphi_j$ the cardinality of $B_i \varphi_j$'s that $i$ has. This value is not transmitted by $i$, but if it is stable for $j$ because $j$ doesn't crash, then by the next theorem its also stable for $i$. After $i$ collects all the $\varphi_j$, $i$ takes image $I_2$. At this point, $i$ can do whatever it likes: it can decide not to believe $\varphi_j$ at some point and force $j$ to prove $\varphi_j$ to $i$ again, before it takes $I_3$.
+Does this definition work? Suppose we consider the model of our group management system. The image is taken initially in the $group_size=1$ state ($I_1$). Lets skip forward and call $\varphi_j$ a logical variable that says $j$ is a part of $i$'s group. Ready acknowledge is $I_{i,j} \varphi_j \rightarrow B_i \varphi_j$ the cardinality of $B_i \varphi_j$'s that $i$ has. This value is not transmitted by $i$, but if it is stable for $j$ because $j$ doesn't crash, then by the next theorem its also stable for $i$. After $i$ collects all the $\varphi_j$, $i$ takes image $I_2$. At this point, $i$ can do whatever it likes: it can decide not to believe $\varphi_j$ at some point and force $j$ to prove $\varphi_j$ to $i$ again, before it takes $I_3$.
 
 \begin{thm}
 If $\varphi$ is stable for $i$, and $i$ is not byzantine and $I_{j,i} \varphi \rightarrow B_j \varphi$, then $B_j \varphi$ is stable for $j$.
@@ -220,7 +220,7 @@ If $\varphi$ is stable for $i$, and $i$ is not byzantine and $I_{j,i} \varphi \r
 Proof: Since $\varphi$ is stable, the output of the valuation function for that wff at $i$ does not change after $i$ has informed $j$ of $\varphi$. Since $i$ is not byzantine, $i$ can only transfer the same value to $j$ as it did in $w_k$. Additionally, the restriction $I_{j,i} \varphi \rightarrow B_j \varphi$ precludes $j$ from arbitrarily changing belief. Therefore, once $j$ believes $\varphi$ it will continue to believe $\varphi$ until at least $w_n$.
 
 \begin{pdef}
-A process is stable if for all wff's used in $Im(D_i, w_0)$ every wff is stable.
+A process is stable if for all wffs used in $Im(D_i, w_0)$ every wff is stable.
 \end{pdef}
 
 Any action taken by agent $i$'s algorithm based on $L_i$ or $N_i$ by the algorithm should consider two components: $N_i$ at worst overestimates the state and $L_i$ at worst underestimates the state. In a consensus algorithm, the consequences of an overestimate are often worse than those of an underestimate. In the case of an underestimate, the agent distributing the atom can simply redistribute the atom to those agents again. If the algorithm moves forward with the overestimate $N_i$, those agents not in $M_i$ can only advance if the algorithm does not depend on $B_j \varphi$ or the receiving agent can deduce $\varphi$ from subsequent messages, without interrupting another agent's operation. However, that deduction can only occur if additional information arrives at the agent.
@@ -238,9 +238,9 @@ If this theorem is true, then the arrival at an imaged state $I_2$ depends only 
 Let $\Pr(w_{i}Rw_{i+1})$ be the probability of transitioning from world $i$ to world $i+1$. Let $\Pr(w_{i}Rw{i+1} \wedge w_{i+1}R... \wedge ...RW_{n})$ be the probability following a sequence of worlds from some world $i$ to some world $n$. There may be multiple sequences that lead from world $w_i$ to world $w_n$. Let $\Pr(w_i \rightarrow w_n)$ be the combined probability of any sequence of worlds that leads from a world $w_i$ to the first encounter of world $w_n$.
 
 It is worth noting then that with a mapping of the probability of transitioning between worlds, the Kripke Model itself becomes a Markov Chain.
-Since the Kripke model is complete representation of the system being modelled, each world must be memoryless wrt to any world that has an $R$ relation onto that world ($w_xRw_y$).
-If there was any information that would affect the probability of transitioning to the next state in the world, the world would not be complete, and would violate the neccessary completeness property of the model.
-Some actions may, by necessity, be determinstic as the $R$ relation of the Kripke model obligates that only one state variable may change between worlds.
+Since the Kripke model is complete representation of the system being modeled, each world must be memoryless wrt to any world that has an $R$ relation onto that world ($w_xRw_y$).
+If there was any information that would affect the probability of transitioning to the next state in the world, the world would not be complete, and would violate the necessary completeness property of the model.
+Some actions may, by necessity, be deterministic as the $R$ relation of the Kripke model obligates that only one state variable may change between worlds.
 
 An imaging function for a Kripke-Markov model is then actually an application of lumpability CITE.
 The ``lumps'' produced by the imaging function are restricted to the class of information that is MSDND insecure to an agent in that domain.
@@ -280,7 +280,7 @@ If no messages are lost, the sequence of worlds that a process goes through betw
 The case where $L_i \subsetneq M_i \subsetneq N_i$
 \end{case}
 
-Since the output of the imaging function is limited to the knowledge of the domain of a given process, the output of the imaging function does not assign value to wff's in $N_i$ but not $L_i$. Since these wff's have no value they cannot be used to construct a valid image, as the image may not correspond to a world $w$ in the set of worlds $W$.
+Since the output of the imaging function is limited to the knowledge of the domain of a given process, the output of the imaging function does not assign value to wffs in $N_i$ but not $L_i$. Since these wffs have no value they cannot be used to construct a valid image, as the image may not correspond to a world $w$ in the set of worlds $W$.
 
 \subsection{Example With Two Armies}
 
@@ -296,7 +296,7 @@ Consider the simple consensus algorithm from before. While all the agents that r
 
 However, this approach is limited because of the set of $\varphi_{1,i}$ that $a$ believes is potentially a subset of all the agent that have a valuation function for $\varphi_{1,i}$ if any of the messages are lost in transit. Based on the information flows presented here and previously, if there is no response mechanism in the algorithm, after the transmission of $\varphi_0$, $a$ has a set of agents which believe might have received $\varphi_0$, but can make no determination of the actual state of the system. If there is an acknowledgment mechanism then $a$ can determine a subset of the total system state. 
 
-Constructing a model based on a subset of the complete state may seem like a mistake, but recall that A does not believe that those other entities believe $\varphi_0$. Assume a simple system where A is attempting to ensure every agent believes $\varphi_0$. If the actions of the agents are divided into discrete steps, then each step A distributes $\varphi_0$ to each of the agents that A has not received $\varphi_{1,i}$ from. A markov chain can easily be constructed for the probability of eventually arriving at state where every agent believes $\varphi_0$. Indeed, this algorithm is a special case of the coin flipping leader election algorithm, an algorithm for leader elections in anonymous networks.
+Constructing a model based on a subset of the complete state may seem like a mistake, but recall that A does not believe that those other entities believe $\varphi_0$. Assume a simple system where A is attempting to ensure every agent believes $\varphi_0$. If the actions of the agents are divided into discrete steps, then each step A distributes $\varphi_0$ to each of the agents that A has not received $\varphi_{1,i}$ from. A Markov chain can easily be constructed for the probability of eventually arriving at state where every agent believes $\varphi_0$. Indeed, this algorithm is a special case of the coin flipping leader election algorithm, an algorithm for leader elections in anonymous networks.
 
 \begin{algorithm}
 \caption{Anonymous Coin Flipping Leader Election}
@@ -330,11 +330,11 @@ Each round, the transfer of $\varphi_0$ to active agents is line 3 of the algori
 \section{Election in an Anonymous Complete Network}
 
 Consider a version of the "coin-flipping" leader election, expressed in terms of BIT logic.
-This algorithm is functionally identical, but contains additional gaurds on the conditionals as an additional expression of the knowlege of the agents executing the algorithm.
+This algorithm is functionally identical, but contains additional guards on the conditionals as an additional expression of the knowledge of the agents executing the algorithm.
 Additionally, note that the construct of labeling each $\varphi$ that an agent receives is simply assigning labels to make the algorithm easier to reason about.
 The algorithm only considers the complete collection of $\varphi$s for execution and not the source of any of the $\varphi$ used.
 
-Additionally, let $\psi_i$ be the state where an agent completes the algorithm as the leader, and $\gamma_i$ is the state where the an agent has terminated the algorithm.
+Additionally, let $\psi_i$ be the state where an agent completes the algorithm as the leader, and $\gamma_i$ is the state where an agent has terminated the algorithm.
 Correct operation is where $\{\gamma_i : \forall i \}$ is true in the same round of execution and exactly one $\psi$ is true ($\sum_i \psi_i = 1$).
 
 \begin{algorithm}
@@ -359,7 +359,7 @@ Correct operation is where $\{\gamma_i : \forall i \}$ is true in the same round
 \end{algorithm}
 
 \begin{thm}
-The coinflipping algorithm may not terminate correctly unless there is detectable, perfect information transfer to all parties in the algorithm.
+Algorithm \ref{alg:coinflip} may not terminate correctly unless there is detectable, perfect information transfer to all parties in the algorithm.
 \end{thm}
 
 Proof: Let $i$ be the agent that would correctly terminate as the leader. Let $j$ be a process that has selected $\varphi_j = F$.
@@ -384,5 +384,5 @@ Therefore, $i$ will terminate before $j$ decides to go passive.
 \end{table}
 
 Which agrees with results from similar analysis CITE.
-As with the Byzantine Generals problem, algorithms similiar to Byzantine agreement can be constructed for the anonymous networks.
+As with the Byzantine Generals problem, algorithms similar to Byzantine agreement can be constructed for the anonymous networks.
 These algorithms terminate if the number of agents that omit information are less than a specific threshold. 
