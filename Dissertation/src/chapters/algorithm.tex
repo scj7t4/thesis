@@ -111,12 +111,55 @@ For the purpose of this work, we have disregarded these live lock scenarios.
 The \ac{AYC} message serves as a failure detector for crashed agents. In the models presented in this paper, crash failures are ignored as part of the modeled system.
 
 The \ac{AYT} message serves as a check for the ``Ready'' message sent by the group leader at the end of the election algorithm. \ac{AYC} verifies the leader considers the sending process a part of its group.
+A negative response to the \ac{AYT} message would preven a process from participating in the current round of leader elections.
+This violated the memorylessness property as a process would be excluded from the current round of elections based on an event that occured the previous round.
 
 \subsection{Modified Algorithm}
 
-\subsubsection{Memorylessness}
+Algoritm \ref{alg:groupmnt} shows the modified components of the Invitation Election algorithm used for group maintenance and leader discovery.
 
-\subsubsection{State Determination}
+\begin{algorithm}
+\caption{Group Maintenance and Leader Discovery Functions}
+    \label{alg:groupmnt}
+\begin{algorithmic}[1]
+\small
+\Function{Check}{}
+    \State This function is called at the start of a round by a leader
+    \If {$State \neq Normal$ or $Coordinator \neq Me$}
+        \Return
+    \EndIf
+    \State $Expected \gets \emptyset$
+    \For {$j \in (AllPeers - \{Me\})$}
+        \State $AreYouCoordinator(j)$
+        \State $Expected \gets Expected \cup j$
+    \EndFor
+    \State Peers which respond ``Yes'' to $AreYouCoordinator$ are put into the $Coordinators$ set.
+    \State Processes that respond are removed from $Expected$.
+    \State When an $AreYouThere$ response is ``No'' and this process is a coordinator, the querying process is put in the $Coordinators$ set.
+    \State Wait for responses, Peers that do not respond are removed from UpPeers.
+    \State $UpPeers \gets (UpPeers-Expected) \cup {Me}$
+    \State $UpPeers \gets (UpPeers-Coordinators) \cup {Me}$
+    \If {$Responses = \emptyset$}
+        \Return
+    \EndIf
+    \If {$Me < min(Responses)$}
+        \State
+        \Call{Merge}{Responses}
+    \EndIf
+\EndFunction
+
+\Function{ReceiveAreYouThere}{Sender, Identifier}
+    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpPeers$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+        \State $Coordinators \gets Sender$
+    \EndIf
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+In the maintenance portion of the algorithm, the leader acts on the set $L$, attempting to invite the agents not in its group into the group. Agents in $M$ but not $L$ will be re-invited. From the messages they receive from the leader the agents in $M-L$ will be able to infer that they are not a part of $L$. To accomplish this, the membership state of the process can be provided to the recipient as part of the \ac{AYC} message or it can be inferred from the process based on the response from an \ac{AYT} message. 
 
 \begin{thm}
 In a synchronous system a process in $M$ but not $L$ can determine its exclusion and act as though it was not in $M$, for the purpose of discovering leaders.
@@ -135,15 +178,19 @@ However, membership in $M$ is leaked by the next ``Are You There Message'' the a
 3. & $(j \not \in L \wedge j \in N \wedge \varphi_{AYT}) \rightarrow j \in M $ & Valuation membership. \\ 
 \end{tabularx} \\~\\
 $i$ knows $j$ is in $N_i$, but recieving the $AYT$ message leaks that $j$ considers itself part of $L_i$. Since $j$ is not a part of $L_i$, but considers itself to be, $j$ must be in $M$. Any message that implies $j$ belief in it's membership of $L_i$ is sufficent to include $j$ in $M$.
-\end{table}
+\end{table}`
 
-Algorithms can potential update $L$ based on information flow to include those agents in $M$.
+Algorithms can potentially update $L_i$ based on information flow to include those agents in $M_i$.
+However, in this instance, to ensure memorylessness, the process in $M_i$ must act in accordance with its exclusion from $L_i$.
 
 \begin{thm}
-A process in $M$ but not $L$ has the same likelihood of being in the next group as a process in not in $M$.
+A process in $M_i$ but not $L_i$ has the same likelihood of being in the next group as a process in not in $M_i$ and not in $L_i$.
 \end{thm}
 
-In the maintenance portion of the algorithm, the leader acts on the set $L$, attempting to invite the agents not in its group into the group. Agents in $M$ but not $L$ will be re-invited. From the messages they receive from the leader the agents in $M-L$ will be able to infer that they are not a part of $L$. To accomplish this, the membership state of the process can be provided to the recipient as part of the \ac{AYC} message or it can be inferred from the process based on the response from an \ac{AYT} message.
+A process in neither $M_i$ nor $L_i$ must not have the \ac{AYC} message it sends and the response nor and have its own \ac{AYC} and that response omitted to reach the next step of the algorithm.
+Successful completion depends on the delivery of 4 messages total.
+If a process is in $M_i$ but not $L_i$, the same obligation follows, but that process sends and \ac{AYT} and expects that response, in addition to the \ac{AYC} from the coordinator.
+Successful completion still depends on the delivery of 4 messages.
 
 This approach allows the memorylessness property for the imaging to be upheld. If an agent is not in $L$ that agent will be able to determine it is not in $L$. This allows the same number of messages to be exchanged regardless of an agent's membership in $L$. If the probability that any given message sent to a process has a consistent probability of being delivered, the sequences of worlds that merge two coordinators has the same distribution of probable outcomes as the sequences of worlds that a process in $M$ but not $L$ is invited to the group.
 
@@ -186,10 +233,6 @@ The original text is vague on how this condition should be determined: if the co
 
 \subsection{Modified Algorithm}
 
-\subsubsection{Memorylessness}
-
-\subsubsection{State Dtermination}
-
 \begin{thm}
 With perfect information transfer, agents can determine the exact coordinator priority for each participating coordinator.
 \end{thm}
@@ -211,6 +254,68 @@ This approach of identifying priority during the group discovery phases allows t
 In the original algorithm, a process accepts the first invitation it receives and does not accept any subsequent invitations.
 
 \subsection{Modified Algorithm}
+
+\begin{algorithm}
+\caption{Invitation Functions}
+\begin{algorithmic}[1]
+\small
+\Function{Merge}{Coordinators}
+    \State This function invites all coordinators in Coordinators to join a group led by Me
+    \State $State \gets Election$
+    \State Stop work
+    \State $Counter \gets Counter+1$
+    \State $PendingID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $Pending \gets UpPeers - {Me}$
+    \For {$j \in Coordinators$}
+        \Call{Invite}{j,Coordinator,PendingID}
+    \EndFor
+    \State Wait for responses, Peers that accept the invite are added to $Pending$.
+    \State $State \gets Reorganization$
+	\State $GroupID \gets PendingID$
+	\State $UpPeers \gets Pending$
+    \For {$j \in UpPeers$}
+        \Call{Ready}{j,Coordinator,GroupID,UpPeers}
+    \EndFor
+    \State $Expected \gets UpPeers$
+    \State Wait for responses, Peers that acknowledge are removed from $Expected$
+    \State $UpPeers \gets UpPeers - Expected$
+    \State $State \gets Normal$
+\EndFunction
+
+\State
+
+\Function{ReceiveInvitation}{Sender,Leader,Identifier}
+    \If {$State \neq Normal$}
+        \Return
+    \EndIf
+    \If {$Sender < Coordinator$}
+        \Return
+    \EndIf
+    \State Stop Work
+    \State $PendingID \gets Identifier$
+    \State $State \gets Election$
+    \State $Accept(Coordinator,Identifier)$
+    \State $State \gets Reorganization$
+    \If {$Ready$ is not received}
+        \State $Recovery()$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAccept}{Sender,Leader,Identifier}
+    \If {$State \gets Election$ and $PendingID = Identifier$}
+        \State $Pending \gets Pending \cup {Sender}$
+    \EndIf
+\EndFunction
+
+\Function{ReceiveReadyAcknowledge}{Sender}
+    \State $Pending \gets Pending \cup {Sender}$
+\EndFunction
+
+\end{algorithmic}
+\end{algorithm}
 
 \subsubsection{Memorylessess}
 
@@ -251,10 +356,6 @@ In the original algorithm the list of agents in the group is distributed as part
 
 \subsection{Modified Algorithm}
 
-\subsubsection{Memorylessness}
-
-\subsubsection{State Determination}
-
 \begin{thm}
 Ready and Ready Acknowledge result in the leader holding and $L$ state and the members holding a $N$ state.
 \end{thm}
@@ -281,12 +382,6 @@ The proof repeats for each $j$ that successfully delivers an invite accept messa
 In the modified algorithm, the agents that receive the ready message reply with confirmation. This allows the leader of the group to determine $L_i$, a set of agents that have definitely received the ready message. By coupling this with the other modifications to the algorithm, for the semi-synchronous execution environment used by the \ac{DGI}, the states observed by the leader are memoryless.
 
 \section{Composed Algorithm}
-
-\subsection{Expression As Markov Chain}
-
-\subsubsection{Image Function}
-
-\subsubsection{Memorylessness}
 
 In the specified execution environment, each time before the coordinator runs the the check portion of the election algorithm it produces an image of the current world to use as the first state of the constructed Markov chain. Each agent in the system has the stability property. As part of the stability property any wffs whose information was transferred after the last image was taken cannot change until the process takes the newest image. For the election algorithm, this causes the leader to doubt the values in $L$.
 
@@ -342,7 +437,61 @@ From this distribution, a set of transition probabilities can be calculated for 
 This set of transition probabilities forms a profile Markov chain $P$, which can be evaluated to for any number of processes $n$ and omission rate $p$.
 The generated profile chain is ergodic when $0<p<1.0$. The profile chain is a stationary Markov chain.
 
-\section{Profile Chain Validation}
+\section{Model Validation}
+
+%State that verification of the profile chain via statistical tests is important. State that if P and T are ergodic stochastic sources and can generate similar sequences if they have the same transition probabilities. State that statistical tests can identify if two chains are different at some significant level.
+
+To assert the closed form profile chain accurately represents the implementation of the algorithm, it must be validated.
+Since $T$ and $P$ are ergodic, they can be checked for equivalence using a goodness-of-fit test.
+If the goodness-of-fit test indicates the chains are equivalent, they will generate similar sequences and have similar properties when analyzed.
+Therefore, generated $P$ chains can be used to analyze the behavior of the algorithm during live execution with changing conditions.
+
+To verify the test chain $T$ is equivalent to the profile chain $P$, a $\chi^2$ goodness-of-fit test is employed.
+The null-hypothesis of this test ($H_{0}$) asserts the profile chain $P$ is equivalent to the test chain $T$:
+
+\begin{equation} H_{0}: T = P \end{equation}
+
+with an alternative hypothesis that the two chains are not equivalent:
+
+\begin{equation} H_{1}: T \neq P \end{equation}
+
+The $\chi^2$ test measures the goodness-of-fit for a complete chain by combining the measurements of goodness of fit for the transitions away from each state.
+Therefore, the goodness of fit test for the chain is a summation of tests for each state:\cite{MARKOV3}
+
+\begin{equation} \chi^2 = \sum_{i}^{m} \sum_{j}^{m} = \frac{n_{i}(P_{ij}-T_{ij})^2}{P_{ij}} \end{equation}
+
+Where $n_{i}$ is the number of times the state $i$ was observed in the input sequence used to construct the test chain $T$.
+The summation is distributed as $\chi^2$ with $m(m-1)$ degrees of freedom (DF) if all entries in $P_{ij}$ are non-zero.
+In this work, all transitions in the profile Markov chain $P$ are non-zero when $0<p<1.0$.
+However, the probability of some transitions may be extremely small.
+The $\chi^2$ value was compared to a critical value (CV) giving a measure of how likely it was $H_{0}$ could not be rejected.
+This work selected an $\alpha = 0.05$ significance level to reject the hypothesis $T=P$.
+
+If the hypothesis $H_{0}$ were to be rejected, it would indicate the test chain and profile chain differ significantly.
+As a consequence of rejecting the hypothesis, the implementation would have behavior from the generated closed form solution.
+
+To verify the model, it was compared to runs of an implementation of the algorithm.
+Test data was collected for systems with 3, 4, 5 and 6 processes.
+Information was collected from sufficiently long runs of the system with an omission rates between 0.05 and 0.95 tested at intervals of 0.05.
+Table \ref{tab:chisummary} shows the measured error and p-value for the worst observed error for each number of processes.
+Since the measured error is less than the critical value and the p-value is greater than 0.05, we cannot reject $H_0$. 
+As a consequence, the profile chains ($P$) are representative of the behavior of the algorithm's implementation.
+
+\begin{table*}[!t]
+\centering
+\begin{tabular}{ c | c c c c c}
+  \hline
+  Processes & DF & CV & Worst Error & $\Pr(WorstError)$ &  p-value \\ \hline
+  3 & 6 & 12.6 & 8.90 & 0.80 & 0.18 \\
+  4 & 12 & 21.0 & 14.55 & 0.75 & 0.27 \\
+  5 & 20 & 31.4 & 23.47 & 0.65 & 0.27 \\
+  6 & 30 & 43.8 & 32.69 & 0.85 & 0.34 \\
+\end{tabular}
+\caption{Summary of $\chi^2$ tests performed.}
+\label{tab:chisummary}
+\end{table*}
+
+\section{Profile Chain Analysis}
 
 The DGI focuses on managing power resources in a microgrid environment.
 Resources can only be managed effectively when multiple DGIs coordinate together to manage those resources.

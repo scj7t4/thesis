@@ -298,6 +298,9 @@ However, this approach is limited because of the set of $\varphi_{1,i}$ that $a$
 
 Constructing a model based on a subset of the complete state may seem like a mistake, but recall that A does not believe that those other entities believe $\varphi_0$. Assume a simple system where A is attempting to ensure every agent believes $\varphi_0$. If the actions of the agents are divided into discrete steps, then each step A distributes $\varphi_0$ to each of the agents that A has not received $\varphi_{1,i}$ from. A markov chain can easily be constructed for the probability of eventually arriving at state where every agent believes $\varphi_0$. Indeed, this algorithm is a special case of the coin flipping leader election algorithm, an algorithm for leader elections in anonymous networks.
 
+\begin{algorithm}
+\caption{Anonymous Coin Flipping Leader Election}
+\label{alg:coinflip2}
 \begin{algorithmic}[1]
 \small
 \State $b(i) \gets random(0,1)$
@@ -312,8 +315,9 @@ Constructing a model based on a subset of the complete state may seem like a mis
 		\State Become passive.
 	\EndIf
 \end{algorithmic}
+\end{algorithm}
 
-Each round, the transfer of $\varphi_0$ to active agents is line 3 of the algorithm. The receive step is equivalent to the expected response. The other agent's $b(i)$ value is decided by the receipt of $\varphi_0$ from A. Agents go idle on the receipt of $\varphi_0$, as if they had randomly selected a 0. If the other agents do not receive $\varphi_0$ it is logically equivalent to them holding a 1. If their confirmation is not received by A, it is logically equivalent to that agent successfully sending a 1 to A. However, this approach has the advantage of being able to evaluate, (given the omission rate) approximately how many rounds it will take for every agent to acknowledge $\varphi_0$. This construction is presented below in Figure \ref{fig:markovstates}, which shows the structure of the chain A could generate for the remaining steps in the election.
+Each round, the transfer of $\varphi_0$ to active agents is line 3 of the algorithm. The receive step is equivalent to the expected response. The other agent's $b(i)$ value is decided by the receipt of $\varphi_0$ from A. Agents go idle on the receipt of $\varphi_0$, as if they had randomly selected a 0. If the other agents do not receive $\varphi_0$ it is logically equivalent to them holding a 1. If their confirmation is not received by A, it is logically equivalent to that agent successfully sending a 1 to A. However, this approach has the advantage of being able to evaluate, (given the omission rate) approximately how many rounds it will take for every agent to acknowledge $\varphi_0$. This construction is presented below in Figure \ref{fig:markovstates}, which shows the structure of the chain A could generate for the election. In the figure, each state records the set of ``passive'' processes.
 
 \begin{figure}
 \begin{centering}
@@ -333,6 +337,9 @@ The algorithm only considers the complete collection of $\varphi$s for execution
 Additionally, let $\psi_i$ be the state where an agent completes the algorithm as the leader, and $\gamma_i$ is the state where the an agent has terminated the algorithm.
 Correct operation is where $\{\gamma_i : \forall i \}$ is true in the same round of execution and exactly one $\psi$ is true ($\sum_i \psi_i = 1$).
 
+\begin{algorithm}
+\caption{Anonymous Coin Flipping Leader Election Expressed in BIT logic}
+\label{alg:coinflip}
 \begin{algorithmic}[1]
 \small
 \State $\varphi_i \gets random(T,F)$
@@ -349,6 +356,7 @@ Correct operation is where $\{\gamma_i : \forall i \}$ is true in the same round
 	\State $\gamma_i \gets T$
 \EndIf
 \end{algorithmic}
+\end{algorithm}
 
 \begin{thm}
 The coinflipping algorithm may not terminate correctly unless there is detectable, perfect information transfer to all parties in the algorithm.

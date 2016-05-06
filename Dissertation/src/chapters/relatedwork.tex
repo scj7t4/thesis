@@ -122,9 +122,9 @@ Using a dedicated daemon allows a Spread view to reconfigure less frequently whe
 
 Spread implements an extended virtual synchrony model. However, message ordering is performed at the daemon level, rather than at the group level. Total ordering is done using a token passing scheme among the daemons.
 
-\section{Markov Models of Distributed Systems}
+\section{Analysis of Distributed Systems}
 
-CITE focus on examining the emergent behavior as a collection of processes in a grid computing scenario work to process a large dataset.
+\cite{markov-distributed} focused on examining the emergent behavior as a collection of processes in a grid computing scenario work to process a large dataset.
 In their work, the authors focus on analysis derived from a discrete time Markov chain discribing a single process completing a task.
 This chain describes how the process in the grid based system goes through the steps of the process acquiring a task to do, working on that task and subsequently either completing the task or failing.
 The created chains were ``absorbing'' chains, meaning that it had one or more states that the process could not leave once it had arrived in those states (task completed and task failed, for obvious reasons).
@@ -132,9 +132,7 @@ Their analysis used minimal s-t cuts to determine critical paths for the ideal o
 Using this analysis, they considered the Markov chain as a max-flow min-cut problem using the task complete or task failed absorbing states as sinks.
 By identifying the ``critical transitions'' of the graph, the areas that would most greatly affect the performance of the system could be identified.
 
-\section{Messaging Analysis of Failure Detectors}
-
-
+\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++\cite{OMNET}, a network simulation software package. Instead of omission failures, however, it considers crash failures. Each configuration goes through a predefined sequence of crash failures. OmNet++ is used to count the number of messages sent by each of three different leader election algorithms. Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a complete and active state when all participants have consensus on a single leader.
 
 \section{Physical Faults Caused by Cyber Entities in CPS}
 
@@ -154,5 +152,3 @@ However, even if a cyber entity is trying to behave correctly, disruptions to th
 As before, these actions can be identifed by using the underlying invariants of the physical network after they have occured.
 However, it would be ideal to avoid situations where a ``good'' entity is forced to act badly.
 
-\section{Congestion in Cyber Physical Systems}
-Other, distantly related, work use cyber communication to avoid congestion in the physical network.
