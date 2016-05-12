@@ -2,14 +2,21 @@
 
 \chapter{Conclusion}
 
-This work presented a new approach for predicting the behavior of a real-time distributed system under omission failure conditions.
-By using a continuous time Markov chain, a variety of insights can be gathered about the system, including observations such as how long a particular configuration will be stable, and the behavior of the system in the long run. 
-The Markov results will be used  to make better real time schedules to better react to the network faults introducing in hardware-in-the-loop test-beds.
-The primary concern are scenarios in which the cyber controller attempts to make physical components which are not connected in the physical network interact, and scenarios where a fault in the cyber network causes the paired events (where two physical controllers change to accomplish some transaction or exchange) to only be partially executed.
-For example, in the DGI load balancing scheme, a node in a supply state injects a quantum of power into the physical network, but the node in the demand state does not change to accept it.
-These errors, which are the primary focus of this work could cause instability if a sufficient number of these failed exchanges occur. In \cite{HARINI}, Choudhari et. al. show that failed transactions can create a scenario where the frequency of a power system could become unstable. 
+We presented a useful framework for reasoning about creating models of distributed systems that tolerate omission failure.
+The models and structures presented allow algorithm designers to design algorithms whose behavior can be modeled with a Markov chain which is invaluable for designing critical infrastructure systems that behave reliably during failure conditions.
 
-In this work, we presented a technique for hardening a real-time distributed cyber-physical system against network congestion.
+To do this, applied existing information flow analysis techniques and applied them to a common distributed systems problem (the two-armies problem) and show the information flow analysis was consistent with similar analyses of the problem.
+We then extended the analysis to show how agents in a distributed system could use that analysis to determine what knowledge each process had.
+As part of this we described belief sets created by distributing information to several other agents in the system.
+
+Additionally, we defined how information being transferred between agents and the actions they take based on that information could be constrained to hold to the memorylessness property common to Markov chains.
+Using this concept we demonstrated how a common leader election algorithm could be modified to use this memorylessness property, allowing it to be modeled online during changing conditions.
+
+This work is particularly valuable for the analysis of critical infrastructure systems, where knowledge of their behavior during fault conditions is particularly important.
+By allowing the ability for algorithms to determine what issues are likely to arise while they are operating, actions can be taken to protect the infrastructure from failure.
+There are a wide range of possible applications, including actions either undertaken by human operators on site, or autonomous actions taken by the algorithms to harden themselves against failure.
+
+We also presented a technique for hardening a real-time distributed cyber-physical system against network congestion.
 The \ac{RED} queueing algorithm and an out-of-band version of explicit congestion notification (ECN) were used to signal an application of congestion.
 Using this technique the application changed several of its characteristics to ready itself for the increased message delays caused by the congestion.
 

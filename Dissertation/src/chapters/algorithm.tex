@@ -8,11 +8,11 @@ Processes synchronized their clocks and executed steps of the election algorithm
 Processes with clocks that were not sufficiently synchronized could not form groups.
 For this work, process execution occured in an environment where the clocks were sufficiently synchronized to consistently form groups.
 In the real-time environment, messages that were delayed and missed their real-time deadlines had the same appearance as an omitted message.
-The execution environment for the election algorithm has a omission failure occurrence modeled as a Bernoulli trial.
+The execution environment for the election algorithm had a omission fault occurrence modeled as a Bernoulli trial.
 In this model, each message had some probability $p$ of being delivered within the timing constraints imposed by the real-time schedule.
 For the purpose of analyzing the effects of omission failures, processes were not subject to other faults.
 
-\section{Election Algorithm}
+\section{Election Algorithm Overview}
 
 A state machine for the election portion of the invitation-election algorithm is shown in Figure \ref{fig:statemachine}.
 In the normal state, the election algorithm regularly searches for other coordinators to join with.
@@ -46,6 +46,168 @@ Leaving the group can either be caused by the coordinator removing the process, 
 \label{fig:statemachine2}
 \end{figure*}
 
+\section{Algorithm}
+
+\begin{algorithmic}[1]
+\small
+\State $AllPeers \gets \{ 1, 2, ..., N \}$
+\State $Coordinators \gets \emptyset$
+\State $UpPeers \gets { Me }$
+\State $State \gets Normal$
+\State $Coordinator \gets Me$
+\State $Expected \gets \emptyset$
+\State $Counter \gets$ A random initial identifier
+\State $GroupID \gets (Me,Counter)$
+\State $PendingID \gets (Me, -1)$
+\State $Pending \gets \emptyset$
+
+\State
+
+\Function{Check}{}
+    \State This function is called at the start of a round by a leader
+    \If {$State \neq Normal$ or $Coordinator \neq Me$}
+        \Return
+    \EndIf
+    \State $Expected \gets \emptyset$
+    \For {$j \in (AllPeers - \{Me\})$}
+        \State $AreYouCoordinator(j)$
+        \State $Expected \gets Expected \cup j$
+    \EndFor
+    \State Peers which respond ``Yes'' to $AreYouCoordinator$ are put into the $Coordinators$ set.
+    \State Processes that respond are removed from $Expected$.
+    \State When an $AreYouThere$ response is ``No'' and this process is a coordinator, the querying process is put in the $Coordinators$ set.
+    \State Wait for responses, Peers that do not respond are removed from UpPeers.
+    \State $UpPeers \gets (UpPeers-Expected) \cup {Me}$
+    \State $UpPeers \gets (UpPeers-Coordinators) \cup {Me}$
+    \If {$Responses = \emptyset$}
+        \Return
+    \EndIf
+    \If {$Me = SelectedProcess$}
+        \State
+        \Call{Merge}{Responses}
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{Timeout}{}
+    \State This function is called at the start of a round by the group members
+    \If {$Coordinator = Me$}
+        \Return
+    \Else
+        \Call{AreYouThere}{Coordinator,GroupID,Me}
+        \If{Response is No}
+            \Call{Recovery}{}
+			\State $Coordinators \gets Coordinator$
+        \EndIf
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{Merge}{Coordinators}
+    \State This function invites all coordinators in Coordinators to join a group led by Me
+    \State $State \gets Election$
+    \State Stop work
+    \State $Counter \gets Counter+1$
+    \State $PendingID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $Pending \gets UpPeers - {Me}$
+    \For {$j \in Coordinators$}
+        \Call{Invite}{j,Coordinator,PendingID}
+    \EndFor
+    \State Wait for responses, Peers that accept the invite are added to $Pending$.
+    \State $State \gets Reorganization$
+	\State $GroupID \gets PendingID$
+	\State $UpPeers \gets Pending$
+    \For {$j \in UpPeers$}
+        \Call{Ready}{j,Coordinator,GroupID,UpPeers}
+    \EndFor
+    \State $Expected \gets UpPeers$
+    \State Wait for responses, Peers that acknowledge are removed from $Expected$
+    \State $UpPeers \gets UpPeers - Expected$
+    \State $State \gets Normal$
+\EndFunction
+
+\State
+
+\Function{ReceiveReady}{Sender, Leader, Identifier, Peers}
+    \If {$State = Reorganization$ and $PendingID = Identifier$}
+        \State $UpPeers \gets Peers$
+        \State $State \gets Normal$
+		\State $Coordinator \gets Leader$
+		\State $GroupID \gets Identifier$
+        \Call{ReadyAcknowledge}{Leader,Identifier}
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouCoordinator}{Sender}
+    \If {$State = Normal$ and $Coordinator = Me$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAreYouThere}{Sender, Identifier}
+    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpPeers$}
+        \State Respond Yes
+    \Else
+        \State Respond No
+        \State $Coordinators \gets Sender$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveInvite}{Sender,Leader,Identifier}
+    \If {$State \neq Normal$}
+        \Return
+    \EndIf
+    \If {$Sender \neq SelectedProcess$}
+        \Return
+    \EndIf
+    \State Stop Work
+    \State $PendingID \gets Identifier$
+    \State $State \gets Election$
+    \State $Accept(Coordinator,Identifier)$
+    \State $State \gets Reorganization$
+    \If {$Ready$ is not received}
+        \State $Recovery()$
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{ReceiveAccept}{Sender,Leader,Identifier}
+    \If {$State \gets Election$ and $PendingID = Identifier$}
+        \State $Pending \gets Pending \cup {Sender}$
+    \EndIf
+\EndFunction
+
+\Function{ReceiveReadyAcknowledge}{Sender}
+    \State $Pending \gets Pending \cup {Sender}$
+\EndFunction
+
+\State
+
+\Function{Recovery}{}
+    \State $State \gets Election$
+    \State Stop Work
+    \State $Counter \gets Counter + 1$
+    \State $GroupID \gets (Me,Counter)$
+    \State $Coordinator \gets Me$
+    \State $UpPeers \gets {Me}$
+    \State $State \gets Reorganization$
+    \State $State \gets Normal$
+\EndFunction
+
+\end{algorithmic}
+
 \section{State Determination}
 
 % Show that the state of the group in the ready set of the orignal algorithm is an N set.
@@ -54,7 +216,7 @@ In the Garcia-Molina version of the algorithm, processes distribute a list of pr
 Let $i$ be the coordinator of a group distributing ready messages.
 The process $i$ has a list of processes that have accepted its invite.
 Let $\varphi_x$ be a wff that indicates that some process $x$ is part of $i$'s group.
-Let $R = {\varphi_x | x \in AcceptedInvite } \cup { \varphi_i }$ be the set of processes that have accepted $i$'s invite.
+Let $R = \{ \varphi_x | x \in AcceptedInvite \} \cup \{ \varphi_i \}$ be the set of processes that have accepted $i$'s invite.
 To finalize the group, $i$ will distribute $R$ to each process described in $R$.
 If a processes does not receive $R$ it will not be in the group.
 
@@ -62,6 +224,7 @@ If a processes does not receive $R$ it will not be in the group.
     In the original algorithm, each process is MSDND secure on $\varphi_x$ for each $x$ that is not $i$ or itself ($j$).
 \end{thm}
 
+\begin{proof}
 \begin{case}
     The case where $x = i$ or $x = j$.
 \end{case}
@@ -85,18 +248,19 @@ Let $O$ be some set of processes that do not receive the $R$ set.
 1. & $I_{j,i} R \forall j \in R $ & $i$ distributes the list of processes that have accepted the invite.  \\
 2. & $\neg(B_x I_{x,i} R \wedge T_{x,i} R) \forall x \in O$ & Processes in $O$ do not receive $R$. \\
 3. & $B_x I_{x,i} R \wedge T_{x,i} R \forall x \not \in O$ & Processes not in $O$ receive $R$. \\
-4. & $w \not \vDash V_{B_x R}^{j}(w) \forall x s.t. x \not \in {i,j}$ & $j$ does not know which processes received $R$ \\
+    4. & $w \not \vDash V_{B_x R}^{j}(w) \forall \{x | x \not \in \{i,j\}\}$ & $j$ does not know which processes received $R$ \\
 \end{tabularx} \\~\\
 Therefore, the receipt of $R$ by other members of the group is MSDND secure to $j$.
 \label{tab:readynsetproof}
 \end{table}
+\end{proof}
 
 \begin{cor}
     The set of processes in the ready message is an $N_i$ set, where $i$ the group's coordinator.
 \end{cor}
 
 Since every wff in $R$ is MSDND secure, $R$ must be an $N_i$ set, and consequently, $L_i = \emptyset$.
-As a consequence, the group leader only has an estimate of the system, which may be an overestimate ($M_i \subset L_i$)
+As a consequence, the group leader only has an estimate of the system, which may be an overestimate ($M_i \subseteq N_i$)
 
 % Show that with the ready ack, the leader has an L set.
 With an ready acknowledgment message from members of the group, the Leader can construct an $L_i$ set, which underestimates the state of the system.
@@ -106,16 +270,18 @@ From previous results, we have shown that with message passing and omission, at 
     If a process $j$ sends a ready acknowledgment message to $i$, $j$'s inclusion in the $i$'s view of the system state is MSDND secure to $j$
 \end{thm}
 
-When $j$ sends the ready acknowledge message to $i$, it is uncertain if the acknowledgment message is actually delivered.
+\begin{proof}
+Proof: When $j$ sends the ready acknowledge message to $i$, it is uncertain if the acknowledgment message is actually delivered.
 From Theorem \ref{case:generalsn0}, we know that $j$ is now MSDND insecure to $i$, but $i$ is insecure to $j$.
 Using the ready acknowledgment messages, $i$ can then valuate $B_i B_j \varphi_j$ for every $j$ that sends an acknowledgment message.
+\end{proof}
 
 Once the ready acknowledgment messages have been sent to the leader, the group can begin to interact.
 As it is impossible for the members of the group to be distributed the $L_i$ set, they must operate using the $N_i$ set they received from the coordinator.
 Messages from other processes which could only have been sent if they are a part of the $M_i$ sent can leak to the receiving processes their receipt of the $R$ set from $i$.
 For the purpose of model construction, the determination of members of $M_i$ that are not in $L_i$ may be undesirable for a \ac{DTMC} since it may involve changing the state captured for the chain at the incorrect moment.
 Instead, for simplicity, while the leader can update their $L_i$ set with leaked information, we avoid doing so to preserve the memorylessness property in the following sections.
-Therefore, we define the state of the system as the cardinality of the processes mentioned in the $L_i$ set.
+We defined the state of the system as the cardinality of the processes mentioned in the $L_i$ set.
 
 % Show that inclusion in M but not L is leaked by AYC to ``member''
 
@@ -127,7 +293,7 @@ Therefore, we define the state of the system as the cardinality of the processes
 % Show that maint. takes so many messages
 % Show that leader discovery for election takes so many messages
 % Show that a process in M but not L needs to many messages to do the above, which is equal.
-As stated previously the coordinator can update $L_i$ with leaked information.
+The a process can update $L_i$ with leaked information.
 To ensure the memorylessness property we are interested in capturing when a process receives the ready message, but the acknowledgment is lost, meaning the process is not included in the $L_i$ set.
 We wish to ensure that the process can determine its own exclusion in $L_i$ so it can behave as though it is not in $M_i$.
 To do this, we attach an additional field to the \ac{AYC} message to indicate if the coordinator $i$ considers the receiving process $j$ a part of the $L_i$ set.
@@ -137,17 +303,16 @@ Likewise, for the coordinator, an \ac{AYT} message leaks to the coordinator that
 Since the behavior of the process in $M_i$ is defined to behave as though it was not in $L_i$, the coordinator should do the same.
 This should be the case even if the process sending \ac{AYT} has already responded negatively to an \ac{AYC} from $i$.
 For the purpose of memorylessness, $i$ should consider $j$ to have responded in the affirmative.
-Table X shows for each circumstance (inclusion / exclusion of $L$) the same number of messages are exchanged for the purpose of going into the invitation stage of the algorithm.
 
 % Stage 2:
 % Show that the probability of an invite working is the probability of delivering an invite
 % + all the lower priority invites not arriving
 % Show that at this point M/L inclusion doesn't matter any more.
 Processes determine which invite to accept based on the exchange of the \ac{AYC} messages.
-Processes always seek to reach the lowest energy state: the wish to be in a group led by the coordinator with the highest priority.
+Processes always seek to reach the ``lowest energy state'': they wish to be in a group led by the coordinator with the highest priority.
 Since the process has determined which invite it will accept, the probability of receiving that invite is the probability that process did not interact with a higher priority process that caused it to expect an invite.
-Processes will submit AYC messages to lower energy processes that are not its coordinator, even if they are in a group.
-As a result, the processes will always seek lower energy, regardless of their current group.
+Processes will submit AYC messages to higher priority processes that are not its coordinator, even if they are in a group.
+As a result, the processes will always seek highest priority, regardless of their current group.
 More importantly, this releases the process from obligations on its next state from the state of other processes in the system.
 
 % Stage 3:
@@ -178,14 +343,13 @@ To maintain a group of $m$ other processes, the probability is defined as a rand
 \begin{equation}
  \Pr_{M}(X=k; m) =
    \begin{cases}
-    \binom{m}{k} p^{6k}(1-p^6)^{m-k}, & \text{if } 0 \leq k \leq m \\
+    \binom{m}{k} p^{2k}(1-p^2)^{m-k}, & \text{if } 0 \leq k \leq m \\
     0,                                & \text{otherwise} \\
   \end{cases}
 \end{equation}
 
 Where $k$ is the number of processes remaining in a group selected from $m$ processes.
 A process will leave a group if, from the considered process's perspective, they do not respond to an ``Are You Coordinator'' message.
-Members cannot change their state without coordinating with the leader.
 
 To invite other processes to the group, the two processes ultimately exchange up to 8 messages.
 In a round, a single process can invite many other processes to its group.
@@ -207,6 +371,51 @@ In the profile chain, in a state $s$ that describes the number of processes in a
 From this distribution, a set of transition probabilities can be calculated for a given omission rate $p$ and number of processes $n$.
 This set of transition probabilities forms a profile Markov chain $P$, which can be evaluated to for any number of processes $n$ and omission rate $p$.
 The generated profile chain is ergodic when $0<p<1.0$. The profile chain is a stationary Markov chain.
+
+\subsection{Lower Priority Process}
+
+A precise accurate model that is time homogeneous cannot be constructed for a process that is not the highest priority.
+Based on the presented algorithm, a lower priority process constructing a model has several challenges.
+First, if the process is invited to join the group of the higher priority process its model is invalidated.
+Secondly, the lower priority process cannot know which processes are already in a group with the higher priority process.
+
+In the execution model we have presented, the inclusion of a process in a higher priority proccess's group is MSDND secure.
+There is no way to for a process that is not in a group to know what processes are in any group except its own.
+
+% For a lower priority process, the probability that an invite will work depends on the probability that that process is
+% Not already in a higher priority group IE, it depends on the outcome of the last election & staying in a group this time
+% For the highest priority process, it doesn't matter what the outcome of the last election was, it can merge that process into its group.
+% So we can demonstrate 2 things: First, the probability of inviting a process from a lower priority process would violate the memorylessness property
+% And secondly, the state of the other process being in the group is MSDND secure
+% A result is secure until it is revealed and then when the process changes variables it is secure again.
+%TODO...
+
+% Set of worlds may need to be defined over a round of execution? Keep space smaller, fixes belief revision.
+% You can show two worlds, one where the process is group and the other where its ungrouped have different outcomes
+% for a third process.
+\begin{thm}
+    In the modified invitation election algorithm only the highest priority process's model can be constructed.
+\end{thm}
+
+\begin{proof}
+Consider a system state with 3 processes, such that the priority of processes is $A > B > C$.
+Suppose process A leads a group with process C.
+If B and C have exchanged no messages, they are MSDND secure by Theorem NO MESSAGES.
+In this case, B does not know that C is in a group with A because C's state is MSDND secure to B.
+B cannot determine the probability that an invitation to C will succeed, because this depends on system state hidden to B.
+\end{proof}
+
+
+% You can show that the there is no way for the process to know that, the state is MSDND secure.
+% Lastly, we need to show there is no way of making it independent
+% There's several different versions for this:
+% It may be sufficent to show that it can only be memoryless for the leader, because only the highest priority
+% can know that the invites will work, every other process depends on the state of the highest priority process
+% which is not memoryless. No matter how it is defined, allowing a process with a higher priority to determine
+% The state prevents a lower priority one from doing so.
+Therefore, unlike the highest priority process, any other process cannot construct a definitive model.
+
+However, any process in the system equipped with the number of processes and the omission rate, can construct the same model of system as the highest priority process.
 
 \subsection{Model Validation}
 
@@ -261,39 +470,6 @@ As a consequence, the profile chains ($P$) are representative of the behavior of
 \caption{Summary of $\chi^2$ tests performed.}
 \label{tab:chisummary}
 \end{table*}
-
-\section{Other Processes}
-
-The probability a process becomes the leader of a configuration depends on the number of processes with higher priority than itself.
-In subsequent formulas this will be denoted $o$.
-The probability that a particular configuration persists for a lower priority process depends on the number of higher priority processes which are not in the configuration.
-For creating a lower priority group the probability is
-
-\begin{equation}
-    \Pr_{I}(Y=k; n) =
-    \begin{cases}
-        \binom{n}{k} ((1-p^4)^{2n} p^8)^k (1-[(1-p^4)^{2n} (p^8)])^{n-k}, & \text{if } 0 \leq k \leq n \\
-        0,                                & \text{otherwise} \\
-    \end{cases}
-\end{equation}
-
-And the probability of holding that group depends on that process not being invited to a higher priority group.
-let $\alpha$ be the probability of being invited to a higher priority group:
-
-\begin{equation}
-    \alpha = p\sum_{i=1}^{n} p^{4i}(1-p^4)^{n-i}
-\end{equation}
-
-Note that if there are no higher priority processes $\alpha = 0$.
-which is the probability that a higher process does not identify the given process and invite it successfully.
-
-\begin{equation}
- \Pr_{M}(X=k; m) =
-   \begin{cases}
-       \binom{m}{k} [(p^6)(1-\alpha)]^{k} [(1-p^6)(1-\alpha)+(p^6)(\alpha)-(1-p^6)\alpha]^{m-k}, & \text{if } 0 \leq k \leq m \\
-    0,                                & \text{otherwise} \\
-  \end{cases}
-\end{equation}
 
 \section{Profile Chain Analysis}
 
@@ -405,4 +581,22 @@ If a message does not arrive during the wait period, before the next step of exe
 If it arrives later, it is ignored by the algorithm.
 While dynamically adjusting the synchronized schedule is not feasible during failure, adjusting the number of messages sent (by sending fewer "Are You Coordinator" messages, for example) is.
 By sending fewer messages, the number of packets in the communication network is reduced, and the savings in processing can allow multiple delivery attempts in the scheduled wait time.
+
+\section{Independent Algorithm}
+
+If we restrict the algorithm to be more like the Bully algorithm, running the partially synchronous environment, any process can construct their model.
+This is accomplished by removing the maintenance portion, releasing each process from the previous state of execution entirely.
+% Interesting... can I prove that if any process depends on a previous state, no other process can be memoryless?
+
+% Send an invite to each lower priority process. (Each receives n invites)
+% Each process collects all the invites and selects the highest priority
+% Send response to highest priority.
+% Process sends ready to recipients
+% recips send ready ack
+
+% probability of success = probability higher priority's invites don't arrive.
+% * the probability the response makes it
+% * the probability the ready makes it
+% * the probability the ready ack makes it
+
 

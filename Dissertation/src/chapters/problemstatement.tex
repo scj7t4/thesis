@@ -1,14 +1,14 @@
 \chapter{Problem Statement and Motivation}
 
 The entry point to research in this area was asking the question ``How does the software managing critical infrastructure like FREEDM behave when a critical component, the communication infrastructure, is not operating correctly?'' 
-Historically, leader elections have had limited applications in critical systems. However, in the smart grid domain, there is a great opportunity to apply leader election algorithms in a directly beneficial way. \cite{LOADBALANCING} presented a simple scheme for performing power distribution and stabilization that relies on formed groups. Algorithms like Zhang, et. al's Incremental Consensus Algorithm \cite{INCREMENTALCONSENSUS}, begin with the assumption that there is a group of nodes who coordinate to distribute power. In a system where 100\% up time is not guaranteed, leader elections are a promising method of establishing these groups.
-A strong cyber-physical system should be able to survive and adapt to network outages in both the physical and cyber domains. When one of these outages occurs, the physical or cyber components must take corrective action to allow the rest of the network to continue operating normally. Additionally, other nodes may need to react to the state change of the failed node. In the realm of computing, algorithms for managing and detecting when other nodes have failed is a common distributed systems problem known as leader election.
+Historically, leader elections have had limited applications in critical systems. However, in the smart grid domain, there is a great opportunity to apply leader election algorithms in a directly beneficial way. \cite{LOADBALANCING} presented a simple scheme for performing power distribution and stabilization that relies on formed groups. Algorithms like Zhang, et. al's Incremental Consensus Algorithm\cite{INCREMENTALCONSENSUS}, begin with the assumption that there is a group of processes who coordinate to distribute power. In a system where 100\% up time is not guaranteed, leader elections are a promising method of establishing these groups.
+A strong cyber-physical system should be able to survive and adapt to network outages in both the physical and cyber domains. When one of these outages occurs, the physical or cyber components must take corrective action to allow the rest of the network to continue operating normally.
 
-This work observes the effects of message omission on the group management module of the Distributed Grid Intelligence (DGI) used by the FREEDM smart-grid project. This system uses a broker system architecture to coordinate several software modules that form a control system for a smart power grid. These modules include: group management, which handles coordinating nodes via leader election; state collection, a module which
+This work observes the effects of message omission on the group management module of the Distributed Grid Intelligence (DGI) used by the FREEDM smart-grid project. This system uses a broker system architecture to coordinate several software modules that form a control system for a smart power grid. These modules include: group management, which handles coordinating processes via leader election; state collection, a module which
 captures a global system state; and load balancing which uses the captured global state to bring the system to a stable state.
 
-It is important for the designer of a cyber-physical system to consider what effects the cyber components will have on the overall system. Failures in the cyber domain can lead to critical instabilities which bring down the entire system if not handled properly.  In fact, there is a major shortage of work within the realm of the effects cyber outages have on \ac{CPS} \cite{CYBERRESEARCHCALL} \cite{SMARTGRIDBENEFITS}.
-In this paper we present a slice of what sort of analysis can be performed on a distributed cyber control by subjecting the system to packet loss. The analysis focuses on quantifiable changes in the amount of time a node of the system could spend participating in energy management with other nodes.
+It is important for the designer of a cyber-physical system to consider what effects the cyber components will have on the overall system. Failures in the cyber domain can lead to critical instabilities which bring down the entire system if not handled properly.  In fact, there is a major shortage of work within the realm of the effects cyber outages have on \ac{CPS}\cite{CYBERRESEARCHCALL}\cite{SMARTGRIDBENEFITS}.
+The analysis focuses on quantifiable changes in the amount of time a \ac{DGI} could spend participating in energy management with other processes.
 
 Using the DGI as a starting point, the analysis of the leader election algorithm in the DGI began with analysis of its behavior when messages were lost.
 To do this, the DGI software was subjected to omission faults while the state of the algorithm was captured over a period of examination.
@@ -22,7 +22,7 @@ Experiments measured the time-in-group for various sets of DGI running the leade
 Additionally, the experiments examined two communication modes, the Sequenced Reliable Connection, and the Sequenced Unreliable Connection.
 Both methods of communication were valid approaches for the message passing requirements of the DGI.
 
-\subsection{Sequenced Reliable Connection.}
+\subsection{Sequenced Reliable Connection}
 
 The sequenced reliable connection is a modified send and wait protocol with the ability to stop resending messages and move on to the next one in the queue if the message delivery time is too long. When designing this scheme we wanted to achieve several criteria:
 
@@ -34,7 +34,7 @@ The sequenced reliable connection is a modified send and wait protocol with the 
 
 There one adjustable parameter, the resend time, which controls how often the system would attempt to deliver a message it hadn't yet received an acknowledgment for.
 
-\subsection{Sequenced Unreliable Connection.}
+\subsection{Sequenced Unreliable Connection}
 
 The SUC protocol is simply a best effort protocol: it employs a sliding window to try to deliver messages as quickly as possible. A window size is decided, and then at any given time, the sender can have up to that many messages in the channel, awaiting acknowledgment. The receiver will look for increasing sequence numbers, and disregard any message that is of a lower sequence number than is expected. The purpose of this protocol is to implement a bare minimum: messages are accepted in the order they are sent.
 
@@ -42,9 +42,9 @@ Like the SRC protocol, the SUC protocol's resend time can be adjusted. Additiona
 
 \section{Initial Results}
 
-The collected results from the tests are divided into several target scenarios as well as the protocol used.
+The collected results from the tests were divided into several target scenarios as well as the protocol used.
 
-The first minute of each test in the experimental test is discarded so that any transients in the test could be removed.
+The first minute of each test in the experimental test was discarded so that any transients in the test could be removed.
 The tests were run for ten minutes, however the maximum result was 9 minutes of in group time.
 These graphs first appeared in \cite{CRITIS2012}.
 
@@ -57,20 +57,20 @@ These graphs first appeared in \cite{CRITIS2012}.
 \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{2NODE-SRC-100-GROUP.pdf}
-    \caption{Time in-group over a 10 minute run for a two node system with a 100ms resend time}
+    \caption{Time in-group over a 10 minute run for a two process system with a 100ms resend time}
     \label{fig:IGT-SRC-2NODE-100}
 \end{minipage}%
 \qquad
 \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{2NODE-SRC-200-GROUP.pdf}
-    \caption{Time in-group over a 10 minute run for a two node system with a 200ms resend time}
+    \caption{Time in-group over a 10 minute run for a two process system with a 200ms resend time}
     \label{fig:IGT-SRC-2NODE-200}
 \end{minipage}
 \end{figure}
 
-The 100ms resend SRC test with two nodes can be considered a type of control in this study.
-These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}, highlight the performance of the SRC protocol.
+The 100ms resend SRC test with two processes was considered a type of control in this study.
+These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}, highlighted the availibility of the DGI with the SRC protocol.
 The maximum in group time of 9 minutes was achieved with only 15\% of datagrams arriving at the receiver. 
 
 Figure \ref{fig:IGT-SRC-2NODE-200} demonstrates that as the rate at which lost datagrams were re-sent was decreased to 200ms, the in-group time decreased.
@@ -96,16 +96,16 @@ Each exchange had a time limit for each message to arrive and the number of atte
 \end{minipage}
 \end{figure}
 
-The transient partition case is a simple example in which a network partition separates two groups of DGI processes. In the simplest case where the opposite side of the partition is unreachable, nodes will form a group with the other nodes on the same side of the partition.
-In this study, two processes were present on each side of the partition.
-In the experiment, the probability of a datagram crossing the partition was increased as the experiment continued.
+The transient partition case was a simple example in which a network partition separates two groups of DGI processes.
+In the simplest case where the opposite side of the partition was unreachable, processes formed a group with the other processes on the same side of the partition.
+Two processes were present on each side of the partition.
 The 100ms case is shown in Figures \ref{fig:MGS-SRC-TRANS-100} and \ref{fig:IGT-SRC-TRANS-100}.
 
-While messages cannot cross the partition, the DGIs stay in a group with the nodes on the same side of the partition, leading to an in-group time of 9 minutes (the maximum value possible).
-As packets began to cross the partition (as the omission rate decreases), DGI instances on either side attempted to complete elections with the nodes on the opposite partition and the in group time began to decrease.
+While messages could not cross the partition, the DGIs stay in a group with the processes on the same side of the partition, leading to an in-group time of 9 minutes (the maximum value possible).
+As packets began to cross the partition (as the omission rate decreases), DGI instances on either side attempted to complete elections with the processes on the opposite partition and the in group time began to decrease.
 During this time, however, the mean group size continued to increase.
 Thus, while the elections were decreasing the amount of time that the module spent in a state where it can actively do work, it typically did not fall into a state where it was in a group by itself. 
-As result, most of the lost in group time comes from elections.
+As result, most of the lost in group time came from elections.
 
 \begin{figure}
 \centering
@@ -125,7 +125,7 @@ As result, most of the lost in group time comes from elections.
 \end{figure}
 
 The 200ms case (Illustrated in Figures \ref{fig:MGS-SRC-TRANS-200} and \ref{fig:IGT-SRC-TRANS-200}) suggests a similar behavior to Figures \ref{fig:MGS-SRC-TRANS-100} and \ref{fig:IGT-SRC-TRANS-100}, with a wider valley produced by the reduced number of datagrams.
-The mean group size dips below 2 in Figure \ref{fig:MGS-SRC-TRANS-200}, possibly because longer resend times allowed for a greater number race conditions between potential leaders.
+The mean group size dipped below two in Figure \ref{fig:MGS-SRC-TRANS-200}, possibly because longer resend times allowed for a greater number race conditions between potential leaders.
 Discussion of these race conditions is shown and discussed during the SUC section since it was more prevalent in those experiments.
 
 \subsection{Sequenced Unreliable Connection}
@@ -133,22 +133,22 @@ Discussion of these race conditions is shown and discussed during the SUC sectio
 \subsubsection{Two Node Case}
 
 The SUC protocol's experimental tests revealed an immediate problem.
-There is a general increasing trend for the amount of time in-group shown in Figure \ref{fig:IGT-SUC-2NODE-100}.
-There is a high amount of variance, however, for any particular trial.
+There was a general increasing trend for the amount of time in-group shown in Figure \ref{fig:IGT-SUC-2NODE-100}.
+However, there was a high amount of variance for any particular trial.
 
 \begin{figure}
 \centering
 \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{2NODE-SUC-100-GROUP.pdf}
-    \caption{Time in group over a 10 minute run for two node system with 100ms resend time}
+    \caption{Time in group over a 10 minute run for two process system with 100ms resend time}
     \label{fig:IGT-SUC-2NODE-100}
 \end{minipage}%
 \qquad
 \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{2NODE-SUC-200-GROUP.pdf}
-    \caption{Time in group over a 10 minute run for two node system with 200ms resend time}
+    \caption{Time in group over a 10 minute run for two process system with 200ms resend time}
     \label{fig:IGT-SUC-2NODE-200}
 \end{minipage}
 \end{figure}
@@ -157,7 +157,6 @@ In the 200ms resend case (illustrated in Figure \ref{fig:IGT-SUC-2NODE-200}), a 
 When an average was taken across all of the collected data points from the experiment, the average in group time is higher for the 200ms case than it was for the 100ms case (6.86 vs 6.09).
 There large amount of variance in the collected in group time, however.
 As a result, it is not possible to state with confidence that the there is a significant difference between the two cases.
-
 
 \section{Markov Models}
 
@@ -171,9 +170,9 @@ As a result, the execution and transition between states is more accurately desc
 
 \subsection{Initial Model Calibration}
 
-The presented methodology of constructing the model was initially calibrated against the original two-node case.
+The presented methodology of constructing the model was initially calibrated against the original two-process case.
 This calibration used a non-real-time version of the DGI code.
-The resulting Markov chain was processed using SharpE \cite{SHARPE}\cite{SHARPE2} made by Dr. Kishor Trivedi's group at Duke University, a popular tool for reliability analysis.
+The resulting Markov chain was processed using SharpE\cite{SHARPE}\cite{SHARPE2}, a popular tool for reliability analysis.
 SharpE measured the reward collected in 600 seconds, minus the reward that was collected in the first 60 seconds. 
 Discarding the reward from the first 60 seconds emulated the 60 seconds were discarded in the experimental runs.
 The SharpE results are plotted along with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \ref{fig:COMPARE-SUC-2NODE-200}.
@@ -198,21 +197,9 @@ The SharpE results are plotted along with the experimental results in Figures \r
 The race condition between processes during an election is a consideration in the original leader election algorithm, and is an additional factor here.
 The simulator provided a parameter to allow the operator to select how closely synchronized the peers were.
 This synchronization was the time difference between when each of them would search for leaders.
-The exchange of messages, particularly during an election, had a tendency to synchronize nodes during elections.
+The exchange of messages, particularly during an election, had a tendency to synchronize processes during elections.
 Nodes could synchronize even if they did not initially begin in a synchronized state. 
 The simulation results aligned best for the 100ms resend case with 1 tick (Approximately 100ms difference in synchronization between processes) and 2 ticks (Approximately 400ms) in the 200ms resend case.
-
-Models fit to the non-real-time code in groups larger than two processes had a poor fit.
-This is presumed to be a combination of several factors.
-The major source of fault included the structure of the chain. 
-Construction of the chain assumes that all processes enter the election state a roughly the same time. 
-This was not typically true for more than two processes.
-Additionally, the simulator could only assume that the synchronization between processes was fixed.
-The coincidental synchronization that occurred in the two node case was suppressed by the increased number of peers.
-Furthermore, an issue with SharpE was discovered that prevented the particular structure of the chains produced from being handled correctly.
-The election states with only one outbound transition uncovered a bug in the SharpE software.
-To circumvent that, issue, SharpE was replaced by a random-walker which generates exponentially distributed numbers and follows the paths of the chain.
-Time in group data for models which SharpE cannot process were collected across several hundred trials.
 
 \begin{figure}
 \centering
@@ -234,7 +221,7 @@ Time in group data for models which SharpE cannot process were collected across 
 The structure of the Markov Chain assumed that processes enter the election state simultaneously.
 This was an appropriate assumption for the real-time system, since the round-robin scheduler synchronized when processes ran their group management modules.
 The simulator was set to assume that the synchronization between processes was very tight.
-New experimental data was collected for the 4 node, transient partition case.
+New experimental data was collected for the 4 process, transient partition case.
 The collected data is overlaid with the results from the random walker in Figures \ref{fig:COMPARE-SUC-TRANS-RT-128} and \ref{fig:COMPARE-SUC-TRANS-RT-64}.
 
 \begin{table}
@@ -270,5 +257,5 @@ By using these models one can analyze where the certainty of the system is place
 Additionally, we wish to show that these models can be used to allow the models to go beyond use by those administrating the infrastructure.
 The models created can be analyzed and used while the system is working to provide services (``online'').
 Using the models created in this way a distributed critical infrastructure system can adjust it behavior, hardening itself against failures that could arise.
-With this hardening technique the algorithms can prevent critical failures which could decrease quality of life or endanger that life itself.
+With this hardening technique the algorithms can prevent critical failures which could decrease quality of life or endanger that life.
 Subsequent chapters show how information flow methods can be used to determine the memorylessness of aspects of a distributed system, how those aspects can be used to construct a model, and applications of those models.

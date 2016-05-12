@@ -23,11 +23,11 @@ Secondly, the \ac{CPS} must employ sensors to detect the state of the physical c
 Again, like the physical components, these sensors are subject to component failure or the actions of an attacker.
 Lastly, if the \ac{CPS} communicates between entities using a communication network, the network can be disrupted by any number of issues, including DDoS, attackers, or congestion caused by other users in a shared network.
 
-Several works have shown, that for a computer controlled smart grid, that failures originating at sensors or the communication network have the potential to cause the cyber entities controlling the physical networks to take incorrect actions.
+Several works have shown\cite{Roth2012}\cite{HARINI}\cite{CYBERRESEARCHCALL}, that for a computer controlled smart grid, that failures originating at sensors or the communication network have the potential to cause the cyber entities controlling the physical networks to take incorrect actions.
 Work has been undertaken to identify faulty sensing components in a network, but the identification of bad sensing equipment may not always be possible.
 Additionally, it is not always possible to identify if the origin of an issue is a faulty sensor or an outside attacker.
 
-If the cyber entity itself has been compromised, it could potentially exhibit Byzantine behavior, causing it to try and trick other components into bad actions, or it may try to disrupt the physical network directly.
+If the cyber entity itself has been compromised, it could potentially exhibit Byzantine behavior, causing it to try and trick other components into bad actions\cite{Roth2012}, or it may try to disrupt the physical network directly.
 Work has been done to try and identify when an entity in a cyber network is actively working to compromise the physical network by using the underlying physical invariants.
 However, even if a cyber entity is trying to behave correctly, disruptions to the communication network or the sensors it uses can cause it to take actions similar to a process that is actively attempting to destabilize the system.
 As before, these actions can be identified by using the underlying invariants of the physical network after they have occurred.
