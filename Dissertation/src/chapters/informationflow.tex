@@ -215,37 +215,74 @@ Therefore, $j \in N_i$, and $B_j \varphi$ is MSDND secure to $i$.
 \end{table}
 \end{proof}
 
-The complete set of atoms and beliefs available in a particular domain may not be necessary to construct the desired model nor may it be the state the model uses. Let $Im(D_i, w)$ define an image function for a particular domain $i$, and world. The image function produces a state suitable for use in a Markov chain. We assume that in our system, any beliefs an agent hold stem from information transfer from another agent. Therefore, we can assert that the beliefs in $L_i$ for any process $i$ must have a traceable history that stems from a process having a valuation for the referenced atom that aligns with the belief process $i$ holds about that wff. Furthermore, wffs in $N_i$ but not $L_i$ do not have valuation in domain $D_i$ and cannot be used in the construction of the image.
+We assume that in our system, any beliefs an agent hold stem from information transfer from another agent. Therefore, we can assert that the beliefs in $L_i$ for any process $i$ must have a traceable history that stems from a process having a valuation for the referenced atom that aligns with the belief process $i$ holds about that wff. Furthermore, wffs in $N_i$ but not $L_i$ do not have valuation in domain $D_i$ and cannot be used in the construction of the image.
+
+With a mapping of the probability of transitioning between worlds, the Kripke Model itself becomes a Markov Chain\cite{kripkemarkov1}\cite{kripkemarkov2}.
+Since the Kripke model is complete representation of the system being modeled, each world must be memoryless with respect to any world that has an $R$ relation onto that world ($w_xRw_y$).
+If there was any information that would affect the probability of transitioning to the next state in the world, the world would not be complete, and would violate the necessary completeness property of the model.
+
+%An imaging function for a Kripke-Markov model is then actually an application of lumpability\cite{markov-lumpability}.
+%The ``lumps'' produced by the imaging function are restricted to the class of information that is MSDND insecure to an agent in that domain.
+%By necessity of being insecure, all information used in an image must have a valuation function for the domain the image is being taken from.
+
+The complete set of wffs and beliefs available in a particular domain may not be necessary to construct the desired model nor may it be the state the model uses. Let $Im(D_i, w)$ define an image function for a particular domain $i$, and world $w$.
+An image function is an observation of the state of the system from the view of a domain $D_i$.
+The image function produces an observation suitable for use in a Markov chain or \ac{HMM}.
+If an image function is non-hiding it can be used in a Markov chain.
+Otherwise, it is hiding, and must be used in conjunction with a \ac{HMM}.
+
+Let $\Pr(w_{i}Rw_{i+1})$ be the probability of transitioning from world $w_i$ to world $w_{i+1}$.
+Let $\Pr(w_{i}Rw{i+1} \wedge w_{i+1}R... \wedge ...RW_{n})$ be the probability of following a sequence of worlds from some world $w_i$ to some world $w_n$.
+There may be multiple sequences that lead from world $w_i$ to world $w_n$.
+Let $\Pr(I_1 \rightarrow I_2)$ be the probability of transitioning from $I_1$ to $I_2$.
+Let $W_1$ and $W_2$ be the set of worlds that produce $I_1$ and $I_2$, respectively.
+Let $W_C$ be the set of worlds where an image of the system would be taken.
+We restrict $W_1$ and $W_2$ to be a subset of $W_C$.
+Let $W_1 = \{ w_x | Im(D_i, w_x) = I_1 \}$ and $W_2 = \{ w_x | Im(D_i, w_x) = I_2 \}$.
+Note that $W_1 \subset W_C$ and $W_2 \subset W_C$.
+We obligate that $I_1 \neq I_2 \rightarrow W_1 \cap W_2 = \emptyset$.
+$I_2$ is a successor to $I_1$ in a Markov chain if there is a sequence of worlds for every $w_x \in W_1$ that leads to a $w_y \in W_2$.
+Let $\Pr(w_x \rightarrow w_y)$ be the probability of going through any sequence $\Pr(w_{x}Rw{x+1} \wedge w_{x+1}R... \wedge ...RW_{y})$ where $w_x \in W_1$ and $w_y \in W_2$ and no world in that sequence except $w_x$ and $w_y$ are in $W_C$.
+
+\begin{pdef}
+    An image $I_1$ is non-hiding if, for every $I_2$ that is a successor to $I_1$, for every world $w_x \in W_1$ and every $w_y \in W_2$ that can be reached from $w_x$ before any other element of $W_C$, $\Pr(w_x \rightarrow w_y) = \Pr(w_x' \rightarrow w_y')$, where $w_x'$ and $w_y'$ are another pair of worlds that fulfill the same requirements for $w_x$ and $w_y$.
+\end{pdef}
+
+An image is hiding if the imaging function discards (or cannot determine) some part of the state necessary to produce a time-homogeneous Markov chain.
 
 \begin{thm}
-For any pair of worlds $w_1$ and $w_2$ where $Im(D_i, w_1)=I_1$ and $Im(D_i, w_2)=I_2$ if $I_2$ is an immediate successor of $I_1$ in the constructed model, the model will have the memorylessness property if for every world $w_k \in W$ where $Im(D_i, w_k)=I_1$ and every world $w_l \in W$ where $Im(D_i, w_l)=I_2$ every possible sequence of worlds that goes from $w_k$ to $w_l$ is equally as likely as the sequence that leads from $w_1$ to $w_2$. 
+A Markov chain is non-hidden if every image used in the chain is non-hiding.
 \end{thm}
 
 \begin{proof}
-Proof: If this theorem is true, then the arrival at an imaged state $I_2$ depends only on the worlds which yield the Image $I_1$. Since the world contains the complete depiction of the state of the system, it is necessary that any additional information not used in the imaging function does not affect the likelihood of arriving at the next image in the model.
-
-Let $\Pr(w_{i}Rw_{i+1})$ be the probability of transitioning from world $i$ to world $i+1$. Let $\Pr(w_{i}Rw{i+1} \wedge w_{i+1}R... \wedge ...RW_{n})$ be the probability following a sequence of worlds from some world $i$ to some world $n$. There may be multiple sequences that lead from world $w_i$ to world $w_n$. Let $\Pr(w_i \rightarrow w_n)$ be the combined probability of any sequence of worlds that leads from a world $w_i$ to the first encounter of world $w_n$.
-
-It is worth noting then that with a mapping of the probability of transitioning between worlds, the Kripke Model itself becomes a Markov Chain.
-Since the Kripke model is complete representation of the system being modeled, each world must be memoryless wrt to any world that has an $R$ relation onto that world ($w_xRw_y$).
-If there was any information that would affect the probability of transitioning to the next state in the world, the world would not be complete, and would violate the necessary completeness property of the model.
-
-An imaging function for a Kripke-Markov model is then actually an application of lumpability\cite{markov-lumpability}.
-The ``lumps'' produced by the imaging function are restricted to the class of information that is MSDND insecure to an agent in that domain.
-By necessity of being insecure, all information used in an image must have a valuation function for the domain the image is being taken from.
-
-To hold the memoryless property, given a pair of images $I_1$ and $I_2$, where $I_2$ is an immediate successor of $I_1$ in the Markov chain. Let $W_1 = \{ w_x | Im(D_i, w_x) = I_1 \}$ and $W_2 = \{ w_x | Im(D_i, w_x) = I_2 \}$. $I_1 \neq I_2 \rightarrow W_1 \cap W_2 = \emptyset$, since the images must not be equal. Furthermore, there exists a sequence of worlds for every $w_x \in W_1$ that leads to a member for $W_2$.
-
-Then, for every world $w_x \in W_1$ and for every $w_y \in W_2$ that can be reached from $w_x$ before any other member of $W_2$, $\Pr(w_x \rightarrow w_y) = \Pr(w_x' \rightarrow w_y')$. Where $w_x'$ and $w_y'$ are another pair of world that fulfill the same requirements for $w_x$ and $w_y$.
-
-Additionally, for any $\Pr(w_x \rightarrow w_y)$, $\Pr(w_x \rightarrow w_y) = \Pr(w_x \rightarrow w_y | w_{z}R...Rw_{x})$, where $w_z$ is some other world that can reach $w_x$ through some sequence of worlds. As a consequence of this property the probability of encountering a sequence of the transitions is equally as likely regardless of the sequence that led up to that point.
+    Proof: A Markov chain is not hidden if the observation and state match.
+    If every image used in a Markov chain is non-hiding, every observation matches.
 \end{proof}
 
-\begin{cor}
-Any sequence of worlds described by a Kripke Model that is complete fulfills the obligation that $\Pr(w_x \rightarrow w_y)$, $\Pr(w_x \rightarrow w_y) = \Pr(w_x \rightarrow w_y | w_{z}R...Rw_{x})$
-\end{cor}
+\begin{thm}
+    Any Markov chain constructed using an imaging function $Im()$ on a Kripke model is memoryless.
+\end{thm}
 
-Proof by contradiction: If with this property, the model is not memoryless, then there must be information not contained in the worlds that affects the next world in the sequence of the system. However, the world must be complete, and if the there is information that is not in the world, the world must not be complete.
+\begin{proof}
+    Proof: Let $I_1$ and $I_2$ be a pair of images, where $I_2$ is an immediate successor of $I_1$ in a Markov chain.
+\begin{case}
+    The Markov chain is non-hidden.
+\end{case}
+
+Since the Markov chain is non-hidden the probability of transitioning from any world in $W_1$ to any world in $W_2$ as part of a sequence of worlds from $I_1$ to $I_2$ is independent of the worlds where the sequence begins ($\in W_1$) or ends ($\in W_2$).
+
+Since every Kripke model with probabilistic mapping is memoryless, the probability of transitioning from a world $w_x \in W_1$ to a world in a sequence that leads to $W_2$ is independent of the sequence that lead to the world $w_1$.
+
+Therefore, since every transition for every sequence of worlds from $I_1$ to $I_2$ is memoryless, the transition from $I_1$ to $I_2$ must be memoryless as well. If this were not the case, there must be some transition in the sequence of worlds from $I_1$ to $I_2$ that is not memoryless, which contradicts the memorylessness of the Kripke model with probabilistic mapping.
+
+\begin{case}
+    The Markov chain is hidden.
+\end{case}
+
+If the Markov chain is hidden, there must be information encoded in the worlds that is not captured by the imaging function.
+However, the underlying transitions between worlds which are hidden are still obligated to be memoryless.
+For an \ac{HMM} only the hidden variables are obligated to be memoryless, therefore, a \ac{HMM} constructed from a Kripke Model with probabilistic mapping and Imaging function is always memoryless.
+\end{proof}
 
 For the sequences of worlds that connect the two worlds $w_x$ and $w_y$, we suppose there are two reasons for the differing available paths: 1) global message and execution ordering and 2) probabilistic logical departures. For type 1, we generally ignore these effects: messages that arrive within a deadline imposed by the agent running the algorithm, or the global total ordering of reactions to messages are not important. We define these then as equally likely transpositions of single path. The second type can be avoided by limiting non-determinism in the algorithms, and avoiding execution decisions influenced by type 1 sequences.
 
@@ -265,7 +302,7 @@ If the imaging function produces the same image for every world, there is no oth
 The case where $L_i = M_i = N_i$ (No messages have been lost).
 \end{case}
 
-If no messages are lost, the sequence of worlds that a process goes through between states depends only on the ordering of events in the system. 
+If no messages are lost, the sequence of worlds that a process goes through between states depends only on the ordering of events in the system, which are equally likely.
 
 \begin{case}
 The case where $L_i \subsetneq M_i \subsetneq N_i$

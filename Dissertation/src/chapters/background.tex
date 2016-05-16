@@ -167,7 +167,7 @@ We try to constrain the discussion about reliability in the distributed systems 
 %State what states mean.
 %State what transition probabilities mean. State what ergodicity is. State what stationarity is. State how we generate the sequence of states.
 
-A Markov chain is a collection of states and probabilistic transitions between those states.
+A Markov chain is a finite set of states $W=\{w_1, w_2, ..., w_n\}$ and probabilistic transitions between those states.
 States in a Markov chain are mutually exclusive.
 In a Markov chain, when a system is some state $i$ it has some probability of transitioning to some other state $j$ at the next time-step.
 A Markov chain is a first order chain if the probability of transitioning from $i$ to $j$ does not depend on the history of transitions that lead to state $i$.
@@ -179,7 +179,7 @@ The Markov property describes a Markov chain as a sequence of random variables $
 \nonumber \\ &= \Pr(X_{n+1}=x\mid X_n=x_n). \end{align}
 
 An ergodic Markov chain is a chain where it is possible, in some finite number of steps, to go from any state to any other state.
-A stationary Markov chain is one where the transition probabilities do not change over time.
+A stationary, or time homogenous, Markov chain is one where the transition probabilities do not change over time.
 In a stationary Markov chain, the $n$th visit to a state is indistinguishable from the $n+1$th visit to a state.
 
 \subsection{Discrete Time Markov Chain}
@@ -187,8 +187,8 @@ In a stationary Markov chain, the $n$th visit to a state is indistinguishable fr
 A \ac{DTMC} is one where the transitions between states happen at discrete time steps.
 A \ac{DTMC} with $m$ states can be represented by a $m\times m$ matrix.
 For simplicity when creating the model, matrices in this work are 1-indexed.
-In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $i$ to $j$.
-It should be obvious the sum of each row in the matrix is equal to one:
+In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $s_i$ to $s_j$.
+The matrix is row stochastic, meaning the sum of each row in the matrix is equal to one:
 
 \begin{equation} \sum_{i=1}^{m} P_{ij} = 1. \end{equation}
 
@@ -213,7 +213,7 @@ The steady state can by found via a system of equations: \cite{MARKOV3}
 \pi_j = \sum_{i=1}^{m} \pi_i p_{ij}
 \end{align}
 
-In the following sections, the computation of the steady state will be noted as $Steady()$.
+The computation of the steady state will be noted as $Steady()$.
 A Markov chain can also be used to predict what state a process will be in at some point in the future.
 Given a initial state and a number of time-steps a matrix operation will yield the likelihood of the process being in each state after the time interval has passed.
 The mean passage time, a measure of how many time-steps will pass before a process returns or arrives to some state, can also be calculated.
@@ -264,19 +264,49 @@ Consider then two streams of random variables.
 One is exponentially distributed and used to determine the amount of time in a state.
 The second stream is normally distributed and used to determine which state to transition to through the intensity matrix.
 
+\subsection{Hidden Markov Model}
+
+A \ac{HMM} is a Markov chain where the state is not directly visible to an observer.
+Instead, the \ac{HMM} outputs observations related to the underlying, hidden, state.
+The hidden state, is assumed to still meet the Markov property.
+A \ac{HMM} is described by the notation $\lambda = (\Pi, P, B)$, where $\Pi$ is the initial state distribution vector, $P$ is the matrix of state transition probabilities, and $B$ is the observation probability distribution.
+The $B$ set maps each state in $W$ to a probability distribution for an observation.
+Let $y$ be some observation, where $y \in Y$, a finite set of discrete, possible values.
+$B$ then is a $|S|\times|Y|$ matrix where $B_ij = \Pr(Y_j|s_i)$, the probability of observing $Y_j$ given the system is in some hidden state $s_i$.
+If $|S|=|Y|$ and $B$ is an identity matrix, then the "\ac{HMM}" described by $\lambda$ is a standard Markov Chain.
+
 \section{Information Flow}
 
 \subsection{Modal Logic}
 
-Kripke frames\cite{kripke1959}\cite{blackburn2002modal} play a critical role in the development of this work. The essential concept of this work is that each global state of the distributed system at any given instant can be captured as a countably infinite set of propositional variables. A Kripke frame is a pair $<W,R>$\cite{french2006} such that W is a set of of possible versions of the global state over time, where each element in $W$ is known as a world. Each element of $R$ describes a binary relationship for how the described system can move from world to world as events occur in the described system.
+Kripke frames\cite{kripke1959}\cite{blackburn2002modal} play a critical role in the development of this work.
+The essential concept of this work is that each global state of the distributed system at any given instant can be captured as a countably infinite set of propositional variables.
+A Kripke frame is a pair $<W,R>$\cite{french2006} such that $W$ is a set of of possible worlds, such each world corresponds to a unique global state of the system.
+Each element of $R$ describes a binary relationship for how the described system can move from world to world as events occur in the described system.
 
-In the case of a distributed system, a world could be described as one the possible combinations of values of all boolean state variables $S=\{s_0, s_1, ... s_n\}$ in that system. As execution occurs, messages, time, or events cause these variables to change. Each change in boolean variables corresponds to a relationship in $R$\cite{Gehrke200565}. Therefore, a world $w$ is one possible valuation of all the variables in $S$ and a transition from $w$ to another $w'$ (with its own valuation) can be noted as $wRw'$. Without loss of generality, each relationship in $R$ must result in the change of at least one variable in $S$. Additionally, the set of world is complete: every possible combination is represented in the set of worlds. No relationship can lead to a world that does not exist.
+In the case of a distributed system, a world could be described as one the possible combinations of values of all boolean state variables $S=\{s_0, s_1, ... s_n\}$ in that system.
+As execution occurs, messages, time, or events cause these variables to change.
+Each change in boolean variables corresponds to a relationship in $R$\cite{Gehrke200565}.
+Therefore, a world $w$ is one possible valuation of all the variables in $S$ and a transition from $w$ to another $w'$ (with its own valuation) can be noted as $wRw'$.
+Without loss of generality, each relationship in $R$ must result in the change of at least one variable in $S$.
+Additionally, the set of world is complete: every possible combination of state variable values is represented in the set of worlds.
+No relationship can lead to a world that does not exist.
 
-Additionally, we can define a set of valuation functions, $\{V\}$. Each function $V^i_{s_x}$ in $V$ describes the value observed by an agent $i$ of a boolean state variable $s_x$.  If a valuation function for a particular state variable is not defined for an agent, that agent cannot determine the value of that state variable, and cannot determine the value of any logical statement based on that variable. In the case of a distributed system, this concept is analogous to the isolation of memory for each agent. For example, an agent $i$, cannot simply determine the value of a variable for agent $j$.
+Additionally, we can define a set of valuation functions, $\{V\}$.
+Each function $V^i_{s_x}$ in $V$ describes the value observed by an agent $i$ of a boolean state variable $s_x$. 
+If a valuation function for a particular state variable is not defined for an agent, that agent cannot determine the value of that state variable, and cannot determine the value of any logical statement based on that variable.
+In the case of a distributed system, this concept is analogous to the isolation of memory for each agent.
+For example, an agent $i$, cannot simply determine the value of a variable for agent $j$.
 
-The combination of a Kripke Frame $< W,R >$ and a set of valuation functions ${V}$ is a Kripke Model $M = \{W, R, V\}$ sometimes known as a modal model. The complete model describes all the possible worlds, the relation between those worlds and the information available in the domains of the system.
+The combination of a Kripke Frame $< W,R >$ and a set of valuation functions ${V}$ is a Kripke Model $M = \{W, R, V\}$ sometimes known as a modal model.
+The complete model describes all the possible worlds, the relation between those worlds and the information available in the domains of the system.
+A Kripke Model can be made into a Markov chain if a transition probability matrix $P : |W| x |W| \rightarrow [0,1]$ is mapped to each transition in $R$.\cite{kripkemarkov1}\cite{kripkemarkov2}
 
-Let $\varphi \in \Phi_0$ be an atomic proposition in a set of countably many propositions. The set of well-formed formulas (wffs) as defined by the formulation rules in \ref{tab:axiomatic} is the least set containing $\Phi_0$. Additionally, we use the modal operator $\Box$ as an abbreviation for $\neg \Diamond \neg \varphi$. The complete axiomatic system is outlined in \ref{tab:wffs}. For the uninitiated, the modal box operator ($\Box$), ``it is necessary that'' states (in the case of $\Box \varphi$) that in every world $w$, $\varphi$ is true. As its dual, the diamond operator ($\Diamond$) states, that it is not the case that in every world, $\varphi$ is true.
+Let $\varphi \in \Phi_0$ be an atomic proposition in a set of countably many propositions.
+The set of well-formed formulas (wffs) as defined by the formulation rules in \ref{tab:axiomatic} is the least set containing $\Phi_0$.
+Additionally, we use the modal operator $\Box$ as an abbreviation for $\neg \Diamond \neg \varphi$.
+The complete axiomatic system is outlined in \ref{tab:wffs}.
+For the uninitiated, the modal box operator ($\Box$), ``it is necessary that'' states (in the case of $\Box \varphi$) that in every world $w$, $\varphi$ is true. As its dual, the diamond operator ($\Diamond$) states, that it is not the case that in every world, $\varphi$ is true.
 
 \begin{table}[]
 \small
