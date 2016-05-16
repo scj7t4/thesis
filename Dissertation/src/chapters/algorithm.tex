@@ -588,9 +588,6 @@ There is no way to for a process that is not in a group to know what processes a
 % Set of worlds may need to be defined over a round of execution? Keep space smaller, fixes belief revision.
 % You can show two worlds, one where the process is group and the other where its ungrouped have different outcomes
 % for a third process.
-\begin{thm}
-In the modified election algorithm a lower priority process cannot construct a non hidden model.
-\end{thm}
 
 % You can show that the there is no way for the process to know that, the state is MSDND secure.
 % Lastly, we need to show there is no way of making it independent
@@ -599,33 +596,11 @@ In the modified election algorithm a lower priority process cannot construct a n
 % can know that the invites will work, every other process depends on the state of the highest priority process
 % which is not memoryless. No matter how it is defined, allowing a process with a higher priority to determine
 % The state prevents a lower priority one from doing so.
-\begin{proof}
-Consider a system with three processes: A, B, and C.
-Process priorities are assigned such that $A > B > C$.
-Next, consider two worlds that produce the same image for process B: the world where C is grouped with A ($w_1$) and the world where C is not grouped with A ($w_2$).
-Additionally, the world $w_3$ as one of the outcomes of a round of execution where B is grouped with C.
-
-In the world where A is grouped with C, process B has no chance of grouping with C, as C is already with its ideal coordinator.
-Therefore $\Pr(w_1 \rightarrow \w_3) = 0$.
-
-If C is not grouped with A then B can potentially group with process C.
-Therefore $\Pr(w_1 \rightarrow \w_3) \neq 0$
-
-Because the state of C is MSDND secure to B each time a round executes, any imaging function for B cannot include information which would differentiate between $w_1$ and $w_2$.
-Therefore $Im(w_1, B) = Im(w_2, B)$.
-Since $\Pr(w_1 \rightarrow w_3) \neq \Pr(w_1 \rightarrow w_3)$ which violates the memorylessness property.
-\end{proof}
-
 
 % Really, the arguement is, if the state affects you can you can't determine it, you can't construct a model.
 % Maybe as a corrollary?
 % Well, in this case, the highest priority process is not affected by the state it doesn't know.
 % Can I prove that if the markov chain is first order, some other process must always be affected by the hidden state?
-Let $W_O$ be the set of worlds that describe outcomes of a round of execution in a modeled partially synchronous leader election.
-Let $W
-\begin{thm}
-\end{thm}
-
 
 \section{Independent Algorithm}
 

@@ -8,15 +8,17 @@ Instead, computers in a distributed system typically interact through a message 
 
 As a result, distributed computing is a challenging area of research.
 In a distributed system, since processes do not share a universal clock, the ordering of messages and events needed to be carefully considered to ensure correct operation of the system.
-Additionally, since individual components fail, determining how components fail is also difficult in a distributed system.
-Different types of failures can cause different kinds of information to be withheld from processes or changed to disrupt those processes.
+Additionally, since individual components fail, determining which components fail and how they affect the system as a whole is also difficult in a distributed system.
+Different types of failures can cause different kinds of information to be withheld or changed, disrupting those processes.
 
 \section{Execution And Communication Models}
 
 In this work we consider a distributed system where no processes in the system share an address space.
 All processes must use a message passing interface in order to communicate with other processes to exchange information.
 As a result of the complexities of distributed systems, various execution models have been developed to define how the execution of a distributed system proceeds.
-Different execution models exchange how easy it is to reason about the system's execution and the types of algorithms that can be executed or how complicated they are to implement.
+Different execution models affect how easy it is to reason about the system's execution, the types of algorithms that can be executed, and how complicated they are to implement.
+
+\subsection{Communication Channels}
 We describe the avenues of communication between processes as channels.
 A channel is classified as reliable if it meets 3 axioms:
 
@@ -36,7 +38,7 @@ A channel is classified as reliable if it meets 3 axioms:
 \end{axm}
 
 These are often referred to as synchronous channels.
-In this work however, channels are not assumed to be perfectly reliable.
+In this work, however, channels are not assumed to be perfectly reliable.
 Instead, we respect Axiom \ref{axm:reliable-channel-fifo}, partially fulfill Axiom \ref{axm:reliable-channel-sender}, and disregard Axiom \ref{axm:reliable-channel-delay}.
 Therefore, we assume the following about communication channels in the systems modeled (replacing Axiom \ref{axm:reliable-channel-sender})
 
@@ -47,20 +49,22 @@ Therefore, we assume the following about communication channels in the systems m
 As well as Axiom \ref{axm:reliable-channel-fifo}.
 Without the constrained propagation delay from \ref{axm:reliable-channel-delay}, this type of communication channel is typically referred to as an asynchronous channel.
 
-Clocks are considered synchronized if every clock in the system reads the same time.
-Since it is impossible for independent clocks to tick at the same rate, weak synchronization is used to describe when clocks in the system have an upper bound on drift rate from each other.
-
-The communication model can be synchronized or asynchronous.
+The communication model can be synchronus or asynchronous.
 In the synchronous communication model, processes can only send a message when the receiving process is ready to receive it.
 Algorithmically, sending in a synchronous model is usually considered a ``blocking'' operation, meaning that once a process tries to send a message, it cannot proceed until the message is received.
 In this work, communication is asynchronous, meaning that a process does not wait for the successful delivery of a message.
 This is known as a non-blocking send.
 
+\subsection{Clocks}
+Clocks are considered synchronized if every clock in the system reads the same time.
+Since it is impossible for independent clocks to tick at the same rate, weak synchronization is used to describe when clocks in the system have an upper bound on drift rate from each other.
+
+\subsection{Execution}
 In a system with synchronous processes, processes execute in lockstep.
 At each step a process executes its next available action.
 Synchronous execution requires tight organization of the processes executing the algorithm.
 In this work we generally rely on partially synchronous execution by processes.
-In the partically synchronous model proceeds in rounds or phases.
+In the partically synchronous model, execution proceeds in rounds or phases.
 The start of each round or phase is synchronized between processes, using a synchronized clock.
 
 \section{Faults, Failures, and Errors}
@@ -69,7 +73,7 @@ Processes can encounter incorrect behavior or issues during execution.
 Errors, faults, and failures describe the severity and consequence of the issue.
 
 \begin{pdef}
-An error is a difference between what is considered ``correct'' output for a given component, and the actual output-- an incorrect result.
+An error is a difference between what is considered ``correct'' output for a given component, and the actual output: an incorrect result.
 \end{pdef}
 
 \begin{pdef}
@@ -84,7 +88,7 @@ Failure is the inability for a component or system to perform its required funct
 
 A crash failure or its more generalized form, a fail-stop failure, describes a failure in which a process stops executing.
 In general, this is considered to be an irreversible failure, since a process typically does not resume from a crashed state.
-There are categorizations of crash failures, called napping failure where a process will appear to have crashed for a finite amount of time before resuming normal operation.
+There is a special category of crash failures, called napping failures, where a process will appear to have crashed for a finite amount of time before resuming normal operation.
 Crash failures are impossible to detect with absolute certainty in an asynchronous system.
 Processes can be suspected by other processes through the use of challenge/response messages or heartbeat messages that allow a process to prove that it has not crashed yet.
 A system that can handle a crash failure is implied to be able to handle a fail-stop failure.\cite{DISTRIBUTED}
@@ -99,17 +103,17 @@ The fail-stop failure has three properties \cite{DISTRIBUTED}:
 
 \subsection{Omission Failure}
 
-An omission fault\cite{OMISSIONFAILURES} occurs when a message is never received by the receiver.
+An omission fault\cite{OMISSIONFAILURES} occurs when a message is never received by the intended recipient.
 Omission faults can occur when the communication medium is unavailable or when the latency of message exceeds a timeout for its expected delivery.
 Protocols like TCP do not tolerate omission failures: a packet is resent until it is acknowledged by the receiver.
 If the acknowledgment never comes, the connection is closed.
 As a contrast, UDP assumes that any datagram could be lost and it is the responsibility of the programmer to handle missing datagrams appropriately.
-An omission failure can have the same observable affects as a napping failure in some situations. \cite{DISTRIBUTED}
+An omission failure can have the same observable affects as a napping failure in some situations.\cite{DISTRIBUTED}
 
 
 \subsection{Failure Detectors}
 
-Failure detectors \cite{FAILUREDETECTORS} (Sometimes referred to as unreliable failure detectors) are special class of processes in a distributed system that detect other failed processes. Distributed systems use failure detection to identify failed processes for group management routines. Because it isn't possible to directly detect a failed process in an asynchronous system, there has been a wide breadth of work related to different classifications of failure detectors, with different properties. Some of the properties include\cite{FAILUREDETECTORS}:
+Failure detectors\cite{FAILUREDETECTORS} (Sometimes referred to as unreliable failure detectors) are special class of processes in a distributed system that detect other failed processes. Distributed systems use failure detection to identify failed processes for leader election routines. Because it isn't possible to directly detect a failed process in an asynchronous system, there has been a wide breadth of work related to different classifications of failure detectors, with different properties. Some of the properties include\cite{FAILUREDETECTORS}:
 
 \begin{itemize}
     \item Strong Completeness - Every faulty process is eventually suspected by
@@ -130,13 +134,14 @@ Failure detectors \cite{FAILUREDETECTORS} (Sometimes referred to as unreliable f
 One class of failure detectors, Omega class Failure detectors, are particularly interesting because of \cite{LEADERELECTIONEVAL}. An eventual weak failure (weak completeness and eventual weak accuracy) detector is the weakest detector which can still solve consensus. It is denoted several ways in various works including $\diamond \mathcal{W}$ \cite{FAILUREDETECTORS}, $\mathcal{W}$ \cite{WEAKESTFAILURE1} \cite{WEAKESTFAILURE2} and $\Omega$ (Omega) \cite{LEADERELECTIONEVAL}.
 
 
-\subsection{Byzantine Failures}
+\subsection{Byzantine Fault}
 
-In a Byzantine failure, processes in the distributed system intentionally send information that is incorrect or misleading to other processes.
+Byzantine fault, causes processes in the distributed system send information that is incorrect or misleading to other processes.
 Constraints for detecting processing that exhibit Byzantine behavior is a famous result in distributed systems.\cite{byzantine-generals}
 
 \section{Probability}
 
+Several concepts are useful for reasoning about the stochastic properties of a distributed system.
 The expected value represents the long-term average output of a probability distribution.
 
 \begin{equation}E[X] = x_1 p_1 + x_2 p_2 + ... + x_k p_k \end{equation}
@@ -156,7 +161,7 @@ Reliability is the ability of a system or component, in specified conditions, to
 \begin{equation}R(t) = \Pr(T > t) = \int_t^{\infty} f(x) dx\end{equation}
 
 Where $R(t)$ is the probability that the system or component functions up until at least time $t$ and $f(x)$ is the probability density function for the component's survival.
-Unfortunately there is a clashing of the term for reliability in distributed systems and in reliability analysis.
+Unfortunately, there is a clash of the term for reliability in distributed systems and in reliability analysis.
 We try to constrain the discussion about reliability in the distributed systems sense to communication channels.
 
 \section{Markov Models}
@@ -169,7 +174,7 @@ We try to constrain the discussion about reliability in the distributed systems 
 
 A Markov chain is a finite set of states $W=\{w_1, w_2, ..., w_n\}$ and probabilistic transitions between those states.
 States in a Markov chain are mutually exclusive.
-In a Markov chain, when a system is some state $i$ it has some probability of transitioning to some other state $j$ at the next time-step.
+In a Markov chain, when a system is some state $w_i$ it has some probability of transitioning to some other state $w_j$ at the next time-step.
 A Markov chain is a first order chain if the probability of transitioning from $i$ to $j$ does not depend on the history of transitions that lead to state $i$.
 First order chains are described as having a memoryless or Markov property.
 This formalizes the independence of the next state from the history of previous states.
@@ -179,7 +184,7 @@ The Markov property describes a Markov chain as a sequence of random variables $
 \nonumber \\ &= \Pr(X_{n+1}=x\mid X_n=x_n). \end{align}
 
 An ergodic Markov chain is a chain where it is possible, in some finite number of steps, to go from any state to any other state.
-A stationary, or time homogenous, Markov chain is one where the transition probabilities do not change over time.
+A stationary, or time homogeneous, Markov chain is one where the transition probabilities do not change over time.
 In a stationary Markov chain, the $n$th visit to a state is indistinguishable from the $n+1$th visit to a state.
 
 \subsection{Discrete Time Markov Chain}
@@ -187,7 +192,7 @@ In a stationary Markov chain, the $n$th visit to a state is indistinguishable fr
 A \ac{DTMC} is one where the transitions between states happen at discrete time steps.
 A \ac{DTMC} with $m$ states can be represented by a $m\times m$ matrix.
 For simplicity when creating the model, matrices in this work are 1-indexed.
-In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $s_i$ to $s_j$.
+In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $w_i$ to $w_j$.
 The matrix is row stochastic, meaning the sum of each row in the matrix is equal to one:
 
 \begin{equation} \sum_{i=1}^{m} P_{ij} = 1. \end{equation}
@@ -198,14 +203,14 @@ While the transition matrix describes how system will transition between states,
 \begin{pdef}
 A state distribution vector is an $m$-dimensional vector composed of probability of observing each state in the system at a given instant:
 \[ [P_{1} \quad P_{2} \quad \ldots \quad P_{m} ] \]
-Where $P_{i}$ corresponds to the probability of observing state $i$.
+Where $P_{i}$ corresponds to the probability of observing state $w_i$.
 \end{pdef}
 
-A Markov chain is a suitable model for a memoryless random process with a finite number states which is observed at fixed time intervals.
-By utilizing a Markov chain, a variety of statistical analyses can be performed on these modeled system.
+A \ac{DTMC} is a suitable model for a memoryless random process with a finite number states which is observed at fixed time intervals.
+By utilizing a Markov chain, a variety of statistical analyses can be performed on the modeled system.
 For example, a Markov chain with the stationary and ergodic properties can be analyzed for its steady state probabilities.
-The steady state is a state distribution vector that describes the probability a random observation of a long-running process will observe some state $i$.
-The steady state can by found via a system of equations: \cite{MARKOV3}
+The steady state is a state distribution vector that describes the probability a random observation of a long-running process will observe some state $w_i$.
+The steady state probability distribution vector can by found via a system of equations: \cite{MARKOV3}
 
 \begin{align}
 0\leq\pi_j\leq1.0 \\
@@ -234,7 +239,7 @@ P\{ X(s+t)=j | X(s) = i \} = P\{ X(t)=j | X(0) = i \}
 \end{equation}
 
 Each transition has some expected value or holding time which describes the amount of time before a transition occurs.
-Continuous time models do not have transitions that return to the same state since the expected value of the transition time describes when how long the system  remains in the same state.
+\ac{CTMC} do not have transitions that return to the same state since the expected value of the transition time describes how long the system remains in the same state.
 The \ac{pdf} of the exponential distribution can be written as: \cite{MARKOV1}
 
 \begin{equation}
@@ -257,29 +262,23 @@ When there are multiple possible transitions from a state, each with their own e
 \end{equation}
 where $\lambda(x,y)$ is the expected amount of time before state $x$ transitions to state $y$.
 The expected time in a state ($\lambda(x)$) is related to the expected time for an individual transition ($\lambda(x,y)$) by a probability $p_{x,y}$.
-
 Each transition lends to an expected amount of time in the state.
-To do a random walk of a continuous time Markov chain, an intensity matrix must also be generated in order to describe which transition is taken after the exponentially distributed amount of time in the state has passed.
-Consider then two streams of random variables.
-One is exponentially distributed and used to determine the amount of time in a state.
-The second stream is normally distributed and used to determine which state to transition to through the intensity matrix.
 
 \subsection{Hidden Markov Model}
 
 A \ac{HMM} is a Markov chain where the state is not directly visible to an observer.
 Instead, the \ac{HMM} outputs observations related to the underlying, hidden, state.
-The hidden state, is assumed to still meet the Markov property.
+The hidden chain is assumed to still meet the Markov property.
 A \ac{HMM} is described by the notation $\lambda = (\Pi, P, B)$, where $\Pi$ is the initial state distribution vector, $P$ is the matrix of state transition probabilities, and $B$ is the observation probability distribution.
 The $B$ set maps each state in $W$ to a probability distribution for an observation.
 Let $y$ be some observation, where $y \in Y$, a finite set of discrete, possible values.
-$B$ then is a $|S|\times|Y|$ matrix where $B_ij = \Pr(Y_j|s_i)$, the probability of observing $Y_j$ given the system is in some hidden state $s_i$.
-If $|S|=|Y|$ and $B$ is an identity matrix, then the "\ac{HMM}" described by $\lambda$ is a standard Markov Chain.
+$B$ then is a $|W|\times|Y|$ matrix where $B_ij = \Pr(y_j|W_i)$, the probability of observing $y_j$ given the system is in some hidden state $s_i$.
 
 \section{Information Flow}
 
 \subsection{Modal Logic}
 
-Kripke frames\cite{kripke1959}\cite{blackburn2002modal} play a critical role in the development of this work.
+Kripke frames\cite{kripke1959}\cite{blackburn2002modal} play a critical role in this work.
 The essential concept of this work is that each global state of the distributed system at any given instant can be captured as a countably infinite set of propositional variables.
 A Kripke frame is a pair $<W,R>$\cite{french2006} such that $W$ is a set of of possible worlds, such each world corresponds to a unique global state of the system.
 Each element of $R$ describes a binary relationship for how the described system can move from world to world as events occur in the described system.
@@ -289,16 +288,16 @@ As execution occurs, messages, time, or events cause these variables to change.
 Each change in boolean variables corresponds to a relationship in $R$\cite{Gehrke200565}.
 Therefore, a world $w$ is one possible valuation of all the variables in $S$ and a transition from $w$ to another $w'$ (with its own valuation) can be noted as $wRw'$.
 Without loss of generality, each relationship in $R$ must result in the change of at least one variable in $S$.
-Additionally, the set of world is complete: every possible combination of state variable values is represented in the set of worlds.
-No relationship can lead to a world that does not exist.
+Additionally, the set of worlds is complete: every possible combination of state variable values is represented in the set of worlds.
+No relationship in $R$ can lead to a world that does not exist.
 
 Additionally, we can define a set of valuation functions, $\{V\}$.
-Each function $V^i_{s_x}$ in $V$ describes the value observed by an agent $i$ of a boolean state variable $s_x$. 
+Each function $V^i_{s_x}(w)$ in $V$ describes the value observed by an agent $i$ of a boolean state variable $s_x$ in some world $w$. 
 If a valuation function for a particular state variable is not defined for an agent, that agent cannot determine the value of that state variable, and cannot determine the value of any logical statement based on that variable.
 In the case of a distributed system, this concept is analogous to the isolation of memory for each agent.
 For example, an agent $i$, cannot simply determine the value of a variable for agent $j$.
 
-The combination of a Kripke Frame $< W,R >$ and a set of valuation functions ${V}$ is a Kripke Model $M = \{W, R, V\}$ sometimes known as a modal model.
+The combination of a Kripke Frame $< W,R >$ and a set of valuation functions ${V}$ is a Kripke model $K = \{W, R, V\}$ sometimes known as a modal model.
 The complete model describes all the possible worlds, the relation between those worlds and the information available in the domains of the system.
 A Kripke Model can be made into a Markov chain if a transition probability matrix $P : |W| x |W| \rightarrow [0,1]$ is mapped to each transition in $R$.\cite{kripkemarkov1}\cite{kripkemarkov2}
 
@@ -369,13 +368,31 @@ R5. & From $\vdash \varphi \equiv \psi$ infer $\vdash T_{i,j} \varphi \equiv T_{
 
 \subsection{Non-Deducible (MSDND) Security}
 
-In the domain of security there are a wide variety of aspects worth protecting in every system. These are grouped into the core security concepts of integrity, accessibility and privacy. Many traditional security approaches rely heavily on cryptography to provide privacy. However accidental information leakage can still occur, which compromises the privacy of the system. For cyber-physical systems, the leakage is difficult to control. Unlike their cyber counterparts, the actions taken by the physical components cannot be hidden from a casual observer. For example, a plane changing altitude or a car turning or changing speed cannot be hidden from an observer. Other, more complicated systems, like the power grid, have actions that are more difficult to observe, but a well motivated attacker can potentially collect critical information about the behavior of the cyber components with observations of the physical network\cite{Roth2012}.
+In the domain of security there are a wide variety of aspects worth protecting in every system.
+These are grouped into the core security concepts of integrity, accessibility and privacy.
+Many traditional security approaches rely heavily on cryptography to provide privacy.
+However accidental information leakage can still occur, which compromises the privacy of the system.
+For cyber-physical systems, the leakage is difficult to prevent.
+Unlike their cyber counterparts, the actions taken by the physical components cannot be easily hidden from an observer.
+For example, a plane changing altitude or a car turning or changing speed cannot be hidden from an observer.
+Other, more complicated systems, like the power grid, have actions that are more difficult to observe, but a well motivated attacker can potentially collect critical information about the behavior of the cyber components with observations of the physical network\cite{Roth2012}.
 
-Information Flow security models are invaluable for assessing what information, if any, is leaked by either the cyber of physical components of the \ac{CPS}. There are a number of information flow security models, all based off similar concepts. Typically, these models partition the system into two domains: the high security domain and the low security domain. However, the MSDND security model allows the system to partitioned into any number of domains. The MSDND model has been used to describe how the STUXNET attack was able to hide its malicious behavior from the operators. The MSDND security model is expressed using modal logic to determine what information in a domain is deducible to an observer in another domain. MSDND security exploits the possible worlds of modal logic to determine if there are worlds where the value of a logical atom is deducible by someone outside the domain.
+Information Flow security models are invaluable for assessing what information, if any, is leaked by either the cyber of physical components of the \ac{CPS}.
+There are a number of information flow security models, all based off similar concepts.
+Typically, these models partition the system into two domains: the high security domain and the low security domain.
+However, the MSDND security model allows the system to partitioned into any number of domains.
+The MSDND model has been used to describe how the STUXNET attack was able to hide its malicious behavior from the plant operators.
+The MSDND security model is expressed using modal logic to determine what information in a domain is deducible to an observer in another domain.
+This model exploits the possible worlds of modal logic to determine if there are worlds where the value of a logical atom is deducible by someone outside the domain.
 
-This information flow security model can be used to determine what an agent in a distributed system can determine about another agent. The exact specification of timing the distributed system becomes unnecessary as the modal model can express any combination of logical atoms in one of its worlds.\cite{Howser2012}\cite{STUXNET}\cite{Howser2013}
+This information flow security model can be used to determine what an agent in a distributed system can determine about another agent.
+The exact specification of timing the distributed system becomes unnecessary as the modal model can express any combination of logical atoms in one of its worlds.\cite{Howser2012}\cite{STUXNET}\cite{Howser2013}
 
-The MSDND security model can be expressed as follows\cite{STUXNET}. Consider a pair of state variables $s_x$ and $s_y$ which may or may not be in the same security domain. The value of $s_x$ and $s_y$ have a logical xor relationship: if $s_x$ is true, $s_y$ must be false. Given an agent $i$ that does not have a valuation function for either of those two variables, the system is MSDND secure for that agent and pair of variables. Written formally:
+The MSDND security model can be expressed as follows\cite{STUXNET}.
+Consider a pair of state variables $s_x$ and $s_y$ which may or may not be in the same security domain.
+The value of $s_x$ and $s_y$ have a logical xor relationship: if $s_x$ is true, $s_y$ must be false.
+Given an agent $i$ that does not have a valuation function for either of those two variables, the system is MSDND secure for that agent and pair of variables.
+Written formally:
 
 \begin{align}
 MSDND = \exists w \in W : w \vdash \Box [ (s_x \vee s_y) \wedge \neg(s_x \wedge s_y) ] 
@@ -393,7 +410,10 @@ In a system where the above logical relationship holds, the agent $i$ cannot det
 
 \subsection{BIT Logic}
 
-\ac{BIT} was developed by such and such to formalize a modal logic about belief and information transfer. \ac{BIT} logic has typically been applied to distributed systems, but has also played roles in \ac{CPS} security. The operations of the \ac{BIT} logic allow formal definition of how entities pass information, and how they will act on the information passed to them. \ac{BIT} logic utilizes several modal operators:
+\ac{BIT} was developed to formalize logic about belief and information transfer.
+\ac{BIT} logic has typically been applied to distributed systems, but has also played roles in \ac{CPS} security.
+The operations of the \ac{BIT} logic allow formal definition of how entities pass information, and how they will act on the information passed to them.
+\ac{BIT} logic utilizes several modal operators:
 
 \begin{itemize}
 \item $I_{i,j} \varphi$ defines the transfer of information directly from agent $j$ to an agent $i$. 
@@ -401,7 +421,8 @@ In a system where the above logical relationship holds, the agent $i$ cannot det
 \item $B_i \varphi$ defines the belief that an agent $i$ has about $\varphi$. The actual value of $\varphi$ is irrelevant: the agent $i$ believes it to be true.
 \end{itemize}
 
-These operators allow reasoning about information transference between entities. In the context of a distributed system, these operators allow the division of the actual state held by some agent $i$ to what some other agent $j$ believes agent $i$'s state is.
+These operators allow reasoning about information transfer between entities
+In the context of a distributed system, these operators allow the division of the actual state held by some agent $i$ to what some other agent $j$ believes agent $i$'s state is.
 
 \section{Explicit Congestion Notification}
 
