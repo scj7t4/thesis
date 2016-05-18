@@ -7,34 +7,46 @@
 
 \section{Methods}
 
-A model created for a distributed system must have sufficient information to create an accurate model. This information is difficult to obtain because of the circumstances many distributed systems run on. Without exact synchronization, an accurate global snapshot of the system cannot be taken. Instead of attempting to capture exact global snapshots, our approach relies on allowing an agent to reason about the state of the other agents in the system in order to allow that agent to construct a model which can then be distributed to other agents.
+A model created for a distributed system must have sufficient information to be accurate.
+The current state of distributed is difficult to obtain because memory spaces are typically isolated.
+Without exact synchronization, an accurate global snapshot of the system cannot be taken.
+Instead of attempting to capture exact global snapshots, our approach relies on allowing an agent to reason about the state of the other agents in the system.
+By doing so, an agent can construct a model.
 
+We propose the following structure for the execution environment of the distributed system:
+\begin{itemize}
+    \item Each agent has some set logical atoms which it manipulates as its algorithms execute.
+    \item Each agent belongs to domain unique to that agent (agent $i$ is the only member of logical domain $D_i$)
+    \item No agent can directly access an \ac{AP} outside of its domain.
+    \item The authenticity of any information transfer (using modal operator $I_{i,j}$) is never not trusted. However, the Trust ($T_{i,j}$) operator is still used to describe a message that is lost in transit: in all logical formulas presented the trust operator ($T_{i,j}$) describe the omission of a message.
+    \item Agents do not exhibit Byzantine failure, nor do they crash, only messages may be omitted.
+\end{itemize}
 
-To do this we propose the following structure for the execution environment of the distributed system:
-Each agent has some set logical atoms which it manipulates as its algorithms execute.
-Each agent belongs to domain unique to that agent (agent $i$ is the only member of logical domain $D_i$)
-No agent can directly access a logical atom outside of its domain.
-The authenticity of any information transfer (using modal operator $I_{i,j}$) is never not trusted. However, the Trust ($T_{i,j}$) operator is still used to describe a message that is lost in transit: in all logical formulas presented the Trust operator describe this circumstance.
-Agents do not exhibit Byzantine failure, nor do they crash, only messages may be omitted.
-
-If no information is passed between agents, they are MSDND secure (ignoring any sort of leakage from interactions in the physical world). As information is passed, aspects of the agents state are leaked. However, depending on when messages are sent, the agent can be left in doubt as to the state of the other agent. This has a common analogy to the two armies problem. 
-
-In order to create algorithms that can be modeled with a Markov chain, first the algorithm must allow at least one agent participating in the algorithm to determine an ``image'' of the current state of the algorithm. This image is descriptive enough to allow the agent to determine the probabilistic likelihood at arriving at the next image of the state of the algorithm. Secondly, to create modelable algorithms, we restrict it to a class of algorithms where the sequences of worlds that lead from one image to the next is equally likely.
+If no information is passed between agents, they are MSDND secure (ignoring any sort of leakage from interactions in the physical world).
+As information is passed, aspects of the agent's state are leaked.
+However, depending on when messages are sent and which message are lost, the agent can be left in doubt as to the state of the other agent.
+The two armies problem is a well known thought-experiment about the ability of multiple parties to reach consensus when there are omission faults.
 
 \section{Two Armies Problem}
 
-First, we will show that information flow analysis can be used to determine what state information is deducible to a particular agent in the system. To begin, we use the common two-armies problem to begin an analysis into what states can be determined in a distributed system.
+First, we will show information flow analysis can be used to determine what state information is deducible to a particular agent in a system.
+To begin, we use the common two-armies problem as a starting point.
+Using the MSDND security model, we will formally show which portions of the system state are leaked to an agent through message exchanges.
 
-In the two armies problem, two agents, which are generals of their respective armies must cooperate to attack an enemy city. However, the two armies are physically separated by the enemy city and must send messengers to each other to coordinate their plan. If the generals do not make an agreement on the attack, the attack will fail. However, the generals must come to an agreement when their channel for communication (a messenger) is unreliable (they can be captured by the enemy).
+In the two armies problem, two agents, which are generals of their respective armies must cooperate to attack an enemy city.
+However, the two armies are physically separated by the enemy city and must send messengers to coordinate their plan.
+If the generals do not make an agreement on when to attack, the attack will fail.
+The generals must come to an agreement when their channel for communication, a messenger, is unreliable and can be captured by the enemy.
 
-After one message has been sent, to one of the two generals, state of the other is MSDND secure. Let $\varphi_0$ be a logical atom that indicates ``General A will attack at dawn.'' For simplicity, we assume that after the time to attack is decided by General A, the agents will not reconsider the plan.
+After one message has been sent, to one of the two generals, the state of the intended recipient is MSDND secure to the sender.
+Let $\varphi_0$ be an \ac{AP} that indicates ``General A will attack at dawn.''
 
 \begin{thm}
 If no messages are exchanged, the state of the two generals is mutually MSDND secure. \label{thm:nomsg}
 \end{thm}
 
 \begin{proof}
-Proof: If no messages are exchanged and no information is leaked from the physical world, the two generals have no way of determining the other's state.
+If no messages are exchanged and no information is leaked from the physical world, the two generals have no way of determining the other's state.
 \end{proof}
 
 \begin{thm}
@@ -42,7 +54,6 @@ Once at least one messenger delivers a message to one of the Generals, one of th
 \end{thm}
 
 \begin{proof}
-Proof:
 Let $\{ \varphi_i : i \in 1,2 ... n \}$ describe the state that a general has received $\varphi_{i-1}$.
 
 \begin{case}
@@ -50,9 +61,11 @@ One messenger is sent by General A and arrives at General B.
 \label{case:generalsn0}
 \end{case}
 
-If no confirmations are sent, then General A clearly cannot deduce if General B has received the message and to General A, then to A, B is MSDND secure because it has no way to valuate $B_B \varphi_0$. However, to B, if B believes A's message then A is not MSDND secure to B, because B believes that $\varphi_0$ is true.
+If no confirmations are sent, then General A clearly cannot deduce if General B has received the message.
+To General A, General B is MSDND secure because it has no way to valuate $B_B \varphi_0$.
+However, to B, if B believes A's message then A is not MSDND secure to B, because B believes that $\varphi_0$ is true.
 
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \small
 \begin{tabularx}{\linewidth}{l l X}
@@ -63,19 +76,18 @@ If no confirmations are sent, then General A clearly cannot deduce if General B 
 5. & $B_{B} \varphi_0 \rightarrow \varphi_1$ & General B knows the plan. \\
 6. & $w \vDash V_{\varphi_0}^{B}(w)$ & $V_{\varphi_0}^{B}(w)$ always returns true. \\
 \end{tabularx} \\~\\
-Therefore, A is not MSDND secure to B. However, $V_{\varphi_1}^{A}(w) \not \in V$ , so B is secure to A.
 \label{tab:twoarmiesproof}
 \end{table}
 
-However, to agent A, $V_{\varphi_{0}}^A(w)$ is undefined, so MSDND holds in that security domain. 
+Therefore, A is not MSDND secure to B. However, $V_{\varphi_1}^{A}(w) \not \in V$ , so B is secure to A.
 
 \begin{case}
 Any number of messengers are sent and deliver their message, alternating from General A or General B to the other general. \label{case:generalsnn}
 \end{case}
 
-As each messenger arrives, the receiving general will trust the message and believe, resulting in that general assigning value to $\varphi_i$.
+As each messenger arrives, the receiving general will trust the integrity of the message and believe its contents, resulting in that general assigning value to $\varphi_i$.
 
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \small
 \begin{tabularx}{\linewidth}{l l X}
@@ -89,19 +101,19 @@ As each messenger arrives, the receiving general will trust the message and beli
 ...& & The same logical chain repeats. \\
 7. & $w \vDash V_{\varphi_n}^{x}(w)$ & $V_{\varphi_n}^{x}(w)$ is always true. $x$ is $A$ or $B$ depending on the value of n. %
 \end{tabularx} \\~\\
-Therefore, either A or B is not MSDND secure to the other for $\varphi_n$.
 \label{tab:twoarmiesproof2}
 \end{table}
 
-In the case $n=1$, B is now unsure that A has received $\varphi_1$ and cannot deduce if $B_{A} \varphi_1$. B is unsure of A's state and as a consequence A is MSDND secure to B. However, B is not MSDND secure to B because $\varphi_1$ is known to A. By extension For $i=2,4...n$ B is secure to A, but not A to B. For $i=3,5...n$, A is secure to B, but not B to A.
+Therefore, either A or B is not MSDND secure to the other for $\varphi_n$.
+In the case $n=1$, B is now unsure that A has received $\varphi_1$ and cannot deduce if $B_{A} \varphi_1$. B is unsure of A's state and as a consequence A is MSDND secure to B. However, B is not MSDND secure to A because $\varphi_1$ is known to A. By extension For $i=2,4...n$ B is secure to A, but not A to B. For $i=3,5...n$, A is secure to B, but not B to A.
 \end{proof}
 
 \begin{cor}
-Every message exchange where some atom $\varphi_0$ is sent, followed by any number $n$ successful exchanges results in one agent being insecure to the other.
+Every message exchange where some atom $\varphi_0$ is delivered, followed by any number $n$ successful exchanges results in one agent being insecure to the other.
 \end{cor}
 
 \begin{thm}
-If a messenger is captured, if the message is not resent, both agents will be secure on the last successfully delivered message atom $\varphi_{n}$ or $\varphi_0$ if the first messenger is captured.
+If a messenger is captured and the message is not resent, both agents will be secure on the last successfully delivered message atom $\varphi_{n}$ or $\varphi_0$ if the first messenger is captured.
 \label{thm:captured}
 \end{thm}
 
@@ -117,41 +129,50 @@ It should be obvious and direct that if the messenger does not arrive, it is equ
 If $n-1$ messengers successfully deliver their message, but messenger $n$ is captured, both are secure on $\varphi_{n}$.
 \end{case}
 
-Suppose General A sends $\varphi_{n-1}$ to B. It should be obvious that on the delivery of the message $\varphi_{n-1}$ to B, the value of $\varphi_{n}$ is secure in B to A, as A has no way of knowing if $\varphi_{n-1}$ was delivered, unless B sends $\varphi_{n}$ with a messenger. When B does send $\varphi_{n}$, the messenger never arrives. As a consequence, General A has no way of assigning value to $B_A \varphi_n$ ($V_{\varphi_n}^A \not \in V$). However, as before, with $\varphi_{n-1}$ at A is not secure to B.
+Suppose General A sends $\varphi_{n-1}$ to B.
+It should be obvious that on the delivery of the message $\varphi_{n-1}$ to B, the value of $\varphi_{n}$ is secure in B to A, as A has no way of knowing if $\varphi_{n-1}$ was delivered, unless B sends $\varphi_{n}$ with a messenger.
+When B does send $\varphi_{n}$, the messenger never arrives.
+As a consequence, General A has no way of assigning value to $B_A \varphi_n$ ($V_{\varphi_n}^A \not \in V$)
+However, as before, $\varphi_{n-1}$ at A is not secure to B.
 \end{proof}
-
-%\begin{pdef}
-%An agent $i$ is certain of a portion of an agent's ($j$'s) state, $\varphi$ iff $I_{i,j} \varphi \wedge B_i I_{i,j} \varphi \wedge T_{i,j} \varphi$ if agent $j$ is stable for $\varphi$.
-%\end{pdef}
 
 \section{Byzantine Generals}
 
-If General A is attempting to coordinate with multiple armies, the problem becomes more complex. If we extend the messenger analogy to cover faulty generals (ones that send incorrect information or omit messengers), the generals can reach consensus if for every faulty general, there are three generals that work correctly. This is a well known result known as the Byzantine Generals problem.
+If General A is attempting to coordinate with multiple armies, the problem becomes more complex.
+If we extend the messenger analogy to cover faulty generals (ones that send incorrect information or omit messengers), the generals can reach consensus if for every faulty general, there are three generals that work correctly.\cite{byzantine-generals}
 
 \begin{thm}
 In any message exchange that conforms to the constraints of the Byzantine Generals problem, all agents are MSDND insecure on the plan $\varphi$.
 \end{thm}
 
 \begin{proof}
-Proof: Suppose agent $i$ decides to use plan $\varphi$ to attack. Suppose that there is some set of Byzantine Generals $T$ and some set of loyal generals $G$ ($i \in G$). If $|G| > 3|T|$, the algorithm executes successfully, and $B_x \varphi : \forall x \in G $. Therefore, every general in $G$ can valuate $\varphi$ and the variable is insecure.
+Suppose agent $i$ decides to use plan $\varphi$ to attack. Suppose that there is some set of Byzantine generals $T$ and some set of loyal generals $G$ ($i \in G$). If $|G| > 3|T|$, the algorithm executes successfully, and $B_x \varphi : \forall x \in G$. Therefore, every general in $G$ can valuate $\varphi$ and the variable is insecure.
 \end{proof}
 
-It is worth noting, however, that if all generals intend to behave well (they are non-byzantine) and messages are lost in transit, consensus can only be reached if the initial distribution of $\varphi$ is delivered to all parties, and each general still receives enough messages to determine the majority consensus. This would be impractical to ensure in an actual application.
+However, in a general omission model, this level of loyalty from processes may be impractical to achieve.
+If the required number of ``loyal'' processes are not available, the system cannot achieve consensus.
 
 \subsubsection{State Determination}
 
-When an agent uses the information transfer operator ($I_{i,j}$) to pass information to another agent in the system, it intends for that agent to believe the passed wff. When an agent distributes a wff to many agents with the information transfer operator, it leads to a set of beliefs about the beliefs of the receiving agent. This set $N_i$ is the set of beliefs agent $i$ can have if all the wffs it passed to the other agents are believed. For example, if an agent distributes a wff $\varphi$ to a set of agents $Ag$ ($i \not \in Ag$), then $N_i = \{ B_i B_j \varphi : \forall j \in Ag \}$. Since the belief of each $B_j \varphi$ is outside of the domain of $i$, the agent $i$ can only valuate a wff in $N_i$ which has been leaked to $i$.
+When an agent uses the information transfer operator ($I_{i,j}$) to pass information to another agent in the system, it intends for that agent to believe the passed wff.
+When an agent distributes a wff to many agents with the information transfer operator, it leads to a set of beliefs about the beliefs of the receiving agents.
+This set, $N_i$, is the set of beliefs agent $i$ can have if all the wffs it passed to the other agents are believed.
+For example, if an agent distributes a wff $\varphi$ to a set of agents $Ag$ ($i \not \in Ag$), then $N_i = \{ B_i B_j \varphi : \forall j \in Ag \}$.
+Since the belief of each $B_j \varphi$ is outside of the domain of $i$, the agent $i$ can only valuate a wff in $N_i$ which has been leaked to $i$.
 
-Let the set $L_i$ be the subset of $N_i$ for which a valuation function exists in a domain $i$. $L_i$ can be populated either by direct information transfer or information leakage from interactions with agents. We can similarly define a set $M_i$ which is the subset of $N_i$ and superset of $L_i$ if the agent $i$ had perfect knowledge of the beliefs of information it passed to other agents ($L_i \subseteq M_i \subseteq N_i$).
+Let the set $L_i$ be the subset of $N_i$ for which a valuation function exists in a domain $i$.
+$L_i$ can be populated either by direct information transfer or information leakage from interactions with agents.
+We can similarly define a set $M_i$ which is the subset of $N_i$ and superset of $L_i$.
+The values in $N_i$ correspond to the beliefs of agent $i$ if $i$ had perfect knowledge of the beliefs other agents ($L_i \subseteq M_i \subseteq N_i$).
 
 \begin{thm}
 Each member of $L_i$ is MSDND insecure to $i$.
 \end{thm}
 
 \begin{proof}
-Proof: Each wff in $L_i$ has a valuation function in the domain $i$.
+Each wff in $L_i$ has a valuation function in the domain $i$.
 
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \small
 \begin{tabularx}{\linewidth}{l l X}
@@ -175,13 +196,13 @@ Each member of $M_i$ and $N_i$ but not $L_i$ are MSDND secure to $i$.
 \end{thm}
 
 \begin{proof}
-Proof: Each wff in $M_i$ and $N_i$ have no valuation in the domain $i$.
+Each wff in $M_i$ and $N_i$ have no valuation in the domain $i$.
 
 \begin{case}
 The case where $j$ receives some wff $\varphi$ and is in $M_i$ but not $L_i$.
 \end{case}
 
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \small
 \begin{tabularx}{\linewidth}{l l X}
@@ -201,7 +222,7 @@ Therefore, $j \in M_i$, and $B_j \varphi$ is MSDND secure to $i$.
 The case where $j$ does not receive some wff $\varphi$ and is in $N_i$ but not $M_i$.
 \end{case}
 
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \small
 \begin{tabularx}{\linewidth}{l l X}
@@ -219,60 +240,15 @@ We assume that in our system, any beliefs an agent hold stem from information tr
 Therefore, we can assert that the beliefs in $L_i$ for any process $i$ must have a traceable history that stems from a process having a valuation for the referenced atom that aligns with the belief process $i$ holds about that wff.
 Furthermore, wffs in $N_i$ but not $L_i$ do not have valuation in domain $D_i$ and cannot be used in the construction of the image.
 
-\subsection{Example With Two Armies}
-
-We enforce a requirement that a General cannot reconsider a plan (in this case, $\varphi_0$). Then, while the receiver of the last message, $\varphi_n$, can construct the same model of the probability to attack as the sender, the recipient can construct a more accurate model given that the message delivery event has occurred. In fact, if the sender is committed to a proposed plan, for this problem the recipient the recipient can be certain the attack will succeed.
-
-Instead, consider a simple algorithm to reach consensus for a system with no byzantine generals, but with omission failure (message loss). Again, each message has the probability $p$ of being delivered. General A distributes the plan $\varphi_0$ to $k$ other generals. If General A expects no confirmations, the probability that the message was delivered to all $k$ generals is $p^k$. If the first message is delivered, the receiving agents can construct the same model as A if they know how many generals there are and the probability that the messages are delivered.
-
-However, for a longer algorithm with multiple exchanges and states, it is not sufficient to use the consensus probability to determine the state, for an overall view of the system because the state of the system is a probability distribution and not a fixed state.
-
-Instead we obligate the design of the algorithm to rely on its underestimate of the system state $L$ and not on the overestimate for determining the actions taking back the algorithm in the next step. For a leader election this is a good construct: with the correct message passing, the other agent can immediately infer that it was not a part of $L$ if it receives $\varphi_0$ again. 
-
-Consider the simple consensus algorithm from before. While all the agents that receive $\varphi$ can construct the same model, that model is not sufficient for any agent to determine the state of the system. However, if a confirmation message $\varphi_{1,i}$ is sent by each agent that received $\varphi_0$ then the original sender knows for certain the state of each agent that sent $\varphi_{1,i}$. Therefore, the original agent ($a$) is certain of a portion of the agents ($i=1,2...n$) that have leaked $\varphi_{1,i}$ to it, assuming that $B_a \varphi_{1,i} \rightarrow w \vDash V_{\varphi_1,i}^i(w)$ for the current world, $w$.
-
-However, this approach is limited because of the set of $\varphi_{1,i}$ that $a$ believes is potentially a subset of all the agent that have a valuation function for $\varphi_{1,i}$ if any of the messages are lost in transit. Based on the information flows presented here and previously, if there is no response mechanism in the algorithm, after the transmission of $\varphi_0$, $a$ has a set of agents which believe might have received $\varphi_0$, but can make no determination of the actual state of the system. If there is an acknowledgment mechanism then $a$ can determine a subset of the total system state. 
-
-Constructing a model based on a subset of the complete state may seem like a mistake, but recall that A does not believe that those other entities believe $\varphi_0$. Assume a simple system where A is attempting to ensure every agent believes $\varphi_0$. If the actions of the agents are divided into discrete steps, then each step A distributes $\varphi_0$ to each of the agents that A has not received $\varphi_{1,i}$ from. A Markov chain can easily be constructed for the probability of eventually arriving at state where every agent believes $\varphi_0$. Indeed, this algorithm is a special case of the coin flipping leader election algorithm, an algorithm for leader elections in anonymous networks.
-
-\begin{algorithm}
-\caption{Anonymous Coin Flipping Leader Election}
-\label{alg:coinflip2}
-\begin{algorithmic}[1]
-\small
-\State $b(i) \gets random(0,1)$
-\State Send $b$ to every active neighbor
-\State Receive $b$ from every active neighbor
-\If {$b(i) = 1 \wedge \forall j \neq i : b(j)=0$}
-	\State $i$ is the leader.
-	\ElsIf {$(b(i) = 1 \wedge \exists j \neq i : b(j) = 1 \vee (\forall k : b(k) = 0))$}
-		\State $b(i) = random(0,1)$
-		\State Go to next round
-	\ElsIf {$b(i) = 0 \wedge \exists j : b(j) = 1 : b(j) = 1$}
-		\State Become passive.
-	\EndIf
-\end{algorithmic}
-\end{algorithm}
-
-Each round, the transfer of $\varphi_0$ to active agents is line 3 of the algorithm. The receive step is equivalent to the expected response. The other agent's $b(i)$ value is decided by the receipt of $\varphi_0$ from A. Agents go idle on the receipt of $\varphi_0$, as if they had randomly selected a 0. If the other agents do not receive $\varphi_0$ it is logically equivalent to them holding a 1. If their confirmation is not received by A, it is logically equivalent to that agent successfully sending a 1 to A. However, this approach has the advantage of being able to evaluate, (given the omission rate) approximately how many rounds it will take for every agent to acknowledge $\varphi_0$. This construction is presented below in Figure \ref{fig:markovstates}, which shows the structure of the chain A could generate for the election. In the figure, each state records the set of ``passive'' processes\cite{markov-anon-elections}.
-
-\begin{figure}
-\begin{centering}
-\includegraphics[width=0.75\linewidth]{MarkovStates.pdf}
-\caption{Example of a Markov chain constructed for an election algorithm from information flows. Each state reprensents the processes that have gone passive.}
-\label{fig:markovstates}
-\end{centering}
-\end{figure}
-
 \section{Election in an Anonymous Complete Network}
 
-Consider a version of the ``coin-flipping'' leader election, expressed in terms of BIT logic.
-This algorithm is functionally identical, but contains additional guards on the conditionals as an additional expression of the knowledge of the agents executing the algorithm.
+Consider a version of the ``coin-flipping'' leader election, expressed in a BIT logic.
+This algorithm is functionally identical, but contains additional guards in the conditionals as an additional expression of the knowledge of the agents executing the algorithm.
 Additionally, note that the construct of labeling each $\varphi$ that an agent receives is simply assigning labels to make the algorithm easier to reason about.
-The algorithm only considers the complete collection of $\varphi$s for execution and not the source of any of the $\varphi$ used.
+The algorithm only considers the complete collection of $\varphi$s for execution and not the source of any $\varphi$ the algorithm uses.
 
-Additionally, let $\psi_i$ be the state where an agent completes the algorithm as the leader, and $\gamma_i$ is the state where an agent has terminated the algorithm.
-Correct operation is where $\{\gamma_i = T : \forall i \}$ is true in the same round of execution and exactly one $\psi$ is true ($\sum_i \psi_i = 1$).
+Additionally, let $\psi_i$ be the state where an agent $i$ completes the algorithm as the leader, and $\gamma_i$ as the state where an agent $i$ has terminated the algorithm.
+The algorithm terminates when $\{\gamma_i = T : \forall i \}$ is satisfied and exactly one $\psi_i$ is true ($\sum_i \psi_i = 1$).
 
 \begin{algorithm}
 \caption{Anonymous Coin Flipping Leader Election Expressed in BIT logic}
@@ -299,9 +275,10 @@ Correct operation is where $\{\gamma_i = T : \forall i \}$ is true in the same r
 Algorithm \ref{alg:coinflip} may not terminate correctly unless there is detectable, perfect information transfer to all parties in the algorithm.
 \end{thm}
 
-Proof: Let $i$ be the agent that would correctly terminate as the leader. Let $j$ be a process that has selected $\varphi_j = F$.
+\begin{proof}
+Let $i$ be the agent that would correctly terminate as the leader. Let $j$ be a process that has selected $\varphi_j = F$.
 
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \small
 \begin{tabularx}{\linewidth}{l X X}
@@ -319,6 +296,42 @@ Proof: Let $i$ be the agent that would correctly terminate as the leader. Let $j
 Therefore, $i$ will terminate before $j$ decides to go passive.
 \label{tab:anonymityproof}
 \end{table}
+\end{proof}
 
-Which agrees with results from similar analysis \cite{anon-omission}.
-As with the Byzantine Generals problem, algorithms similar to Byzantine agreement can be constructed for the anonymous networks.
+This result agrees with results from similar analysis\cite{anon-omission}.
+
+\section{Model Construction}
+
+% I want to talk about assigning a probability to each delivery as an omission rate
+% I want to talk about constructing a model of likelihood of success
+% For the two armies problem, what model do you make?
+% Lets say A sends one messenger to B. A's probability that the plan will work is the probability the message arrives at B.
+% B knows that A's probability of the attack succeeding is the probability that the messenger reached B.
+% (This is shared common knowledge like in that 2009 paper -- without the shared knowledge B cannot assign a probability to success.)
+% 2 Messengers:
+% B then reasons, if I don't send a messenger, both A and I know that there's a p probability the plan will work.
+% If I send another messenger to acknowledge, A will know I got his plan, but the only think I'll know is that there is a p chance A got my plan.
+% Of course, if A also knows the omission rate is p, A knows that B only knows there's a p chance of success.
+% One can argue that every sent messenger just resets the problem.
+% Each additonal messenger does not contribute to the confidence of the attack succeeding.
+
+Suppose for the two armies problem, A and B wish determine their chance of success.
+If neither A nor B have any idea of probability that their messenger is captured, they have no way of assessing their chances of a successful attack.
+Indeed, based on common results, this has been shown to be the case.
+However, what can we determine if the two generals share some knowledge about the world?
+
+Suppose that both generals know that their messenger has the probability $p$ of being captured in transit.
+When A sends a messenger to B, A will know that there is a probability $p$ that the messenger arrives at B.
+If the messenger does indeed arrive at B, B can know, through the shared knowledge of the omission rate $p$, that A knows there is a $p$ chance their attack will succeed.
+In this situation, both Generals can construct identical models of the success of an attack, given that the initial message arrives.
+It is also worth noting that in this scenario no additional messages can improve the outlook of the two generals.
+Each additional message only confirms that there is a probability $p$ that the other general will also attack.
+
+
+
+% What if the probability is not known? Then its just the regular problem and its boring.
+
+% I want to talk about constructing an HMM for a given hidden global state?
+% Later I want to show that there is a special class of HMM where the observations correspond to a markov chain
+
+

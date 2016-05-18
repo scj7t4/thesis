@@ -172,7 +172,7 @@ We try to constrain the discussion about reliability in the distributed systems 
 %State what states mean.
 %State what transition probabilities mean. State what ergodicity is. State what stationarity is. State how we generate the sequence of states.
 
-A Markov chain is a finite set of states $W=\{w_1, w_2, ..., w_n\}$ and probabilistic transitions between those states.
+A Markov chain is a finite set of states $X=\{x_1, x_2, ..., x_n\}$ and probabilistic transitions between those states.
 States in a Markov chain are mutually exclusive.
 In a Markov chain, when a system is some state $w_i$ it has some probability of transitioning to some other state $w_j$ at the next time-step.
 A Markov chain is a first order chain if the probability of transitioning from $i$ to $j$ does not depend on the history of transitions that lead to state $i$.
@@ -192,7 +192,7 @@ In a stationary Markov chain, the $n$th visit to a state is indistinguishable fr
 A \ac{DTMC} is one where the transitions between states happen at discrete time steps.
 A \ac{DTMC} with $m$ states can be represented by a $m\times m$ matrix.
 For simplicity when creating the model, matrices in this work are 1-indexed.
-In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $w_i$ to $w_j$.
+In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $x_i$ to $x_j$.
 The matrix is row stochastic, meaning the sum of each row in the matrix is equal to one:
 
 \begin{equation} \sum_{i=1}^{m} P_{ij} = 1. \end{equation}
@@ -203,13 +203,13 @@ While the transition matrix describes how system will transition between states,
 \begin{pdef}
 A state distribution vector is an $m$-dimensional vector composed of probability of observing each state in the system at a given instant:
 \[ [P_{1} \quad P_{2} \quad \ldots \quad P_{m} ] \]
-Where $P_{i}$ corresponds to the probability of observing state $w_i$.
+Where $P_{i}$ corresponds to the probability of observing state $x_i$.
 \end{pdef}
 
 A \ac{DTMC} is a suitable model for a memoryless random process with a finite number states which is observed at fixed time intervals.
 By utilizing a Markov chain, a variety of statistical analyses can be performed on the modeled system.
 For example, a Markov chain with the stationary and ergodic properties can be analyzed for its steady state probabilities.
-The steady state is a state distribution vector that describes the probability a random observation of a long-running process will observe some state $w_i$.
+The steady state is a state distribution vector that describes the probability a random observation of a long-running process will observe some state $x_i$.
 The steady state probability distribution vector can by found via a system of equations: \cite{MARKOV3}
 
 \begin{align}
@@ -231,11 +231,11 @@ The chain constructed from sampled data is known as a test chain (noted as $T$).
 \subsection{Continuous Time Markov Chain}
 
 Transitions in a \ac{CTMC} depend on the amount of time spent in a given state.
-Let $X(s) = i$ indicate the model is in state $i$ at time $s$.
-If the model is time homogeneous, then the probability of transitioning to state $j$ only depends on the time spent in that state ($t$).
+Let $X(s) = x_i$ indicate the model is in state $x_i$ at time $s$.
+If the model is time homogeneous, then the probability of transitioning to state $x_j$ only depends on the time spent in that state ($t$).
 
 \begin{equation}
-P\{ X(s+t)=j | X(s) = i \} = P\{ X(t)=j | X(0) = i \}
+    P\{ X(s+t)=x_j | X(s) = x_i \} = P\{ X(t)=x_j | X(0) = x_i \}
 \end{equation}
 
 Each transition has some expected value or holding time which describes the amount of time before a transition occurs.
@@ -272,7 +272,11 @@ The hidden chain is assumed to still meet the Markov property.
 A \ac{HMM} is described by the notation $\lambda = (\Pi, P, B)$, where $\Pi$ is the initial state distribution vector, $P$ is the matrix of state transition probabilities, and $B$ is the observation probability distribution.
 The $B$ set maps each state in $W$ to a probability distribution for an observation.
 Let $y$ be some observation, where $y \in Y$, a finite set of discrete, possible values.
-$B$ then is a $|W|\times|Y|$ matrix where $B_ij = \Pr(y_j|W_i)$, the probability of observing $y_j$ given the system is in some hidden state $s_i$.
+$B$ then is a $|X|\times|Y|$ matrix where $B_ij = \Pr(y_j|x_i)$, the probability of observing $y_j$ given the system is in some hidden state $x_i$.
+An example \ac{HMM} is pictured in Figure \ref{fig:hmm-example}.
+
+
+
 
 \section{Information Flow}
 

@@ -6,14 +6,28 @@
 \section{Analysis of Distributed Systems}
 
 \cite{markov-distributed} focused on examining the emergent behavior as a collection of processes in a grid computing scenario work to process a large dataset.
-In their work, the authors focus on analysis derived from a discrete time Markov chain describing a single process completing a task.
-This chain describes how the process in the grid based system goes through the steps of the process acquiring a task to do, working on that task and subsequently either completing the task or failing.
-The created chains were ``absorbing'' chains, meaning that it had one or more states that the process could not leave once it had arrived in those states (task completed and task failed, for obvious reasons).
+In their work, the authors focus on analysis derived from a \ac{DTMC} describing a single process completing a task.
+This chain describes how the process in the grid based system goes through the steps of acquiring a task to work on, working on the task and subsequently either completing the task or failing.
+The created models were ``absorbing'' chains, meaning it had one or more states the process could not leave once it had arrived in those states.
 Their analysis used minimal s-t cuts to determine critical paths for the ideal operation of the system.
-Using this analysis, they considered the Markov chain as a max-flow min-cut problem using the task complete or task failed absorbing states as sinks.
-By identifying the ``critical transitions'' of the graph, the areas that would most greatly affect the performance of the system could be identified.
+In their analysis, they considered the Markov chain as a max-flow min-cut problem using task complete or task failed absorbing states as sinks.
+By identifying ``critical transitions'' in the graph, the areas that would most greatly affect the performance of the system could be identified.
 
-\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++\cite{OMNET}, a network simulation software package. Instead of omission failures, however, it considers crash failures. Each configuration goes through a predefined sequence of crash failures. OmNet++ is used to count the number of messages sent by each of three different leader election algorithms. Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a complete and active state when all participants have consensus on a single leader.
+\cite{LEADERELECTIONEVAL} studies an Omega class failure detector using OmNet++\cite{OMNET}, a network simulation software package.
+Instead of omission failures, however, it considers crash failures
+Each configuration goes through a predefined sequence of crash failures.
+OmNet++ is used to count the number of messages sent by each of three different leader election algorithms.
+Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a complete and active state when all participants have consensus on a single leader.
+
+% Knowledge and Common Knowledge in a Distributed Environment
+% This work showed, through the use of a logical knowledge framework, that with omission and with no ``common knowledge'' 
+\cite{knowledge-distributed} showed that in a distributed system where there are omission faults, complete consensus cannot be achieved without access to ``common knowledge.''
+The authors used a logic system that isolated the \ac{AP}s a process could use to the memory space of that process, and a knowledge operator to access to \ac{AP}s outside of the processes normal memory space when knowledge was transferred between processes.
+This allowed the authors of \cite{knowledge-distributed} to reason about the necessary conditions to arrive at consensus when there are omission faults.
+The authors concluded that consensus could only be reached when there is existing shared knowledge in a system that is both unaffected by the omission faults, and lent to the arriving at a correct consensus (that is, the common knowledge was useful for finding consensus).
+Of particular interest was the two armies problem.
+The authors established the generals would only reach consensus and attack successfully if it was common knowledge they would attack together.
+Additionally, they established the common knowledge of the two generals attacking together could not be established in a system with omission faults.
 
 \section{Physical Faults Caused by Cyber Entities in CPS}
 
@@ -28,8 +42,29 @@ Work has been undertaken to identify faulty sensing components in a network, but
 Additionally, it is not always possible to identify if the origin of an issue is a faulty sensor or an outside attacker.
 
 If the cyber entity itself has been compromised, it could potentially exhibit Byzantine behavior, causing it to try and trick other components into bad actions\cite{Roth2012}, or it may try to disrupt the physical network directly.
-Work has been done to try and identify when an entity in a cyber network is actively working to compromise the physical network by using the underlying physical invariants.
+Work has been done to identify when an entity in a cyber network is actively working to compromise the physical network by using the underlying physical invariants.
 However, even if a cyber entity is trying to behave correctly, disruptions to the communication network or the sensors it uses can cause it to take actions similar to a process that is actively attempting to destabilize the system.
 As before, these actions can be identified by using the underlying invariants of the physical network after they have occurred.
 However, it would be ideal to avoid situations where a ``good'' entity is forced to act badly.
+
+\section{Communication in the Smart Grid}
+
+Communication in the smart grid is still a rapidly developing area.
+In particular, because of the interest in the \ac{IoT} and in \ac{M2M} communication, there is a wide range of solutions being developed for ``smart'' infrastructures like smart-cities, smart-factories, and even the smart-grid.
+Historically, for the power-grid, communication has been largely one way.
+Because generation of energy was centralized, communication requirements only necessitated communication paths between measurement points and control centers, and from the control centers to individual substations\cite{smartgrid-comm1}.
+These \ac{SCADA} systems were almost exclusively organized in a star topology where the individual devices had no means of communicating directly with each other.
+
+In a smart-grid where energy generation is widely distributed and citizens are encouraged to manage their energy usage for their own economic benefit as well as the planet's, the traditional \ac{SCADA} design is not sufficient\cite{smartgrid-comm1}\cite{smartgrid-comm-lastmile}\cite{smartgrid-comm-m2m}.
+This version of the smart-grid relies heavily on communication between devices, consumers, and the utility to coordinate access to energy generated across a wide area.
+The Internet has great potential as the backbone for the communication requirements of a smart-grid.
+Due to its wide-spread prevalence, using existing Internet infrastructure is an attractive, affordable, option for realizing the requirements of a smart-grid\cite{smartgrid-comm-germany}\cite{smartgrid-comm-lastmile}.
+Many companies in the power generation industry have expressed an interest in using the Internet in the smart-grid\cite{smartgrid-comm-doe}.
+
+Traditional \ac{SCADA} systems for the power grid have used \ac{DNP3}, a data-link layer protocol, to control substations and related devices\cite{dnp3}.
+For the smart-grid, IEC 61850 has emerged as a front-runner for substation control in the smart-grid\cite{iec61850-1}\cite{iec61850-2}\cite{iec61850-3}.
+IEC-61850 can be run over TCP/IP network or high speed switched LANs\cite{iec61850-3}.
+A number of potential attacks on \ac{SCADA}-based control systems have been identified\cite{smartgrid-security}\cite{smartgrid-attacks}, including \ac{DoS} attacks\cite{scada-attack-dos}\cite{dnp3-attack}.
+Regardless of the communication medium or the source of the issue, handling interruptions to the communication network in the smart-grid is an important concern.
+If a utility chooses to use a public network like the Internet for any portion of its control network, that operator must consider the consequences of congestion on that network\cite{intelligent-control}\cite{plc-communication}\cite{wireless-congestion}.
 

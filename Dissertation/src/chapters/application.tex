@@ -4,16 +4,13 @@
 
 \chapter{Application}
 
-In this work, we consider the effects of network congestion on a cyber communication network used by the \ac{FREEDM} smart-grid.
-We create a model version of a large number of \ac{DGI} processes in a simple partitioned setup.
-%By applying traffic to this network, we create a situation where the network devices' queues are completely filled or real-time deadlines are missed due to queuing delays.
+We consider the effects of network congestion on a cyber communication network used by the \ac{FREEDM} smart-grid.
+We a model of \ac{DGI} processes in a simple partitioned setup.
+By applying traffic to this network, we create a situation where real-time deadlines are missed due to queuing delays.
 In  the \ac{FREEDM} smart-grid, the consequences of this congestion could result in several problematic scenarios.
 First, if the congestion prevents the \ac{DGI} from autonomously configuring using its group management system, processes cannot work together to manage power devices.
 Secondly, if messages arrive too late, or are lost, the \ac{DGI} could apply settings to the attached power devices that drive the physical network to instability.
 These unstable settings could lead to problems in the power-grid like frequency instability, blackouts, and voltage collapse.
-
-
-
 These techniques allow the DGI to anticipate behavior during a fault and allow it to preemptively harden itself against the fault.
 
 \section{Application: ECN Hardening}
