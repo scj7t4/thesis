@@ -23,6 +23,7 @@ add_latex_document(main.tex
 	DEPENDS
 		packages/__packages.generated
 	FORCE_PDF
+    USE_NOMENCL
 )
 	
 add_custom_command(OUTPUT ${output_dir}/packages/__packages.generated

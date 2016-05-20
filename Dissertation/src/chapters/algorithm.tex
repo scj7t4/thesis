@@ -210,42 +210,6 @@ Leaving the group can either be caused by the coordinator removing the process, 
 
 \section{Model Construction}
 
-As part of the execution model described, execution proceeds in a partially synchronous fashion.
-The state of the system is captured by a process using an imaging function $Im : D_i \times w \rightarrow o$.
-The imaging function maps a domain and world into an observation.
-The domain $D_i$ is used to restrict the set of valid valuation functions used to produce the observation of the world.
-Each observation is taken using the imaging function after each round of execution for the algorithm completes.
-
-We describe the system with two Kripke Models modeling the algorithm at different levels of detail.
-Both models share a set of valuation functions.
-In the first model, $K_1 = <W_1, R_1, V>$, each action and variable change taken by a process corresponds to a relation in $R_1$.
-With this model, the knowledge of each process can be analyized to determine which processes have access to which knowledge in their domain.
-
-In the second model, $K_2 = <W_2, R_2, V>$, we describe the system with a Kripke Model such that each world is the state of the system after each execution of the algorithm.
-The set of worlds $W_2$ in $K_2$ is a subset of the worlds in $W_1$.
-Each relationship in $R_2$ is the transition the state makes from the end of the last round of execution to the end of the current round of execution.
-Therefore, $R_2$ is a sequential composition of one or more elements of $R$.
-
-Both $K_1$ and $K_2$ can be mapped to Markov chains by assigning each transition a probability based on the likelihood for each particular combination of successes and failures for message delivery that occured between the two worlds in the model.
-$K_2$ is less powerful then $K_1$ (less things can be proven about execution) but it is more convient for reasoning about Markov Models.
-
-The election algorithm produces and distributes a set of processes $UpPeers$ and a coordinator of that set.
-$UpPeers$ is distributed via message passing and maintained by the coordinator.
-Different processes may have different versions of $UpPeers$ for a given coordinator as processes enter and leave the group.
-However, a process will eventually receive an up-to-date version of $UpPeers$ from the coordinator, or it will leave the group.
-
-The imaging function used in this system captured the cardinality of the $UpPeers$ for a process $i$ if that process was a coordinator, or a \null observation otherwise.
-One can safely assume that this observation from an imaging function corresponds to an observation for an \ac{HMM}: the process taking the image does not have complete access to the state.
-However, for the highest priority process for this algorithm, we will show that the observation of that process corresponds directly to the underlying Markov chain.
-Consequently, that process does not need to work with an \ac{HMM} but instead uses a Markov chain.
-We allow if the observations and the associated probabilities are themselves a Markov chain.
-
-\begin{thm}
-For each world $w$ such that $Im(D_i,w) = I_x$ and for each world such that $Im(D_i,w') = I_y$ such that $I_y$ is an immediate successor of $I_x$, if the transition probability of going from $I_x$ to $I_y$ is the same as the probability of going from $w$ to $w'$, then observation function and the associated transition probabilities are a Markov chain.
-\end{thm}
-\begin{proof}
-Lalalala.
-\end{proof}
 
 \section{Highest Priority Process}
 
@@ -330,6 +294,12 @@ We defined the state of the system as the cardinality of the processes mentioned
 
 \subsection{Memorylessness}
 
+\begin{figure}[]
+\includegraphics[width=\linewidth]{ElectionMessages}
+\caption{Diagram of message exchanges for an election.}{Diagram of message exchanges for an election. In the figure, process 2 almost completed the previous election, and considers itself a part of process 1's group, but process 1 does not. Process 3 does not consider itself a part of process 1's group before the election begins. Both process 2 and process 3 need to successfully exchange the same number of messages to successfully complete the election.}
+\label{fig:electionmessages}
+\end{figure}
+
 % Stage 1: AYC / AYT
 % Show that maint. takes so many messages
 % Show that leader discovery for election takes so many messages
@@ -362,6 +332,11 @@ More importantly, this releases the process from obligations on its next state f
 A process will only accept an invite if it receives it and it has determined it is the invite it wishes to accept.
 This result allows a process to determine the likelihood of an invite being accepted.
 This probability is based on the probability the higher priority process selecting that process to send invites to, and the lower priority process selecting that invite.
+
+In Figure \ref{fig:electionmessages}, we diagram the sequence of message exchanges and function calls for two possible states a process that is not in the leader's group.
+In the first state, the process nearly completed an election the previous round, but the read acknowledgement message was not delivered in time, resulting in the process being in the $M_i$ set.
+In the second state, the process is not in the leader's group.
+As shown in the figure, both cases require the same number of messages to be delivered for the process to be considered a part of the group.
 
 \subsection{Model Construction}
 

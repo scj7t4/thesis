@@ -2,46 +2,52 @@
 \chapter{Introduction}
 
 The design of stochastic models of distributed systems has a long history as a challenging area of interest.
-Models of distributed systems have to deal with a number of factors.
-These factors include the various types of failure the system could experience, a lack of tightly synchronized execution, and a large complex state space when there are a high number of agents\cite{DISTRIBUTED}\cite{distributed-challenges}. 
+Models of distributed systems have to consider many factors.
+These factors include the various types of failure the system could experience, a lack of tightly synchronized execution, and a large complex state space when there are many agents\cite{DISTRIBUTED}\cite{distributed-challenges}. 
 However, the concept of distributed systems plays a central role in many of the future visions for how critical infrastructure will operate.
-These critical infrastructures are physical networks whose operation are so vital that if those networks failed to operate correctly it would be highly detrimental to the population that rely on those systems.
+These critical infrastructures are physical networks whose operation are so vital that if those networks failed to operate correctly it would be highly detrimental to the population that relies on those systems.
 \ac{CPS} are the integration of computational systems with physical networks.
 Computational systems already play a critical role in most critical infrastructures, and as demands for security features, such as accessibility, increase distributed systems are becoming an increasingly favorable choice for the computational needs for these systems\cite{SMARTGRIDBENEFITS}.
 
-The \ac{FREEDM} center\cite{FREEDM}, an NSF funded ERC envisions a future power-grid where widely distributed renewable power generation and storage is closely coupled with a distributed system that facilitates the dispatch of power across those areas.
+The \ac{FREEDM} center\cite{FREEDM}, an NSF-funded ERC envisions a future power grid with widely distributed renewable power generation and storage closely coupled with a distributed system that facilitates the dispatch of power across those areas.
 Other systems like \ac{VANET}\cite{CARS1}\cite{CARS2}\cite{vanet-congestion} and air traffic control systems\cite{AIRTRAFFIC1}\cite{AIRTRAFFIC2} also propose similar control systems where many computers must cooperate to ensure both smooth operation and the safety of the people using those systems.
 As a consequence, ensuring that the computer systems that control those infrastructures behave correctly during fault conditions is critical, especially when those computer systems rely on their interaction with other computers to operate.
 
 A robust \ac{CPS} should be able to survive and adapt to communication network outages in both the physical and cyber domains.
-When one of these outages occurs, the physical or cyber components must take corrective action to allow the rest of the system to continue operating normally.
+When an outage occurs, the physical or cyber components must take corrective action to allow the rest of the system to continue operating normally.
 Additionally, processes may need to react to the state change of some other process.
 Managing and detecting when other processes have failed is commonly handled by a leader election algorithm and failure detector.
 
-In a smart-grid system, misbehavior during fault conditions could lead to critical failures such as a blackout or voltage collapse. In a \ac{VANET} or air traffic control system, vehicles could collide, injuring passengers or destroying property. Additionally, since these systems are a part of critical infrastructure, protecting them from malicious entities is an important consideration.
+In a smart-grid system, misbehavior during fault conditions could lead to critical failures such as a blackout or voltage collapse.
+In a \ac{VANET} or air traffic control system, vehicles could collide, injuring passengers or destroying property.
+Additionally, because these systems are a part of critical infrastructure, protecting them from malicious entities is an important consideration.
 
-This work was motivated by observations on the effects of lost messages on the group management module of the \ac{DGI} used by the \ac{FREEDM} smart-grid project.
-These original observations confirmed the need to explore more well defined models for the behaviors of \ac{CPS} in order for them to better serve the people that use them.
+We were motivated by observations on the effects of lost messages on the group management module of the \ac{DGI} used by the \ac{FREEDM} smart-grid project.
+The original observations confirmed the need to explore more well-defined models for the behaviors of \ac{CPS} in order for them to better serve the people who use them.
 
-We present a framework for reasoning about inferable state in the context of a distributed system. To do this, we exploit existing work in the field of information flow security. Information flow security has been used to reason about how attacks like STUXNET can manipulate operators beliefs while disrupting a system\cite{STUXNET}. In particular, these approaches reason about how the operator in a STUXNET attack has no avenue to verify the reports from a compromised computing device. Using existing modal logic frameworks and using information flow security models\cite{Howser2012}\cite{STUXNET}\cite{Howser2013}, one can formally reason about where information that is not normally known to a domain can be inferred.
+We present a framework for reasoning about inferable state in the context of a distributed system.
+To do this, we exploit existing work in the field of information flow security, which has been used to reason how attacks like STUXNET can manipulate operators beliefs while disrupting a system\cite{STUXNET}.
+In particular, approaches in information flow security reason about how the operator in a STUXNET attack has no avenue to verify the reports from a compromised computing device.
+Using existing modal logic frameworks and information flow security models\cite{Howser2012}\cite{STUXNET}\cite{Howser2013}, one can formally reason where information, not normally known to a domain, can be inferred.
 
-We will show in this work that in a system with the correct information flows, an agent in a distributed system can infer the state of other agents in the system. With this information, that agent can then construct a reasonable model of the system to determine if the current behavior could lead to an undesirable situation with either the cyber or physical network.
+With the correct information flows, an agent in a distributed system can infer the state of other agents in the system.
+With this information, that agent can then construct a reasonable model of the system to determine if the current behavior could lead to an undesirable situation with either the cyber or physical network.
 
-Using this framework we present a leader election algorithm that can be modeled with a Markov chain for a known omission fault\cite{OMISSIONFAILURES} rate.
+Using the framework, we present a leader election algorithm which can be modeled with a Markov chain for a known omission fault\cite{OMISSIONFAILURES} rate.
 The presented algorithm maintains the Markov property for the observations of the leader despite omission faults.
-This approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems.
+Our approach to considering how a distributed system interacts during a fault condition allows for the creation of new techniques for managing a fault scenario in cyber-physical systems.
 In the context of \ac{FREEDM}, these models produce expectations of how much time the DGI will be able to spend coordinating and doing useful work.
-Using these measures, the behavior of the control system for the physical devices can be adjusted to prevent faults, like blackouts and voltage collapse, in the physical network.
+With this information, the behavior of the control system for the physical devices can be adjusted to prevent faults, such as blackouts and voltage collapse, in the physical network.
 
 We also propose using existing schemes to detect communication network congestion and inform processes in a \ac{CPS} of impending congestion.
-Processes act on this information to change their behavior in anticipation of message delays or loss.
-This behavior allows them to harden themselves against the congestion, and allows them to continue operating as normally as possible during the congestion.
-This technique involves changing the behavior of both the leader election\cite{INVITATIONELECTION} and physical device management algorithm during congestion.
+Processes act on congestion information to change their behavior in anticipation of message delays or loss.
+Using an alternative behavior allows them to harden themselves against the congestion, and allows them to continue operating as normally as possible during the congestion.
+The technique involves changing the behavior of both the leader election\cite{INVITATIONELECTION} and physical device management algorithm during congestion.
 
-To accomplish this, we extend existing networking concepts of \ac{RED}, \ac{ECN}\cite{RFCECN}, and ICMP source quench\cite{RFCSOURCEQUENCH}.
-When a network device detects congestion, it notifies processes that the network is experiencing congestion and they should react appropriately.
+To detect and inform agents of congestion, we extend existing networking concepts of \ac{RED}, \ac{ECN}\cite{RFCECN}, and ICMP source quench\cite{RFCSOURCEQUENCH}.
+When a network device detects congestion, it notifies processes of the congestion, and they should react appropriately.
 We demonstrate an implementation of the \ac{FREEDM} \ac{DGI} in a \ac{NS3} simulation environment\cite{NS3} with our congestion detection feature.
-The \ac{DGI} operates normally until the simulation introduces a traffic flow that congests the network devices in the simulation.
+The \ac{DGI} operates normally until the simulation introduces a traffic flow, congesting the network devices in the simulation.
 After congestion has been identified by the \ac{RED} queuing algorithm, the \ac{DGI} are informed. %via UDP multicast.
 When the congestion notifications are introduced, the \ac{DGI} maintains configurations which they would normally be unable to maintain during congestion.
 Additionally, we show a greater amount of work can be done without the work causing unstable power settings to be applied.

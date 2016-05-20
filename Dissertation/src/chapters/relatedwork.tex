@@ -68,3 +68,7 @@ A number of potential attacks on \ac{SCADA}-based control systems have been iden
 Regardless of the communication medium or the source of the issue, handling interruptions to the communication network in the smart-grid is an important concern.
 If a utility chooses to use a public network like the Internet for any portion of its control network, that operator must consider the consequences of congestion on that network\cite{intelligent-control}\cite{plc-communication}\cite{wireless-congestion}.
 
+For congestion control in \ac{CPS}, to our knowledge, only one other work has advocated the \ac{ECN} approach: \cite{ecn-cloudhari}.
+In \cite{ecn-cloudhari}, the authors proposed varying the schedule and migration size of load-balancing like algorithm in a network to maintain physical network stability during congestion.
+We adapt their measure ``K'', used to determine when the system would collapse due to failed migrations, to evaluate the success of our approach by counting the number of times migrations failed during the simulation.
+

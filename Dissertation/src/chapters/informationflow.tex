@@ -315,6 +315,7 @@ This result agrees with results from similar analysis\cite{anon-omission}.
 % One can argue that every sent messenger just resets the problem.
 % Each additonal messenger does not contribute to the confidence of the attack succeeding.
 
+\subsection{Two Armies Problem}
 Suppose for the two armies problem, A and B wish determine their chance of success.
 If neither A nor B have any idea of probability that their messenger is captured, they have no way of assessing their chances of a successful attack.
 Indeed, based on common results, this has been shown to be the case.
@@ -327,11 +328,29 @@ In this situation, both Generals can construct identical models of the success o
 It is also worth noting that in this scenario no additional messages can improve the outlook of the two generals.
 Each additional message only confirms that there is a probability $p$ that the other general will also attack.
 
+\subsection{Generalization}
 
+The idea of converting a Kripke model to a Markov model is mentioned in \cite{kripkemarkov1} and \cite{kripkemarkov2}.
+However, we could not locate a formal description of the method, so we present one here.
+Given a Kripke Model $K = <W,R,V>$, where we obligate $K$ to contain sufficient state information to ensure the probability mapping is memoryless.
+Let $f_{W} : W \rightarrow X$ be a bijective mapping from $W$ to $X$, where $X$ is the set of states for a Markov model.
+Let $f_{R}$ be a mapping for a relationship $wRw' \in R$ to $\Pr(X_{i+1}=f_W(w') | X_{i}=f_W(w))$.
+Therefore, for a Kripke-Markov model $P_{ij} = f_R(w,w')$ where $i=f_W(w)$ and $j=f_W(w')$.
 
-% What if the probability is not known? Then its just the regular problem and its boring.
+For a process $i$, information about the system state is restricted to those \ac{AP}s in its domain $D_i$.
+Let $O : D \times X \rightarrow Y$ be a surjective mapping from the complete, hidden, system state to an observable state for a domain.
+With $O$, one can construct $B$, the observation probability distribution matrix for a \ac{HMM}:
 
-% I want to talk about constructing an HMM for a given hidden global state?
-% Later I want to show that there is a special class of HMM where the observations correspond to a markov chain
+\begin{equation}
+ B_{ij} =
+   \begin{cases}
+    1, & \text{if } O(D_i, x_i) = y_j\\
+    0, & \text{otherwise} \\
+  \end{cases}
+\end{equation}
+
+Intuitively, one or more worlds will look identical to a process $i$, since the information necessary to differentiate them is not in $i$'s domain.
+As a side effect of $O$ being a deterministic, surjective mapping a special case exists where the observed state has the Markov property.
+If $\Pr(X_{k+1} | X_k=x_i)=\Pr(O(D_i,X_k+1) | Y_k=O(D_i,x_i))$, $\forall x_i \in X$ and $\forall y_j \in Y$ such that $O(D_i,x_i)=y_j$, then the observations of a process are a Markov chain.
 
 
