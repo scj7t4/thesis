@@ -28,7 +28,7 @@ If the message does not arrive in time, the process will enter the recovery stat
 
 \begin{figure*}[!t]
 \includegraphics[width=\linewidth]{LeaderElectionStateDiagram.pdf}
-\caption{State machine of a leader election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to \ac{AYC} messages they receive. The algorithm was modified by adding a ``Ready Acknowledgment'' message as the final step of completing the election. Additionally, processes only accept invites if they have received an ``\ac{AYC} Response'' message from the inviting process.}
+\caption[State machine for an election]{State machine for an election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to \ac{AYC} messages they receive. The algorithm was modified by adding a ``Ready Acknowledgment'' message as the final step of completing the election. Additionally, processes only accept invites if they have received an ``\ac{AYC} Response'' message from the inviting process.}
 \label{fig:statemachine}
 \end{figure*}
 
@@ -42,7 +42,7 @@ Leaving the group can either be caused by the coordinator removing the process, 
 
 \begin{figure*}[!t]
 \includegraphics[width=\linewidth]{MaintainStateDiagram.pdf}
-\caption{State machine of maintaining a group. The \ac{AYC} messages are the same as those in Figure \ref{fig:statemachine}. \ac{AYC} and \ac{AYT} are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
+\caption[State machine for maintaining a group]{State machine for maintaining a group. The \ac{AYC} messages are the same as those in Figure \ref{fig:statemachine}. \ac{AYC} and \ac{AYT} are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
 \label{fig:statemachine2}
 \end{figure*}
 
@@ -175,12 +175,12 @@ This probability is based on the probability the higher priority process selecti
 In Figure \ref{fig:electionmessages}, we diagram the sequence of message exchanges and function calls for two possible states a process that is not in the leader's group.
 In the first state, the process nearly completed an election the previous round, but the read acknowledgement message was not delivered in time, resulting in the process being in the $M_i$ set.
 In the second state, the process is not in the leader's group.
-As shown in the figure, both cases require the same number of messages to be delivered for the process to be considered a part of the group.
+As shown in Figure \ref{fig:electionmessages}, both cases require the same number of messages to be delivered for the process to be considered a part of the group.
 
 \subsection{Model Construction}
 
-Based on the state determination and memorylessness arguements presented, the highest priority process operates independent of the state of the other processes in the system.
-The highest priority processes invites are always accepted, and the structure of the algorithm prevents any process from being locked out of participipating in a round of execution based on the outcome of the previous round.
+Based on the state determination and memorylessness arguments presented, the highest priority process operates independent of the state of the other processes in the system.
+The highest priority processes invites are always accepted, and the structure of the algorithm prevents any process from being locked out of participating in a round of execution based on the outcome of the previous round.
 Therefore, for every observation of the system state the highest priority process makes, the next round of execution for all the other processes favors the high priority process, ensuring that its observation corresponds directly with the system state.
 
 In each round, the behavior is described by two components: maintaining a group and inviting other processes into the group.
@@ -340,7 +340,7 @@ Therefore, Figure \ref{fig:ss-means}, shows the average percentage of total proc
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{schedule.pdf}
-    \caption{Example DGI schedule. Normal operation accounts for a fixed number of migrations each time the load balancing module runs. Message delays reduce the number of migrations that can be completed each round. However, reducing the group size allows more migrations to be completed (because fewer messages are being exchanged) at the cost of flexibility for how those migrations are completed.}
+    \caption[Example DGI schedule]{Example DGI schedule. Normal operation accounts for a fixed number of migrations each time the load balancing module runs. Message delays reduce the number of migrations that can be completed each round. However, reducing the group size allows more migrations to be completed (because fewer messages are being exchanged) at the cost of flexibility for how those migrations are completed.}
     \label{fig:schedule}
 \end{figure}
 

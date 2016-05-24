@@ -75,7 +75,7 @@ For larger groups, splitting them provides significant savings in the number of 
 \begin{figure}
 \centering
 \includegraphics[width=0.35\textwidth]{NetworkLayout}
-\caption{Example of process organization used in this paper. Two groups of processes are connected by a router.} \label{fig:network-layout}
+\caption[Example of process organization]{Example of process organization. Two groups of processes are connected by a router.} \label{fig:network-layout}
 \end{figure}
 
 Suppose a network like one depicted in Figure \ref{fig:network-layout}, where processes are divided by a router.
@@ -87,7 +87,7 @@ During elections (and with each group update) the leader distributes a fallback 
 When the \ac{ECN} notification is received, the processes will halt all current group management operations and enter a splitting mode where they switch to the fallback configuration.
 The leader of the group distributes a fallback notification to ensure all processes in the group apply their new configuration. 
 The complexity of distributing the notification is linear $O(n)$ and processes that already received the notification will have halted their communication.
-This approach will, ideally, avoid the burst/drain phenomena from figure \ref{fig:queue-types}.
+This approach will, ideally, avoid the burst/drain phenomena from Figure \ref{fig:queue-types}.
 
 The design of the fallback configuration can be created to optimize various factors.
 The factors include cyber considerations, such as the likely network path the processes in the group will use to communicate.
@@ -277,7 +277,7 @@ RED Max Threshold is computed using a similar technique, but using the message c
 \begin{figure}
 \centering
 \includegraphics[width=0.65\linewidth]{m-max-average-queue.pdf}
-\caption{Plot of the maximum observed average queue size as a function of the overall background traffic. The polynomial estimate is $y=22.70x^2-44.74x+85.72$}
+\caption[Plot of the maximum observed average queue size as a function of the overall background traffic.]{Plot of the maximum observed average queue size as a function of the overall background traffic. The polynomial estimate is $y=22.70x^2-44.74x+85.72$}
 \label{fig:plotm}
 \end{figure}
 
@@ -437,7 +437,7 @@ Additionally, the smaller group size allowed the amount of traffic from the load
 \begin{figure}
 \centering
 \includegraphics[width=0.95\textwidth]{failedmigrations.pdf}
-\caption{Count of lost migrations from all processes over time. Migrations are counted as lost until the second process confirms it has been completed. Without congestion management, migrations are lost.}
+\caption[Count of lost migrations from all processes over time.]{Count of lost migrations from all processes over time. Migrations are counted as lost until the second process confirms it has been completed. Without congestion management, migrations are lost.}
 \label{fig:plotg}
 \end{figure}
 
@@ -487,7 +487,7 @@ A summary of test scenarios for the worst case is presented in \ref{tab:scenario
     I & 5.1Mbps & Soft & \\ \hline
     J & 5.1Mbps & All &  \\ \hline
 \end{tabular}
-\label{tab:scenarios}
+\label{tab:scenarios-worst}
 \end{table}
 
 Figure X shows the number of lost migrations for each scenario.
