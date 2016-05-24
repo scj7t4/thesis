@@ -247,6 +247,7 @@ As a result, the computation time on the \ac{DGI} for processing and preparing m
 However, to compensate for the lack of processing time, the synchronization of the \ac{DGI} was randomly distributed as a normal distribution.
 This was done to introduce realism to ensure events did not occur simultaneously.
 Additionally, the real-time schedules used by the \ac{DGI} were adjusted to remove the processing time that was neglected in the simulation.
+The schedule used is depicted in Figure X.
 
 The \ac{DGI} were placed into a partitioned environment.
 The test included 30 nodes.
@@ -254,6 +255,7 @@ Each of the nodes ran one \ac{DGI} process.
 Two sets of 15 \ac{DGI} were each connected to a switch and each switch was in turn connected to the router.
 The network is pictured in Figure \ref{fig:network-layout}.
 Node identifiers were randomly assigned to nodes in the simulation and used as the process identifier for the \ac{DGI}.
+In the experiments the load at each process was randomly assigned: each side is mix of supply and demand processes.
 
 The links between the router and the switches had a \ac{RED} enabled queue placed on both network interfaces.
 The \ac{RED} parameters for all queues were set identically.
@@ -266,11 +268,11 @@ ARP tables were populated before the simulation began.
 The relationship between the background traffic and the average queue size was estimated through runs of the \ac{NS3} simulation.
 Figure \ref{fig:plotm} demonstrates the observed relationship between the total background traffic and the maximum average queue size for that level of traffic.
 Additionally, the $DequeueRate$ was collected from a run of the simulation without traffic, and was found to be $713.08$ packets/second.
-Therefore, from Equation \ref{eq:prob-est}, assuming $init_q=0, resp=225, init_m=225$ and $\Delta t=1$, the maximum traffic rate with no omissions is $263.0$ packets/second.
+Therefore, from Equation \ref{eq:prob-est}, assuming $init_q=0, resp=225, init_m=225$ and $\Delta t=1$, the maximum traffic rate with no omissions was $263.0$ packets/second.
 The number of packets for the $resp$ and $init_m$ were selected from the worst case of the algorithm in \cite{JOURNAL}.
-Based on the traffic parameters in Table \ref{tab:red-parameters}, $263.0$ packets/second corresponds to 1.077 Mbps of traffic generated at one switch and 2.1545 Mbps traffic overall.
-From the polynomial estimate in Figure \ref{fig:plotm}, the maximum average queue size for that level of traffic is $94.715$, estimated as $90$ for the \ac{RED} Min Threshold in Table \ref{tab:red-parameters}.
-RED Max Threshold is computed using a similar technique, but using the message complexity for the Load Balancing algorithm, since it maintains its complexity during Soft ECN mode.
+Based on the traffic parameters in Table \ref{tab:red-parameters}, $263.0$ packets/second corresponded to 1.077 Mbps of traffic generated at one switch and 2.1545 Mbps traffic overall.
+From the polynomial estimate in Figure \ref{fig:plotm}, the maximum average queue size for that level of traffic was $94.715$, estimated as $90$ for the \ac{RED} Min Threshold in Table \ref{tab:red-parameters}.
+RED Max Threshold is computed using a similar technique, but using the message complexity for the Load Balancing algorithm, since it maintained its complexity during Soft ECN mode.
 
 \begin{figure}
 \centering
@@ -300,18 +302,49 @@ The number of packets sent per second was a function of the data rate and the si
 In each simulation, half of the traffic originated from each switch.
 Due to the properties of the network links, the greatest queueing effect occurred at the switches.
 
-\subsection{Results}
+\subsection{Average Case Results}
 \label{sect:results}
-Figures \ref{fig:plota} and \ref{fig:plotb} show the normal operation of the system.
+Six test scenarios were created to evaluate the \ac{ECN} technique.
+The six scenarios are summarized in Table \ref{tab:scenarios}.
+In each scenario, the distribution of supply and demand processes is mixed: each switch has a mix of supply and demand processes.
+The potential of the system to complete migrations, as well as the potential for migrations to fail were primary considerations for each scenario.
+Processes cannot initiate migrations if they are not grouped with other processes.
+Similarly, if the process is attempting to communicate over a congested link, it may not meet real-time deadlines or successfully complete migrations.
+
+\begin{table}
+\centering
+\caption{Summary of Scenarios Run}
+\begin{tabular}{| c | c | c | c |}
+    \hline
+    Test & Traffic & Notifications & Attempted Migrations \\ \hline
+    A & None & N/A & 1171 \\ \hline
+    B & 2Mbps & N/A & 1171 \\ \hline
+    C & 4Mbps & None & 1114  \\ \hline
+    D & 4Mbps & Soft & 888 \\ \hline
+    E & 6.4Mbps & Soft & 861 \\ \hline
+    F & 6.4Mbps & All & 888 \\ \hline
+\end{tabular}
+\label{tab:scenarios}
+\end{table}
+
+Figures \ref{fig:plota} and \ref{fig:plotb} (Scenario A) show the normal operation of the system.
 In this configuration, there is no congestion on the network. 
 The \ac{DGI} start, group together and then begin migrating power between processes.
 Figure \ref{fig:plota} plots the queue size over time for a queue used to send packets from a switch to the router.
 Figure \ref{fig:plotb} is a detailed view of a portion of Figure \ref{fig:plota}.
-Figure \ref{fig:plotb} shows the queue size during the normal operation of group management as well as the first migration of the load balancing module.
+Figure \ref{fig:plotb} shows the queue size during the normal operation of group management as well as the first three migrations of a load balancing round.
 The dotted line plots the \ac{EWMA} of the size of the queue.
-
 An important note for the plotted \ac{EWMA} values: \ac{NS3} only updates the average queue size during simulation when a new packet is enqueued.
-As a consequence, the average queue size is slightly misleading the in scenarios where there is a significant amount of idle channel time (such as Figures \ref{fig:plota}, \ref{fig:plotb}, and \ref{fig:plote})
+As a consequence, the average queue size is slightly misleading the in scenarios where there is a significant amount of idle channel time (such as Figures \ref{fig:plota}, \ref{fig:plotb}, and \ref{fig:plote}).
+In scenarios A and B, the traffic is not sufficient to disrupt the operation of the DGI.
+As a result, in Figure \ref{fig:groupstatedistro}, process 0 has an uninterrupted observation of a group size of 30 throughout the two scenarios.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.95\textwidth]{groupstatedistribution.pdf}
+\caption[Distribution of group sizes for process 0 in each scenario.]{Distribution of group sizes for process 0 in each scenario. The list of scenarios is presented in \ref{tab:scenarios}.  The height of each colored segment indicates the portion of the simulation where process 0 was in the given configuration.}
+\label{fig:groupstatedistro}
+\end{figure}
 
 \begin{figure}
 \centering
@@ -354,7 +387,7 @@ Additionally, during this scenario some migrations are lost due to message delay
 \label{fig:plotf}
 \end{figure}
 
-From the experiment we establish the $min_{th}$ value used as a \ac{RED} queue parameter.
+From scenario A and B we establish the $min_{th}$ value used as a \ac{RED} queue parameter.
 The traffic generated by each step of the group management algorithm is very bursty.
 The tightness of the clock synchronization in the group affect the size of the peak.
 Like \cite{HILTESTBED}, the level of power at a process is the net sum of its power generation capability and load.
@@ -403,8 +436,8 @@ Additionally, the smaller group size allowed the amount of traffic from the load
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\textwidth]{g-lostm-nonotifications-4mbpstraffic-all.pdf}
-\caption{Count of lost migrations from all processes over time. Migrations are counted as lost until the second process confirms it has been completed. Without congestion management, a large number of migrations are lost.}
+\includegraphics[width=0.95\textwidth]{failedmigrations.pdf}
+\caption{Count of lost migrations from all processes over time. Migrations are counted as lost until the second process confirms it has been completed. Without congestion management, migrations are lost.}
 \label{fig:plotg}
 \end{figure}
 
@@ -412,19 +445,58 @@ Figure \ref{fig:plote} shows the queue size as the network traffic begins to inc
 The \ac{DGI} in these experiments used schedule that allowed for some congestion to occur before processes are disrupted.
 The slack gave network devices the opportunity to identify when the network congestion will go beyond the acceptable threshold.
 
-Figure \ref{fig:plotf} shows an example of congestion affecting the physical network without \ac{ECN}.
-As a result of the congestion in Figure \ref{fig:plotf}, processes leave the main group.
-Additionally, power migrations are affected: migrations fail, or the supply process is left uncertain of migrations completions.
+Figure \ref{fig:plotf} (Scenario C) shows an example of congestion affecting the physical network without \ac{ECN}.
+As a result of the congestion in Figure \ref{fig:plotf}, processes leave the main group, shown in \ref{fig:groupstatedistro}.
+The observed configurations have greater than 15 processes because communication that does not cross the switch-router-switch path is not congested.
+As a consequence, processes on the same switch as process 0 do not leave 0's group.
+Power migrations are affected by congestion: migrations fail, or the supply process is left uncertain of migrations completions.
 Figure \ref{fig:plotg} plots the count of failed migrations over time.
+The number of failed migrations relative to the number attempted is quite low, because processes on the same switch as process 0 can still attempt migrations.
+
 %In this scenario, only migrations are completed compared to the control.
 
-Figure \ref{fig:ploti} shows an example of the \ac{ECN} algorithm notifying processes of the congestion.
-Compared to the scenario in Figure \ref{fig:plotf}, the \ac{ECN} algorithm successfully prevents the group from dividing and increases the number of migrations by reducing the number of attempted migrations each round.
+Figure \ref{fig:ploti} (Scenario D) shows an example of the \ac{ECN} algorithm notifying processes of the congestion.
+Compared to the scenario in Figure \ref{fig:plotf} (Scenario C), the \ac{ECN} algorithm successfully prevents the group from dividing.
+As part of the compensation for the congestion, the number of migrations attempted are reduced, as listed in Table \ref{tab:scenarios}.
+In \cite{ecn-cloudhari}, when the number of migrations are reduced, the size of each migration is increased.
+Despite fewer migrations being attempted, the same amount of power can be managed by the \ac{DGI}, and the number lost migrations is reduced by the changed schedule.
 
-Figures \ref{fig:plotk} and \ref{fig:plot;} show an example of a more extreme congestion scenario.
+Figures \ref{fig:plotk} (Scenario E) and \ref{fig:plotl} (Scenario F) show an example of a more extreme congestion scenario.
 In Figure \ref{fig:plotl}, the \ac{RED} algorithm shares a Hard \ac{ECN} notification.
 The notification causes the \ac{DGI} to switch to a smaller fallback configuration and fallback configuration decreases the queue usage from Figure \ref{fig:plotk} to Figure \ref{fig:plotl}.
 Without this fallback configuration behavior, the system is greatly affected by the traffic.
 However, with the fallback configuration the system remains stable and no migrations are lost.
 
-%Table X summarizes the number of migrations and number of failed migrations for each of the presented scenarios.
+\subsection{Worst Case Results}
+
+In the worst case, supply processes and demand processes are not intermixed at each switch: only supply processes are at switch A, and only demand processes are at switch B.
+This placement of processes is the worst case because it involves the highest number of messages crossing the congested link.
+No migration can occur without messages crossing the congested link.
+As a result, in the worst case scenarios, hard \ac{ECN} messages are triggered at a lower level of traffic than in the average case scenarios.
+This is expected: in soft \ac{ECN} mode, the majority of traffic comes from the load balancing algorithm and in the worst case, the load balancing algorithm can onl perform migrations while using the congested link.
+A summary of test scenarios for the worst case is presented in \ref{tab:scenarios-worst}.
+
+\begin{table}
+\centering
+\caption{Summary of Scenarios Run}
+\begin{tabular}{| c | c | c | c |}
+    \hline
+    Test & Traffic & Notifications & Attempted Migrations \\ \hline
+    G & 4Mbps & None &  \\ \hline
+    H & 4Mbps & Soft &  \\ \hline
+    I & 5.1Mbps & Soft & \\ \hline
+    J & 5.1Mbps & All &  \\ \hline
+\end{tabular}
+\label{tab:scenarios}
+\end{table}
+
+Figure X shows the number of lost migrations for each scenario.
+Because all migrations must be completed with the congested link, there is a greater number of failed migrations and the number of migrations attempted is reduced because of the congestion (Scenario G).
+The queue size for Scenario G is presented in Figure Y.
+Enabling soft ECN mode (Scenario H), as before, prevents failed migrations.
+Scenario G's queue is presented in figure Z.
+
+The hard ECN message is triggered earlier in the worst case, due to the increased dependence on the congested link.
+Figure ZA shows the queue size for Scenario I, a scenario that should trigger hard ECN mode.
+In Scenario I, uncontrolled group division occur and migrations are lost.
+By enabling notifications (Scenario J) those situations are mitigated.
