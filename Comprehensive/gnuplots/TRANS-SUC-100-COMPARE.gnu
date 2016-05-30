@@ -5,7 +5,7 @@ set boxwidth 3 absolute
 set title "Comparision Between Experimental and SharpE (Transient Partition, 100ms Resend, SUC)" 
 set xrange [ -5.00000 : 105.0000 ] noreverse nowriteback
 set ylabel "In Group Time (Minutes)"
-set xlabel "Network Reliability"
+set xlabel "Probability of Delivery"
 set yrange [ 0.00000 : 10.0000 ] noreverse nowriteback
 set style line 1 lt 1 lc rgb "black" lw 1
 set style line 2 lt 1 lc rgb "black" lw 1

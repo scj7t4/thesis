@@ -8,11 +8,11 @@ hist(x,width)=width*floor((x)/width)
 set terminal epslatex size SIZE_X,SIZE_Y color colortext  
 set output '2NODE-SUC-100-LDR-FEVENTS.tex'
 set boxwidth 0.9*width
-set title "Two Node, Number Of Detected Leader Failures (SUC - 100ms Resend)" 
+set title "Two Process, Number Of Detected Leader Failures (SUC - 100ms Resend)" 
 set xrange [ -5.00000 : 105.0000 ] noreverse nowriteback
 set yrange [ 0 : ]
 set ylabel "Number of Collected Events"
-set xlabel "Network Reliability"
+set xlabel "Probability of Delivery"
 set style fill solid 0.5
 #set yrange [ 0.00000 : 10.0000 ] noreverse nowriteback
 set style line 1 lt 1 lc rgb "black" lw 1

@@ -2,10 +2,10 @@
 set terminal epslatex size SIZE_X,SIZE_Y color colortext  
 set output 'TRANS-RT-SUC-128-COMPARE.tex'
 set boxwidth 3 absolute
-set title "Simulated versus Experimental Time In Group:\n Transient Partition (SUC 128ms Resend)" 
+set title "Simulated versus Experimental In-Group Time:\n Transient Partition (SUC 128ms Resend)" 
 set xrange [ -5.00000 : 105.0000 ] noreverse nowriteback
 set ylabel "In Group Time (Seconds)"
-set xlabel "Network Reliability"
+set xlabel "Probability of Delivery"
 set yrange [ 0.00000 : 600.0000 ] noreverse nowriteback
 set style line 1 lt 1 lc rgb "black" lw 1
 set style line 2 lt 1 lc rgb "black" lw 1
