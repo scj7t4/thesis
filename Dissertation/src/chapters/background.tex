@@ -4,49 +4,49 @@
 
 Distributed systems are a computing paradigm characterized by independence of computational units and no universal clock.
 Components in a distributed system may not directly share computational resources or memory.
-Instead, computers in a distributed system typically interact through a message passing interface.
+Instead, computers in a distributed system typically interact through a message-passing interface.
 
 As a result, distributed computing is a challenging area of research.
 In a distributed system, because processes do not share a universal clock, the ordering of messages and events needed to be carefully considered to ensure correct operation of the system.
-Additionally, when individual components fail, determining which components fail and how they affect the system as a whole is also difficult in a distributed system.
+Additionally, when individual components fail, determining which components failed and how they affected the system as a whole is difficult in a distributed system.
 Different types of failures can cause different kinds of information to be withheld or changed, disrupting those processes.
 
 \section{Execution And Communication Models}
 
 We consider a distributed system where no processes in the system share an address space.
-All processes must use a message passing interface to communicate with other processes to exchange information.
+All processes must use a message-passing interface to communicate with other processes to exchange information.
 As a result of the complexities of distributed systems, various execution models have been developed to define how the execution of a distributed system proceeds.
 Different execution models affect how easy it is to reason about the system's execution, the types of algorithms the system can execute, and how complicated they are to implement.
 
 \subsection{Communication Channels}
 We describe the avenues of communication between processes as channels.
-A channel is classified as reliable if it meets three axioms:
+A channel is classified as reliable if it meets three axioms\cite{DISTRIBUTED}:
 
 \begin{axm}
     \label{axm:reliable-channel-sender}
-    Every message sent by a sender is received by a receiver and every received message was sent by a sender in the system. \cite{DISTRIBUTED}
+    Every message sent by a sender is received by a receiver and every received message was sent by a sender in the system. 
 \end{axm}
 
 \begin{axm}
     \label{axm:reliable-channel-delay}
-    Every message has an arbitrary but not infinite propagation delay.\cite{DISTRIBUTED}
+    Every message has an arbitrary but not infinite propagation delay.
 \end{axm}
 
 \begin{axm}
     \label{axm:reliable-channel-fifo}
-    Every channel is a \ac{FIFO} channel. If process $P$ sends a messages $x$ and $y$ to $Q$ (in that order) then $Q$ receives the messages in order ($x$ then $y$).\cite{DISTRIBUTED}
+    Every channel is a \ac{FIFO} channel. If process $P$ sends messages $x$ and $y$ to $Q$ (in that order) then $Q$ receives the messages in order ($x$ then $y$).
 \end{axm}
 
 Reliable channels are often referred to as synchronous channels.
-However, in our system, channels are not assumed to be perfectly reliable.
-Instead, we respect Axioms \ref{axm:reliable-channel-fifo} \& \ref{axm:reliable-channel-fifo}, partially fulfill Axiom \ref{axm:reliable-channel-sender}, and disregard Axiom \ref{axm:reliable-channel-delay}.
+In our system, however, channels are not assumed to be perfectly reliable.
+Instead, we respect Axiom \ref{axm:reliable-channel-fifo}, partially fulfill Axiom \ref{axm:reliable-channel-sender}, and disregard Axiom \ref{axm:reliable-channel-delay}.
 Therefore, we assume the following about communication channels in our systems (replacing Axiom \ref{axm:reliable-channel-sender}):
 
 \begin{axm}
     Every message received by a receiver was sent by a sender in the system.
 \end{axm}
 
-Without the constrained propagation delay from \ref{axm:reliable-channel-delay}, this type of communication channel is typically referred to as an asynchronous channel.
+Without the constrained propagation delay from Axiom \ref{axm:reliable-channel-delay}, this type of communication channel is typically referred to as an asynchronous channel.
 
 The communication model can be synchronous or asynchronous.
 In the synchronous communication model, processes can only send a message when the receiving process is ready to receive it.
@@ -75,20 +75,20 @@ An error is a difference between what is considered ``correct'' output for a giv
 \end{pdef}
 
 \begin{pdef}
-A fault is the manifestation of an error in software or an incident where an incorrect step, or data definition is performed in a computer program.
+A fault is the manifestation of an error in software or an incident where an incorrect step or data definition is performed in a computer program.
 \end{pdef}
 
 \begin{pdef}
-Failure is the inability of a component or system to perform its required function or within its specified limits.
+A failure is the inability of a component or system to perform its required function or within its specified limits.
 \end{pdef}
 
 \subsection{Crash or Fail-Stop Failure}
 
-A crash failure or its more generalized form, a fail-stop failure, describes a failure in which a process stops executing.
+A crash failure, or its more generalized form, a fail-stop failure, describes a failure in which a process stops executing.
 In general, it is considered to be an irreversible failure, since a process typically does not resume from a crashed state.
 There is a special category of crash failures, called napping failures, where a process will appear to have crashed for a finite amount of time before resuming normal operation.
 Crash failures are impossible to detect with absolute certainty in an asynchronous system.
-Processes can be suspected by other processes through the use of challenge/response messages or heartbeat messages that allow a process to prove that it has not crashed yet.
+Processes can be suspected of failure by other processes through the use of challenge/response messages or heartbeat messages that allow a process to prove that it has not crashed yet.
 A system that can handle a crash failure is implied to be able to handle a fail-stop failure.\cite{DISTRIBUTED}
 
 The fail-stop failure has three properties \cite{DISTRIBUTED}:
@@ -99,21 +99,11 @@ The fail-stop failure has three properties \cite{DISTRIBUTED}:
 \item Volatile storage is lost when the fail-stop process is stopped.
 \end{enumerate}
 
-\subsection{Omission Failure}
-
-An omission fault\cite{OMISSIONFAILURES} occurs when a message is never received by the intended recipient.
-Omission faults can occur when the communication medium is unavailable or when the latency of message exceeds a timeout for its expected delivery.
-Protocols like TCP do not tolerate omission failures: a packet is resent until it is acknowledged by the receiver.
-If the acknowledgment never comes, the connection is closed.
-As a contrast, UDP assumes that any datagram could be lost, and it is the responsibility of the programmer to handle missing datagrams appropriately.
-An omission failure can have the same observable effects as a napping failure in some situations.\cite{DISTRIBUTED}
-
-
 \subsection{Failure Detectors}
 
-Failure detectors\cite{FAILUREDETECTORS} (Sometimes referred to as unreliable failure detectors) are a special class of processes in a distributed system used to detect other failed processes.
+Failure detectors\cite{FAILUREDETECTORS} (sometimes referred to as unreliable failure detectors) are a special class of processes in a distributed system used to detect other failed processes.
 Distributed systems use failure detection to identify failed processes for leader election routines.
-Because it isn't possible to directly detect a failed process in an asynchronous system, there has been a wide breadth of work related to different classifications of failure detectors, with different properties.
+Because it isn't possible to directly detect a failed process in an asynchronous system, there has been a wide breadth of work related to different classifications of failure detectors with different properties.
 Some of the properties include\cite{FAILUREDETECTORS}:
 
 \begin{itemize}
@@ -122,18 +112,26 @@ Some of the properties include\cite{FAILUREDETECTORS}:
     \item Weak Completeness - Every faulty process is eventually suspected by 
         some other working process.
     \item Strong Accuracy - No process is suspected before it fails.
-    \item Weak Accuracy - There exists some process is never suspected of failure.
+    \item Weak Accuracy - There exists some process that is never suspected of failure.
     \item Eventual Strong Accuracy - There is an initial period where strong accuracy is not kept. Eventually, working processes are identified as such, and are not suspected unless they actually fail.
     \item Eventual Weak Accuracy - There is an initial period where weak accuracy is not kept. Eventually, working processes are identified as such, and there is some process that is never suspected of failing again.
 \end{itemize} 
 
 One class of failure detectors, Omega class Failure detectors, are particularly interesting because of \cite{LEADERELECTIONEVAL}. An eventual weak failure (weak completeness and eventual weak accuracy) detector is the weakest detector which can still solve consensus. It is denoted several ways in various works including $\diamond \mathcal{W}$ \cite{FAILUREDETECTORS}, $\mathcal{W}$ \cite{WEAKESTFAILURE1} \cite{WEAKESTFAILURE2} and $\Omega$ (Omega) \cite{LEADERELECTIONEVAL}.
 
+\subsection{Omission Fault}
+
+An omission fault\cite{OMISSIONFAILURES} occurs when a message is never received by the intended recipient.
+Omission faults can occur when the communication medium is unavailable or when the latency of message exceeds a timeout for its expected delivery.
+Protocols like TCP do not allow omission failures: a packet is resent until it is acknowledged by the receiver.
+If the acknowledgment never comes, the connection is closed.
+As a contrast, UDP assumes that any datagram could be lost, and it is the responsibility of the programmer to handle missing datagrams appropriately.
+An omission failure can have the same observable effects as a napping failure in some situations.\cite{DISTRIBUTED}
 
 \subsection{Byzantine Fault}
 
-Byzantine fault, causes processes in the distributed system send information that is incorrect or misleading to other processes.
-Constraints for detecting processing that exhibit Byzantine behavior is a famous result in distributed systems.\cite{byzantine-generals}
+A Byzantine fault causes processes in the distributed system to send information that is incorrect or misleading to other processes.
+Constraints for detecting processes exhibiting Byzantine behavior are a famous result in distributed systems.\cite{byzantine-generals}
 
 \section{Probability}
 
@@ -143,7 +141,7 @@ The expected value represents the long-term average output of a probability dist
 \begin{equation}E[X] = x_1 p_1 + x_2 p_2 + ... + x_k p_k \end{equation}
 
 \nomenclature{$E[X]$}{Expected value of a random variable.}
-Conceptually, the expected value is the weighted average of the outcomes of some stochastic system.
+Conceptually, the expected value is the weighted average of the outcomes of a stochastic system.
 
 \begin{pdef}
 Availability is the probability a system or component is operational and accessible when required for use, denoted $A$.
@@ -156,10 +154,12 @@ Availability is the probability a system or component is operational and accessi
 Reliability is the ability of a system or component, in specified conditions, to be able to perform its required functions for a specified period.
 \end{pdef}
 
+Let R(t) be the probability a system or component function up until at least time $t$:
+
 \begin{equation}R(t) = \Pr(T > t) = \int_t^{\infty} f(x) dx\end{equation}
 \nomenclature{$R(t)$}{Reliability of a component.}
 
-Where $R(t)$ is the probability that the system or component functions up until at least time $t$ and $f(x)$ is the probability density function for the component's survival.
+where $f(x)$ is the probability density function for the component's survival.
 Unfortunately, there is a clash of the term for reliability in distributed systems and reliability analysis.
 We try to constrain the discussion about reliability in the distributed systems sense to communication channels.
 
@@ -174,24 +174,24 @@ We try to constrain the discussion about reliability in the distributed systems 
 \nomenclature{$X$}{A random variable, or the set of states for a Markov chain}%
 A Markov chain is a finite set of states $X=\{x_1, x_2, ..., x_n\}$ and probabilistic transitions between those states.
 States in a Markov chain are mutually exclusive.
-In a Markov chain, when a system is some state $x_i$ it has some probability of transitioning to some other state $x_j$ at the next time-step.
+When a system is some state $x_i$ it has some probability of transitioning to some other state $x_j$ at the next time-step.
 A Markov chain is a first order chain if the probability of transitioning from $i$ to $j$ does not depend on the history of transitions that lead to state $i$.
-First order chains are described as having a memoryless or Markov property.
+First order chains are described as being memoryless because they have the Markov property.
 The Markov property formalizes the independence of the next state from the history of previous states.
-The Markov property describes a Markov chain as a sequence of random variables $X_{1}, X_{2}, X_{3}, ...$ and states the value of $X_{n+1}$ only depends $X_{n}$: \cite{MARKOV3}
+If we describe a Markov chain as a sequence of random variables $X_{1}, X_{2}, X_{3}, ...$, the Markov property states the value of $X_{n+1}$ only depends $X_{n}$: \cite{MARKOV3}
 
 \begin{align} \Pr(X_{n+1}&=x\mid X_1=x_1, X_2=x_2, \ldots, X_n=x_n)
 \nonumber \\ &= \Pr(X_{n+1}=x\mid X_n=x_n). \end{align}
 
 An ergodic Markov chain is a chain where it is possible, in some finite number of steps, to go from any state to any other state.
 A stationary, or time homogeneous, Markov chain is one where the transition probabilities do not change over time.
-In a stationary Markov chain, the $n$th visit to a state is indistinguishable from the $n+1$th visit to a state.
+In a stationary Markov chain, the $n$th visit to a state is indistinguishable from the ($n+1$)th visit to a state.
 
 \subsection{Discrete Time Markov Chain}
 
 \nomenclature{$P$}{Transition probability matrix of a discrete time Markov chain.}
 A \ac{DTMC} is one where the transitions between states happen at discrete time steps.
-A \ac{DTMC} with $m$ states can be represented by a $m\times m$ matrix.
+A \ac{DTMC} with $m$ states can be represented by an $m\times m$ matrix.
 For simplicity when creating the model, matrices in this work are 1-indexed.
 In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $x_i$ to $x_j$.
 The matrix is row stochastic, meaning the sum of each row in the matrix is equal to one:
@@ -202,10 +202,15 @@ A useful companion to the transition matrix is a state distribution vector.
 While the transition matrix describes how a system will transition between states, the state distribution vector describes the probability of observing a given state.
 
 \begin{pdef}
-A state distribution vector is an $m$-dimensional vector composed of probability of observing each state in the system at a given instant:
-\[ [P_{1} \quad P_{2} \quad \ldots \quad P_{m} ] \]
-Where $P_{i}$ corresponds to the probability of observing state $x_i$.
+A state distribution vector is an $m$-dimensional vector composed of the probability of observing each state in the system at a given instant.
 \end{pdef}
+
+Let $v$ be a state distribution vector:
+
+\[ v = [P_{1} \quad P_{2} \quad \ldots \quad P_{m} ] \]
+
+where $P_{i}$ corresponds to the probability of observing state $x_i$.
+
 
 A \ac{DTMC} is a suitable model for a memoryless random process with a finite number states which is observed at fixed time intervals.
 By utilizing a Markov chain, a variety of statistical analyses can be performed on the modeled system.
@@ -216,7 +221,7 @@ The steady state probability distribution vector can by found via a system of eq
 \begin{align}
 0\leq\pi_j\leq1.0 \\
 \sum_{j = 1}^{m}\pi_j = 1.0 \\
-\pi_j = \sum_{i=1}^{m} \pi_i p_{ij}
+\pi_j = \sum_{i=1}^{m} \pi_i p_{ij}.
 \end{align}
 
 The computation of the steady state will be noted as $Steady()$.
@@ -246,7 +251,7 @@ The \ac{pdf} of the exponential distribution can be written as: \cite{MARKOV1}
 f(x;\lambda) = \begin{cases}
 \lambda e^{-\lambda x} & x \ge 0 \\
 0 & x < 0
-\end{cases}
+\end{cases}.
 \end{equation}
 
 As a result, the expected or mean value of an exponential distribution is a function of the parameter $\lambda$: \cite{MARKOV1}
@@ -268,14 +273,13 @@ Each transition contributes to an expected amount of time in the state.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.75\textwidth]{hiddenmarkovmodel-1.pdf}
-	\caption[Behavior of a hidden Markov model.]{Behavior of a hidden Markov model. The model goes through a sequence of hidden states ($X_k$) and produces an observable output at each state ($Y_k$).}
+	\caption[Behavior of a hidden Markov model.]{Behavior of a Hidden Markov Model. The model goes through a sequence of hidden states ($X_k$) and produces an observable output at each state ($Y_k$).}
 	\label{fig:hmm-1}
 \end{figure}
 
-A \ac{HMM} is a Markov chain where the state is not directly visible to an observer.
-Instead, the \ac{HMM} outputs observations related to the underlying, hidden, chain.
+A \ac{HMM}, pictured in Figure \ref{fig:hmm-1}, is a Markov chain where the state is not directly visible to an observer.
+Instead, the \ac{HMM} outputs observations related to the underlying, hidden chain.
 The hidden chain is assumed to meet the Markov property.
-A \ac{HMM} is pictured in Figure \ref{fig:hmm-1}
 A \ac{HMM} can be described by the notation $\lambda = (\Pi, P, B)$, where $\Pi$ is the initial state distribution vector, $P$ is the matrix of state transition probabilities, and $B$ is a matrix describing the probability of observing an output given the hidden state.
 Each row in $B$ maps each state in $X$ to a probability distribution for an observation from $Y$.
 Let $y$ be some observation, where $y \in Y$, a finite set of discrete, possible observations.
@@ -286,7 +290,7 @@ This relationship is pictured in Figure \ref{fig:hmm-2}.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.75\textwidth]{hiddenmarkovmodel-2.pdf}
-	\caption[Observable output of a hidden Markov model.]{Observable output of a hidden Markov model. Each state has a corresponding probability distribution for the observable outputs.}
+	\caption[Observable output of a hidden Markov model.]{Observable output of a Hidden Markov Model. Each hidden state ($x_i$) has a corresponding probability distribution ($B_i$) for the observable outputs ($y_j$).}
 	\label{fig:hmm-2}
 \end{figure}
 
@@ -320,21 +324,21 @@ Additionally, we can define a set of valuation functions, $\mathbb{V}$.
 Each function $V^i_{s_x}(w) \in \mathbb{V}$ describes the value observed by in a domain $D_i$ of a boolean state variable $s_x$ in some world $w$. 
 If a valuation function for a particular state variable is not defined for an agent, the agent cannot determine the value of the state variable, and cannot determine the value of any logical statement based on the variable.
 In the case of a distributed system, the valuation function concept is analogous to the isolation of memory for each agent.
-For example, an agent $i$, cannot simply determine the value of a variable for agent $j$.
+For example, an agent $i$ cannot simply determine the value of a variable for agent $j$.
 \nomenclature{$D_i$}{The domain of an agent or process $i$.}
 \nomenclature{$\mathbb{V}$}{Set of valuation functions in a Kripke model.}
 \nomenclature{$V$}{A valuation function.}
 
-The combination of a Kripke Frame $< W,R >$ and a set of valuation functions $V$ is a Kripke model $K = \{W, R, V\}$, frequently known as a modal model.
+The combination of a Kripke Frame $< W,R >$ and a set of valuation functions $\mathbb{V}$ is a Kripke model $K = \{W, R, \mathbb{V}\}$, frequently known as a modal model.
 The complete model describes all the possible worlds, the relation between those worlds and the information available in the domains of the system.
 \nomenclature{$K$}{A Kripke model.}
 
 Let $\varphi \in \Phi_0$ be an atomic proposition in a set of countably many propositions.
-The set of well-formed formulas (wffs), as defined by the formulation rules in \ref{tab:axiomatic}, is the least set containing $\Phi_0$.
+The set of \acp{wff}, as defined by the formulation rules in Table \ref{tab:axiomatic}, is the least set containing $\Phi_0$.
 Additionally, we use the modal operator $\Box$ as an abbreviation for $\neg \Diamond \neg \varphi$.
-The complete axiomatic system is outlined in \ref{tab:wffs}.
-For the uninitiated, the modal box operator ($\Box$), ``it is necessary that'' states (in the case of $\Box \varphi$) ``in every world $w$, $\varphi$ is true.'' As its dual, the diamond operator ($\Diamond$) states ``there is a world where $\varphi$ is true.''
-\nomenclature{$\varphi, \gamma, \psi$}{Well formed formulas.}
+The complete axiomatic system is outlined in Table \ref{tab:wffs}.
+For the uninitiated, the modal box operator ($\Box$), ``it is necessary that,'' states (in the case of $\Box \varphi$) ``in every world $w$, $\varphi$ is true.'' As its dual, the diamond operator ($\Diamond$) states ``there is a world where $\varphi$ is true.''
+\nomenclature{$\varphi, \gamma, \psi$}{Well-formed formulas.}
 \nomenclature{$\Box \varphi$}{The modal ``it is necessary that'' operator.}
 \nomenclature{$\Diamond \varphi$}{The modal ``it is possible that'' operator.}
 
@@ -397,7 +401,7 @@ R5. & From $\vdash \varphi \equiv \psi$ infer $\vdash T_{i,j} \varphi \equiv T_{
 \label{tab:axiomatic}
 \end{table}
 
-\subsection{Non-Deducible (MSDND) Security}
+\subsection{Multiple Security Domain Model Non-Deducibility (MSDND)}
 
 In the domain of security, there are a wide variety of aspects worth protecting in every system.
 These are grouped into the core security concepts of integrity, accessibility, and privacy.
@@ -406,17 +410,17 @@ However, accidental information leakage can still occur, which compromises the p
 For \ac{CPS}, the leakage is difficult to prevent.
 Unlike their purely cyber counterparts, the actions taken by the physical components cannot be easily hidden from an observer.
 For example, a plane changing altitude or a car turning or changing speed cannot be hidden from an observer.
-Other, more complicated systems, like the power grid, have actions that are more difficult to observe. However, a well-motivated attacker can potentially collect critical information about the behavior of the cyber components with observations of the physical network\cite{Roth2012}.
+More complicated systems, like the power grid, have actions that are more difficult to observe.
+However, a well-motivated attacker can potentially collect critical information about the behavior of the cyber components with observations of the physical network\cite{Roth2012}.
 
 Information flow security models are invaluable for assessing what information, if any, is leaked by either the cyber of physical components of the \ac{CPS}.
 Many information flow security models, have been proposed, all based on similar concepts.
 Typically, the models partition the system into two domains: the high-security domain and the low-security domain.
 However, the MSDND security model allows the system to be partitioned into any number of domains.
-The MSDND model has been used to describe how the STUXNET attack was able to hide its malicious behavior from the plant operators.
+The MSDND model has been used to describe how the Stuxnet attack was able to hide its malicious behavior from the plant operators.
 The MSDND security model is expressed using modal logic to determine what information in a domain is deducible to an observer in another domain.
 The model exploits the possible worlds of modal logic to determine if there are worlds where the value of a logical atom is deducible by an agent outside the domain.
-
-The MSDND security model can be used to determine what an agent in a distributed system can determine about another agent.
+As a consequence, it can be used to determine what an agent in a distributed system can determine about another agent.
 The exact specification of timing the distributed system becomes unnecessary as the modal model can express any combination of logical atoms in one of its worlds.\cite{Howser2012}\cite{STUXNET}\cite{Howser2013}
 
 The MSDND security model can be expressed as follows\cite{STUXNET}.
@@ -463,7 +467,7 @@ In the context of a distributed system, these operators allow the division of th
 \section{Explicit Congestion Notification}
 
 \ac{ECN} is a technique for managing congestion in IP networks. 
-When an \ac{ECN} capable network device detects congestion, it can drop the packets, or it can signal senders using flags in the packet headers that the network is congested.
+When an \ac{ECN}-capable network device detects congestion, it can drop the packets, or it can signal senders using flags in the packet headers that the network is congested.
 For a TCP application, the result of the dropped packets causes the slow-start congestion control strategy to reduce the rate packets are sent.
 A more advanced implementation, using \ac{ECN}, sets specific bits in the TCP header to indicate congestion.
 By using \ac{ECN}, TCP connections can reduce their transmission rate without re-transmitting packets.
@@ -478,7 +482,7 @@ It uses a probabilistic model and an \ac{EWMA} to determine if the average queue
 The values are used to identify potential congestion and manage it.
 Congestion identification is accomplished by determining the average size of the queue, and then probabilistically dropping packets to maintain the size of the queue.
 In \ac{RED}, when the average queue size, $avg$, exceeds a minimum threshold ($min_{th}$), but is less than a maximum threshold ($max_{th}$), new packets arriving at the queue may be ``marked''.
-The probability a packet is marked is based on the following relation between $p_{b}$ and $p_{a}$ where $p_{a}$ is the final probability a packet will be marked.
+The probability a packet is marked is based on the following relation between $p_{b}$ and $p_{a}$, where $p_{a}$ is the final probability a packet will be marked.
 
 \begin{equation}
 p_{b} = max_p (avg - min_{th}) / (max_{th}-min_{th})
@@ -488,7 +492,7 @@ p_{a} = p_{b} / (1-count * p_b)
 \end{equation}
 
 Where $max_p$ is the maximum probability a packet will be marked when the queue size is between $min_{th}$ and $max_{th}$ and $count$ is the number of packets since the last marked packet.
-With \ac{RED}, the probability a packet is marked varies linearly with the average queue size, and as a function of the time since the last packet was marked.
+With \ac{RED}, the probability a packet is marked varies linearly with the average queue size and as a function of the time since the last packet was marked.
 If $avg$ is greater than $max_{th}$, the probability of marking trends toward one as the average queue size approaches $2*max_{th}$.
 In the event the queue fills completely, the \ac{RED} queue operates as a drop-tail queue.
 In a simple implementation of the \ac{RED} algorithm, marked packets are dropped.
@@ -496,9 +500,9 @@ In a simple implementation of the \ac{RED} algorithm, marked packets are dropped
 \section{Distributed Grid Intelligence (DGI)}
 
 The DGI is a smart grid operating system that organizes and coordinates power electronics.
-It also negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their needs.
+It also negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their own needs.
 DGI leverages common distributed algorithms to control the power grid, making it an attractive target for modeling a distributed system.
-Algorithms employed by the \ac{DGI} and grouped into modules, work together to migrate power from areas of excess supply to excess demand.
+Algorithms employed by the \ac{DGI} and grouped into modules work together to migrate power from areas of excess supply to excess demand.
 
 DGI utilizes several modules to manage a distributed smart-grid system.
 Group management, which is our main focus, implements a leader election algorithm to discover which processes are reachable within the cyber domain.
@@ -511,32 +515,30 @@ When a module's round ends, the next module in the line is allowed to execute.
 The DGI uses the leader election algorithm, ``Invitation Election Algorithm,'' written by Garcia-Molina\cite{INVITATIONELECTION}.
 The algorithm provides a robust election procedure which allows for transient partitions.
 Transient partitions are formed when a faulty link inside a group of processes causes the group to divide temporarily.
-The transient partitions merge when the link becomes more reliable.
+When the link becomes more reliable, the transient partitions merge.
 
 \subsection{Real Time}
-Real-time requirements were designed to enforce a tight upper bound on the amount of time used creating groups, discovering peers, collecting the global state, and performing migrations.
+Real-time requirements were designed to enforce a strict upper bound on the amount of time used creating groups, discovering peers, collecting the global state, and performing migrations.
 
 To enforce these bounds, the real-time DGI has distinct phases which modules were allowed to use for all processing.
 Each module was given a round with a specific amount of processor time allocated to the module.
 Modules used the allocated time to complete any tasks they had prepared.
 When the allotted time was up, the scheduler changed context to the next module.
-This interaction is illustrated in Figure \ref{fig:REALTIMESCHEDULER}
+This interaction is illustrated in Figure \ref{fig:REALTIMESCHEDULER}.
 
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1.0\textwidth]{RealTimeScheduler.pdf}
 \captionsetup{singlelinecheck=off}
-\caption[Real time scheduler]{The real time scheduler used a round robin approach to allot execution time to modules. 
-\begin{enumerate}
-    \item Modules requested a task be executed by specifying a time in the future to execute the task.
-          A timer was set to count down to the specified moment.
-           Modules could place tasks immediately into the ready queue if the task could be executed immediately.
-    \item When the timer expires, the task is placed into the ready queue.
-    \item Modules were assigned periods of execution (called phases) of a predetermined length.
-          After the specified amount of time had passed, the module's phase ends and the next module in the schedule began to execute.
-    \item The worker selected the next ready task for the active module from the ready queue and executed it.
-          These tasks could also schedule other tasks to be run in the future.
-\end{enumerate}
+\caption[Real time scheduler]{The real time scheduler used a round robin approach to allot execution time to modules.
+\raisebox{.5pt}{\textcircled{\raisebox{-.9pt} {1}}} Modules requested a task be executed by specifying a time in the future to execute the task.
+\raisebox{.5pt}{\textcircled{\raisebox{-.9pt} {2}}} A timer was set to count down to the specified moment. 
+Modules could place tasks immediately into the ready queue if the task could be executed immediately.
+\raisebox{.5pt}{\textcircled{\raisebox{-.9pt} {3}}} When the timer expires, the task is placed into the ready queue.
+\raisebox{.5pt}{\textcircled{\raisebox{-.9pt} {4}}} Modules were assigned periods of execution (called phases) of a predetermined length.
+After the specified amount of time had passed, the module's phase ends and the next module in the schedule began to execute.
+\raisebox{.5pt}{\textcircled{\raisebox{-.9pt} {5}}} The worker selected the next ready task for the active module from the ready queue and executed it.
+These tasks could also schedule other tasks to be run in the future.
 }
 \label{fig:REALTIMESCHEDULER}
 \end{figure}
@@ -551,7 +553,6 @@ When the phase was complete, the scheduler stopped pulling tasks from the previo
 Using a round robin scheduler allowed enforcement of an upper bound on message delay.
 Modules had a specific amount of processing time allotted.
 Modules with messages that invoked responses typically required the responses to be received within the same phase.
-Round numbers enforced that the message was sent within the same phase.
 
 Modules were designed and allotted time to allow for parameters such as maximum query/response time (based on the latency between communicating processes).
 Modules using the scheduler had an upper-bound in response time before messages were considered lost.
@@ -565,7 +566,7 @@ These transient partitions merge when the link becomes more reliable.
 The election algorithm allows for failures that disconnect two distinct sub-networks.
 These sub-networks are fully connected, but connectivity between the two sub-networks is limited by an unreliable link.
 
-Since Garcia-Molina's original publication \cite{INVITATIONELECTION}, a large number of election algorithms have been created. 
+Since Garcia-Molina's original publication\cite{INVITATIONELECTION}, a large number of election algorithms have been created. 
 Each algorithm is designed to be well-suited the problem space where it is used.
 Specialized algorithms exist for wireless sensor networks\cite{LE-WSN-1}\cite{LE-WSN-2}, detecting failures in certain circumstances\cite{LE-SPECIALCIRCUMSTANCES-1}\cite{LE-SPECIALCIRCUMSTANCES-2}, and of course, transient partitions.
 Work on leader elections has been incorporated into a variety of distributed frameworks: Isis\cite{ISISTOOLKIT}, Horus\cite{HORUSTOOLKIT}, Totem\cite{TOTEMTOOLKIT}, Transis\cite{TRANSISTOOLKIT}, and Spread\cite{SPREADTOOLKIT} all have methods for creating groups.
@@ -574,7 +575,7 @@ across all work.
 Processes arrive at a consensus of a single peer that coordinates the group.
 Processes that fail are detected and removed from the group. 
 
-The elected leader is responsible for making work assignments, and identifying and merging with other coordinators when they are found, as well as maintaining an up-to-date list of peers for the members of his group. 
+The elected leader is responsible for making work assignments and identifying and merging with other coordinators when they are found, as well as maintaining an up-to-date list of peers for the members of its group. 
 Group members monitor the group leader by periodically checking if the group leader is still alive by sending a message. 
 If the leader fails to respond, the querying nodes will enter a recovery state and operate alone until
 they can identify another coordinator.
@@ -592,10 +593,16 @@ The member sends a query to its leader.
 The member will only suspect the leader and not the other processes in their group.
 
 Using a leader election algorithm allows the \ac{FREEDM} system to autonomously reconfigure in the event of a failure.
-Cyber components are tightly coupled with the physical components, and reaction to faults is not limited to faults originating in the cyber domain.
+Cyber components are tightly coupled with the physical components, and their reaction to faults is not limited to faults originating in the cyber domain.
 Processes automatically react to crash-stop failures, network issues, and power system faults.
 The automatic reconfiguration allows processes to react immediately to issues, faster than a human operator, without relying on a central configuration point.
-However, it is important the configuration a leader election algorithm supplies is one where the system can do viable work without causing physical faults like voltage collapse or blackouts\cite{HARINI}.
+However, it is important that the configuration a leader election algorithm supplies is one where the system can do viable work without causing physical faults like voltage collapse or blackouts\cite{HARINI}.
+
+\begin{figure*}[!t]
+\includegraphics[width=\linewidth]{LeaderElectionStateDiagram.pdf}
+\caption[State machine for an election]{State machine for an election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to \ac{AYC} messages they receive. The algorithm was modified by adding a ``Ready Acknowledgment'' message as the final step of completing the election. Additionally, processes only accept invites if they have received an ``\ac{AYC} Response'' message from the inviting process.}
+\label{fig:statemachine}
+\end{figure*}
 
 A state machine for the election portion of the election algorithm is shown in Figure \ref{fig:statemachine}.
 In the normal state, the election algorithm regularly searches for other coordinators.
@@ -612,13 +619,13 @@ Processes with devices that exceed their demand offer their power to processes t
 These processes perform a three-way handshake.
 At the end of the handshake, the two processes have issued commands to their attached devices to supply power from the shared bus and to draw power from the shared bus.
 An example of how the power system is affected by migrations is depicted in Figure \ref{fig:good-migrations}.
-In the chart, processes with net generation (generation $>$ 0) share power with processes with excess loads.
+In the chart, processes with net power generation (generation $>$ 0) share power with processes with excess loads.
 As processes with excess loads are satisfied, both supply and demand processes trend toward 0 net generation.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.95\textwidth]{FailedMigration1}
-\caption[Example of a failed migration.]{Example of a failed migration. (*) and (**) mark moments when power devices change state to complete the physical component of the migration. In this scenario, the message confirming the demand side made the physical is lost, leaving the supply node uncertain.}
+\caption[Example of a failed migration.]{Example of a failed migration. (*) and (**) mark moments when power devices change state to complete the physical component of the migration. In this scenario, the message confirming the demand side made its corresponding physical change is lost, leaving the supply process uncertain.}
 \label{fig:failed-migration-1}
 \end{figure}
 
@@ -643,7 +650,7 @@ A failed migration is diagrammed in Figures \ref{fig:failed-migration-1} and \re
 With the power migration algorithm, uncompensated actions may occur in the power system.
 These actions can eventually lead to power instability through issues such as voltage collapse.
 Additionally, the supply process may not always be certain if the second half of the action was completed or not.
-If the ``Draft Accept'' message does not arrive from the demand process, the supply process cannot be certain of if its ``Draft Select'' message was received.
+If the ``Draft Accept'' message does not arrive from the demand process, the supply process cannot be certain if its ``Draft Select'' message was received.
 If the supply process takes action to compensate by reversing the migration and the confirmation arrives later, the system will also be driven towards instability because another process completed an uncompensated action.
 Processes could confirm the number of failed migrations with a state collection technique.
 It is, therefore, desirable to manage the processes to minimize the number of failed migrations.

@@ -11,7 +11,7 @@ Unstable settings could lead to problems in the power-grid such as frequency ins
 Congestion response techniques allow the DGI to anticipate behavior during a fault and allow it to harden itself against the fault.
 In a smart-grid system, interfering traffic can originate from the use of public infrastructure at any level\cite{smartgrid-comm-germany}\cite{smartgrid-comm-lastmile}, a misconfigured device, changing networking requirements as new devices enter a network, or from an attacker in a \ac{DoS} attack.
 
-\section{Usage Theory}
+\section{Theory of Operation}
 In the simulated network, the router and the two switches were ECN enabled devices.
 The devices monitored their incoming packet queues for each of their interfaces and used the \ac{RED} algorithm to determine when to mark a packet for \ac{ECN}.
 Since \ac{ECN} fields in an IPv4 header are not directly available to an application, the notifications were multicast onto the source interface(s) of the packet that triggered the notification.
@@ -67,7 +67,7 @@ As a consequence, the message complexity for processes responding to the congest
 
 In a hard \ac{ECN} scenario, the router will determine congestion has reached a threshold where the real-time processes will soon not be able to meet their deadlines.
 In this scenario, the real-time process will likely split its group.
-In an uncontrolled situation, the split will be random, and time will be spent working to reorganize the system.
+In an uncontrolled situation, the split will be random, and time will be wasted while the system is reorganizing.
 It is, therefore, desirable when this level of traffic is reached to split the group.
 Splitting the group reduces the number of messages sent across the router for modules with $O(n^2)$ (where $n$ is the number of processes in the original group) message complexity.
 For larger groups, splitting them provides significant savings in the number of messages that must be queued by the router, especially since the traffic is very bursty.
@@ -107,7 +107,7 @@ Other power management algorithms could have similar effects on the power system
 
 \subsection{Soft ECN Notification}
 
-In a soft congestion notification mode, the process being informed of the congestion can reduce its effect on the congestion by changing how often it generates bursty traffic.
+In a soft congestion mode, the process being informed of the congestion can reduce its effect on the congestion by changing how often it generates bursty traffic.
 Processes running the load balancing algorithm make several traffic bursts when they exchange state information and prepare migrations.
 As shown before, if the interval between these bursts is not sufficient for the queue to drain before the next burst occurs, then critical, overwhelming congestion occurs.
 The schedule of the \ac{DGI} is fixed at run-time and processes cannot simply extend the duration of the load balancing execution phase.
@@ -155,14 +155,14 @@ The benefits of the cut are minimized when $i_1$ and $j_1$ are $\frac{n}{2}$ and
 
 Which is a reduction of half as many messages.
 For systems with many participating processes, a significant reduction in the number of messages sent across the router is achieved.
-As a consequence, this further extends the delivery window for processes sending messages.
+As a consequence, this further extends the delivery window for processes sending messages by decreasing channel utilization.
 
 \section{Relation To Omission Model}
 
 The synchronization of clocks in the environment is assumed to be normally distributed around a true time value provided by the simulation.
 The shape of the curve created by plotting the queue is \ac{CDF} of the normal distribution, noted $F(x)$.
 A simple description of the traffic behavior can then be described in terms of that curve.
-First, observe that when the queue hits a specific threshold, even if the queue is drained at an optimal rate, the $n$th queued packed will not be delivered in time:
+First, when the queue hits a specific threshold, even if the queue is drained at an optimal rate, the $n$th queued packed will not be delivered in time:
 
 \begin{equation}
 Qsize - min(Qsize, (DequeueRate * \Delta t)) \geq 0
@@ -443,7 +443,7 @@ Additionally, the smaller group size allowed the amount of traffic from the load
 
 Figure \ref{fig:plote} shows the queue size as the network traffic begins to increase.
 The \ac{DGI} in these experiments used schedule that allowed for some congestion to occur before processes are disrupted.
-The slack gave network devices the opportunity to identify when the network congestion will go beyond the acceptable threshold.
+The slack gave network devices the opportunity to identify when the network congestion would go beyond the acceptable threshold.
 
 Figure \ref{fig:plotf} (Scenario C) shows an example of congestion affecting the physical network without \ac{ECN}.
 As a result of the congestion in Figure \ref{fig:plotf}, processes leave the main group, shown in \ref{fig:groupstatedistro}.
@@ -470,10 +470,10 @@ However, with the fallback configuration the system remains stable and no migrat
 \subsection{Worst Case Results}
 
 In the worst case, supply processes and demand processes are not intermixed at each switch: only supply processes are at switch A, and only demand processes are at switch B.
-This placement of processes is the worst case because it involves the highest number of messages crossing the congested link.
+The placement of processes is the worst case because it involves the highest number of messages crossing the congested link.
 No migration can occur without messages crossing the congested link.
 As a result, in the worst case scenarios, hard \ac{ECN} messages are triggered at a lower level of traffic than in the average case scenarios.
-This is expected: in soft \ac{ECN} mode, the majority of traffic comes from the load balancing algorithm and in the worst case, the load balancing algorithm can onl perform migrations while using the congested link.
+This is expected: in soft \ac{ECN} mode, the majority of traffic comes from the load balancing algorithm and in the worst case, the load balancing algorithm can only perform migrations while using the congested link.
 A summary of test scenarios for the worst case is presented in \ref{tab:scenarios-worst}.
 
 \begin{table}

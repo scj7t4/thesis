@@ -1,0 +1,65 @@
+For a system with a heirarchical ordering of processes determining what memberships are allowed and their associated likelihood are listed in Table \ref{tab:membership-probs}.
+
+\begin{table}
+\centering
+\caption{Possible Membership Changes in a Leader Election Algorithm}
+\label{tab:membership-probs}
+\begin{tabular}{l l l}
+$\Pr(A \rightarrow A | A \in A)$ & & \\ \hline
+$\Pr(B \rightarrow A | A \in A)$ & $\Pr(B \rightarrow B | B \in A)$ & \\
+$\Pr(B \rightarrow A | B \in B)$ & $\Pr(B \rightarrow B | B \in B)$ & \\ \hline
+$\Pr(C \rightarrow A | C \in A)$ & $\Pr(C \rightarrow A | C \in B)$ & $\Pr(C \rightarrow A | C \in C)$ \\
+$\Pr(C \rightarrow B | C \in A)$ & $\Pr(C \rightarrow B | C \in B)$ & $\Pr(C \rightarrow B | C \in C)$ \\
+$\Pr(C \rightarrow C | C \in A)$ & $\Pr(C \rightarrow C | C \in B)$ & $\Pr(C \rightarrow C | C \in C)$ \\ \hline
+... & & \\
+\end{tabular}
+\end{table}
+
+To fullfill the requirements of Equations \ref{eq:mod-req-a} and \ref{eq:mod-req-b}:
+
+\begin{equation}
+\begin{split}
+\Pr(C \rightarrow B| C \in A) &= \Pr(C \rightarrow B) \\
+\Pr(C \rightarrow B| C \in C) &= \Pr(C \rightarrow B) \\
+\Pr(C \rightarrow A| C \in B) &= \Pr(C \rightarrow A) \\
+\Pr(C \rightarrow A | C \in C) &= \Pr(C \rightarrow A) \\
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+\Pr(C \rightarrow C | C \in A) + \Pr(C \rightarrow A | C \in A) &= \Pr(C \rightarrow C) + \Pr(C \rightarrow A) \\
+\Pr(C \rightarrow C | C \in C) + \Pr(C \rightarrow A | C \in C) &= \Pr(C \rightarrow C) + \Pr(C \rightarrow A) \\
+\Pr(C \rightarrow  B | C \in B) + \Pr(C \rightarrow C | C \in B) &= \Pr(C \rightarrow C) + \Pr(C \rightarrow B) \\
+\Pr(C \rightarrow B | C \in C) + \Pr(C \rightarrow C | C \in C) &= \Pr(C \rightarrow C) + \Pr(C \rightarrow B)
+\end{split}
+\end{equation}
+
+Via subsitution:
+
+\begin{equation}
+\begin{split}
+\Pr(C \rightarrow B) + \Pr(C \rightarrow C | C \in C) &= \Pr(C \rightarrow C) + \Pr(C \rightarrow B) \\
+\Rightarrow \Pr(C \rightarrow C | C \in C) &= \Pr(C \rightarrow C).
+\end{split}
+\end{equation}
+
+If process B can construct a Markov chain the probability of a process joining B's group must be independent of that processes' current state.
+If that is the case, the ``Markov chain'' ceases to become a Markov chain since the probability of observing a state is the probability a set of processes join B's group.
+For example, the probability that B observes C joining its group is:
+
+\begin{equation}
+\Pr(Y_{k+1}) = \Pr(C->B).
+\end{equation}
+
+The probability of C joining B's group is independent of C's state before the election.
+In Equation \ref{eq:mod-req-b} every possible transition that is not of the form $\Pr(i \rightarrow i | i \in i)$ is constrained by an Equation \ref{eq:mod-req-a}.
+Observing those conditions:
+
+\begin{equation}
+\Pr(Y_{k+1}) = \Pr(Y_{k+1} | Y_k)
+\end{equation}
+
+which is simply a probability distribution.
+The presented algorithm does not fulfill this obligation for any process except the highest priority process and cannot generate Markov chain for those processes.
+
+Every possible membership change must have a related Equation \ref{eq:mod-req-a}.
