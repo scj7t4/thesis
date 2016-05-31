@@ -14,8 +14,9 @@ add_latex_document(main.tex
 		info/*.tex
 		packages/*.tex
 		extras/*.tex
+        appendix/*.tex
 		contents.tex
-	BIBFILES
+    BIBFILES
 		bibliography.bib
 	IMAGE_DIRS
 		media/drawings

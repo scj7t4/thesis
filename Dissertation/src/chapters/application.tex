@@ -2,22 +2,55 @@
 
 \chapter{Application: ECN Hardening}
 
-We considered the effects of network congestion on a cyber communication network used by the \ac{FREEDM} smart-grid, using a model of \ac{DGI} processes in a partitioned network.
+We considered the effects of network congestion on a cyber communication network used by the \ac{FREEDM} smart-grid using a model of \ac{DGI} processes in a partitioned network.
 By applying background traffic to the partitioned network, we create a situation where real-time deadlines are missed due to queuing delays.
 In the \ac{FREEDM} smart-grid, the consequences of network congestion could result in several problematic scenarios.
 First, if the congestion prevents \ac{DGI} from autonomously configuring using its group management system, processes cannot work together to manage power devices.
 Secondly, if messages arrive too late, or are lost, the \ac{DGI} could apply settings to the attached power devices, driving the physical network to instability.
-Unstable settings could lead to problems in the power-grid such as frequency instability, blackouts, and voltage collapse.
+Unstable settings could lead to problems in the power grid such as frequency instability, blackouts, and voltage collapse.
 Congestion response techniques allow the DGI to anticipate behavior during a fault and allow it to harden itself against the fault.
-In a smart-grid system, interfering traffic can originate from the use of public infrastructure at any level\cite{smartgrid-comm-germany}\cite{smartgrid-comm-lastmile}, a misconfigured device, changing networking requirements as new devices enter a network, or from an attacker in a \ac{DoS} attack.
+In a smart-grid system, interfering traffic can originate from the use of public infrastructure\cite{smartgrid-comm-germany}\cite{smartgrid-comm-lastmile}, a misconfigured device, changing networking requirements as new devices enter the network, or from an attacker in a \ac{DoS} attack.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{schedule.pdf}
+    \caption[Example DGI schedule]{Example DGI schedule. Normal operation accounts for a fixed number of migrations each time the load balancing module runs. Message delays reduce the number of migrations that can be completed each round. However, reducing the group size allows more migrations to be completed (because fewer messages are being exchanged) at the cost of flexibility for how those migrations are completed.}
+    \label{fig:schedule}
+\end{figure}
+
+The DGI employed a round-robin schedule where each module was given a predetermined amount of time to execute.
+The schedule was determined by the number of DGI that could be grouped together and the expected cyber network conditions.
+Additionally, the load balance module, which managed the power resources, was scheduled to run multiple times in a long block before the group was evaluated for failure.
+This schedule is depicted in Figure \ref{fig:schedule}.
+
+The system began by using group management to organize groups.
+Next, load balancing ran to manage power resources in the created group.
+Finally, state collection obtained a causally consistent state to be used for reporting and offline analysis.
+For the purpose of the ECN experiments presented in the subsequent sections, we opted to not use the state collection module.
+If message delays occurred, the number of migrations load balancing could perform was reduced.
+However, by reducing the group size, the number of messages sent by load balancing could be reduced, allowing for a greater amount of work to be done.
+The outcome of an election had a direct effect on how effectively the DGI can manage resources.
+%Interestingly, the average group size as percentage of the total processes seems to be converging asymptotically, to a fixed value for each plotted probability as the number of processes increases.
+
+This information can also be used to anticipate faults and mitigate them before they occur.
+Modern routers can supply an expected congestion notification as part of the IP header\cite{ECN2}.
+When congestion is anticipated, the coordinator can preemptively split the group to reduce congestion.
+This is possible because the load balancing algorithm's message complexity is $O(n^2)$.
+If future congestions causes an omission probability of as little as 0.15, performing a coordinated group division can potentially avoid transient states where processes cannot coordinate.
+
+The coordinated group division has three main benefits:
+Breaking the large groups into smaller groups drastically reduces the number of messages transmitted and helps relieve congestion.
+The coordinator can design the split to ensure work continues by mixing supply and demand processes.
+The division can also account for the placement of routers for targeted congestion relief.
 
 \section{Theory of Operation}
+
 In the simulated network, the router and the two switches were ECN enabled devices.
 The devices monitored their incoming packet queues for each of their interfaces and used the \ac{RED} algorithm to determine when to mark a packet for \ac{ECN}.
 Since \ac{ECN} fields in an IPv4 header are not directly available to an application, the notifications were multicast onto the source interface(s) of the packet that triggered the notification.
 Each network device ran an application responsible for generating the multicast ECN message.
 
-When the \ac{RED} algorithm identifies congestion, it must notify senders of congestion.
+When the \ac{RED} algorithm identifies congestion, it must notify senders.
 Because the approach is non-standard and most UDP applications would not understand the notification, we opted to create an application to run on switches and routers.
 When congestion is detected, the application sends a multicast beacon to a group of interfaces informing the attached devices of the level of congestion.
 For similarity with the \ac{RED} algorithm and the \ac{NS3} implementation, the notification is classified as either ``soft'' or ``hard.''
@@ -28,16 +61,16 @@ A hard notification indicates the congestion has reached a level where messages 
 \section{Group Management}
 
 The group management module's execution schedule is broken into several periods of message generation and response windows.
-Because the schedule of the \ac{DGI} is partially synchronous, the traffic generated by modules is bursty.
-The number of messages sent is $O(n^2)$ (where $n$ is the number of processes in the system), in a brief window, dependent on how well the clocks are synchronized in the system.
+Because the schedule of the \ac{DGI} is partially synchronous, the traffic generated by modules occurs in bursts.
+The number of messages sent by group management is $O(n^2)$ (where $n$ is the number of processes in the system).
 The duration of the response window is dependent on the amount of time it takes for messages to propagate to the hardest-to-reach process.
-Additionally, to contend with congestion, an additional slack must be added to allow the \ac{RED} algorithm to detect congestion before it reaches a critical level.
+To contend with congestion, slack, in the form of idle time, must be added to allow the \ac{RED} algorithm to detect congestion before it reaches a critical level.
 Figure \ref{fig:queue-types} depicts typical queuing behavior for a network device serving \ac{DGI} processes under different circumstances.
 
-Because the traffic generated by \ac{DGI} modules is very bursty, there is a phenomenon where the bursty traffic mixed with steady background traffic causes the packet queue at the network device to fill.
+Because the traffic generated by \ac{DGI} modules occurs in bursts, there is a phenomenon where the traffic bursts mix with steady background traffic to cause the packet queue at the network device to fill.
 With no background traffic, the impulse queues many messages, but those messages are distributed within real-time constraints.
 When the background traffic is introduced, the queue takes longer to empty.
-At a critical threshold, the queue does not empty completely before the next burst is generated by the \ac{DGI} and the services provided by \ac{DGI} are disrupted.
+At a critical threshold, the queue does not empty completely before the next burst is generated by the \ac{DGI} and services provided by the \ac{DGI} are disrupted.
 If the level of other traffic is sufficiently high, the queue completely fills, and no messages can be distributed.
 The \ac{RED} algorithm and \ac{ECN} are used to delay or prevent the queue from reaching this critical threshold.
 
@@ -47,9 +80,9 @@ The \ac{RED} algorithm and \ac{ECN} are used to delay or prevent the queue from 
 \caption{
 Example of network queuing during \ac{DGI} operation.
 }
-\ac{DGI} modules are semi-synchronous, and create bursty traffic on the network.
-When there is no other traffic on the network (solid line), the bursty traffic causes many packets to queue quickly, but the queue empties at a similar rate.
-With background traffic (dashed line), the bursty traffic causes many packets to be queued suddenly. More packets arrive continuously, causing the queue to drain off more slowly.
+\ac{DGI} modules are semi-synchronous and create traffic bursts on the network.
+When there is no other traffic on the network (solid line), the traffic bursts cause many packets to queue quickly, but the queue empties at a similar rate.
+With background traffic (dashed line), the traffic bursts cause many packets to be queued suddenly. More packets arrive continuously, causing the queue to drain off more slowly.
 When the background traffic reaches a certain threshold (dotted line), the queue does not empty before the next burst occurs. When this happens, messages will not be delivered in time, and the queue may completely fill.
 \label{fig:queue-types}
 \end{figure}
@@ -57,7 +90,7 @@ When the background traffic reaches a certain threshold (dotted line), the queue
 \subsection{Soft \ac{ECN}}
 
 A soft \ac{ECN} message indicates the network has reached a level of congestion where the router suspects processes will not be able to meet their real-time requirements.
-The soft \ac{ECN} message encourages the \ac{DGI} processes to reduce the number of messages they send, reducing the amount of congestion they contribute to the network, and to allow for reliable distribution techniques to have additional time to deliver messages (since fewer messages are being sent).
+The soft \ac{ECN} message encourages the \ac{DGI} processes to decrease the number of messages they send, reducing the amount of congestion they contribute to the network and to allow for reliable distribution techniques to have additional time to deliver messages (since fewer messages are being sent).
 In the case of potential congestion, the group management module can reduce its traffic bursts by disabling elections during the congestion.
 When elections are disabled, messages for group management are only sent to members of the group.
 Processes do not seek out better or other leaders with which to merge.
@@ -68,9 +101,9 @@ As a consequence, the message complexity for processes responding to the congest
 In a hard \ac{ECN} scenario, the router will determine congestion has reached a threshold where the real-time processes will soon not be able to meet their deadlines.
 In this scenario, the real-time process will likely split its group.
 In an uncontrolled situation, the split will be random, and time will be wasted while the system is reorganizing.
-It is, therefore, desirable when this level of traffic is reached to split the group.
+It is therefore desirable when this level of traffic is reached to split the group.
 Splitting the group reduces the number of messages sent across the router for modules with $O(n^2)$ (where $n$ is the number of processes in the original group) message complexity.
-For larger groups, splitting them provides significant savings in the number of messages that must be queued by the router, especially since the traffic is very bursty.
+For larger groups, splitting them provides significant savings in the number of messages that must be queued by the router, especially since the traffic occurs in bursts.
 
 \begin{figure}
 \centering
@@ -78,8 +111,8 @@ For larger groups, splitting them provides significant savings in the number of 
 \caption[Example of process organization]{Example of process organization. Two groups of processes are connected by a router.} \label{fig:network-layout}
 \end{figure}
 
-Suppose a network like one depicted in Figure \ref{fig:network-layout}, where processes are divided by a router.
-In Figure \ref{fig:network-layout}, there are $n$ processes on one side of the network and $m$ on the other.
+Consider a network like one depicted in Figure \ref{fig:network-layout}, where processes are divided by a router.
+Here, there are $n$ processes on one side of the network and $m$ on the other.
 In normal operation, the omission-modelable algorithm has an $O(n^2)$ message complexity.
 In Soft \ac{ECN} maintenance mode, the reduced number of messages reduces the complexity to $O(n)$ by disabling elections.
 
@@ -87,12 +120,12 @@ During elections (and with each group update) the leader distributes a fallback 
 When the \ac{ECN} notification is received, the processes will halt all current group management operations and enter a splitting mode where they switch to the fallback configuration.
 The leader of the group distributes a fallback notification to ensure all processes in the group apply their new configuration. 
 The complexity of distributing the notification is linear $O(n)$ and processes that already received the notification will have halted their communication.
-This approach will, ideally, avoid the burst/drain phenomena from Figure \ref{fig:queue-types}.
+This approach will ideally avoid the burst/drain phenomena from Figure \ref{fig:queue-types}.
 
 The design of the fallback configuration can be created to optimize various factors.
 The factors include cyber considerations, such as the likely network path the processes in the group will use to communicate.
-By selecting the group around cyber network resources, the group can be selected to minimize the amount of traffic that crosses the congested links in the future.
-Additionally, considerations from the physical network can be considered.
+By partitioning the group around cyber network resources, the group can be selected to minimize the amount of traffic that crosses the congested links in the future.
+Additionally, constraints of the physical network can be considered.
 Fallback groups can be created to ensure they can continue to facilitate the needs of the members.
 The design of the configuration can take into the consideration the distribution of supply and demand processes in the current group.
 By having a good mix of process types in the fallback group, the potential for work can remain high.
@@ -100,18 +133,18 @@ By having a good mix of process types in the fallback group, the potential for w
 \section{Cyber-Physical System}
 
 For a real-time \ac{CPS}, message delays could affect coordinated actions.
-As a result, actions may not happen at the correct moments or at all.
+As a result, actions may not happen at the correct moments, or at all.
 Since the two-army problem prevents any process from being entirely certain a coordinated action will happen in concert, problems arising from delay or omission of messages is of particular interest.
 Specifically, we are interested in the scenario from \cite{HARINI}, where only half of a power migration is performed.
-Other power management algorithms could have similar effects on the power system based on this idea of a process performing an action that is not compensated for by other processes.
+Other power management algorithms could have similar effects on the power system based on this idea of a process performing an action that does not have a corresponding, compensating action.
 
 \subsection{Soft ECN Notification}
 
-In a soft congestion mode, the process being informed of the congestion can reduce its effect on the congestion by changing how often it generates bursty traffic.
+In a soft congestion mode, the process being informed of the congestion can reduce its effect on the congestion by changing how often it generates traffic bursts.
 Processes running the load balancing algorithm make several traffic bursts when they exchange state information and prepare migrations.
 As shown before, if the interval between these bursts is not sufficient for the queue to drain before the next burst occurs, then critical, overwhelming congestion occurs.
 The schedule of the \ac{DGI} is fixed at run-time and processes cannot simply extend the duration of the load balancing execution phase.
-However, on notification from the leader, the process can, instead, reduce the number of migrations to increase the message delivery interval.
+However, on notification from the leader, the process can reduce the number of migrations to increase the message delivery interval.
 The notification to reduce the schedule originates from the coordinator as part of the message exchange necessary for the process to remain in the group.
 Every process in the group must receive the message to participate in load balancing, ensuring all processes remain on the same real-time schedule.
 By using this approach, the amount of traffic generated is unchanged but the period a process waits for the messages to be distributed is increased.
@@ -127,10 +160,10 @@ Consider a network like the in Figure \ref{fig:network-layout} with $n$ processe
 The number of messages sent across the router for the undivided group is of the order $2mn$ as the $n$ processes on side A send a message to the $m$ on side B and vice-versa.
 Let $i_{1}$ and $j_{1}$ be the number of processes from side A and side B (respectively) in the first group created by the partition.
 Let $i_{2}$ and $j_{2}$ be the number of processes in the second group created by the partition under the same circumstances of $i_1$ and $j_1$.
-The number of messages sent that pass through the router, is then 
+The number of messages sent that pass through the router, is then: 
 
 \begin{equation}
-2 i_{1} j_{1} + 2 i_{2} j_{2}
+2 i_{1} j_{1} + 2 i_{2} j_{2}.
 \end{equation}
 
 For an arbitrary group division, the following can be observed.
@@ -138,38 +171,36 @@ Suppose $i_{1}$ and $j_{2}$ are the cardinality of two arbitrarily chosen sets o
 Following the same cut requirements as before:
 
 \begin{equation}
-i_2 = n - i_1 \text{ and } j_2 = m - j_1
+i_2 = n - i_1 \text{ and } j_2 = m - j_1.
 \end{equation}
 
 The number of messages that must pass through the router for this cut is:
 
 \begin{equation}
-2 i_{1} j_{1} + 2 (n-i_{1}) (m-j_{1})
+2 i_{1} j_{1} + 2 (n-i_{1}) (m-j_{1}).
 \end{equation}
 
 The benefits of the cut are minimized when $i_1$ and $j_1$ are $\frac{n}{2}$ and $\frac{m}{2}$:
 
 \begin{equation}
 2( 2 \frac{mn}{4} + mn - \frac{mn}{2} - \frac{mn}{2}) = mn
-\end{equation}
-
-Which is a reduction of half as many messages.
+\end{equation}%
+which is a reduction of half as many messages.
 For systems with many participating processes, a significant reduction in the number of messages sent across the router is achieved.
 As a consequence, this further extends the delivery window for processes sending messages by decreasing channel utilization.
 
 \section{Relation To Omission Model}
 
 The synchronization of clocks in the environment is assumed to be normally distributed around a true time value provided by the simulation.
-The shape of the curve created by plotting the queue is \ac{CDF} of the normal distribution, noted $F(x)$.
+The shape of the curve created by plotting the queue is a \ac{CDF} of the normal distribution, noted as $F(x)$.
 A simple description of the traffic behavior can then be described in terms of that curve.
 First, when the queue hits a specific threshold, even if the queue is drained at an optimal rate, the $n$th queued packed will not be delivered in time:
 
 \begin{equation}
 Qsize - min(Qsize, (DequeueRate * \Delta t)) \geq 0
 \label{eq:origin}
-\end{equation}
-
-Where $\Delta t$ is the deadline for the message to be delivered.
+\end{equation}%
+where $\Delta t$ is the deadline for the message to be delivered.
 If the size of the queue exceeds the number of messages that can be delivered before $\Delta t$ passes, some messages will not be delivered.
 The size of the queue during the message bursts created by the DGI depends on the message complexity of the algorithm, the number of messages already in the queue, the other traffic on the network, and any replies needing to be delivered in that interval.
 Therefore, let $c$ represent the rate traffic is generated by other processes.
@@ -180,16 +211,15 @@ We can then express $Qsize$ as two parts:
 
 \begin{equation}
 Qsize = Burst + Obligations
-\end{equation}
-
-Where $Burst$ takes the form of the \ac{CDF} for the normal distribution:
+\end{equation}%
+where $Burst$ takes the form of the \ac{CDF} for the normal distribution:
 
 \begin{equation}
 Burst = init_m * F(x)  
 \end{equation}
 
 \begin{equation}
-Obligations = c * \Delta t + init_q + resp
+Obligations = c * \Delta t + init_q + resp.
 \end{equation}
 
 From this we can derive the equation:
@@ -197,13 +227,12 @@ From this we can derive the equation:
 \begin{equation}
 F(x) \geq \frac{DequeueRate * \Delta t - c * \Delta t - init_q - resp}{init_m}
 \label{eq:prob-est}
-\end{equation}
-
-Where, from Equation \ref{eq:origin}, $DequeueRate * \Delta t$ is less than or equal to the number of messages in the queue. 
-Solving for $F(x)$ gives a worst case estimate of the omission rate for a specific algorithmic or network circumstance.
+\end{equation}%
+where, from Equation \ref{eq:origin}, $DequeueRate * \Delta t$ is less than or equal to the number of messages in the queue. 
+Solving for $F(x)$ gives a worst case estimate of the probability of delivery for a specific algorithmic or network circumstance.
 $DequeueRate$ is affected by the amount of traffic in the system. 
 It should be noted, a greater amount of background traffic corresponds to a greater average queue size.
-From an relationship between the background traffic and the average queue size and the results presented in \cite{JOURNAL}, Equation \ref{eq:prob-est} can be used to select the ECN parameters.
+From a relationship between the background traffic, the average queue size, and the results presented in the previous chapters, Equation \ref{eq:prob-est} can be used to select the ECN parameters.
 
 %   - Show the unbounded Queue Graph and the mess it makes of LB and GM
 %   - Show soft ECVN allows more work to be done, possibly at the cost of accumulating K.
@@ -247,7 +276,14 @@ As a result, the computation time on the \ac{DGI} for processing and preparing m
 However, to compensate for the lack of processing time, the synchronization of the \ac{DGI} was randomly distributed as a normal distribution.
 This was done to introduce realism to ensure events did not occur simultaneously.
 Additionally, the real-time schedules used by the \ac{DGI} were adjusted to remove the processing time that was neglected in the simulation.
-The schedule used is depicted in Figure X.
+The schedule used is depicted in Figure \ref{fig:execution-schedule}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\textwidth]{ExecutionSchedule}
+\caption[Execution schedule used in experiments.]{Execution schedule used in experiments. Each burst of messages was allotted one second for those messages and their replies to propagate. During the load balancing execution period, ten migrations are performed on the normal schedule. Soft ECN increased the message propagation time for the load balancing module to 1.5 seconds and reduced the number of migrations each round to six.}
+\label{fig:execution-schedule}
+\end{figure}
 
 The \ac{DGI} were placed into a partitioned environment.
 The test included 30 nodes.
@@ -255,7 +291,7 @@ Each of the nodes ran one \ac{DGI} process.
 Two sets of 15 \ac{DGI} were each connected to a switch and each switch was in turn connected to the router.
 The network is pictured in Figure \ref{fig:network-layout}.
 Node identifiers were randomly assigned to nodes in the simulation and used as the process identifier for the \ac{DGI}.
-In the experiments the load at each process was randomly assigned: each side is mix of supply and demand processes.
+In the experiments, the load at each process was randomly assigned: each side is mix of supply and demand processes.
 
 The links between the router and the switches had a \ac{RED} enabled queue placed on both network interfaces.
 The \ac{RED} parameters for all queues were set identically.
@@ -267,12 +303,12 @@ ARP tables were populated before the simulation began.
 
 The relationship between the background traffic and the average queue size was estimated through runs of the \ac{NS3} simulation.
 Figure \ref{fig:plotm} demonstrates the observed relationship between the total background traffic and the maximum average queue size for that level of traffic.
-Additionally, the $DequeueRate$ was collected from a run of the simulation without traffic, and was found to be $713.08$ packets/second.
-Therefore, from Equation \ref{eq:prob-est}, assuming $init_q=0, resp=225, init_m=225$ and $\Delta t=1$, the maximum traffic rate with no omissions was $263.0$ packets/second.
-The number of packets for the $resp$ and $init_m$ were selected from the worst case of the algorithm in \cite{JOURNAL}.
-Based on the traffic parameters in Table \ref{tab:red-parameters}, $263.0$ packets/second corresponded to 1.077 Mbps of traffic generated at one switch and 2.1545 Mbps traffic overall.
+Additionally, the $DequeueRate$ was collected from a run of the simulation without traffic, and was found to be $713.08$ packets per second.
+Therefore, from Equation \ref{eq:prob-est}, assuming $init_q=0, resp=225, init_m=225$, and $\Delta t=1$, the maximum traffic rate with no omissions was $263.0$ packets per second.
+The number of packets for the $resp$ and $init_m$ were selected from the worst case of the modified election algorithm.
+Based on the traffic parameters in Table \ref{tab:red-parameters}, $263.0$ packets/second corresponded to 1.077Mbps of traffic generated at one switch and 2.1545Mbps traffic overall.
 From the polynomial estimate in Figure \ref{fig:plotm}, the maximum average queue size for that level of traffic was $94.715$, estimated as $90$ for the \ac{RED} Min Threshold in Table \ref{tab:red-parameters}.
-RED Max Threshold is computed using a similar technique, but using the message complexity for the Load Balancing algorithm, since it maintained its complexity during Soft ECN mode.
+RED Max Threshold is computed using a similar technique, but using the message complexity for the load balancing algorithm, since it maintained its complexity during Soft ECN mode.
 
 \begin{figure}
 \centering
@@ -283,17 +319,18 @@ RED Max Threshold is computed using a similar technique, but using the message c
 
 \begin{table}
 \begin{center}
+\caption{Summary of \ac{RED} parameters.}
 \begin{tabular}{ | l | l || l | l | } \hline
 Parameter & Value & Parameter & Value        \\ \hline
 RED Queueing Mode & Packet & RED Gentle Mode & True    \\ \hline
 RED $Q_{w}$ & 0.002 & RED Wait Mode & True      \\ \hline
 RED Min Threshold & 90 & RED Max Threshold & 130   \\ \hline
 %Maximum Queue Size & 1000 \\ \hline
-RED Link Speed & 100 Mbps & RED Link Delay & 0.5 ms   \\ \hline
+RED Link Speed & 100Mbps & RED Link Delay & 0.5 ms   \\ \hline
 %Clock Distribution $\sigma$ & 0.005 & Traffic Packet Size & 512 Bytes \\ \hline
 \end{tabular}
+Unspecified values default to the \ac{NS3} implementation default value
 \end{center}
-\caption{Summary of \ac{RED} parameters. Unspecified values default to the \ac{NS3} implementation default value}
 \label{tab:red-parameters}
 \end{table}
 
@@ -302,18 +339,18 @@ The number of packets sent per second was a function of the data rate and the si
 In each simulation, half of the traffic originated from each switch.
 Due to the properties of the network links, the greatest queueing effect occurred at the switches.
 
-\subsection{Average Case Results}
+\subsection{Results}
 \label{sect:results}
 Six test scenarios were created to evaluate the \ac{ECN} technique.
-The six scenarios are summarized in Table \ref{tab:scenarios}.
-In each scenario, the distribution of supply and demand processes is mixed: each switch has a mix of supply and demand processes.
+These scenarios are summarized in Table \ref{tab:scenarios}.
+In each scenario, the distribution of supply and demand processes is mixed: each switch has both supply and demand processes.
 The potential of the system to complete migrations, as well as the potential for migrations to fail were primary considerations for each scenario.
 Processes cannot initiate migrations if they are not grouped with other processes.
 Similarly, if the process is attempting to communicate over a congested link, it may not meet real-time deadlines or successfully complete migrations.
 
 \begin{table}
 \centering
-\caption{Summary of Scenarios Run}
+\caption{Summary of Test Configurations}
 \begin{tabular}{| c | c | c | c |}
     \hline
     Test & Traffic & Notifications & Attempted Migrations \\ \hline
@@ -331,11 +368,11 @@ Figures \ref{fig:plota} and \ref{fig:plotb} (Scenario A) show the normal operati
 In this configuration, there is no congestion on the network. 
 The \ac{DGI} start, group together and then begin migrating power between processes.
 Figure \ref{fig:plota} plots the queue size over time for a queue used to send packets from a switch to the router.
-Figure \ref{fig:plotb} is a detailed view of a portion of Figure \ref{fig:plota}.
-Figure \ref{fig:plotb} shows the queue size during the normal operation of group management as well as the first three migrations of a load balancing round.
+Figure \ref{fig:plotb} is a detailed view of a portion of Figure \ref{fig:plota};
+it shows the queue size during the normal operation of group management as well as the first three migrations of a load balancing round.
 The dotted line plots the \ac{EWMA} of the size of the queue.
 An important note for the plotted \ac{EWMA} values: \ac{NS3} only updates the average queue size during simulation when a new packet is enqueued.
-As a consequence, the average queue size is slightly misleading the in scenarios where there is a significant amount of idle channel time (such as Figures \ref{fig:plota}, \ref{fig:plotb}, and \ref{fig:plote}).
+As a consequence, the average queue size is slightly misleading in scenarios where there is a significant amount of idle channel time (such as Figures \ref{fig:plota}, \ref{fig:plotb}, and \ref{fig:plote}).
 In scenarios A and B, the traffic is not sufficient to disrupt the operation of the DGI.
 As a result, in Figure \ref{fig:groupstatedistro}, process 0 has an uninterrupted observation of a group size of 30 throughout the two scenarios.
 
@@ -349,7 +386,7 @@ As a result, in Figure \ref{fig:groupstatedistro}, process 0 has an uninterrupte
 \begin{figure}
 \centering
 \includegraphics[width=0.75\textwidth]{a-qsizeot-notraffic-all.pdf}
-\caption{Plot of the queue size for a queue from switch A to the router when only the DGI generates traffic.}
+\caption{Plot of the queue size for a queue from switch A to the router when only the DGI generates traffic.}[Test configuration A. Plot of the queue size for a queue from switch A to the router when only the DGI generates traffic.]
 \label{fig:plota}
 \end{figure}
 
@@ -357,10 +394,11 @@ As a result, in Figure \ref{fig:groupstatedistro}, process 0 has an uninterrupte
 \centering
 \includegraphics[width=0.75\textwidth]{b-qsizeot-notraffic-120s-130s.pdf}
 \caption[Detailed view of Figure \ref{fig:plota}.]{
+    Test configuration A.
 Detailed view of Figure \ref{fig:plota}. In the figure, the dark gray section is the period where the group management module executes.
 The alternating white and light gray sections are the execution periods for individual migrations.
 In the normal schedule, the DGI allocates approximately 1 second to each migration and performs 10 migrations each round.
-Three migrations are shown in the figure.}
+Three migrations are shown.}
 \label{fig:plotb}
 \end{figure}
 
@@ -368,10 +406,11 @@ Three migrations are shown in the figure.}
 \centering
 \includegraphics[width=0.75\textwidth]{e-qsizeot-nonotifications-2mbpstraffic-120s-130s.pdf}
 \caption[Detailed view of the effect on queue size as other network traffic is introduced.]{
+    Test configuration B.
 Detailed view of the effect on queue size as other network traffic is introduced.
 Compared to Figure \ref{fig:plotb}, the peaks are taller and wider. 
 The background traffic creates the intermediate effect described in \ref{fig:queue-types}.
-As with Figure \ref{fig:plotb}, this figure shows 3 migrations.}
+As with Figure \ref{fig:plotb}, this figure shows three migrations.}
 \label{fig:plote}
 \end{figure}
 
@@ -379,17 +418,18 @@ As with Figure \ref{fig:plotb}, this figure shows 3 migrations.}
 \centering
 \includegraphics[width=0.75\textwidth]{f-qsizeot-nonotifications-4mbpstraffic-120s-130s.pdf}
 \caption[Detailed view of the effect on queue size as other network traffic is introduced without notifications.]{
+    Test configuration C.
 Detailed view of the effect on queue size as other network traffic is introduced without notifications.
 In this scenario, the queue does not empty completely before the next burst of traffic occurs.
-As a result, Group Management generates a large peak as it tries to rejoin groups that have broken due to the message delays.
+As a result, group management generates a large peak as it tries to rejoin groups that have broken due to the message delays.
 Load balancing has smaller and less pronounced peaks because the groups are smaller.
 Additionally, during this scenario some migrations are lost due to message delays.}
 \label{fig:plotf}
 \end{figure}
 
 From scenario A and B we establish the $min_{th}$ value used as a \ac{RED} queue parameter.
-The traffic generated by each step of the group management algorithm is very bursty.
-The tightness of the clock synchronization in the group affect the size of the peak.
+The traffic generated by each step of the group management algorithm occurs in bursts.
+The tightness of the clock synchronization in the group affects the size of the peak.
 Like \cite{HILTESTBED}, the level of power at a process is the net sum of its power generation capability and load.
 As power is shared on the network, processes with excess generation, converge toward zero net power.
 Demand processes also converge toward zero net power.
@@ -398,6 +438,7 @@ Demand processes also converge toward zero net power.
 \centering
 \includegraphics[width=0.75\textwidth]{i-qsizeot-softnotifications-4mbpstraffic-120s-130s.pdf}
 \caption[Detailed view of the effect on queue size as other network traffic is introduced with soft \ac{ECN} notifications.]{
+    Test configuration D.
 Detailed view of the effect on queue size as other network traffic is introduced with soft \ac{ECN} notifications.
 In this scenario, the group management module entered a maintenance mode where it suspended discovering leaders of other groups.
 As a result, that module's message complexity dropped significantly, resulting in the lack of a noticeable peak compared to previous scenarios.
@@ -413,9 +454,10 @@ However, the reduced schedule is sufficient to prevent any migrations from being
 \centering
 \includegraphics[width=0.75\textwidth]{k-qsizeot-softnotificationsonly-64mbpstraffic-120s-130s.pdf}
 \caption[Detailed view of the effect on queue size as a large amount network traffic is introduced.]{
+    Test configuration E.
 Detailed view of the effect on queue size as a large amount network traffic is introduced.
-In this scenario, group management enters a maintenance mode when it receives the soft \ac{ECN} notification, but that approach alone is not sufficient to maintain groups: processes leave the group randomly during the simulation.
-The system decreased the number of migrations per round, as it had done in \ref{fig:ploti}.
+In this scenario, group management enters a maintenance mode when it receives the soft \ac{ECN} notification, but that approach alone is not sufficient to maintain groups; processes leave the group randomly during the simulation.
+The system decreased the number of migrations per round, as it had done in Figure \ref{fig:ploti}.
 However, migrations were lost.
 }
 \label{fig:plotk}
@@ -427,8 +469,9 @@ However, migrations were lost.
 \includegraphics[width=0.75\textwidth]{l-qsizeot-allnotifications-64mbpstraffic-120s-130s.pdf}
 \caption[Effect on queue size as a large amount of network traffic is introduced.]
 {
+    Test configuration F.
 In this scenario, hard notifications caused the groups to perform a coordinated division, enabled maintenance mode for the group management modules, and reduced the migration schedule for the load balancing module.
-As a consequence, the group management module produced more traffic than it did in \ref{fig:plotk}, but, the installed fallback configurations did not have any of the \ac{DGI} leave the group.
+As a consequence, the group management module produced more traffic than it did in Figure \ref{fig:plotk}, but, the installed fallback configurations did not have any of the \ac{DGI} leave the group.
 Additionally, the smaller group size allowed the amount of traffic from the load balancing module to be reduced while still allowing the module to migrate power between \ac{DGI} without any migrations being lost.
 }
 \label{fig:plotl}
@@ -442,14 +485,14 @@ Additionally, the smaller group size allowed the amount of traffic from the load
 \end{figure}
 
 Figure \ref{fig:plote} shows the queue size as the network traffic begins to increase.
-The \ac{DGI} in these experiments used schedule that allowed for some congestion to occur before processes are disrupted.
+The \ac{DGI} in these experiments used a schedule that allowed for some congestion to occur before processes are disrupted.
 The slack gave network devices the opportunity to identify when the network congestion would go beyond the acceptable threshold.
 
 Figure \ref{fig:plotf} (Scenario C) shows an example of congestion affecting the physical network without \ac{ECN}.
 As a result of the congestion in Figure \ref{fig:plotf}, processes leave the main group, shown in \ref{fig:groupstatedistro}.
 The observed configurations have greater than 15 processes because communication that does not cross the switch-router-switch path is not congested.
 As a consequence, processes on the same switch as process 0 do not leave 0's group.
-Power migrations are affected by congestion: migrations fail, or the supply process is left uncertain of migrations completions.
+Power migrations are affected by congestion: migrations fail, or the supply process is left uncertain of a migration's completion.
 Figure \ref{fig:plotg} plots the count of failed migrations over time.
 The number of failed migrations relative to the number attempted is quite low, because processes on the same switch as process 0 can still attempt migrations.
 
@@ -463,40 +506,7 @@ Despite fewer migrations being attempted, the same amount of power can be manage
 
 Figures \ref{fig:plotk} (Scenario E) and \ref{fig:plotl} (Scenario F) show an example of a more extreme congestion scenario.
 In Figure \ref{fig:plotl}, the \ac{RED} algorithm shares a Hard \ac{ECN} notification.
-The notification causes the \ac{DGI} to switch to a smaller fallback configuration and fallback configuration decreases the queue usage from Figure \ref{fig:plotk} to Figure \ref{fig:plotl}.
+The notification causes the \ac{DGI} to switch to a smaller fallback configuration, which decreases the queue usage from Figure \ref{fig:plotk} to Figure \ref{fig:plotl}.
 Without this fallback configuration behavior, the system is greatly affected by the traffic.
-However, with the fallback configuration the system remains stable and no migrations are lost.
+However, with the fallback configuration, the system remains stable and no migrations are lost.
 
-\subsection{Worst Case Results}
-
-In the worst case, supply processes and demand processes are not intermixed at each switch: only supply processes are at switch A, and only demand processes are at switch B.
-The placement of processes is the worst case because it involves the highest number of messages crossing the congested link.
-No migration can occur without messages crossing the congested link.
-As a result, in the worst case scenarios, hard \ac{ECN} messages are triggered at a lower level of traffic than in the average case scenarios.
-This is expected: in soft \ac{ECN} mode, the majority of traffic comes from the load balancing algorithm and in the worst case, the load balancing algorithm can only perform migrations while using the congested link.
-A summary of test scenarios for the worst case is presented in \ref{tab:scenarios-worst}.
-
-\begin{table}
-\centering
-\caption{Summary of Scenarios Run}
-\begin{tabular}{| c | c | c | c |}
-    \hline
-    Test & Traffic & Notifications & Attempted Migrations \\ \hline
-    G & 4Mbps & None &  \\ \hline
-    H & 4Mbps & Soft &  \\ \hline
-    I & 5.1Mbps & Soft & \\ \hline
-    J & 5.1Mbps & All &  \\ \hline
-\end{tabular}
-\label{tab:scenarios-worst}
-\end{table}
-
-Figure X shows the number of lost migrations for each scenario.
-Because all migrations must be completed with the congested link, there is a greater number of failed migrations and the number of migrations attempted is reduced because of the congestion (Scenario G).
-The queue size for Scenario G is presented in Figure Y.
-Enabling soft ECN mode (Scenario H), as before, prevents failed migrations.
-Scenario G's queue is presented in figure Z.
-
-The hard ECN message is triggered earlier in the worst case, due to the increased dependence on the congested link.
-Figure ZA shows the queue size for Scenario I, a scenario that should trigger hard ECN mode.
-In Scenario I, uncontrolled group division occur and migrations are lost.
-By enabling notifications (Scenario J) those situations are mitigated.

@@ -1,7 +1,7 @@
 \chapter{Problem Statement and Motivation}
 
-The entry point to research in this area was asking the question ``How does the software managing critical infrastructure like FREEDM behave when a critical component, the communication infrastructure, is not operating correctly?'' 
-Historically, leader elections have had limited applications in critical systems. However, in the smart grid domain, there is a great opportunity to apply leader election algorithms in a directly beneficial way. \cite{LOADBALANCING} presents a simple scheme for performing power distribution and stabilization that relies on formed groups. Algorithms like Zhang, et. al's Incremental Consensus Algorithm\cite{INCREMENTALCONSENSUS}, begin with the assumption that there is a group of processes who coordinate to distribute power. In a system where 100\% up time is not guaranteed, leader elections are a promising method of establishing these groups.
+The entry point to research in this area was asking the question: ``How does the software managing critical infrastructure, like FREEDM, behave when a critical component, the communication infrastructure, is not operating correctly?'' 
+Historically, leader elections have had limited applications in critical systems. However, in the smart-grid domain, there is a great opportunity to apply leader election algorithms in a directly beneficial way. \cite{LOADBALANCING} presents a simple scheme for performing power distribution and stabilization that relies on formed groups. Algorithms like Incremental Consensus Algorithm\cite{INCREMENTALCONSENSUS}, begin with the assumption that there is a group of processes who coordinate to distribute power. In a system where 100\% up time is not guaranteed, leader elections are a promising method of establishing these groups.
 A strong cyber-physical system should be able to survive and adapt to network outages in both the physical and cyber domains. When one of these outages occurs, the physical or cyber components must take corrective action to allow the rest of the network to continue operating normally.
 
 This work observes the effects of message omission on the group management module of the Distributed Grid Intelligence (DGI) used by the FREEDM smart-grid project. This system uses a broker system architecture to coordinate several software modules that form a control system for a smart power grid. These modules include: group management, which handles coordinating processes via leader election; state collection, a module which
@@ -18,7 +18,7 @@ Additionally, we hoped to determine the advantages and disadvantages of using a 
 \section{Initial Experiments}
 
 The initial experiments were collected from a non-real time version of the DGI code.
-Experiments measured the time-in-group for various sets of DGI running the leader election algorithm during omission fault conditions.
+Experiments measured the \ac{IGT}, a measure of availability, for various sets of DGI running the leader election algorithm during omission fault conditions.
 Additionally, the experiments examined two communication modes, the Sequenced Reliable Connection, and the Sequenced Unreliable Connection.
 Both methods of communication were valid approaches for the message passing requirements of the DGI.
 
@@ -28,15 +28,16 @@ The \ac{SRC} is a modified send and wait protocol with the ability to stop resen
 
 \begin{itemize}
 \item Messages must be accepted in order - Some distributed algorithms rely on the assumption that the underlying message channel is FIFO.
-\item Messages can become irrelevant - Some messages may only have a short period in which they are worth sending. Outside of that time period, they should be considered inconsequential and should be skipped. To achieve this, we have added message expiration times. After a certain amount of time has passed, the sender will no longer attempt to write that message to the channel. Instead, it will proceed to the next unexpired message and attach a ``kill'' value to the message being sent, with the number of the last message the sender knows the receiver accepted.
+\item Messages can become irrelevant - Some messages may only have a short period in which they are worth sending. Outside of that time period, they should be considered inconsequential and should be skipped. To achieve this, we have added message expiration times. After a specified amount of time has passed, the sender will no longer attempt to write that message to the channel. Instead, it will proceed to the next unexpired message and attach a ``kill'' value to the message being sent, with the number of the last message the sender knows the receiver accepted.
 \item As much effort as possible should be applied to deliver a message while it is still relevant.
 \end{itemize}
 
-There one adjustable parameter, the resend time, which controls how often the system would attempt to deliver a message it had not yet received an acknowledgment for.
+There was one adjustable parameter, the resend time, which controls how often the system would attempt to deliver a message it had not yet received an acknowledgment for.
 
 \subsection{Sequenced Unreliable Connection (SUC)}
 
-The \ac{SUC} protocol is simply a best effort protocol: it employs a sliding window to try to deliver messages as quickly as possible. A window size is decided, and then at any given time, the sender can have up to that many messages in the channel, awaiting acknowledgment. The receiver will look for increasing sequence numbers and disregard any message that is of a lower sequence number than is expected. The purpose of this protocol is to implement a bare minimum: messages are accepted in the order they are sent.
+The \ac{SUC} protocol is simply a best effort protocol: it employs a sliding window to try to deliver messages as quickly as possible.
+The receiver will look for increasing sequence numbers and disregard any message that is of a lower sequence number than is expected. The purpose of this protocol is to implement a bare minimum: messages are accepted in the order they are sent.
 
 Like the \ac{SRC} protocol, the SUC protocol's resend time can be adjusted. Additionally, the window size is configurable, but was left unchanged for the tests presented in this work.
 
@@ -70,7 +71,7 @@ These graphs first appeared in \cite{CRITIS2012}.
 \end{figure}
 
 The 100ms resend SRC test with two processes was considered a type of control in this study.
-These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}, highlighted the availibility of the DGI with the SRC protocol.
+These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}, highlighted the availability of the DGI with the SRC protocol.
 The maximum \ac{IGT} of 9 minutes was achieved with only 15\% of datagrams arriving at the receiver. 
 
 Figure \ref{fig:IGT-SRC-2NODE-200} demonstrates that as the rate at which lost datagrams were re-sent was decreased to 200ms, the in-group time decreased.
@@ -102,7 +103,7 @@ Two processes were present on each side of the partition.
 The 100ms case is shown in Figures \ref{fig:MGS-SRC-TRANS-100} and \ref{fig:IGT-SRC-TRANS-100}.
 
 While messages could not cross the partition, the DGIs stay in a group with the processes on the same side of the partition, leading to an in-group time of 9 minutes (the maximum value possible).
-As packets began to cross the partition (as the omission rate decreased), DGI instances on either side attempted to complete elections with the processes on the opposite partition and the in group time began to decrease.
+As packets began to cross the partition (as the omission probability decreased), DGI instances on either side attempted to complete elections with the processes on the opposite partition and the in group time began to decrease.
 During this time, however, the mean group size continued to increase.
 Thus, while the elections were decreasing the amount of time that the module spent in a state where it can actively do work, it typically did not fall into a state where it was in a group by itself. 
 As result, most of the lost \ac{IGT} came from elections.
@@ -153,7 +154,7 @@ However, there was a high amount of variance for every trial.
 \end{minipage}
 \end{figure}
 
-In the 200ms resend case (illustrated in Figure \ref{fig:IGT-SUC-2NODE-200}), a greater growth rate occurred in the \ac{IGT} as the omission rate decreased.
+In the 200ms resend case (illustrated in Figure \ref{fig:IGT-SUC-2NODE-200}), a greater growth rate occurred in the \ac{IGT} as the omission probability decreased.
 When an average was taken across all of the collected data points from the experiment, the average \ac{IGT} is higher for the 200ms case than it was for the 100ms case (6.86 minutes vs 6.09 minutes).
 There was a large amount of variance in the collected \ac{IGT}, however.
 As a result, it is not possible to state with confidence that the there is a significant difference between the two cases.
@@ -196,9 +197,9 @@ The SharpE results are plotted along with the experimental results in Figures \r
 
 The race condition between processes during an election is a consideration in the original leader election algorithm, and is an additional factor here.
 The simulator provided a parameter to allow the operator to select how closely synchronized the peers were.
-This synchronization was the time difference between when each of them would search for leaders.
+The synchronization parameter was the time difference between when each process would search for leaders.
 The exchange of messages, particularly during an election, had a tendency to synchronize processes during elections.
-Nodes could synchronize even if they did not initially begin in a synchronized state. 
+Processes could synchronize even if they did not initially begin in a synchronized state. 
 The simulation results aligned best for the 100ms resend case with 1 tick (approximately 100ms difference in synchronization between processes) and 2 ticks (approximately 400ms) in the 200ms resend case.
 
 \begin{figure}
@@ -206,14 +207,14 @@ The simulation results aligned best for the 100ms resend case with 1 tick (appro
 \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{TRANS-RT-SUC-128-COMPARE.pdf}
-    \caption{Comparison of in-group time as collected from the experimental platform and the time in group from the equivalent Markov chain (128ms between resends).}
+    \caption{Comparison of in-group time as collected from the experimental platform and the in-group time from the equivalent Markov chain (128ms between resends).}
     \label{fig:COMPARE-SUC-TRANS-RT-128}
 \end{minipage}%
 \qquad
 \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{TRANS-RT-SUC-64-COMPARE.pdf}
-    \caption{Comparison of in-group time as collected from the experimental platform and the time in group from the equivalent Markov chain (64ms between resends).}
+    \caption{Comparison of in-group time as collected from the experimental platform and the in-group time from the equivalent Markov chain (64ms between resends).}
     \label{fig:COMPARE-SUC-TRANS-RT-64}
 \end{minipage}
 \end{figure}
@@ -247,7 +248,7 @@ As a result, we sought to refine the analysis of the model in order to get an ac
 
 \section{Remarks}
 
-In order to ensure that critical infrastructure safely and reliably provides services to those that need the services, it is necessary to understand how the infrastructure behaves during faults.
+To ensure the critical infrastructure can safely and reliably provides services to those needing the service, it is necessary to understand how the infrastructure behaves during faults.
 Conceptually, using unvetted critical infrastructure, especially when the infrastructure relies heavily on communication, is the same as stepping into an elevator without a safety brake.
 Strong analysis of a system's behavior during a failure scenario is paramount to ensuring the safety of those using the infrastructure.
 

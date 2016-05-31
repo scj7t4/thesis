@@ -26,11 +26,11 @@ The original observations confirmed the need to explore more well-defined models
 
 We present a framework for reasoning about inferable state in the context of a distributed system.
 To do this, we exploit existing work in the field of information flow security, which has been used to reason how attacks like Stuxnet can manipulate operators' beliefs while disrupting a system\cite{STUXNET}.
-In particular, approaches in information flow security reason about how the operator in a Stuxnet attack has no avenue to verify the reports from a compromised computing device.
+In particular, approaches in information flow security reason how the operator in a Stuxnet attack has no avenue to verify the reports from a compromised computing device.
 Using existing modal logic frameworks and information flow security models\cite{Howser2012}\cite{STUXNET}\cite{Howser2013}, one can formally reason where information, not normally known to a domain, can be inferred.
 
 With the correct information flows, an agent in a distributed system can infer the state of other agents in the system.
-With this information, that agent can then construct a reasonable model of the system to determine if the current behavior could lead to an undesirable situation with either the cyber or physical network.
+With this information, an agent can construct a reasonable model of the system to determine if the current behavior could lead to an undesirable situation with either the cyber or physical network.
 
 Using the framework, we present a leader election algorithm which can be modeled with a Markov chain for a known omission fault\cite{OMISSIONFAILURES} rate.
 The presented algorithm maintains the Markov property for the observations of the leader despite omission faults.

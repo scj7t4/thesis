@@ -229,8 +229,8 @@ A Markov chain can also be used to predict what state a process will be in at so
 Given an initial state and a number of time-steps, a matrix operation will yield the likelihood of the process being in each state after the time interval has passed.
 The mean passage time, a measure of how many time-steps will pass before a process returns or arrives in some state, can also be calculated.
 
-We model a leader election algorithm with a closed form representation of the behavior of the algorithm.
-The closed form representation is a profile Markov chain (noted as $P$) and will be validated against a chain generated from execution of the algorithm.
+We model a leader election algorithm with a closed-form representation of the behavior of the algorithm.
+The closed-form representation is a profile Markov chain (noted as $P$) and will be validated against a chain generated from execution of the algorithm.
 The chain constructed from sampled data is known as a test chain (noted as $T$).
 \nomenclature{$T$}{Test chain. A Markov chain sampled from a system.}
 
@@ -297,8 +297,7 @@ This relationship is pictured in Figure \ref{fig:hmm-2}.
 % Mention the joint probability distribution and cite that it also meets the markov property.
 % That will be very helpful later I think.
 A model where the state is a combination of $X$ and $Y$ from a \ac{HMM} is also a Markov model.
-The state space for the new model, $Z$, is a set of tuples $Z = \{(X_0,Y_0), (X_0, Y_1), ... (X_1, Y_0), ... (X_n,Y_m)  \}$.
-Where $\Pr(Z_k+1=(x_{k+1}, y_{k+1})|Z_k=(x_k, y_k)) = \Pr(Y_{k+1}=y_{k+1}|X_{k+1}=x_{k+1})\Pr(X_{k+1}=x_{k+1}|X_{k}=x_k)$.
+The state space for the new model, $Z$, is a set of tuples $Z = \{(X_0,Y_0), (X_0, Y_1), ... (X_1, Y_0), ... (X_n,Y_m)  \}$ where $\Pr(Z_k+1=(x_{k+1}, y_{k+1})|Z_k=(x_k, y_k)) = \Pr(Y_{k+1}=y_{k+1}|X_{k+1}=x_{k+1})\Pr(X_{k+1}=x_{k+1}|X_{k}=x_k)$.
 Stated plainly, the probability that the joint model is some state $(x_{k+1},y_{k+1})$ is the probability that the hidden part of the model transitions to state $x_{k+1}$ and the observation for $x_{k+1}$ is $y_{k+1}$.
 The probability distribution for the transition to the next state does not depend on the $y_k$ of the current state.
 
@@ -423,7 +422,7 @@ The model exploits the possible worlds of modal logic to determine if there are 
 As a consequence, it can be used to determine what an agent in a distributed system can determine about another agent.
 The exact specification of timing the distributed system becomes unnecessary as the modal model can express any combination of logical atoms in one of its worlds.\cite{Howser2012}\cite{STUXNET}\cite{Howser2013}
 
-The MSDND security model can be expressed as follows\cite{STUXNET}.
+The MSDND security model can be expressed as follows\cite{STUXNET}:
 Consider a pair of state variables $s_x$ and $s_y$ which may or may not be in the same security domain.
 The value of $s_x$ and $s_y$ have a logical xor relationship: if $s_x$ is true, $s_y$ must be false.
 Given an agent $i$ that does not have a valuation function for either of those two variables, the system is MSDND secure for the agent and pair of variables.
@@ -482,8 +481,7 @@ It uses a probabilistic model and an \ac{EWMA} to determine if the average queue
 The values are used to identify potential congestion and manage it.
 Congestion identification is accomplished by determining the average size of the queue, and then probabilistically dropping packets to maintain the size of the queue.
 In \ac{RED}, when the average queue size, $avg$, exceeds a minimum threshold ($min_{th}$), but is less than a maximum threshold ($max_{th}$), new packets arriving at the queue may be ``marked''.
-The probability a packet is marked is based on the following relation between $p_{b}$ and $p_{a}$, where $p_{a}$ is the final probability a packet will be marked.
-
+A packet is marked based on the following relation between $p_{b}$ and $p_{a}$:
 \begin{equation}
 p_{b} = max_p (avg - min_{th}) / (max_{th}-min_{th})
 \end{equation}
@@ -491,7 +489,7 @@ p_{b} = max_p (avg - min_{th}) / (max_{th}-min_{th})
 p_{a} = p_{b} / (1-count * p_b)
 \end{equation}
 
-Where $max_p$ is the maximum probability a packet will be marked when the queue size is between $min_{th}$ and $max_{th}$ and $count$ is the number of packets since the last marked packet.
+where $p_{a}$ is the final probability a packet will be marked, $max_p$ is the maximum probability a packet will be marked when the queue size is between $min_{th}$, and $max_{th}$ and $count$ is the number of packets since the last marked packet.
 With \ac{RED}, the probability a packet is marked varies linearly with the average queue size and as a function of the time since the last packet was marked.
 If $avg$ is greater than $max_{th}$, the probability of marking trends toward one as the average queue size approaches $2*max_{th}$.
 In the event the queue fills completely, the \ac{RED} queue operates as a drop-tail queue.
@@ -499,7 +497,7 @@ In a simple implementation of the \ac{RED} algorithm, marked packets are dropped
 
 \section{Distributed Grid Intelligence (DGI)}
 
-The DGI is a smart grid operating system that organizes and coordinates power electronics.
+The DGI is a smart-grid operating system that organizes and coordinates power electronics.
 It also negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their own needs.
 DGI leverages common distributed algorithms to control the power grid, making it an attractive target for modeling a distributed system.
 Algorithms employed by the \ac{DGI} and grouped into modules work together to migrate power from areas of excess supply to excess demand.
@@ -549,13 +547,7 @@ When a task became ready, it was inserted into a ready queue for the module whic
 
 When the module's phase was active, tasks were pulled from the ready queue and executed.
 When the phase was complete, the scheduler stopped pulling tasks from the previous module's queue and began pulling from the next module's queue.
-
 Using a round robin scheduler allowed enforcement of an upper bound on message delay.
-Modules had a specific amount of processing time allotted.
-Modules with messages that invoked responses typically required the responses to be received within the same phase.
-
-Modules were designed and allotted time to allow for parameters such as maximum query/response time (based on the latency between communicating processes).
-Modules using the scheduler had an upper-bound in response time before messages were considered lost.
 
 \subsection{Group Management Algorithm}
 
@@ -577,7 +569,7 @@ Processes that fail are detected and removed from the group.
 
 The elected leader is responsible for making work assignments and identifying and merging with other coordinators when they are found, as well as maintaining an up-to-date list of peers for the members of its group. 
 Group members monitor the group leader by periodically checking if the group leader is still alive by sending a message. 
-If the leader fails to respond, the querying nodes will enter a recovery state and operate alone until
+If the leader fails to respond, the querying process will enter a recovery state and operate alone until
 they can identify another coordinator.
 Therefore, a leader and each of the members maintains a set of processes which are currently reachable, a subset of all known processes in the system.
 
