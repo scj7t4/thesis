@@ -121,6 +121,7 @@ If a messenger is captured and the message is not resent, both agents will be se
 \end{thm}
 
 \begin{proof}
+    If a messenger carrying a reply is captured, original sender cannot determine which message was captured.
 \begin{case}
 One messenger is sent and captured by the enemy.
 \end{case}
@@ -266,7 +267,7 @@ Intuitively, one or more worlds will look identical to a process $i$, since the 
 As a side effect of $O$ being a deterministic, surjective mapping, a special case exists where the observed state has the Markov property:
 
 \begin{equation}
-    \Pr(Y_{k+1} | Y_{k}) = \sum_{\{X_{k+1} | O(X_{k+1}) = Y_{k+1}\}} \Pr(X_{k+1} | X_{k}), \forall X_k \in \{X_k | O(X_k) = Y_k\}.
+    \Pr(Y_{k+1}=a | Y_{k}=b) = \sum_{\{x_i | O(D_x, x_i) = a\}} \Pr(X_{k+1}=x_i | X_{k}=x_j), \forall x_j \in \{x_j | O(D_x, x_j) = b\}.
 \label{eq:hidden-to-chain}
 \end{equation}
 

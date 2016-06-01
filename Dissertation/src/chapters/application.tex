@@ -296,10 +296,11 @@ In the experiments, the load at each process was randomly assigned: each side is
 The links between the router and the switches had a \ac{RED} enabled queue placed on both network interfaces.
 The \ac{RED} parameters for all queues were set identically.
 A summary of \ac{RED} parameters are listed in Table \ref{tab:red-parameters}.
+Any parameters not included in the table used the NS-3 default value.
 All links in the simulation were 100Mbps links with a 0.5ms delay.
 RED was used in packet count mode to determine congestion.
 ARP tables were populated before the simulation began.
-\ac{RED} parameters were selected using results from \cite{JOURNAL}.
+\ac{RED} parameters were selected using results from the previous chapter.
 
 The relationship between the background traffic and the average queue size was estimated through runs of the \ac{NS3} simulation.
 Figure \ref{fig:plotm} demonstrates the observed relationship between the total background traffic and the maximum average queue size for that level of traffic.
@@ -318,8 +319,9 @@ RED Max Threshold is computed using a similar technique, but using the message c
 \end{figure}
 
 \begin{table}
-\begin{center}
+\centering
 \caption{Summary of \ac{RED} parameters.}
+    \label{tab:red-parameters}
 \begin{tabular}{ | l | l || l | l | } \hline
 Parameter & Value & Parameter & Value        \\ \hline
 RED Queueing Mode & Packet & RED Gentle Mode & True    \\ \hline
@@ -329,9 +331,6 @@ RED Min Threshold & 90 & RED Max Threshold & 130   \\ \hline
 RED Link Speed & 100Mbps & RED Link Delay & 0.5 ms   \\ \hline
 %Clock Distribution $\sigma$ & 0.005 & Traffic Packet Size & 512 Bytes \\ \hline
 \end{tabular}
-Unspecified values default to the \ac{NS3} implementation default value
-\end{center}
-\label{tab:red-parameters}
 \end{table}
 
 To introduce traffic, processes attached to each of the switches attempted to send a high volume of messages to each other across the router.

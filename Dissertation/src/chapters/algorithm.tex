@@ -48,7 +48,7 @@ Let $\Pr(i \rightarrow j)$, be the probability the outcome of an election is $i$
 Since every process must be a member of some group:
 
 \begin{equation}
-\sum^{j} \Pr(i \rightarrow j) = 1.
+\sum_{j} \Pr(i \rightarrow j) = 1.
 \label{eq:prob-consistent-1}
 \end{equation}
 
@@ -56,7 +56,7 @@ Let $\Pr(i \rightarrow j | i \in k)$ be the probability $i$ joins $j$ at the end
 A similar relationship to Equation \ref{eq:prob-consistent-1} must exist for this circumstance:
 
 \begin{equation}
-\sum^{j} \Pr(i \rightarrow j | i \in k) = 1.
+\sum_{j} \Pr(i \rightarrow j | i \in k) = 1.
 \label{eq:prob-consistent-2}
 \end{equation}
 
@@ -103,6 +103,7 @@ If a processes does not receive $G$ it will not be in the group.
 \end{thm}
 
 \begin{proof}
+    The receipt of $G$ by other members of a group is secure to a process that receives $G$.
 \begin{case}
     The case where $x = i$ or $x = j$.
 \end{case}
@@ -192,7 +193,7 @@ For the purpose of memorylessness, $i$ should consider $j$ to have responded in 
 % + all the lower priority invites not arriving
 % Show that at this point M/L inclusion doesn't matter any more.
 Processes determine which invitation to accept based on the exchange of the \ac{AYC} messages.
-Processes always seek to reach the ``lowest energy state'': they wish to be in a group led by the coordinator with the highest priority.
+Processes wish to be in a group led by the coordinator with the highest priority.
 Processes will submit AYC messages to higher priority processes that are not its coordinator, even if they are in a group.
 As a result, the processes will always seek highest priority, regardless of their current group.
 More importantly, this releases the process from obligations on its next state from the state of other processes in the system.
@@ -215,6 +216,7 @@ The probability of transitioning to the next state is not influenced by the inte
 \end{thm}
 
 \begin{proof}
+    The state the highest priority process observes always has the same transition probabilities, regardless of the hidden state of the other processes.
 \begin{case}
     The system has one other process ($n=1$).
 \end{case}
@@ -237,7 +239,7 @@ $X_U$ is the set of states where the processes are excluded from $P_0$'s group a
 By the nature of the algorithm: 
 
 \begin{equation}
-\Pr(O(D_0, X_{k+1}) | X_k \in X_G) = \Pr(O(D_0, X_{k+1}) | X_k \in X_U).
+\Pr(O(D_0, x_{k+1}) | x_k \in X_G) = \Pr(O(D_0, x_{k+1}) | x_k \in X_U).
 \label{eq:sameprob}
 \end{equation}
 
@@ -245,14 +247,14 @@ As a result, the ungrouped and grouped sub-cases have the same probability of re
 Furthermore, based on the observations of the ungrouped process:
 
 \begin{equation}
-O(D_0, x_i) = O(D_0, x_j), \forall x_i \in X_G, \forall x_j \in X_U.
+O(D_0, x_i) = O(D_0, x_j) = b, \forall x_i \in X_G, \forall x_j \in X_U.
 \end{equation}
 
 The equation indicates every observation of a state in $X_G$ and $X_U$ looks identical to $P_0$.
 With this restriction:
 
 \begin{equation}
-\Pr(Y_{k+1} | Y_{k}) = \sum_{\{X_{k+1} | O(X_{k+1}) = Y_{k+1}\}} \Pr(X_{k+1} | X_{k}), \forall X_k \in \{X_k | X_k \in X_U \cup X_G\}.
+    \Pr(Y_{k+1}=a | Y_{k}=b) = \sum_{\{x_{i} | O(D_0, x_{i}) = a\}} \Pr(X_{k+1}=x_i | X_{k}=x_j), \forall x_j \in \{x_j | x_j \in X_U \cup X_G\}.
 \end{equation}
 
 Where $X_U \cup X_G$ is the complete set of states for processes not in $P_0$'s group.
@@ -279,7 +281,7 @@ To maintain a group of $m$ other processes, the probability is defined as a rand
 \begin{equation}
  \Pr_{M}(Y=k; m) =
    \begin{cases}
-    \binom{m}{k} p^{2k}(1-p^2)^{m-k}, & \text{if } 0 \leq k \leq m \\
+    \binom{m}{k} p^{4k}(1-p^4)^{m-k}, & \text{if } 0 \leq k \leq m \\
     0,                                & \text{otherwise} \\
   \end{cases}
 \end{equation}%
@@ -366,7 +368,7 @@ As a consequence, the profile chains ($P$) are representative of the behavior of
 Resources can only be managed effectively when multiple \ac{DGI} coordinate together to manage those resources.
 Without another DGI to coordinate with, the DGI has a limited range of options to manage power generation, storage, and loads.
 Therefore, the amount of time the DGI will spend coordinating with another process is of particular interest.
-\cite{CRITIS2012} defines an \ac{IGT} metric to measure the amount of time a DGI process spends coordinating with at least one other process.
+\cite{CRITIS2012} defines an In-Group Time (IGT) metric to measure the amount of time a DGI process spends coordinating with at least one other process.
 In this work, we define \ac{IGT} based on the steady state of the profile chain.
 Let $\pi=Steady(P)$ for some profile chain.
 The \ac{IGT} is the sum of all states in $\pi$, save the first state where the process is alone:
@@ -432,6 +434,13 @@ Therefore, Figure \ref{fig:ss-means} shows the average percentage of total proce
     \label{fig:ss-means}
 \end{figure}
 
+We had hoped to observe an upper limit for the number of processes in a group, where adding processes to the system does not improve the amount time the system can spend coordinating.
+If this limit existed, it would provide a suggestion for an ideal group size when the DGI was being deployed.
+However, this was not observed.
+Instead, we observed how fragile a grouping of processes would be during omission failures: the omission probability strongly affects the grouping of processes.
+Cases where omission caused processes to leave the group are particularly concerning. 
+In those cases, processes enter a state where they are not grouped with any of the other processes, meaning they cannot coordinate to manage power resources.
+A balance must be struck between preventing omission faults from breaking up the group and halting work and keeping a grouping that causes physical faults with failed migrations.
 
 % For a lower priority process, the probability that an invite will work depends on the probability that that process is
 % Not already in a higher priority group IE, it depends on the outcome of the last election & staying in a group this time

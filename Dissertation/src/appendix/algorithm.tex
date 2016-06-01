@@ -4,101 +4,123 @@ The modified leader election algorithm.
 
 \begin{algorithmic}[1]
 \small
+\State $Counter \gets$ A random initial identifier
 \State $AllPeers \gets \{ 1, 2, ..., N \}$
 \State $Coordinators \gets \emptyset$
-\State $UpPeers \gets { Me }$
-\State $State \gets Normal$
+\State $Group \gets { Me }$
+\State $GroupID \gets (Me,Counter)$
 \State $Coordinator \gets Me$
 \State $Expected \gets \emptyset$
-\State $Counter \gets$ A random initial identifier
-\State $GroupID \gets (Me,Counter)$
 \State $PendingID \gets (Me, -1)$
+\State $PendingLdr \gets Me$
 \State $Pending \gets \emptyset$
+\State $State \gets Normal$
 
 \State
 
 \Function{Check}{}
-    \State This function is called at the start of a round by a leader
-    \If {$State \neq Normal$ or $Coordinator \neq Me$}
-        \Return
-    \EndIf
     \State $Expected \gets \emptyset$
+    \State $Coordinators \gets \emptyset$
+    \State $PendingID \gets (Me, 0)$
+    \State $PendingLdr \gets Me$
+
+    \If {$Coordinator = Me$}
     \For {$j \in (AllPeers - \{Me\})$}
         \State $AreYouCoordinator(j)$
         \State $Expected \gets Expected \cup j$
     \EndFor
+    \Else
+        \For {$j \in (AllPeers - \{Me\})$}
+            \If {$j < Me$}
+                \State $AreYouCoordinator(j, j \in Group)$
+                \State $Expected \gets Expected \cup j$
+            \EndIf
+        \EndFor
+        \State $Expected \gets Expected \cup Coordinator$
+        \State $AreYouThere(Coordinator)$
+    \EndIf
     \State Peers which respond ``Yes'' to $AreYouCoordinator$ are put into the $Coordinators$ set.
     \State Processes that respond are removed from $Expected$.
     \State When an $AreYouThere$ response is ``No'' and this process is a coordinator, the querying process is put in the $Coordinators$ set.
-    \State Wait for responses, Peers that do not respond are removed from UpPeers.
-    \State $UpPeers \gets (UpPeers-Expected) \cup {Me}$
-    \State $UpPeers \gets (UpPeers-Coordinators) \cup {Me}$
-    \If {$Responses = \emptyset$}
-        \Return
-    \EndIf
-    \If {$Me = SelectedProcess$}
-        \State
-        \Call{Merge}{Responses}
-    \EndIf
 \EndFunction
 
 \State
 
-\Function{Timeout}{}
-    \State This function is called at the start of a round by the group members
-    \If {$Coordinator = Me$}
-        \Return
-    \Else
-        \Call{AreYouThere}{Coordinator,GroupID,Me}
-        \If{Response is No}
-            \Call{Recovery}{}
-			\State $Coordinators \gets Coordinator$
+\Function{Merge}{}
+    \If {$Coordinator = Me$ and $PendingLdr >= Me$}
+        \State $Group = Group - Expected$
+        \State $Group = Group - Coordinators$
+    \EndIf
+    \If {$|Coordinators| >= 1$}
+        \State $State \gets Election$
+        \State Stop work
+        \State $Counter \gets Counter+1$
+        \State $PendingID \gets (Me,Counter)$
+        \State $PendingLdr \gets Me$
+        \State $Pending \gets Group$
+        \For {$j \in Coordinators$}
+            \Call{Invite}{j,Coordinator,PendingID}
+        \EndFor
+        \State Processes that Accept are added to $Pending$.
+        \State $State \gets Reorganization$
+    \EndIf
+    \State $Expected \gets \emptyset$
+\EndFunction
+
+\State
+
+\Function{Ready}{}
+    \State $Expected \gets \emptyset$
+    \If {$Coordinator = Me$ and $PendingLdr = Me$}
+        \State $OldGroup \gets Group$
+        \If {$Pending \neq \emptyset$}
+            \State $Group \gets Pending$
+            \State $GroupID \gets PendingID$
+        \Else
+            \State $Group \gets Pending$
         \EndIf
+        \State $Expected \gets Group$
+        \For {$j \in Group$}
+            \Call{ReadyMsg}{j,GroupID,Group}
+        \EndFor
+        \State Processes that acknowledge the Ready message are removed from $Expected$.
     \EndIf
-\EndFunction
-
-\State
-
-\Function{Merge}{Coordinators}
-    \State This function invites all coordinators in Coordinators to join a group led by Me
-    \State $State \gets Election$
-    \State Stop work
-    \State $Counter \gets Counter+1$
-    \State $PendingID \gets (Me,Counter)$
-    \State $Coordinator \gets Me$
-    \State $Pending \gets UpPeers - {Me}$
-    \For {$j \in Coordinators$}
-        \Call{Invite}{j,Coordinator,PendingID}
-    \EndFor
-    \State Wait for responses, Peers that accept the invite are added to $Pending$.
-    \State $State \gets Reorganization$
-	\State $GroupID \gets PendingID$
-	\State $UpPeers \gets Pending$
-    \For {$j \in UpPeers$}
-        \Call{Ready}{j,Coordinator,GroupID,UpPeers}
-    \EndFor
-    \State $Expected \gets UpPeers$
-    \State Wait for responses, Peers that acknowledge are removed from $Expected$
-    \State $UpPeers \gets UpPeers - Expected$
     \State $State \gets Normal$
 \EndFunction
 
 \State
 
-\Function{ReceiveReady}{Sender, Leader, Identifier, Peers}
-    \If {$State = Reorganization$ and $PendingID = Identifier$}
-        \State $UpPeers \gets Peers$
-        \State $State \gets Normal$
-		\State $Coordinator \gets Leader$
-		\State $GroupID \gets Identifier$
-        \Call{ReadyAcknowledge}{Leader,Identifier}
+\Function{Cleanup}{}
+    \If{$Coordinator = Me$}
+        \State $Group \gets Group - Expected$
     \EndIf
+    \State $Expected \gets \emptyset$
+    \State $Coordinators \gets \emptyset$
+    \State $Pending \gets \emptyset$
+    \State $PendingLdr \gets Me$
+    \State $PendingId \gets (Me, -1)$
+    \If{$Coordinator \neq Me$ and Didn't Receive $Ready$}
+        \Call{Recovery}{}
+    \EndIf
+\EndFunction
+
+\State
+
+\Function{Recovery}{}
+    \State $Coordinator \gets Me$
+    \State $Group \gets \emptyset$
+    \State $Counter \gets Counter+1$
+    \State $GroupID \gets (Me,Counter)$
+    \State $Coordinators \gets \emptyset$
+    \State $Pending \gets \emptyset$
+    \State $PendingId \gets (Me, -1)$
+    \State $PendingLdr \gets Me$
 \EndFunction
 
 \State
 
 \Function{ReceiveAreYouCoordinator}{Sender}
-    \If {$State = Normal$ and $Coordinator = Me$}
+    \If {$Coordinator = Me$}
         \State Respond Yes
     \Else
         \State Respond No
@@ -107,44 +129,38 @@ The modified leader election algorithm.
 
 \State
 
-\Function{ReceiveAreYouThere}{Sender, Identifier}
-    \If {$GroupID = Identifier$ and $Coordinator = Me$ and $Sender \in UpPeers$}
+\Function{ReceiveAreYouThere}{Sender}
+    \If {$Coordinator = Me$ and $Sender \in Group$}
         \State Respond Yes
     \Else
         \State Respond No
-        \State $Coordinators \gets Sender$
+        \State $Coordinators \gets Coordinators \cup Sender$
     \EndIf
 \EndFunction
 
 \State
 
-\Function{ReceiveInvite}{Sender,Leader,Identifier}
-    \If {$State \neq Normal$}
-        \Return
-    \EndIf
-    \If {$Sender \neq SelectedProcess$}
+\Function{ReceiveInvite}{Sender,Identifier}
+    \If {$Sender > Coordinator$ or $Sender > PendingLdr$ or $Sender \not \in Coordinators$}
         \Return
     \EndIf
     \State Stop Work
     \State $PendingID \gets Identifier$
-    \State $State \gets Election$
-    \State $Accept(Coordinator,Identifier)$
+    \State $PendingLdr \gets Sender$
     \State $State \gets Reorganization$
-    \If {$Ready$ is not received}
-        \State $Recovery()$
-    \EndIf
+    \Call{Accept}{Sender,Identifier}
 \EndFunction
 
 \State
 
-\Function{ReceiveAccept}{Sender,Leader,Identifier}
-    \If {$State \gets Election$ and $PendingID = Identifier$}
-        \State $Pending \gets Pending \cup {Sender}$
+\Function{ReceiveReady}{Sender, Identifier, Peers}
+    \If {$PendingID = Identifier$ or $Coordinator = Sender$}
+        \State $Group \gets Peers$
+        \State $State \gets Normal$
+		\State $Coordinator \gets Sender$
+		\State $GroupID \gets Identifier$
+        \Call{ReadyAcknowledge}{Leader,Identifier}
     \EndIf
-\EndFunction
-
-\Function{ReceiveReadyAcknowledge}{Sender}
-    \State $Pending \gets Pending \cup {Sender}$
 \EndFunction
 
 \State
