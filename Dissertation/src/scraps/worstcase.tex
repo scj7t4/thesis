@@ -1,0 +1,35 @@
+
+\subsection{Worst Case Results}
+
+In the worst case, supply processes and demand processes are not intermixed at each switch: only supply processes are at switch A, and only demand processes are at switch B.
+The placement of processes is the worst case because it involves the highest number of messages crossing the congested link.
+No migration can occur without messages crossing the congested link.
+As a result, in the worst case scenarios, hard \ac{ECN} messages are triggered at a much lower level of traffic than in the average case scenarios.
+This is expected: in soft \ac{ECN} mode, the majority of traffic comes from the load balancing algorithm and in the worst case, the load balancing algorithm can only perform migrations while using the congested link.
+The parameters necessary to protect the system in the average case make \acp{ECN} in worst case overly proactive when attempting to protect the system. 
+A summary of test scenarios for the worst case is presented in \ref{tab:scenarios-worst}.
+
+\begin{table}
+\centering
+\caption{Summary of Scenarios Run}
+\begin{tabular}{| c | c | c | c |}
+    \hline
+    Test & Traffic & Notifications & Attempted Migrations \\ \hline
+    G & 4Mbps & None &  \\ \hline
+    H & 4Mbps & Soft &  \\ \hline
+    I & 5.1Mbps & Soft & \\ \hline
+    J & 5.1Mbps & All &  \\ \hline
+\end{tabular}
+\label{tab:scenarios-worst}
+\end{table}
+
+Figure X shows the number of lost migrations for each scenario.
+Because all migrations must be completed with the congested link, there is a greater number of failed migrations and the number of migrations attempted is reduced because of the congestion (Scenario G).
+The queue size for Scenario G is presented in Figure Y.
+Enabling soft ECN mode (Scenario H), as before, prevents failed migrations.
+Scenario G's queue is presented in figure Z.
+
+The hard ECN message is triggered earlier in the worst case, due to the increased dependence on the congested link.
+Figure ZA shows the queue size for Scenario I, a scenario that should trigger hard ECN mode.
+In Scenario I, uncontrolled group division occur and migrations are lost.
+By enabling notifications (Scenario J) those situations are mitigated.
