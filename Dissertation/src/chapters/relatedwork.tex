@@ -1,13 +1,11 @@
 % Describe related work in this area
-
-
 \chapter{Related Work}
 
 \section{ANALYSIS OF DISTRIBUTED SYSTEMS}
 
-\cite{markov-distributed} focuses on examining the behavior of a collection of processes in a grid computing system processing a large dataset.
+Dabrowski and Hunt's work\cite{markov-distributed} focuses on examining the behavior of a collection of processes in a grid computing system processing a large dataset.
 In their work, the authors use a \ac{DTMC} to model a single process completing a task.
-The chain describes how a process in the system goes through the steps of acquiring a task to work on, working on the task, and subsequently either completing or failing the task.
+The Markov chain describes how a process in the system goes through the steps of acquiring a task to work on, working on the task, and subsequently either completing or failing the task.
 The created models are ``absorbing'' chains, meaning it has one or more states the process cannot leave once it has arrived in those states.
 They consider the Markov chain as a max-flow min-cut problem using the ``task complete'' and ``task failed'' absorbing states as sinks.
 Their analysis uses minimal s-t cuts to determine critical paths for the ideal operation of the system.
@@ -20,7 +18,7 @@ Additionally, \cite{LEADERELECTIONEVAL} only considers the system to be in a com
 
 % Knowledge and Common Knowledge in a Distributed Environment
 % This work showed, through the use of a logical knowledge framework, that with omission and with no ``common knowledge'' 
-\cite{knowledge-distributed} shows that in a distributed system, when there are omission faults, complete consensus cannot be achieved without access to ``common knowledge.''
+Work by Halpern and Moses\cite{knowledge-distributed} shows that in a distributed system, when there are omission faults, complete consensus cannot be achieved without access to ``common knowledge.''
 The authors use a logic system that isolates the \acp{AP} a process can directly access to its memory space and a knowledge operator to access other \acp{AP} when information is transferred between processes.
 It allows the authors to reason about the necessary conditions to arrive at consensus when there are omission faults.
 They conclude consensus can only be reached when there is existing shared knowledge in a system that is both unaffected by the omission faults and is useful for arriving at a correct consensus.
@@ -29,7 +27,7 @@ Additionally, they establish the common knowledge of the two generals attacking 
 
 \section{PHYSICAL FAULTS CAUSED BY CYBER ENTITIES IN CPS}
 
-Faults in \ac{CPS} can originate from many locations.
+Faults in \ac{CPS} can originate from many sources.
 First, and most obviously, the traditional physical system being augmented by the CPS is subject to its own failures, either from component failure or the actions of an attacker.
 Secondly, the \ac{CPS} must employ sensors to detect the state of the physical components in the system.
 Like the physical components, these sensors are subject to component failure or the actions of an attacker.

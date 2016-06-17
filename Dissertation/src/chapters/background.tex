@@ -1,7 +1,5 @@
 \chapter{Background}
 
-\section{DISTRIBUTED SYSTEMS}
-
 Distributed systems are a computing paradigm characterized by independence of computational units and no universal clock.
 Components in a distributed system may not directly share computational resources or memory.
 Instead, computers in a distributed system typically interact through a message-passing interface.
@@ -10,6 +8,9 @@ As a result, distributed computing is a challenging area of research.
 In a distributed system, because processes do not share a universal clock, the ordering of messages and events needed to be carefully considered to ensure correct operation of the system.
 Additionally, when individual components fail, determining which components failed and how they affected the system as a whole is difficult in a distributed system.
 Different types of failures can cause different kinds of information to be withheld or changed, disrupting those processes.
+
+In this section, the core concepts of distributed systems are presented.
+This section also describes the concepts necessary to understand the models presented in subsequent sections.
 
 \section{EXECUTION AND COMMUNICATION MODELS}
 
@@ -82,22 +83,21 @@ A fault is the manifestation of an error in software or an incident where an inc
 A failure is the inability of a component or system to perform its required function or within its specified limits.
 \end{pdef}
 
-\subsection{Crash or Fail-Stop Failure}
+\subsection{Crash Failure}
 
 A crash failure, or its more generalized form, a fail-stop failure, describes a failure in which a process stops executing.
 In general, it is considered to be an irreversible failure, since a process typically does not resume from a crashed state.
 There is a special category of crash failures, called napping failures, where a process will appear to have crashed for a finite amount of time before resuming normal operation.
-Crash failures are impossible to detect with absolute certainty in an asynchronous system.
+Crash failures are impossible to detect with absolute certainty in an asynchronous system\cite{DISTRIBUTED}.
 Processes can be suspected of failure by other processes through the use of challenge/response messages or heartbeat messages that allow a process to prove that it has not crashed yet.
-A system that can handle a crash failure is implied to be able to handle a fail-stop failure.\cite{DISTRIBUTED}
-
-The fail-stop failure has three properties \cite{DISTRIBUTED}:
-
-\begin{enumerate}
-\item When a failure occurs the program execution is stopped.
-\item A process can detect when another fail-stop process has failed.
-\item Volatile storage is lost when the fail-stop process is stopped.
-\end{enumerate}
+%A system that can handle a crash failure is implied to be able to handle a fail-stop failure.
+%The fail-stop failure has three properties \cite{DISTRIBUTED}:
+%
+%\begin{enumerate}
+%\item When a failure occurs the program execution is stopped.
+%\item A process can detect when another fail-stop process has failed.
+%\item Volatile storage is lost when the fail-stop process is stopped.
+%\end{enumerate}
 
 \subsection{Failure Detectors}
 
@@ -117,7 +117,9 @@ Some of the properties include\cite{FAILUREDETECTORS}:
     \item Eventual Weak Accuracy - There is an initial period where weak accuracy is not kept. Eventually, working processes are identified as such, and there is some process that is never suspected of failing again.
 \end{itemize} 
 
-One class of failure detectors, Omega class Failure detectors, are particularly interesting because of \cite{LEADERELECTIONEVAL}. An eventual weak failure (weak completeness and eventual weak accuracy) detector is the weakest detector which can still solve consensus. It is denoted several ways in various works including $\diamond \mathcal{W}$ \cite{FAILUREDETECTORS}, $\mathcal{W}$ \cite{WEAKESTFAILURE1} \cite{WEAKESTFAILURE2} and $\Omega$ (Omega) \cite{LEADERELECTIONEVAL}.
+One class of failure detectors, Omega class Failure detectors, are particularly interesting because of Gomez-Calzado et al.\cite{LEADERELECTIONEVAL}.
+In their work, the authors analyze a leader-election with crash failures by determining the number of messages needed to come to a consensus.
+An eventual weak failure (weak completeness and eventual weak accuracy) detector is the weakest detector which can still solve consensus. Related works note it in a number of ways: $\diamond \mathcal{W}$ \cite{FAILUREDETECTORS}, $\mathcal{W}$ \cite{WEAKESTFAILURE1} \cite{WEAKESTFAILURE2} and $\Omega$ (Omega) \cite{LEADERELECTIONEVAL}.
 
 \subsection{Omission Fault}
 
@@ -126,16 +128,21 @@ Omission faults can occur when the communication medium is unavailable or when t
 Protocols like TCP do not allow omission failures: a packet is resent until it is acknowledged by the receiver.
 If the acknowledgment never comes, the connection is closed.
 As a contrast, UDP assumes that any datagram could be lost, and it is the responsibility of the programmer to handle missing datagrams appropriately.
-An omission failure can have the same observable effects as a napping failure in some situations.\cite{DISTRIBUTED}
+An omission failure can have the same observable effects as a napping failure\cite{DISTRIBUTED}.
 
 \subsection{Byzantine Fault}
 
 A Byzantine fault causes processes in the distributed system to send information that is incorrect or misleading to other processes.
-Constraints for detecting processes exhibiting Byzantine behavior are a famous result in distributed systems.\cite{byzantine-generals}
+Constraints for detecting processes exhibiting Byzantine behavior are a famous result in distributed systems\cite{byzantine-generals}.
 
 \section{PROBABILITY}
 
 Several concepts are useful for reasoning about the stochastic properties of a distributed system.
+A random variable, typically denoted $X$ or $Y$, is a variable whose value is the outcome of a random event.
+The variable numerically represents possible outcome of an event.
+Random variables may be discrete or continuous, depending on the range of the possible outcomes of the random event it describes.
+A random variable is discrete if its range is finite or countably infinite.
+
 The expected value represents the long-term average output of a probability distribution.
 If $x_i$ is a value the random variable $X$ can produce, and $p_i$ is the probability the random variable produces the value, the expected value, $E[X]$, is:
 \begin{equation}E[X] = x_1 p_1 + x_2 p_2 + ... + x_k p_k.\end{equation}
@@ -143,7 +150,7 @@ If $x_i$ is a value the random variable $X$ can produce, and $p_i$ is the probab
 Conceptually, the expected value is the weighted average of the outcomes of a stochastic system.
 
 \begin{pdef}
-Availability is the probability a system or component is operational and accessible when required for use, denoted $A$.
+Availability, denoted as A, is the probability a system or component is operational and accessible when required for use.
 \end{pdef}
 \begin{equation}A = \frac{E[uptime]}{E[uptime]+E[downtime]}\end{equation}
 \nomenclature{$A$}{Availability of a component.}
@@ -170,7 +177,7 @@ We try to constrain the discussion about reliability in the distributed systems 
 \nomenclature{$X$}{A random variable, or the set of states for a Markov chain}%
 A Markov chain is a finite set of states $X=\{x_1, x_2, ..., x_n\}$ and probabilistic transitions between those states.
 States in a Markov chain are mutually exclusive.
-When a system is some state $x_i$ it has some probability of transitioning to some other state $x_j$ at the next time-step.
+When a system is in some state $x_i$, it has some probability of transitioning to some other state $x_j$ at the next time-step.
 A Markov chain is a first order chain if the probability of transitioning from $i$ to $j$ does not depend on the history of transitions that lead to state $i$.
 First order chains are described as being memoryless because they have the Markov property.
 The Markov property formalizes the independence of the next state from the history of previous states.
@@ -178,7 +185,16 @@ If we describe a Markov chain as a sequence of random variables $X_{1}, X_{2}, X
 \begin{align} \Pr(X_{n+1}&=x\mid X_1=x_1, X_2=x_2, \ldots, X_n=x_n)
 \nonumber \\ &= \Pr(X_{n+1}=x\mid X_n=x_n). \end{align}
 
-An ergodic Markov chain is a chain where it is possible, in some finite number of steps, to go from any state to any other state.
+An irreducible Markov chain is a chain where it is possible to go from any state to any other state.
+A state is considered periodic with period $k$ if returns to a state must occur in $nk$ steps (where $n$ is a positive whole number and $k \geq 1$).
+If $k=1$ a state is considered aperiodic.
+If every state is aperiodic, the Markov chain is aperiodic.
+A state is recurrent if $\Pr(X_n=i for some n \geq 1| X_0=i)=1$.
+In an irreducible chain, if any state is recurrent, every state is recurrent.
+A state is positive recurrent if expected return time for the state is finite.
+A chain is positive recurrent if every state is positive recurrent.
+A Markov chain is ergodic if it is aperiodic and positive recurrent.
+
 A stationary, or time homogeneous, Markov chain is one where the transition probabilities do not change over time.
 In a stationary Markov chain, the $n$th visit to a state is indistinguishable from the ($n+1$)th visit to a state.
 
@@ -194,6 +210,10 @@ The matrix is row stochastic, meaning the sum of each row in the matrix is equal
 A useful companion to the transition matrix is a state distribution vector.
 While the transition matrix describes how a system will transition between states, the state distribution vector describes the probability of observing a given state.
 
+If every $P_ij$ is positive and non-zero, the DTMC is said to be regular.
+Every regular Markov chain is ergodic.
+As a consequence every regular Markov is periodic and positive recurrent.
+
 \begin{pdef}
 A state distribution vector is an $m$-dimensional vector composed of the probability of observing each state in the system at a given instant.
 \end{pdef}
@@ -204,7 +224,7 @@ where $P_{i}$ corresponds to the probability of observing state $x_i$.
 
 A \ac{DTMC} is a suitable model for a memoryless random process with a finite number states which is observed at fixed time intervals.
 By utilizing a Markov chain, a variety of statistical analyses can be performed on the modeled system.
-For example, a Markov chain with the stationary and ergodic properties can be analyzed for its steady state probabilities.
+For example, if a Markov chain is stationary, aperiodic, and positive recurrent it can be analyzed for its steady state probabilities.
 The steady state is a state distribution vector that describes the probability a random observation of a long-running process will observe some state $x_i$.
 The steady state probability distribution vector can by found via a system of equations: \cite{MARKOV3}
 \begin{align}

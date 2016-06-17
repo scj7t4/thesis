@@ -4,9 +4,6 @@
 
 \chapter{Information Flow Analysis of Distributed Computing}
 
-
-\section{METHODS}
-
 A model created for a distributed system must have sufficient information to be accurate.
 The current state of a distributed system is difficult to obtain because memory spaces are typically isolated.
 Without exact synchronization, an accurate global snapshot of the system cannot be taken.
@@ -79,7 +76,7 @@ Therefore, A is not MSDND secure to B. However, $V_{\varphi_1}^{A}(w) \not \in \
 \begin{case}
 Any number of messengers are sent and deliver their messages, alternating from General A or General B to the other general. \label{case:generalsnn}
 \end{case}
-As each messenger arrives, the receiving general will trust the integrity of the message and believe its contents, resulting in that general assigning value to $\varphi_i$.
+As each messenger arrives, the receiving general will trust the integrity of the message and believe its contents, resulting in that general assigning value to $\varphi_i$. The state of the receiving general remains secure to the sending general until a response is delivered.
 
 \begin{msdndproof}
 % Revise me to have some dots in me so the last step resolves n.
@@ -138,7 +135,8 @@ If the required number of ``loyal'' processes are not available, the system cann
 
 \section{ELECTION IN AN ANONYMOUS COMPLETE NETWORK}
 
-Consider a version of the ``coin-flipping'' leader election expressed in BIT logic.
+
+Consider a version of the ``coin-flipping'' leader election expressed in BIT logic, presented as Algorithm \ref{alg:coinflip}.
 The algorithm is functionally identical, but contains additional guards in the conditionals as an expression of the agents' knowledge.
 Additionally, note the construct of labeling each $\varphi$ that an agent receives is simply assigning labels to make the algorithm easier to understand.
 The algorithm only considers the complete collection of $\varphi$s for execution and not the source of any $\varphi$ the algorithm uses.
@@ -146,7 +144,27 @@ The algorithm only considers the complete collection of $\varphi$s for execution
 Let $\psi_i$ be the state where an agent $i$ completes the algorithm as the leader, and $\gamma_i$ as the state where an agent $i$ has terminated the algorithm.
 The algorithm terminates when $\{\gamma_i = T : \forall i \}$ is satisfied and exactly one $\psi_i$ is true ($\sum_i \psi_i = 1$).
 
-\begin{algorithm}
+\begin{thm}
+Algorithm \ref{alg:coinflip} may not terminate correctly unless there is detectable, perfect information transfer to all parties in the algorithm.
+\end{thm}
+\begin{prooftight}
+Let $i$ be the agent that would correctly terminate as the leader. Let $j$ be a process that has selected $\varphi_j = F$.
+\begin{msdndproof}
+1. & $\varphi_i = T, \varphi_j = F$ & Initial conditions. \\
+2a.& $I_{j,i} \varphi_i$ & $i$ sends $\varphi_i$ to $j$. \\
+2b.& $I_{i,j} \varphi_j$ & $j$ sends $\varphi_j$ to $i$. \\
+3a.& $\neg (B_j I_{j,i} \varphi_i \wedge T_{j,i} \varphi_j)$ & $j$ does not receive $\varphi_i$. \\
+3b.& $B_i I_{i,j} \varphi_j \wedge T_{i,j} \varphi_i$ & $i$ receives $\varphi_j$. \\
+4a.& $w \not \vDash V_{\varphi_i}{j}(w)$ & $j$ cannot valuate $\varphi_i$. \\
+4b.& $B_i \varphi_j$ & By C1. \\
+5a. & $\not \exists V_{\varphi_i}^j(w) \wedge \neg \varphi_j \rightarrow (\varphi \gets T)$ & $j$ Cannot determine that $i$ can terminate and incorrectly changes $\varphi$. \\
+5b. & $\varphi_i \wedge w \vDash V_{\varphi_j}^i(w) \wedge \neg \varphi_j \rightarrow \psi_i$ & $i$ incorrectly terminates as the leader. \\
+\end{msdndproof}
+Therefore, $i$ will terminate before $j$ decides to go passive.
+This result agrees with results from similar analysis\cite{anon-omission}.
+\end{prooftight}
+%As it was with the two armies problem, the MSDND security of the other processes' states is an important consideration for the correctness of a distributed algorithm.
+\begin{algorithm}[t]
 \caption{Anonymous Coin Flipping Leader Election Expressed in BIT logic}
 \label{alg:coinflip}
 \begin{algorithmic}[1]
@@ -167,26 +185,6 @@ The algorithm terminates when $\{\gamma_i = T : \forall i \}$ is satisfied and e
 \end{algorithmic}
 \end{algorithm}
 
-\begin{thm}
-Algorithm \ref{alg:coinflip} may not terminate correctly unless there is detectable, perfect information transfer to all parties in the algorithm.
-\end{thm}
-\begin{prooftight}
-Let $i$ be the agent that would correctly terminate as the leader. Let $j$ be a process that has selected $\varphi_j = F$.
-
-\begin{msdndproof}
-1. & $\varphi_i = T, \varphi_j = F$ & Initial conditions. \\
-2a.& $I_{j,i} \varphi_i$ & $i$ sends $\varphi_i$ to $j$. \\
-2b.& $I_{i,j} \varphi_j$ & $j$ sends $\varphi_j$ to $i$. \\
-3a.& $\neg (B_j I_{j,i} \varphi_i \wedge T_{j,i} \varphi_j)$ & $j$ does not receive $\varphi_i$. \\
-3b.& $B_i I_{i,j} \varphi_j \wedge T_{i,j} \varphi_i$ & $i$ receives $\varphi_j$. \\
-4a.& $w \not \vDash V_{\varphi_i}{j}(w)$ & $j$ cannot valuate $\varphi_i$. \\
-4b.& $B_i \varphi_j$ & By C1. \\
-5a. & $\not \exists V_{\varphi_i}^j(w) \wedge \neg \varphi_j \rightarrow (\varphi \gets T)$ & $j$ Cannot determine that $i$ can terminate and incorrectly changes $\varphi$. \\
-5b. & $\varphi_i \wedge w \vDash V_{\varphi_j}^i(w) \wedge \neg \varphi_j \rightarrow \psi_i$ & $i$ incorrectly terminates as the leader. \\
-\end{msdndproof} Therefore, $i$ will terminate before $j$ decides to go passive.
-\end{prooftight}
-This result agrees with results from similar analysis\cite{anon-omission}.
-
 \section{MODEL CONSTRUCTION FOR THE TWO ARMIES PROBLEM}
 Suppose for the two armies problem, A and B wish determine their chance of success.
 If neither A nor B have any idea of the probability their messenger is captured, they have no way of assessing their chances of a successful attack.
@@ -195,7 +193,7 @@ However, what can be determined if the two generals share some knowledge about t
 Suppose that both generals know their messenger has the probability $q=(1-p)$ of being captured in transit.
 When A sends a messenger to B, A will know there is a probability $p$ that the messenger arrives at B.
 If the messenger does indeed arrive at B, B knows that A knows there is a $p$ chance their attack will succeed.
-In this situation, both generals can construct identical models of the success the attack, given the initial message arrives.
+In this situation, both generals can construct identical models of the success of the attack, given the initial message arrives.
 It is also worth noting in this scenario, no additional messages can improve the outlook of the two generals.
 Each additional message only confirms there is a probability $p$ the other general will also attack.
 
@@ -220,9 +218,11 @@ With $O$, one can construct $B$, the observation probability distribution matrix
 \end{equation}
 
 Intuitively, one or more worlds will look identical to a process $i$, since the information necessary to differentiate them is not in $D_i$.
-As a side effect of $O$ being a deterministic, surjective mapping, a special case exists where the observed state has the Markov property:
+As a side effect of $O$ being a deterministic, surjective mapping, a special case exists where the observed state has the Markov property.
+Let $v=\{x_i | O(D_x, x_i) = a\}$, the set of hidden states that produce the observation $a$.
+The observed state has the Markov property if:
 \begin{equation}
-    \Pr(Y_{k+1}=a | Y_{k}=b) = \sum_{\{x_i | O(D_x, x_i) = a\}} \Pr(X_{k+1}=x_i | X_{k}=x_j), \forall x_j \in \{x_j | O(D_x, x_j) = b\}.
+    \Pr(Y_{k+1}=a | Y_{k}=b) = \sum_{v} \Pr(X_{k+1}=x_i | X_{k}=x_j), \forall x_j \in \{x_j | O(D_x, x_j) = b\}.
 \label{eq:hidden-to-chain}
 \end{equation}
 
@@ -266,7 +266,7 @@ Therefore, $j \in L_i$, and $B_j \varphi$ is MSDND insecure to $i$.
 Each wff in $M_i$ and $N_i$ but not $L_i$ is MSDND secure to $i$.
 \end{thm}
 \begin{prooftight}
-Each wff in $M_i$ and $N_i$ have no valuation in the domain $i$.
+Each wff in $M_i$ and $N_i$ but not $L_i$ have no valuation in the domain $i$.
 \begin{case}
 The case where $j$ receives some wff $\varphi$ and is in $M_i$ but not $L_i$.
 \end{case}
@@ -279,7 +279,7 @@ The case where $j$ receives some wff $\varphi$ and is in $M_i$ but not $L_i$.
 6. & $w \neg \vDash V_{\varphi_ack}^{i}(w)$ & $i$ is uncertain if $B_j \varphi$. \\
 7. & $w \vDash V_{\varphi}^{j}(w)$ & Is always true. %
 \end{msdndproof}
-Therefore, $j \in M_i$, and $B_j \varphi$ is MSDND secure to $i$.
+Therefore, $j \in M_i$, and $B_j \varphi$ is MSDND secure to $i$. As a consequence of step 5, $j$ is not in $L_i$.
 
 \begin{case}
 The case where $j$ does not receive some wff $\varphi$ and is in $N_i$ but not $M_i$.

@@ -79,7 +79,7 @@
 
 \RequirePackage{titlesec}
 \titleformat{\chapter}{\singlespacing\center\normalsize\bfseries\uppercase}{\thechapter}{.5em}{}[\doublespacing]
-\titlespacing{\chapter}{0pt}{-24pt}{0.6875in} % -0.5in is the vertical spacing of the chapter in the body
+\titlespacing{\chapter}{0pt}{-28pt}{0.6875in} % -0.5in is the vertical spacing of the chapter in the body
 \titleformat{\section}{\singlespacing\normalsize\bfseries\uppercase}{\thesection}{.5em}{}%[\doublespacing]
 \titlespacing{\section}{0pt}{0pt}{0pt}
 \titleformat{\subsection}[runin]{\normalsize\bfseries}%
@@ -317,8 +317,8 @@
 }{}
 
 \newenvironment{ThesisFrontMatter}{}{%
-  %\addtocontents{toc}{\protect\vspace{4ex}}%
-  \addtocontents{toc}{\hbox to \textwidth{{}\hspace*{-2mm}{\bf SECTION\ \hfill}}}%
+  \addtocontents{toc}{\protect\vspace{12pt}}%
+  \addtocontents{toc}{\hbox to \textwidth{{}\hspace*{0mm}{\bf SECTION\ \hfill}}}%
 }
 
 
@@ -328,7 +328,7 @@
   %\setcounter{page}{1}
   %\addtolength{\textfloatsep}{+0.28125in}%
   %\addtocontents{toc}{\protect\vspace{4ex}}%
-  \addtocontents{toc}{\hbox to \textwidth{{}\hspace*{-2mm}{\bf SECTION\ \hfill}}}%
+  \addtocontents{toc}{\hbox to \textwidth{{}\hspace*{0mm}{\bf SECTION\ \hfill}}}%
 }{}
 
 \def\copyrightpage{

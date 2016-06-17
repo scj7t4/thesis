@@ -1,5 +1,10 @@
 \chapter{Algorithm and Model Creation}
 
+In order for the leader election algorithm to be analyzed with Markov chains, the algorithm was modified from its original form.
+These modifications allowed the observations of the highest priority process to be a \ac{DTMC}.
+In this chapter, the modifications to the algorithm are presented, along with the reasoning for those changes, motivated by the MSDND analysis presented previously.
+The probability of transitioning between states is presented as a formula and the accuracy of the formula is validated using a statistical inference test.
+
 \section{ORIGINAL INVITATION ELECTION ALGORITHM OVERVIEW}
 
 A state machine for the election portion of the invitation-election algorithm is shown in Figure \ref{fig:statemachine}.
@@ -46,20 +51,16 @@ A process can construct a Markov chain if its observations are consistent with t
 In each election, a process has some probability of joining a given process' group.
 Let $\Pr(i \rightarrow j)$, be the probability the outcome of an election is $i$ being a member of $j$'s group.
 Since every process must be a member of some group:
-
 \begin{equation}
 \sum_{j} \Pr(i \rightarrow j) = 1.
 \label{eq:prob-consistent-1}
 \end{equation}
-
 Let $\Pr(i \rightarrow j | i \in k)$ be the probability $i$ joins $j$ at the end of an election given $i$ starts in $k$'s group at the start of the election.
 A similar relationship to Equation \ref{eq:prob-consistent-1} must exist for this circumstance:
-
 \begin{equation}
 \sum_{j} \Pr(i \rightarrow j | i \in k) = 1.
 \label{eq:prob-consistent-2}
 \end{equation}
-
 A leader process $j$ can construct a Markov chain iff, for every $i$ that can join $j$'s group:
 \begin{equation}
 \Pr(i \rightarrow j | i \in k) = \Pr(i \rightarrow j), i \neq j \neq k
@@ -69,7 +70,6 @@ where $i \in k$ is a state where $i$ is in $k$'s group.
 Therefore, the probability of $i$ joining $j$'s group must be independent of $i$'s membership at the start of the election.
 Equation \ref{eq:mod-req-a} enforces the probability $j$ observes some process $i$ joining its group is independent of $i$'s previous membership, which is hidden to $j$ unless $i$ was in $j$'s group.
 From Equations \ref{eq:prob-consistent-1} and \ref{eq:prob-consistent-2}:
-
 \begin{equation}
 \sum_{n \neq j} \Pr(i \rightarrow n | i \in k) = \sum_{n\neq j} \Pr(i \rightarrow n).
 \label{eq:mod-req-b}
@@ -170,11 +170,6 @@ Since the behavior of the process in $M_i$ is defined to behave as though it was
 This should be the case even if the process sending \ac{AYT} has already responded negatively to an \ac{AYC} from $i$.
 For the purpose of memorylessness, $i$ should consider $j$ to have responded in the affirmative.
 
-\begin{figure}
-\includegraphics[width=\linewidth]{ElectionMessages}
-\caption[Diagram of message exchanges for an election.]{Diagram of message exchanges for an election. Process 2 almost completed the previous election and considers itself a part of process 1's group, but process 1 does not. Process 3 does not consider itself a part of process 1's group before the election begins. Both process 2 and process 3 need to successfully exchange the same number of messages to successfully complete the election.}
-\label{fig:electionmessages}
-\end{figure}
 % Stage 2:
 % Show that the probability of an invite working is the probability of delivering an invite
 % + all the lower priority invites not arriving
@@ -186,6 +181,12 @@ As a result, the processes will always seek highest priority, regardless of thei
 More importantly, this releases the process from obligations on its next state from the state of other processes in the system.
 A process will only accept a received invitation if it has determined the sending process is the highest priority process.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{ElectionMessages}
+\caption[Diagram of message exchanges for an election.]{Diagram of message exchanges for an election. Process 2 almost completed the previous election and considers itself a part of process 1's group, but process 1 does not. Process 3 does not consider itself a part of process 1's group before the election begins. Both process 2 and process 3 need to successfully exchange the same number of messages to successfully complete the election.}
+\label{fig:electionmessages}
+\end{figure}
 % Stage 3:
 % Show that ready only depends on the sucessful delivery of ready
 % & Ready ack.
