@@ -5,6 +5,26 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
+\usepackage{xpatch}
+
+\makeatletter
+\newtheoremstyle{mytheorem}% <name>
+  {0pt}% <Space above>
+  {0pt}% <Space below>
+  {}% <Body font>
+  {}% <Indent amount>
+  {\itshape}% <Theorem head font>
+  {.}% <Punctuation after theorem head>
+  {.5em}% <Space after theorem heading>
+  {\thmname{#1}\thmnumber{\@ifnotempty{#1}{ }#2}%
+   \thmnote{ {\the\thm@notefont(#3)}}}% <Theorem head spec (can be left empty, meaning `normal')>
+\makeatother
+
+%\makeatletter
+%\xpatchcmd{\proof}{\vspace{120pt}}{}{}{}
+%\makeatother
+
+\theoremstyle{mytheorem}
 
 \newtheorem{thm}{Theorem}
 \newtheorem{pdef}{Definition}
@@ -15,3 +35,5 @@
 \newtheorem{prop}[thm]{Proposition}
 \newtheorem{rem}{Remark}[thm]
 \newtheorem{ill}[thm]{Illustration}
+
+

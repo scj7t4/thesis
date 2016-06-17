@@ -5,6 +5,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{mstthesis}[2016/04/20 MO S&T Thesis Class]
 
+
 \RequirePackage{ifthen}
 
 \newboolean{timesfree}
@@ -66,8 +67,8 @@
 % Normally the following gives 1`` right and bottom margins
 %\geometry{letterpaper,total={5.985in,9.5in},includehead} % page width and length
 % However, due to use of \brokenpenalty this is not always obeyed
-\geometry{letterpaper,total={5.985in,9.37in},includehead} % page width and length
-\geometry{top=0.515in,headheight=0.125in,headsep=0.3125in,left=1.515in} % margins
+\geometry{letterpaper,includehead} % page width and length
+\geometry{top=0.5in,headheight=0.125in,headsep=0.375in,left=1.5in,right=1in} % margins
 
 \RequirePackage{setspace}
 \RequirePackage{amsmath} % ,amssymb
@@ -77,16 +78,15 @@
 \RequirePackage[noprefix]{nomencl}
 
 \RequirePackage{titlesec}
-\titleformat{\chapter}{\singlespacing\center\normalsize\bfseries\uppercase}%
-  {\thechapter.}{.5em}{}[\doublespacing]
-\titlespacing{\chapter}{0pt}{-0.5in}{0.6875in} % -0.5in is the vertical spacing of the chapter in the body
-\titleformat{\section}{\singlespacing\normalsize\bfseries\uppercase}%
-  {\thesection.}{.5em}{}[\doublespacing]
+\titleformat{\chapter}{\singlespacing\center\normalsize\bfseries\uppercase}{\thechapter}{.5em}{}[\doublespacing]
+\titlespacing{\chapter}{0pt}{-24pt}{0.6875in} % -0.5in is the vertical spacing of the chapter in the body
+\titleformat{\section}{\singlespacing\normalsize\bfseries\uppercase}{\thesection}{.5em}{}%[\doublespacing]
+\titlespacing{\section}{0pt}{0pt}{0pt}
 \titleformat{\subsection}[runin]{\normalsize\bfseries}%
-  {\thesubsection.}{0.5em}{}[.\hspace{0.5em}~]
+  {\thesubsection}{0.5em}{}[.\hspace{0.5em}~]
 \titlespacing{\subsection}{\parindent}{\parskip}{0pt}
 \titleformat{\subsubsection}[runin]{\normalsize\bfseries}%
-  {\thesubsubsection.}{0.5em}{}[.\hspace{0.5em}~]
+  {\thesubsubsection}{0.5em}{}[.\hspace{0.5em}~]
 \titlespacing{\subsubsection}{\parindent}{\parskip}{0pt}
 
 \RequirePackage{fancyhdr}
@@ -317,7 +317,7 @@
 }{}
 
 \newenvironment{ThesisFrontMatter}{}{%
-  \addtocontents{toc}{\protect\vspace{4ex}}%
+  %\addtocontents{toc}{\protect\vspace{4ex}}%
   \addtocontents{toc}{\hbox to \textwidth{{}\hspace*{-2mm}{\bf SECTION\ \hfill}}}%
 }
 
@@ -327,7 +327,7 @@
   %\pagenumbering{arabic}%
   %\setcounter{page}{1}
   %\addtolength{\textfloatsep}{+0.28125in}%
-  \addtocontents{toc}{\protect\vspace{4ex}}%
+  %\addtocontents{toc}{\protect\vspace{4ex}}%
   \addtocontents{toc}{\hbox to \textwidth{{}\hspace*{-2mm}{\bf SECTION\ \hfill}}}%
 }{}
 
@@ -341,8 +341,11 @@
     All Rights Reserved \\ [12pt]
     \end{center}
     \clearpage}
+
+
+%\renewcommand{\thechapter}{\arabic{chapter}.} 
 \renewcommand{\tableofcontents}{%
-  \renewcommand{\contentsname}{TABLE OF CONTENTS}
+    \renewcommand{\contentsname}{TABLE OF CONTENTS}
   \if@twocolumn
     \@restonecoltrue\onecolumn
   \else
@@ -350,11 +353,12 @@
   \fi
   \chapter*{\contentsname
       \@mkboth{\uppercase{\contentsname}}{\uppercase{\contentsname}}}
-  \vspace*{-0.375in} % vertical where the contents of TOC start
-  \hbox to \textwidth{{} \hspace*{-2mm}{\ \hfill Page}}
-  \singlespacing\setlength{\parskip}{10\p@} % 10 is lots of space, like double. % 6 or 5 is like single spacing.
+  %\vspace*{-0.375in} % vertical where the contents of TOC start
+  \hbox to \textwidth{{} \hspace*{0mm}{\ \hfill Page}}
+  \singlespacing\setlength{\parskip}{12pt} % 10 is lots of space, like double. % 6 or 5 is like single spacing.
   \@starttoc{toc}%
   \if@restonecol\twocolumn\fi
+  \setlength{\parskip}{0pt}\doublespacing% ... added by koh ...
   }
 
 \renewcommand{\listoffigures}{%
@@ -369,9 +373,9 @@
   \chapter*{\listfigurename
     \@mkboth{\uppercase{\listfigurename}}%
             {\uppercase{\listfigurename}}}%
-  \vspace*{-0.375in}
-  \hbox to \textwidth{{} \hspace*{-2mm}{Figure \ \hfill Page}}
-  \singlespacing\setlength{\parskip}{10\p@}
+  %\vspace*{-0.375in}
+  \hbox to \textwidth{{} \hspace*{0mm}{Figure \ \hfill Page}}
+  \singlespacing\setlength{\parskip}{12pt}
   \@starttoc{lof}%
   \if@restonecol\twocolumn\fi
   \setlength{\parskip}{0pt}\doublespacing% ... added by koh ...
@@ -388,9 +392,9 @@
   \renewcommand{\listtablename}{LIST OF TABLES}
   \chapter*{\listtablename
     \@mkboth{\uppercase{\listtablename}}{\uppercase{\listtablename}}}%
-  \vspace*{-0.375in}
-  \hbox to \textwidth{{} \hspace*{-2mm}{Table \ \hfill Page}}
-  \singlespacing\setlength{\parskip}{10\p@}
+  %\vspace*{-0.375in}
+  \hbox to \textwidth{{} \hspace*{0mm}{Table \ \hfill Page}}
+  \singlespacing\setlength{\parskip}{12pt}
   \@starttoc{lot}%
   \if@restonecol\twocolumn\fi
   \setlength{\parskip}{0pt}\doublespacing% ... added by koh ...
@@ -407,15 +411,15 @@
 \newcommand{\Thesistocentry}[1]{%
 \addtocontents{toc}{\protect\vspace{4ex}}
 \addtocontents{toc}%
-{\hbox to \textwidth{{} \hspace*{-2mm}{{#1} \ \hfill}}}
+{\hbox to \textwidth{{} \hspace*{0mm}{{#1} \ \hfill}}}
 }
 
 \newenvironment{ThesisBody}{%
   \newpage%
   \pagenumbering{arabic}%
   \setcounter{page}{1}
-  \addtolength{\textfloatsep}{+0.28125in}%
 }{}
+%\addtolength{\textfloatsep}{+0.28125in}%
 
 \newenvironment{ThesisPublications}{\Thesistocentry{\bf PAPERS}}{}
 
@@ -461,7 +465,7 @@
 \renewcommand*{\l@chapter}[2]{%
   \ifnum \c@tocdepth >\m@ne
     \addpenalty{-\@highpenalty}%
-    \vskip 1.0em \@plus\p@ % vertical skip in the TOC between chapters
+    %\vskip 1.0em \@plus\p@ % vertical skip in the TOC between chapters
     \setlength\@tempdima{1.5em}%
     \begingroup
       \parindent \z@ \rightskip \@pnumwidth

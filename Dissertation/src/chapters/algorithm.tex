@@ -1,6 +1,6 @@
 \chapter{Algorithm and Model Creation}
 
-\section{Original Invitation Election Algorithm Overview}
+\section{ORIGINAL INVITATION ELECTION ALGORITHM OVERVIEW}
 
 A state machine for the election portion of the invitation-election algorithm is shown in Figure \ref{fig:statemachine}.
 In the normal state, the election algorithm regularly searches for other coordinators to join.
@@ -28,7 +28,7 @@ Group members send ``Are You There'' messages to the coordinator to verify they 
 If processes fail to reply to a received message before a timeout, they will leave the group.
 Leaving the group can initiated by the coordinator removing the process, or the process can enter a recovery state and leave the group, forming a new group with itself as the only member.
 
-\section{Execution Environment}
+\section{EXECUTION ENVIRONMENT}
 
 Execution occurred in a real-time, partially synchronous environment.
 The execution environment was subject to omission failures.
@@ -40,7 +40,7 @@ The execution environment for the election algorithm had an omission fault occur
 In this model, each message had some probability $p$ of being delivered within the timing constraints imposed by the real-time schedule.
 For the purpose of analyzing the effects of omission failures, processes were not subject to other faults.
 
-\section{Model Construction}
+\section{MODEL CONSTRUCTION}
 
 A process can construct a Markov chain if its observations are consistent with the transition probabilities the process can determine with its observable state.
 In each election, a process has some probability of joining a given process' group.
@@ -82,7 +82,7 @@ For B to be able to construct a Markov chain, it must be equally likely that C l
 In a system with no omission faults, ideally, a process will join a group and never leave it, especially if the election algorithm is being used to find a consensus value.
 Therefore, we restrict model construction to the highest priority process.
 
-\section{Modified Election Algorithm}
+\section{MODIFIED ELECTION ALGORITHM}
 
 The complete, modified election algorithm is listed in the appendix.
 
@@ -101,43 +101,32 @@ If a processes does not receive $G$ it will not be in the group.
 \begin{thm}
     In the original algorithm, each process is MSDND secure on $\varphi_x$ for each $x$ that is not $i$ or itself ($j$).
 \end{thm}
-
 \begin{proof}
     The receipt of $G$ by other members of a group is secure to a process that receives $G$.
 \begin{case}
     The case where $x = i$ or $x = j$.
 \end{case}
-
 If we assume the authenticity of messages is not questioned in this environment, a ready message from $i$ must mean $i$ is a part of the group.
 Therefore, $i$'s inclusion in the group is MSDND insecure to $j$.
 
 If $j$ accepts the ready message, that process will be a part of the group in $G$ and since $j$ knows its own state, $j$ knows it is a part of $G$.
-
 \begin{case}
     The case where $x \neq i$ and $x \neq j$.
 \end{case}
-
 For process $i$, $i$ distributes $G$ to each other process in $G$.
 Let $Q$ be some set of processes that do not receive the $G$ set.
-
-\begin{table}[h!]
-\centering
-\small
-\begin{tabularx}{\linewidth}{l X X}
+\begin{msdndproof}
 1. & $I_{j,i} G \forall j \in G $ & $i$ distributes the list of processes that have accepted the invite.  \\
 2. & $\neg(B_x I_{x,i} G \wedge T_{x,i} G) \forall x \in Q$ & Processes in $Q$ do not receive $G$. \\
 3. & $B_x I_{x,i} G \wedge T_{x,i} G \forall x \not \in Q$ & Processes not in $Q$ receive $G$. \\
     4. & $w \not \vDash V_{B_x G}^{j}(w) \forall \{x | x \not \in \{i,j\}\}$ & $j$ does not know which processes received $G$ \\
-\end{tabularx} \\~\\
+\end{msdndproof}
 Therefore, the receipt of $G$ by other members of the group is MSDND secure to $j$.
-\label{tab:readynsetproof}
-\end{table}
 \end{proof}
 
 \begin{cor}
     The set of processes in the ready message is an $N_i$ set, where $i$ the group's coordinator.
 \end{cor}
-
 Because every wff in $G$ is MSDND secure, $G$ must be an $N_i$ set, and $L_i = \emptyset$.
 As a consequence, the group leader only has an estimate of the system, which may be an overestimate ($M_i \subseteq N_i$).
 
@@ -148,7 +137,6 @@ From the previous chapter, we have shown that with message passing and omission,
 \begin{thm}
     If a process $j$ sends a ready acknowledgment message to $i$, $j$'s inclusion in the $i$'s view of the system state is MSDND secure to $j$.
 \end{thm}
-
 \begin{proof}
 When $j$ sends the ready acknowledgment message to $i$, it is uncertain if the acknowledgment message is actually delivered.
 From Theorem \ref{case:generalsn0}, we know that $j$ is now MSDND insecure to $i$, but $i$ is secure to $j$.
@@ -167,12 +155,6 @@ Instead, for simplicity, while the leader can update their $L_i$ set with leaked
 
 \subsection{Memorylessness}
 
-\begin{figure}[]
-\includegraphics[width=\linewidth]{ElectionMessages}
-\caption[Diagram of message exchanges for an election.]{Diagram of message exchanges for an election. Process 2 almost completed the previous election and considers itself a part of process 1's group, but process 1 does not. Process 3 does not consider itself a part of process 1's group before the election begins. Both process 2 and process 3 need to successfully exchange the same number of messages to successfully complete the election.}
-\label{fig:electionmessages}
-\end{figure}
-
 % Stage 1: AYC / AYT
 % Show that maint. takes so many messages
 % Show that leader discovery for election takes so many messages
@@ -188,6 +170,11 @@ Since the behavior of the process in $M_i$ is defined to behave as though it was
 This should be the case even if the process sending \ac{AYT} has already responded negatively to an \ac{AYC} from $i$.
 For the purpose of memorylessness, $i$ should consider $j$ to have responded in the affirmative.
 
+\begin{figure}
+\includegraphics[width=\linewidth]{ElectionMessages}
+\caption[Diagram of message exchanges for an election.]{Diagram of message exchanges for an election. Process 2 almost completed the previous election and considers itself a part of process 1's group, but process 1 does not. Process 3 does not consider itself a part of process 1's group before the election begins. Both process 2 and process 3 need to successfully exchange the same number of messages to successfully complete the election.}
+\label{fig:electionmessages}
+\end{figure}
 % Stage 2:
 % Show that the probability of an invite working is the probability of delivering an invite
 % + all the lower priority invites not arriving
@@ -214,19 +201,15 @@ The probability of transitioning to the next state is not influenced by the inte
 \begin{thm}
     The observations of the highest priority process are sufficient for producing a Markov chain from the underlying \ac{HMM}.
 \end{thm}
-
 \begin{proof}
     The state the highest priority process observes always has the same transition probabilities, regardless of the hidden state of the other processes.
 \begin{case}
     The system has one other process ($n=1$).
 \end{case}
-
 If there is only one other process, the probability of observing a group of two processes given the current state is a direct observation.
-
 \begin{case}
     The system has two other processes ($n=2$).
 \end{case}
-
 In this case, there are 3 possible states for each of the other processes to be in: grouped with the highest priority process, ungrouped, and grouped without the highest priority process.
 When the other processes are grouped with the highest priority process, the probability of the other processes remaining in the group depends on the probability the current grouping is maintained.
 In the second scenario, where processes are ungrouped, the probability only depends on the probability they successfully contact the highest priority process.
@@ -237,32 +220,25 @@ The probability of the processes excluded in the group joining the group is inde
 Let $X_G$ be the set of states for the \ac{HMM} where the other processes are excluded from $P_0$'s group, and in their own group led by $P_1$.
 $X_U$ is the set of states where the processes are excluded from $P_0$'s group and are themselves ungrouped.
 By the nature of the algorithm: 
-
 \begin{equation}
 \Pr(O(D_0, x_{k+1}) | x_k \in X_G) = \Pr(O(D_0, x_{k+1}) | x_k \in X_U).
 \label{eq:sameprob}
 \end{equation}
-
 As a result, the ungrouped and grouped sub-cases have the same probability of resulting in a particular $Y_{k+1}$.
 Furthermore, based on the observations of the ungrouped process:
-
 \begin{equation}
 O(D_0, x_i) = O(D_0, x_j) = b, \forall x_i \in X_G, \forall x_j \in X_U.
 \end{equation}
-
 The equation indicates every observation of a state in $X_G$ and $X_U$ looks identical to $P_0$.
 With this restriction:
-
 \begin{equation}
     \Pr(Y_{k+1}=a | Y_{k}=b) = \sum_{\{x_{i} | O(D_0, x_{i}) = a\}} \Pr(X_{k+1}=x_i | X_{k}=x_j), \forall x_j \in \{x_j | x_j \in X_U \cup X_G\}.
 \end{equation}
-
 Where $X_U \cup X_G$ is the complete set of states for processes not in $P_0$'s group.
 
 \begin{case}
     The system has a number of other processes ($n > 2$).
 \end{case}
-
 Since the interactions of the other processes do not affect the probability of joining $P_0$'s group, the previous case directly extends to this case.
 
 \end{proof}
@@ -277,7 +253,6 @@ The states of the Markov chain are the cardinality of the highest priority proce
 In each round, the behavior is described by two components: maintaining a group and inviting other processes into the group.
 The coordinator will exchange an ``Are You Coordinator'' message and the peer will respond to verify it is still available.
 To maintain a group of $m$ other processes, the probability is defined as a random variable with the following \ac{pdf}:
-
 \begin{equation}
  \Pr_{M}(Y=k; m) =
    \begin{cases}
@@ -291,7 +266,6 @@ A process will leave a group if, from the considered process' perspective, they 
 To invite other processes to the group, the two processes ultimately exchange up to 8 messages.
 In a round, a single process can invite many other processes to its group.
 From a selection of $n$ other coordinators, the probability distribution for joining a new group with $k$ of the $n$ processes is:
-
 \begin{equation}
     \Pr_{I}(Y=k; n) =
     \begin{cases}
@@ -299,12 +273,9 @@ From a selection of $n$ other coordinators, the probability distribution for joi
         0,                                & \text{otherwise.} \\
     \end{cases}
 \end{equation}
-
 In the profile chain, in a state $s$ that describes the number of processes in a group, the probability of transitioning from $s$ to $s'$ with $n$ total processes (including the considered process) is:
-
 \begin{align} \Pr_{T}(Z=s'; n; s) = \sum_{i=0}^{s-1} &\Pr_{M}(X=i; s-1) *
 \nonumber \\ &\Pr_{I}(X=s'-i; n-s-1).\end{align}
-
 From this distribution, a set of transition probabilities can be calculated for a given probability of delivery $p$ and number of processes $n$.
 This set of transition probabilities forms a profile Markov chain $P$, which can be evaluated for any number of processes $n$ and probability of delivery $p$.
 The generated profile chain is ergodic when $0<p<1.0$. The profile chain is a stationary Markov chain.
@@ -320,13 +291,9 @@ Therefore, generated $P$ chains can be used to analyze the behavior of the algor
 
 To verify the test chain $T$ is equivalent to the profile chain $P$, a $\chi^2$ goodness-of-fit test is employed.
 The null-hypothesis of the test ($H_{0}$) asserts the profile chain $P$ is equivalent to the test chain $T$:
-
 \begin{equation} H_{0}: T = P.\end{equation}
-
 With an alternative hypothesis that the two chains are not equivalent:
-
 \begin{equation} H_{1}: T \neq P.\end{equation}
-
 The $\chi^2$ test measures the goodness-of-fit for a complete chain by combining the measurements of goodness of fit for the transitions away from each state.
 Therefore, the goodness of fit test for the chain is a summation of tests for each state:\cite{MARKOV3}
 
@@ -371,48 +338,44 @@ Therefore, the amount of time the DGI will spend coordinating with another proce
 \cite{CRITIS2012} defines an In-Group Time (IGT) metric to measure the amount of time a DGI process spends coordinating with at least one other process.
 In this work, we define \ac{IGT} based on the steady state of the profile chain.
 Let $\pi=Steady(P)$ for some profile chain.
-The \ac{IGT} is the sum of all states in $\pi$, save the first state where the process is alone:
-
-\begin{equation} IGT = \sum_{i=2}^{m} \pi_i \end{equation}
-
-The \ac{IGT} is a number between 0 and 1.
-It represents the probability a random observation sees a group of at least two members.
-The steady state distributions are presented as stacked bar graphs in Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process}.
-Each complete bar in the graph indicates the \ac{IGT}.
-Additionally, these figures contain the average group size (AGS) when the system has reached the steady-state plotted as a fraction of the total number of processes.
-Let $P$ be the steady-state distribution vector for some number of processes, $n$, and a given probability of delivery rate:
-
-\begin{equation} y = \frac{\sum_{i=1}^{n} P_{i}*i}{n} \label{eq:ss-means} \end{equation}
-
-where $y$ is the plotted \ac{AGS} as a fraction.
-
-The components of each bar represent the probability the system is in a specific state for a random observation of the system.
-The height of the component represents the relative probability of observing that state when in a group.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\linewidth]{ss-3process.pdf}
+    \includegraphics[width=0.75\linewidth]{ss-3process.pdf}
     \caption{Steady state distribution for 3 processes as well as the \ac{AGS} as a fraction of total processes.}
     \label{fig:ss-3process}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\linewidth]{ss-4process.pdf}
+    \includegraphics[width=0.75\linewidth]{ss-4process.pdf}
     \caption{Steady state distribution for 4 processes as well as the \ac{AGS} as a fraction of total processes.}
     \label{fig:ss-4process}
 \end{figure}
 
+The \ac{IGT} is the sum of all states in $\pi$, save the first state where the process is alone:
+\begin{equation} IGT = \sum_{i=2}^{m} \pi_i \end{equation}
+The \ac{IGT} is a number between 0 and 1.
+It represents the probability a random observation sees a group of at least two members.
+The steady state distributions are presented as stacked bar graphs in Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process}.
+Each complete bar in the graph indicates the \ac{IGT}.
+Additionally, these figures contain the average group size (AGS) when the system has reached the steady-state plotted as a fraction of the total number of processes.
+Let $P$ be the steady-state distribution vector for some number of processes, $n$, and a given probability of delivery rate:
+\begin{equation} y = \frac{\sum_{i=1}^{n} P_{i}*i}{n} \label{eq:ss-means} \end{equation}
+where $y$ is the plotted \ac{AGS} as a fraction.
+The components of each bar represent the probability the system is in a specific state for a random observation of the system.
+The height of the component represents the relative probability of observing that state when in a group.
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\linewidth]{ss-5process.pdf}
+    \includegraphics[width=0.75\linewidth]{ss-5process.pdf}
     \caption{Steady state distribution for 5 processes as well as the \ac{AGS} as a fraction of total processes.}
     \label{fig:ss-5process}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\linewidth]{ss-6process.pdf}
+    \includegraphics[width=0.75\linewidth]{ss-6process.pdf}
     \caption{Steady state distribution for 6 processes as well as the \ac{AGS} as a fraction of total processes.}
     \label{fig:ss-6process}
 \end{figure}
@@ -429,7 +392,7 @@ Therefore, Figure \ref{fig:ss-means} shows the average percentage of total proce
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\linewidth]{ss-means.pdf}
+    \includegraphics[width=0.75\linewidth]{ss-means.pdf}
     \caption{Average group size as a percentage of all processes in the system for larger systems.}
     \label{fig:ss-means}
 \end{figure}
@@ -467,7 +430,7 @@ A balance must be struck between preventing omission faults from breaking up the
 % Well, in this case, the highest priority process is not affected by the state it doesn't know.
 % Can I prove that if the markov chain is first order, some other process must always be affected by the hidden state?
 
-%\section{Independent Algorithm}
+%\section{INDEPENDENT ALGORITHM}
 
 %Algorithm X presents a leader election algorithm that fulfills the requirements for any process to model the algorithm.
 

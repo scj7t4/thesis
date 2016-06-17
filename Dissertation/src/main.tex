@@ -30,10 +30,12 @@
 \makeindex
 \makeglossary  
 
+
 \begin{document}
 
 \setlength{\parskip}{0pt}
 \setlength{\parindent}{0.5in}
+
 
 % Set to ms or phd
 \begin{ThesisTitlePage}{phd}
@@ -60,9 +62,13 @@
 \tableofcontents
 \listoffigures
 \listoftables
-\input{extras/listofacronyms.tex}
-\input{extras/nomenclature.tex}
+\input{extras/listofacronyms.tex}%
+\input{extras/nomenclature.tex}%
 \end{ThesisFrontMatter}
+
+\setlength{\textfloatsep}{1in}
+%\setlength{\intextsep}{1in}
+
 
 % Thesis body.
 \begin{ThesisBody}

@@ -1,0 +1,9 @@
+\usepackage{environ}
+
+\NewEnviron{msdndproof}{\vspace{-1pt}\begin{tabularx}{\linewidth}{l l X}%
+\BODY%
+\end{tabularx}}[\vspace{-12pt}\noindent\ignorespacesafterend]%
+
+\NewEnviron{prooftight}{\textit{Proof.}\hspace{0.5em}%
+\BODY \qed%
+}

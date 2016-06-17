@@ -1,6 +1,6 @@
 \chapter{Background}
 
-\section{Distributed Systems}
+\section{DISTRIBUTED SYSTEMS}
 
 Distributed systems are a computing paradigm characterized by independence of computational units and no universal clock.
 Components in a distributed system may not directly share computational resources or memory.
@@ -11,7 +11,7 @@ In a distributed system, because processes do not share a universal clock, the o
 Additionally, when individual components fail, determining which components failed and how they affected the system as a whole is difficult in a distributed system.
 Different types of failures can cause different kinds of information to be withheld or changed, disrupting those processes.
 
-\section{Execution And Communication Models}
+\section{EXECUTION AND COMMUNICATION MODELS}
 
 We consider a distributed system where no processes in the system share an address space.
 All processes must use a message-passing interface to communicate with other processes to exchange information.
@@ -65,7 +65,7 @@ The systems presented rely on partially synchronous execution by processes.
 In the partially synchronous model, execution proceeds in rounds or phases.
 The start of each round or phase is synchronized between processes, using a synchronized clock.
 
-\section{Faults, Failures, and Errors}
+\section{FAULTS, FAILURES, AND ERRORS}
 
 Processes can encounter incorrect behavior or issues during execution.
 Errors, faults, and failures describe the severity and consequence of the issue.
@@ -133,20 +133,18 @@ An omission failure can have the same observable effects as a napping failure in
 A Byzantine fault causes processes in the distributed system to send information that is incorrect or misleading to other processes.
 Constraints for detecting processes exhibiting Byzantine behavior are a famous result in distributed systems.\cite{byzantine-generals}
 
-\section{Probability}
+\section{PROBABILITY}
 
 Several concepts are useful for reasoning about the stochastic properties of a distributed system.
 The expected value represents the long-term average output of a probability distribution.
-
-\begin{equation}E[X] = x_1 p_1 + x_2 p_2 + ... + x_k p_k \end{equation}
-
+If $x_i$ is a value the random variable $X$ can produce, and $p_i$ is the probability the random variable produces the value, the expected value, $E[X]$, is:
+\begin{equation}E[X] = x_1 p_1 + x_2 p_2 + ... + x_k p_k.\end{equation}
 \nomenclature{$E[X]$}{Expected value of a random variable.}
 Conceptually, the expected value is the weighted average of the outcomes of a stochastic system.
 
 \begin{pdef}
 Availability is the probability a system or component is operational and accessible when required for use, denoted $A$.
 \end{pdef}
-
 \begin{equation}A = \frac{E[uptime]}{E[uptime]+E[downtime]}\end{equation}
 \nomenclature{$A$}{Availability of a component.}
 
@@ -155,15 +153,13 @@ Reliability is the ability of a system or component, in specified conditions, to
 \end{pdef}
 
 Let R(t) be the probability a system or component function up until at least time $t$:
-
 \begin{equation}R(t) = \Pr(T > t) = \int_t^{\infty} f(x) dx\end{equation}
 \nomenclature{$R(t)$}{Reliability of a component.}
-
 where $f(x)$ is the probability density function for the component's survival.
 Unfortunately, there is a clash of the term for reliability in distributed systems and reliability analysis.
 We try to constrain the discussion about reliability in the distributed systems sense to communication channels.
 
-\section{Markov Models}
+\section{MARKOV MODELS}
 
 %When Markov chains work to model a system.
 %Something about order of Markov chain.
@@ -179,7 +175,6 @@ A Markov chain is a first order chain if the probability of transitioning from $
 First order chains are described as being memoryless because they have the Markov property.
 The Markov property formalizes the independence of the next state from the history of previous states.
 If we describe a Markov chain as a sequence of random variables $X_{1}, X_{2}, X_{3}, ...$, the Markov property states the value of $X_{n+1}$ only depends $X_{n}$: \cite{MARKOV3}
-
 \begin{align} \Pr(X_{n+1}&=x\mid X_1=x_1, X_2=x_2, \ldots, X_n=x_n)
 \nonumber \\ &= \Pr(X_{n+1}=x\mid X_n=x_n). \end{align}
 
@@ -195,9 +190,7 @@ A \ac{DTMC} with $m$ states can be represented by an $m\times m$ matrix.
 For simplicity when creating the model, matrices in this work are 1-indexed.
 In a matrix $P$, the value of $P_{ij}$ represents the probability of the transition from $x_i$ to $x_j$.
 The matrix is row stochastic, meaning the sum of each row in the matrix is equal to one:
-
 \begin{equation} \sum_{i=1}^{m} P_{ij} = 1. \end{equation}
-
 A useful companion to the transition matrix is a state distribution vector.
 While the transition matrix describes how a system will transition between states, the state distribution vector describes the probability of observing a given state.
 
@@ -206,24 +199,19 @@ A state distribution vector is an $m$-dimensional vector composed of the probabi
 \end{pdef}
 
 Let $v$ be a state distribution vector:
-
 \[ v = [P_{1} \quad P_{2} \quad \ldots \quad P_{m} ] \]
-
 where $P_{i}$ corresponds to the probability of observing state $x_i$.
-
 
 A \ac{DTMC} is a suitable model for a memoryless random process with a finite number states which is observed at fixed time intervals.
 By utilizing a Markov chain, a variety of statistical analyses can be performed on the modeled system.
 For example, a Markov chain with the stationary and ergodic properties can be analyzed for its steady state probabilities.
 The steady state is a state distribution vector that describes the probability a random observation of a long-running process will observe some state $x_i$.
 The steady state probability distribution vector can by found via a system of equations: \cite{MARKOV3}
-
 \begin{align}
 0\leq\pi_j\leq1.0 \\
 \sum_{j = 1}^{m}\pi_j = 1.0 \\
 \pi_j = \sum_{i=1}^{m} \pi_i p_{ij}.
 \end{align}
-
 The computation of the steady state will be noted as $Steady()$.
 A Markov chain can also be used to predict what state a process will be in at some point in the future.
 Given an initial state and a number of time-steps, a matrix operation will yield the likelihood of the process being in each state after the time interval has passed.
@@ -239,14 +227,12 @@ The chain constructed from sampled data is known as a test chain (noted as $T$).
 Transitions in a \ac{CTMC} depend on the amount of time spent in a given state.
 Let $X(s) = x_i$ indicate the model is in state $x_i$ at time $s$.
 If the model is time homogeneous, then the probability of transitioning to state $x_j$ only depends on the time spent in the current state ($t$).
-
 \begin{equation}
     \Pr\{ X(s+t)=x_j | X(s) = x_i \} = \Pr\{ X(t)=x_j | X(0) = x_i \}
 \end{equation}
 
 Each transition has some expected value or holding time which describes the amount of time before a transition occurs.
 The \ac{pdf} of the exponential distribution can be written as: \cite{MARKOV1}
-
 \begin{equation}
 f(x;\lambda) = \begin{cases}
 \lambda e^{-\lambda x} & x \ge 0 \\
@@ -255,7 +241,6 @@ f(x;\lambda) = \begin{cases}
 \end{equation}
 
 As a result, the expected or mean value of an exponential distribution is a function of the parameter $\lambda$: \cite{MARKOV1}
-
 \begin{equation}
 \mathrm{E}[X] = \frac{1}{\lambda}. \!
 \end{equation}
@@ -301,7 +286,7 @@ The state space for the new model, $Z$, is a set of tuples $Z = \{(X_0,Y_0), (X_
 Stated plainly, the probability that the joint model is some state $(x_{k+1},y_{k+1})$ is the probability that the hidden part of the model transitions to state $x_{k+1}$ and the observation for $x_{k+1}$ is $y_{k+1}$.
 The probability distribution for the transition to the next state does not depend on the $y_k$ of the current state.
 
-\section{Information Flow}
+\section{INFORMATION FLOW}
 
 \subsection{Modal Logic}
 
@@ -427,19 +412,15 @@ Consider a pair of state variables $s_x$ and $s_y$ which may or may not be in th
 The value of $s_x$ and $s_y$ have a logical xor relationship: if $s_x$ is true, $s_y$ must be false.
 Given an agent $i$ that does not have a valuation function for either of those two variables, the system is MSDND secure for the agent and pair of variables.
 Written formally:
-
 \begin{align}
 MSDND = \exists w \in W : w \vdash \Box [ (s_x \vee s_y) \wedge \neg(s_x \wedge s_y) ] 
 \nonumber \\ \wedge [ w \vDash ( \not \exists V_x^i (w) \wedge \not \exists V_y^i (w) ) ]
 \end{align}
-
 Of particular interest is the special case where $s_x$ and $s_y$ are relation on the same wff: $(s_x = \varphi$ and $s_y = \neg \varphi)$:
-
 \begin{align}
 MSDND = \exists w \in W : w \vdash \Box [ \varphi \oplus \neg \varphi ] 
 \nonumber \\ \wedge [ w \vDash ( \not \exists V_\varphi^i(w)) ]
 \end{align}
-
 In a system where the above logical relationship holds, the agent $i$ cannot determine the value of $s_x$ or $s_y$. However, if the relationship does not hold, there is some world where the agent can determine the value of $s_x$ and $s_y$.
 
 \subsection{BIT Logic}
@@ -463,7 +444,7 @@ The operations of the \ac{BIT} logic allow formal definition of how entities pas
 These operators allow reasoning about information transfer between entities.
 In the context of a distributed system, these operators allow the division of the actual state held by some agent $i$ to what some other agent $j$ believes is agent $i$'s state.
 
-\section{Explicit Congestion Notification}
+\section{EXPLICIT CONGESTION NOTIFICATION AND RANDOM EARLY DETECTION}
 
 \ac{ECN} is a technique for managing congestion in IP networks. 
 When an \ac{ECN}-capable network device detects congestion, it can drop the packets, or it can signal senders using flags in the packet headers that the network is congested.
@@ -475,8 +456,7 @@ UDP applications have not typically utilized \ac{ECN}.
 Although the \ac{ECN} standard has flags in the IPv4 header, access to the IPv4 header is not possible on most systems.
 Furthermore, there is not a ``one size fits all'' solution to congestion in UDP algorithms.
 
-\subsection{Random Early Detection (RED)}
-The \ac{RED} queuing algorithm is a popular queuing algorithm for switches and routers.
+The \ac{RED} queuing algorithm is a popular algorithm for switches and routers.
 It uses a probabilistic model and an \ac{EWMA} to determine if the average queue size exceeds predefined values.
 The values are used to identify potential congestion and manage it.
 Congestion identification is accomplished by determining the average size of the queue, and then probabilistically dropping packets to maintain the size of the queue.
@@ -488,14 +468,13 @@ p_{b} = max_p (avg - min_{th}) / (max_{th}-min_{th})
 \begin{equation}
 p_{a} = p_{b} / (1-count * p_b)
 \end{equation}
-
 where $p_{a}$ is the final probability a packet will be marked, $max_p$ is the maximum probability a packet will be marked when the queue size is between $min_{th}$, and $max_{th}$ and $count$ is the number of packets since the last marked packet.
 With \ac{RED}, the probability a packet is marked varies linearly with the average queue size and as a function of the time since the last packet was marked.
 If $avg$ is greater than $max_{th}$, the probability of marking trends toward one as the average queue size approaches $2*max_{th}$.
 In the event the queue fills completely, the \ac{RED} queue operates as a drop-tail queue.
 In a simple implementation of the \ac{RED} algorithm, marked packets are dropped.
 
-\section{Distributed Grid Intelligence (DGI)}
+\section{DISTRIBUTED GRID INTELLIGENCE (DGI)}
 
 The DGI is a smart-grid operating system that organizes and coordinates power electronics.
 It also negotiates contracts to deliver power to devices and regions that cannot effectively facilitate their own needs.
