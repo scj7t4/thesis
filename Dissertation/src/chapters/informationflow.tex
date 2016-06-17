@@ -45,14 +45,14 @@ Let $\varphi_0$ be an \ac{AP} indicating ``General A will attack at dawn.''
 \begin{thm}
 If no messages are exchanged, the state of the two generals is mutually MSDND secure. \label{thm:nomsg}
 \end{thm}
-\begin{proof}
+\begin{prooftight}
 If no messages are exchanged and no information is leaked from the physical world, the two generals have no way of determining the other's state.
-\end{proof}
+\end{prooftight}
 
 \begin{thm}
 Once at least one messenger delivers a message to one of the generals, one of the generals is not MSDND secure.
 \end{thm}
-\begin{proof}
+\begin{prooftight}
 Let $\{ \varphi_i : i \in 1,2 ... n \}$ describe the state that a general has received $\varphi_{i-1}$.
 \begin{case}
 One messenger is sent by General A and arrives at General B.
@@ -97,13 +97,13 @@ Therefore, either A or B is not MSDND secure to the other for $\varphi_n$.
 In the case $n=1$, B is now unsure that A has received $\varphi_1$ and cannot deduce if $B_{A} \varphi_1$.
 B is unsure of A's state and, as a consequence, A is MSDND secure to B.
 However, B is not MSDND secure to A because $\varphi_1$ is known to A. By extension, for $i=2,4...n$, B is secure to A, but not A to B. For $i=3,5...n$, A is secure to B, but not B to A.
-\end{proof}
+\end{prooftight}
 
 \begin{thm}
 If a messenger is captured and the message is not resent, both agents will be secure on the last successfully delivered message $\varphi_{n}$ or $\varphi_0$ if the first messenger is captured.
 \label{thm:captured}
 \end{thm}
-\begin{proof}
+\begin{prooftight}
     If a messenger carrying a reply is captured, original sender cannot determine which message was captured.
 \begin{case}
 One messenger is sent and captured by the enemy.
@@ -119,7 +119,7 @@ On the delivery of the message $\varphi_{n-1}$ to B, the value of $\varphi_{n}$ 
 When B does send $\varphi_{n}$, the messenger never arrives.
 As a consequence, General A has no way of assigning value to $B_A \varphi_n$ ($V_{\varphi_n}^A \not \in \mathbb{V}$).
 However, as before, $\varphi_{n-1}$ at A is not secure to B.
-\end{proof}
+\end{prooftight}
 
 \section{BYZANTINE GENERALS}
 
@@ -129,9 +129,9 @@ If we extend the messenger analogy to cover faulty generals (ones sending incorr
 \begin{thm}
 In any message exchange that conforms to the constraints of the Byzantine Generals problem, all agents are MSDND insecure on the plan $\varphi$.
 \end{thm}
-\begin{proof}
+\begin{prooftight}
 Suppose agent $i$ decides to use plan $\varphi$ to attack and there is some set of Byzantine generals $T$ and some set of loyal generals $G$ ($i \in G$). If $|G| > 3|T|$, the algorithm executes successfully and $B_x \varphi : \forall x \in G$. Therefore, every general in $G$ can valuate $\varphi$ and the variable is insecure.
-\end{proof}
+\end{prooftight}
 
 However, in a general omission model, the level of loyalty from processes may be impractical to achieve.
 If the required number of ``loyal'' processes are not available, the system cannot achieve consensus.
@@ -170,7 +170,7 @@ The algorithm terminates when $\{\gamma_i = T : \forall i \}$ is satisfied and e
 \begin{thm}
 Algorithm \ref{alg:coinflip} may not terminate correctly unless there is detectable, perfect information transfer to all parties in the algorithm.
 \end{thm}
-\begin{proof}
+\begin{prooftight}
 Let $i$ be the agent that would correctly terminate as the leader. Let $j$ be a process that has selected $\varphi_j = F$.
 
 \begin{msdndproof}
@@ -184,7 +184,7 @@ Let $i$ be the agent that would correctly terminate as the leader. Let $j$ be a 
 5a. & $\not \exists V_{\varphi_i}^j(w) \wedge \neg \varphi_j \rightarrow (\varphi \gets T)$ & $j$ Cannot determine that $i$ can terminate and incorrectly changes $\varphi$. \\
 5b. & $\varphi_i \wedge w \vDash V_{\varphi_j}^i(w) \wedge \neg \varphi_j \rightarrow \psi_i$ & $i$ incorrectly terminates as the leader. \\
 \end{msdndproof} Therefore, $i$ will terminate before $j$ decides to go passive.
-\end{proof}
+\end{prooftight}
 This result agrees with results from similar analysis\cite{anon-omission}.
 
 \section{MODEL CONSTRUCTION FOR THE TWO ARMIES PROBLEM}
@@ -245,7 +245,7 @@ The values in $M_i$ correspond to the beliefs of agent $i$ if $i$ had perfect kn
 \begin{thm}
 Each member of $L_i$ is MSDND insecure to $i$.
 \end{thm}
-\begin{proof}
+\begin{prooftight}
 Each wff in $L_i$ has a valuation function in the domain $i$.
 
 \begin{msdndproof}
@@ -260,12 +260,12 @@ Each wff in $L_i$ has a valuation function in the domain $i$.
 9. & $w \vDash V_{B_j \varphi}^{j}(w)$ & Is always true. %
 \end{msdndproof}
 Therefore, $j \in L_i$, and $B_j \varphi$ is MSDND insecure to $i$.
-\end{proof}
+\end{prooftight}
 
 \begin{thm}
 Each wff in $M_i$ and $N_i$ but not $L_i$ is MSDND secure to $i$.
 \end{thm}
-\begin{proof}
+\begin{prooftight}
 Each wff in $M_i$ and $N_i$ have no valuation in the domain $i$.
 \begin{case}
 The case where $j$ receives some wff $\varphi$ and is in $M_i$ but not $L_i$.
@@ -291,7 +291,7 @@ The case where $j$ does not receive some wff $\varphi$ and is in $N_i$ but not $
 4. & $w \not \vDash V_{\varphi}^{j}(w)$ & $j$ is uncertain of $\varphi$. %
 \end{msdndproof}
 Therefore, $j \in N_i$, and $B_j \varphi$ is MSDND secure to $i$.
-\end{proof}
+\end{prooftight}
 We assumed any beliefs an agent held stem from information transfer from another agent.
 Therefore, we can assert the beliefs in $L_i$ for any process $i$ must have a traceable history derived from a process having a valuation for the referenced wff that aligns with the belief process $i$ holds about the wff.
 Furthermore, wff in $N_i$ but not $L_i$ do not have valuation in domain $D_i$ and cannot be used in an observation.

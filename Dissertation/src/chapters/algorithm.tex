@@ -101,7 +101,7 @@ If a processes does not receive $G$ it will not be in the group.
 \begin{thm}
     In the original algorithm, each process is MSDND secure on $\varphi_x$ for each $x$ that is not $i$ or itself ($j$).
 \end{thm}
-\begin{proof}
+\begin{prooftight}
     The receipt of $G$ by other members of a group is secure to a process that receives $G$.
 \begin{case}
     The case where $x = i$ or $x = j$.
@@ -122,7 +122,7 @@ Let $Q$ be some set of processes that do not receive the $G$ set.
     4. & $w \not \vDash V_{B_x G}^{j}(w) \forall \{x | x \not \in \{i,j\}\}$ & $j$ does not know which processes received $G$ \\
 \end{msdndproof}
 Therefore, the receipt of $G$ by other members of the group is MSDND secure to $j$.
-\end{proof}
+\end{prooftight}
 
 \begin{cor}
     The set of processes in the ready message is an $N_i$ set, where $i$ the group's coordinator.
@@ -137,11 +137,11 @@ From the previous chapter, we have shown that with message passing and omission,
 \begin{thm}
     If a process $j$ sends a ready acknowledgment message to $i$, $j$'s inclusion in the $i$'s view of the system state is MSDND secure to $j$.
 \end{thm}
-\begin{proof}
+\begin{prooftight}
 When $j$ sends the ready acknowledgment message to $i$, it is uncertain if the acknowledgment message is actually delivered.
 From Theorem \ref{case:generalsn0}, we know that $j$ is now MSDND insecure to $i$, but $i$ is secure to $j$.
 Using the ready acknowledgment messages, $i$ can then valuate $B_i B_j \varphi_j$ for every $j$ sending an acknowledgment message.
-\end{proof}
+\end{prooftight}
 
 Once the ready acknowledgment messages have been sent to the leader, the group can begin to interact.
 As it is impossible for the members of the group to be distributed the $L_i$ set, they must operate using the $N_i$ set they received from the coordinator.
@@ -201,7 +201,7 @@ The probability of transitioning to the next state is not influenced by the inte
 \begin{thm}
     The observations of the highest priority process are sufficient for producing a Markov chain from the underlying \ac{HMM}.
 \end{thm}
-\begin{proof}
+\begin{prooftight}
     The state the highest priority process observes always has the same transition probabilities, regardless of the hidden state of the other processes.
 \begin{case}
     The system has one other process ($n=1$).
@@ -241,7 +241,7 @@ Where $X_U \cup X_G$ is the complete set of states for processes not in $P_0$'s 
 \end{case}
 Since the interactions of the other processes do not affect the probability of joining $P_0$'s group, the previous case directly extends to this case.
 
-\end{proof}
+\end{prooftight}
 
 \subsection{Model Construction}
 
