@@ -29,7 +29,7 @@ The outcome of an election had a direct effect on how effectively the DGI can ma
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{schedule.pdf}
-    \caption[Example DGI schedule]{Example DGI schedule. Normal operation accounts for a fixed number of migrations each time the load balancing module runs. Message delays reduce the number of migrations that can be completed each round. However, reducing the group size allows more migrations to be completed (because fewer messages are being exchanged) at the cost of flexibility for how those migrations are completed.}
+    \caption[Example DGI schedule.]{Example DGI schedule. Normal operation accounts for a fixed number of migrations each time the load balancing module runs. Message delays reduce the number of migrations that can be completed each round. However, reducing the group size allows more migrations to be completed (because fewer messages are being exchanged) at the cost of flexibility for how those migrations are completed.}
     \label{fig:schedule}
 \end{figure}
 
@@ -111,7 +111,7 @@ For larger groups, splitting them provides significant savings in the number of 
 \begin{figure}
 \centering
 \includegraphics[width=0.35\textwidth]{NetworkLayout}
-\caption[Example of process organization]{Example of process organization. Two groups of processes are connected by a router.} \label{fig:network-layout}
+\caption[Example of process organization.]{Example of process organization. Two groups of processes are connected by a router.} \label{fig:network-layout}
 \end{figure}
 
 Consider a network like one depicted in Figure \ref{fig:network-layout}, where processes are divided by a router.
@@ -207,13 +207,10 @@ We can then express $Qsize$ as two parts:
 Qsize = Burst + Obligations
 \end{equation}%
 where $Burst$ takes the form of the \ac{CDF} for the normal distribution:
-\begin{equation}
-Burst = init_m * F(x)  
-\end{equation}
+\begin{equation}Burst = init_m * F(x)\end{equation}and
 \begin{equation}
 Obligations = c * \Delta t + init_q + resp.
 \end{equation}
-
 From this we can derive the equation:
 \begin{equation}
 F(x) \geq \frac{DequeueRate * \Delta t - c * \Delta t - init_q - resp}{init_m}
@@ -265,11 +262,12 @@ However, to compensate for the lack of processing time, the synchronization of t
 This was done to introduce realism to ensure events did not occur simultaneously.
 Additionally, the real-time schedules used by the \ac{DGI} were adjusted to remove the processing time that was neglected in the simulation.
 The schedule used is depicted in Figure \ref{fig:execution-schedule}.
+Each burst of messages was allotted one second for those messages and their replies to propagate. During the load balancing execution period, ten migrations are performed on the normal schedule. Soft ECN increased the message propagation time for the load balancing module to 1.5 seconds and reduced the number of migrations each round to six.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.85\textwidth]{ExecutionSchedule}
-\caption[Execution schedule used in experiments.]{Execution schedule used in experiments. Each burst of messages was allotted one second for those messages and their replies to propagate. During the load balancing execution period, ten migrations are performed on the normal schedule. Soft ECN increased the message propagation time for the load balancing module to 1.5 seconds and reduced the number of migrations each round to six.}
+\caption{Execution schedule used in experiments. }
 \label{fig:execution-schedule}
 \end{figure}
 
@@ -321,20 +319,6 @@ RED Link Speed & 100Mbps & RED Link Delay & 0.5 ms   \\ \hline
 \end{tabular}
 \end{table}
 
-To introduce traffic, processes attached to each of the switches attempted to send a high volume of messages to each other across the router.
-The number of packets sent per second was a function of the data rate and the size of the packets sent.
-In each simulation, half of the traffic originated from each switch.
-Due to the properties of the network links, the greatest queueing effect occurred at the switches.
-
-\section{Results}
-\label{sect:results}
-Six test scenarios were created to evaluate the \ac{ECN} technique.
-These scenarios are summarized in Table \ref{tab:scenarios}.
-In each scenario, the distribution of supply and demand processes is mixed: each switch has both supply and demand processes.
-The potential of the system to complete migrations, as well as the potential for migrations to fail were primary considerations for each scenario.
-Processes cannot initiate migrations if they are not grouped with other processes.
-Similarly, if the process is attempting to communicate over a congested link, it may not meet real-time deadlines or successfully complete migrations.
-
 \begin{table}
 \centering
 \caption{Summary of Test Configurations}
@@ -351,42 +335,29 @@ Similarly, if the process is attempting to communicate over a congested link, it
 \label{tab:scenarios}
 \end{table}
 
+To introduce traffic, processes attached to each of the switches attempted to send a high volume of messages to each other across the router.
+The number of packets sent per second was a function of the data rate and the size of the packets sent.
+In each simulation, half of the traffic originated from each switch.
+Due to the properties of the network links, the greatest queueing effect occurred at the switches.
+
+\section{Results}
+\label{sect:results}
+Six test scenarios were created to evaluate the \ac{ECN} technique.
+These scenarios are summarized in Table \ref{tab:scenarios}.
+In each scenario, the distribution of supply and demand processes is mixed: each switch has both supply and demand processes.
+The potential of the system to complete migrations, as well as the potential for migrations to fail were primary considerations for each scenario.
+Processes cannot initiate migrations if they are not grouped with other processes.
+Similarly, if the process is attempting to communicate over a congested link, it may not meet real-time deadlines or successfully complete migrations.
+Figure \ref{fig:groupstatedistro} shows the distribution of group sizes observed by the highest priority process in each scenario.
+The height of each colored segment indicates the portion of the simulation where process 0 was in the given configuration.
+
 \begin{figure}
 \centering
 \includegraphics[width=0.90\textwidth]{groupstatedistribution.pdf}
-\caption[Distribution of group sizes for process 0 in each scenario.]{Distribution of group sizes for process 0 in each scenario. The list of scenarios is presented in \ref{tab:scenarios}.  The height of each colored segment indicates the portion of the simulation where process 0 was in the given configuration.}
+\caption{Distribution of group sizes for process 0 in each scenario.}
 \label{fig:groupstatedistro}
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.70\textwidth]{a-qsizeot-notraffic-all.pdf}
-\caption[Plot of the queue size for a queue from switch A to the router when only the DGI generates traffic.]{Test configuration A. Plot of the queue size for a queue from switch A to the router when only the DGI generates traffic.}
-\label{fig:plota}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.75\textwidth]{b-qsizeot-notraffic-120s-130s.pdf}
-\caption[Detailed view of Figure \ref{fig:plota}.]{
-    Test configuration A.
-Detailed view of Figure \ref{fig:plota}. In the figure, the dark gray section is the period where the group management module executes.
-The alternating white and light gray sections are the execution periods for individual migrations.
-In the normal schedule, the DGI allocates approximately 1 second to each migration and performs 10 migrations each round.
-Three migrations are shown.}
-\label{fig:plotb}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.75\textwidth]{e-qsizeot-nonotifications-2mbpstraffic-120s-130s.pdf}
-\caption[Detailed view of the effect on queue size as other network traffic is introduced.]{
-    Test configuration B.
-Detailed view of the effect on queue size as other network traffic is introduced.
-Compared to Figure \ref{fig:plotb}, the peaks are taller and wider. 
-As with Figure \ref{fig:plotb}, this figure shows three migrations.}
-\label{fig:plote}
-\end{figure}
 
 Figures \ref{fig:plota} and \ref{fig:plotb} (Scenario A) show the normal operation of the system.
 In this configuration, there is no congestion on the network. 
@@ -394,27 +365,36 @@ The \ac{DGI} start, group together and then begin migrating power between proces
 Figure \ref{fig:plota} plots the queue size over time for a queue used to send packets from a switch to the router.
 Figure \ref{fig:plotb} is a detailed view of a portion of Figure \ref{fig:plota};
 it shows the queue size during the normal operation of group management as well as the first three migrations of a load balancing round.
+In the normal schedule, the DGI allocates approximately 1 second to each migration and performs 10 migrations each round.
+In the figure, the dark gray section is the period where the group management module executes.
+The alternating white and light gray sections are the execution periods for individual migrations.
 The dotted line plots the \ac{EWMA} of the size of the queue.
 An important note for the plotted \ac{EWMA} values: \ac{NS3} only updates the average queue size during simulation when a new packet is enqueued.
 As a consequence, the average queue size is slightly misleading in scenarios where there is a significant amount of idle channel time (such as Figures \ref{fig:plota}, \ref{fig:plotb}, and \ref{fig:plote}).
 In scenarios A and B, the traffic is not sufficient to disrupt the operation of the DGI.
 As a result, in Figure \ref{fig:groupstatedistro}, process 0 has an uninterrupted observation of a group size of 30 throughout the two scenarios.
 
-
-
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{a-qsizeot-notraffic-all.pdf}
+\caption{Test configuration A. Plot of the queue size for a queue from switch A to the router when only the DGI generates traffic.}
+\label{fig:plota}
+\end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\textwidth]{f-qsizeot-nonotifications-4mbpstraffic-120s-130s.pdf}
-\caption[Detailed view of the effect on queue size as other network traffic is introduced without notifications.]{
-    Test configuration C.
-Detailed view of the effect on queue size as network traffic is introduced without notifications.
-In this scenario, the queue does not empty completely before the next burst of traffic.
-As a result, group management generates a large peak as it tries to rejoin groups that have broken due to the message delays.
-Load balancing has smaller and less pronounced peaks because the groups are smaller.
-Additionally, some migrations are lost due to message delays.}
-\label{fig:plotf}
+\includegraphics[width=0.75\textwidth]{b-qsizeot-notraffic-120s-130s.pdf}
+\caption{Test configuration A. Detailed view of Figure \ref{fig:plota}.}
+\label{fig:plotb}
 \end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{e-qsizeot-nonotifications-2mbpstraffic-120s-130s.pdf}
+\caption{Test configuration B. Detailed view of the effect on queue size as other network traffic is introduced.}
+\label{fig:plote}
+\end{figure}
+
 
 From scenario A and B we establish the $min_{th}$ value used as a \ac{RED} queue parameter.
 The traffic generated by each step of the group management algorithm occurs in bursts.
@@ -423,82 +403,89 @@ Like \cite{HILTESTBED}, the level of power at a process is the net sum of its po
 As power is shared on the network, processes with excess generation, converge toward zero net power.
 Demand processes also converge toward zero net power.
 
-\begin{figure}
-\centering
-\includegraphics[width=0.75\textwidth]{i-qsizeot-softnotifications-4mbpstraffic-120s-130s.pdf}
-\caption[Detailed view of the effect on queue size as other network traffic is introduced with soft \ac{ECN} notifications.]{
-    Test configuration D.
-Detailed view of the effect on queue size as network traffic is introduced with soft \ac{ECN} notifications.
-The group management module entered a maintenance mode where it suspended discovering leaders of other groups.
-The module's message complexity decreased to $O(N)$, resulting in the lack of a noticeable peak compared to previous scenarios.
-The system decreased the number of migrations performed per round by load balancing: only two migrations are pictured.
-Load balancing has higher peaks than in Figure \ref{fig:plotf} because processes have not left the group.
-However, the reduced schedule is sufficient to prevent lost migrations.
-}
-\label{fig:ploti}
-\end{figure}
 
 Figure \ref{fig:plote} shows the queue size as the network traffic begins to increase.
 The \ac{DGI} in these experiments used a schedule that allowed for some congestion to occur before processes are disrupted.
 The slack gave network devices the opportunity to identify when the network congestion would go beyond the acceptable threshold.
-
-
-\begin{figure}
-\centering
-\includegraphics[width=0.75\textwidth]{k-qsizeot-softnotificationsonly-64mbpstraffic-120s-130s.pdf}
-\caption[Detailed view of the effect on queue size as a large amount network traffic is introduced.]{
-    Test configuration E.
-Detailed view of the effect on queue size as a large amount network traffic is introduced.
-Group management enters a maintenance mode when it receives the soft \ac{ECN} notification, but it is not sufficient to maintain groups; processes leave the group randomly.
-The system decreased the number of migrations per round, as it had done in Figure \ref{fig:ploti}.
-However, migrations were lost.
-}
-\label{fig:plotk}
-\centering
-\end{figure}
-
-
-
-\begin{figure}
-\centering
-\includegraphics[width=0.75\textwidth]{l-qsizeot-allnotifications-64mbpstraffic-120s-130s.pdf}
-\caption[Effect on queue size as a large amount of network traffic is introduced.]
-{
-    Test configuration F.
-In this scenario, hard notifications caused the groups to perform a coordinated division, enabled maintenance mode for the group management modules, and reduced the migration schedule for the load balancing module.
-The group management module produced more traffic than in Figure \ref{fig:plotk}, but, no DGI left the fallback groups.
-The smaller group size allowed the amount of traffic from the load balancing module to be reduced and prevent lost migrations.
-}
-\label{fig:plotl}
-\end{figure}
+Compared to Figure \ref{fig:plotb}, the peaks in Figure \ref{fig:plote} are taller and wider.
+As with Figure \ref{fig:plotb}, this figure shows three migrations.
 
 
 Figure \ref{fig:plotf} (Scenario C) shows an example of congestion affecting the physical network without \ac{ECN}.
+In this scenario, the queue does not empty completely before the next burst of traffic.
 As a result of the congestion in Figure \ref{fig:plotf}, processes leave the main group, shown in \ref{fig:groupstatedistro}.
+As a result, group management generates a large peak as it tries to rejoin groups that have broken due to the message delays.
 The observed configurations have greater than 15 processes because communication that does not cross the switch-router-switch path is not congested.
 As a consequence, processes on the same switch as process 0 do not leave 0's group.
+Load balancing has smaller and less pronounced peaks because the groups are smaller.
 Power migrations are affected by congestion: migrations fail, or the supply process is left uncertain of a migration's completion.
 Figure \ref{fig:plotg} plots the count of failed migrations over time.
 The number of failed migrations relative to the number attempted is quite low, because processes on the same switch as process 0 can still attempt migrations.
 
 \begin{figure}
 \centering
+\includegraphics[width=0.75\textwidth]{f-qsizeot-nonotifications-4mbpstraffic-120s-130s.pdf}
+\caption{Test configuration C.
+Detailed view of the effect on queue size as network traffic is introduced without notifications.}
+\label{fig:plotf}
+\end{figure}
+
+\begin{figure}
+\centering
 \includegraphics[width=0.95\textwidth]{failedmigrations.pdf}
-\caption[Count of lost migrations from all processes over time.]{Count of lost migrations from all processes over time. Migrations are counted as lost until the second process confirms it has been completed. Without congestion management, migrations are lost.}
+\caption{Count of lost migrations from all processes over time.}
 \label{fig:plotg}
 \end{figure}
+
 
 %In this scenario, only migrations are completed compared to the control.
 
 Figure \ref{fig:ploti} (Scenario D) shows an example of the \ac{ECN} algorithm notifying processes of the congestion.
+The group management module entered a maintenance mode where it suspended discovering leaders of other groups.
 Compared to the scenario in Figure \ref{fig:plotf} (Scenario C), the \ac{ECN} algorithm successfully prevents the group from dividing.
+The module's message complexity decreased to $O(N)$, resulting in the lack of a noticeable peak compared to previous scenarios.
+Only two migrations are pictured in the figure.
 As part of the compensation for the congestion, the number of migrations attempted are reduced, as listed in Table \ref{tab:scenarios}.
+Load balancing has higher peaks than in Figure \ref{fig:plotf} because processes have not left the group.
+However, the reduced schedule is sufficient to prevent lost migrations.
 In \cite{ecn-cloudhari}, when the number of migrations are reduced, the size of each migration is increased.
 Despite fewer migrations being attempted, the same amount of power can be managed by the \ac{DGI}, and the number lost migrations is reduced by the changed schedule.
 
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{i-qsizeot-softnotifications-4mbpstraffic-120s-130s.pdf}
+\caption{
+    Test configuration D.
+Detailed view of the effect on queue size as network traffic is introduced with soft \ac{ECN} notifications.
+}
+\label{fig:ploti}
+\end{figure}
+
 Figures \ref{fig:plotk} (Scenario E) and \ref{fig:plotl} (Scenario F) show an example of a more extreme congestion scenario.
+In Figure\ref{fig:plotk}, group management enters a maintenance mode when it receives the soft \ac{ECN} notification, but it is not sufficient to maintain groups; processes leave the group randomly.
+The system decreased the number of migrations per round, as it had done in Figure \ref{fig:ploti}.
+However, migrations were lost.
+
 In Figure \ref{fig:plotl}, the \ac{RED} algorithm shares a Hard \ac{ECN} notification.
 The notification causes the \ac{DGI} to switch to a smaller fallback configuration, which decreases the queue usage from Figure \ref{fig:plotk} to Figure \ref{fig:plotl}.
 Without this fallback configuration behavior, the system is greatly affected by the traffic.
-However, with the fallback configuration, the system remains stable and no migrations are lost.
+The group management module produced more traffic than in Figure \ref{fig:plotk}, but, no DGI left the fallback groups.
+The smaller group size allowed the amount of traffic from the load balancing module to be reduced and prevented lost migrations.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\textwidth]{k-qsizeot-softnotificationsonly-64mbpstraffic-120s-130s.pdf}
+\caption{
+    Test configuration E.
+Detailed view of the effect on queue size as a large amount network traffic is introduced with only soft notifications enabled.
+}
+\label{fig:plotk}
+\centering
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{l-qsizeot-allnotifications-64mbpstraffic-120s-130s.pdf}
+\caption{Test configuration F. Effect on queue size as a large amount of network traffic is introduced with hard notifications enabled}
+\label{fig:plotl}
+\end{figure}

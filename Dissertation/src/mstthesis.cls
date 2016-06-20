@@ -68,7 +68,7 @@
 %\geometry{letterpaper,total={5.985in,9.5in},includehead} % page width and length
 % However, due to use of \brokenpenalty this is not always obeyed
 \geometry{letterpaper,includehead} % page width and length
-\geometry{top=0.5in,headheight=0.125in,headsep=0.375in,left=1.5in,right=1in} % margins
+\geometry{top=0.5in,headheight=0.125in,headsep=0.375in,left=1.5in,right=1in,bottom=1in} % margins
 
 \RequirePackage{setspace}
 \RequirePackage{amsmath} % ,amssymb

@@ -21,7 +21,7 @@ If the message does not arrive in time, the process will enter the recovery stat
 
 \begin{figure*}[!t]
 \includegraphics[width=\linewidth]{MaintainStateDiagram.pdf}
-\caption[State machine for maintaining a group]{State machine for maintaining a group. The \ac{AYC} messages are the same as those in Figure \ref{fig:statemachine}. \ac{AYC} and \ac{AYT} are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
+\caption[State machine for maintaining a group.]{State machine for maintaining a group. The \ac{AYC} messages are the same as those in Figure \ref{fig:statemachine}. \ac{AYC} and \ac{AYT} are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
 \label{fig:statemachine2}
 \end{figure*}
 
@@ -140,7 +140,7 @@ From the previous chapter, we have shown that with message passing and omission,
 \begin{prooftight}
 When $j$ sends the ready acknowledgment message to $i$, it is uncertain if the acknowledgment message is actually delivered.
 From Theorem \ref{case:generalsn0}, we know that $j$ is now MSDND insecure to $i$, but $i$ is secure to $j$.
-Using the ready acknowledgment messages, $i$ can then valuate $B_i B_j \varphi_j$ for every $j$ sending an acknowledgment message.
+Using the ready acknowledgment messages, $i$ can then valuate $B_i B_j \varphi_j$ for every $j$ sending an acknowledgment.
 \end{prooftight}
 
 Once the ready acknowledgment messages have been sent to the leader, the group can begin to interact.
@@ -241,7 +241,6 @@ Where $X_U \cup X_G$ is the complete set of states for processes not in $P_0$'s 
     The system has a number of other processes ($n > 2$).
 \end{case}
 Since the interactions of the other processes do not affect the probability of joining $P_0$'s group, the previous case directly extends to this case.
-
 \end{prooftight}
 
 \subsection{Model Construction}

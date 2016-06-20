@@ -42,14 +42,12 @@ Reliable channels are often referred to as synchronous channels.
 In our system, however, channels are not assumed to be perfectly reliable.
 Instead, we respect Axiom \ref{axm:reliable-channel-fifo}, partially fulfill Axiom \ref{axm:reliable-channel-sender}, and disregard Axiom \ref{axm:reliable-channel-delay}.
 Therefore, we assume the following about communication channels in our systems (replacing Axiom \ref{axm:reliable-channel-sender}):
-
 \begin{axm}
     Every message received by a receiver was sent by a sender in the system.
 \end{axm}
 
 Without the constrained propagation delay from Axiom \ref{axm:reliable-channel-delay}, this type of communication channel is typically referred to as an asynchronous channel.
-
-The communication model can be synchronous or asynchronous.
+Additionally, The communication model can be synchronous or asynchronous.
 In the synchronous communication model, processes can only send a message when the receiving process is ready to receive it.
 Algorithmically, sending in a synchronous model is usually considered a ``blocking'' operation, meaning, once a process tries to send a message, it cannot proceed until the message is received.
 In this work, communication is asynchronous: a process does not wait for the successful delivery of a message, typically referred to as a non-blocking send.
@@ -210,8 +208,8 @@ The matrix is row stochastic, meaning the sum of each row in the matrix is equal
 A useful companion to the transition matrix is a state distribution vector.
 While the transition matrix describes how a system will transition between states, the state distribution vector describes the probability of observing a given state.
 
-If every $P_ij$ is positive and non-zero, the DTMC is said to be regular.
-Every regular Markov chain is ergodic.
+If every $P_ij$ is positive and non-zero, the DTMC is said to be positive regular.
+Every positive regular Markov chain is ergodic\cite{finite-markov}.
 As a consequence every regular Markov is periodic and positive recurrent.
 
 \begin{pdef}
@@ -282,7 +280,7 @@ Each transition contributes to an expected amount of time in the state.
 	\label{fig:hmm-1}
 \end{figure}
 
-A \ac{HMM}, pictured in Figure \ref{fig:hmm-1}, is a Markov chain where the state is not directly visible to an observer.
+A \ac{HMM}, pictured in Figure \ref{fig:hmm-1}, is a Markov chain where the state is not directly visible to an observer\cite{hidden-markov}.
 Instead, the \ac{HMM} outputs observations related to the underlying, hidden chain.
 The hidden chain is assumed to meet the Markov property.
 A \ac{HMM} can be described by the notation $\lambda = (\Pi, P, B)$, where $\Pi$ is the initial state distribution vector, $P$ is the matrix of state transition probabilities, and $B$ is a matrix describing the probability of observing an output given the hidden state.
@@ -591,7 +589,7 @@ However, it is important that the configuration a leader election algorithm supp
 
 \begin{figure*}[!t]
 \includegraphics[width=\linewidth]{LeaderElectionStateDiagram.pdf}
-\caption[State machine for an election]{State machine for an election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to \ac{AYC} messages they receive. The algorithm was modified by adding a ``Ready Acknowledgment'' message as the final step of completing the election. Additionally, processes only accept invites if they have received an ``\ac{AYC} Response'' message from the inviting process.}
+\caption[State machine for an election.]{State machine for an election. Processes start as coordinators in the ``Normal'' state and search for other coordinators to join with. Processes immediately respond to \ac{AYC} messages they receive. The algorithm was modified by adding a ``Ready Acknowledgment'' message as the final step of completing the election. Additionally, processes only accept invites if they have received an ``\ac{AYC} Response'' message from the inviting process.}
 \label{fig:statemachine}
 \end{figure*}
 
