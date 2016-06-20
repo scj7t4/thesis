@@ -353,9 +353,9 @@
   \fi
   \chapter*{\contentsname
       \@mkboth{\uppercase{\contentsname}}{\uppercase{\contentsname}}}
-  %\vspace*{-0.375in} % vertical where the contents of TOC start
-  \hbox to \textwidth{{} \hspace*{0mm}{\ \hfill Page}}
-  \singlespacing\setlength{\parskip}{12pt} % 10 is lots of space, like double. % 6 or 5 is like single spacing.
+  \hbox to \textwidth{{} \hspace*{0mm}{\ \hfill Page}}%
+  \singlespacing\setlength{\parskip}{12pt}% 10 is lots of space, like double. % 6 or 5 is like single spacing.
+  \vspace*{-12pt} % vertical where the contents of TOC start
   \@starttoc{toc}%
   \if@restonecol\twocolumn\fi
   \setlength{\parskip}{0pt}\doublespacing% ... added by koh ...
@@ -376,6 +376,7 @@
   %\vspace*{-0.375in}
   \hbox to \textwidth{{} \hspace*{0mm}{Figure \ \hfill Page}}
   \singlespacing\setlength{\parskip}{12pt}
+  \vspace*{-12pt} % vertical where the contents of TOC start
   \@starttoc{lof}%
   \if@restonecol\twocolumn\fi
   \setlength{\parskip}{0pt}\doublespacing% ... added by koh ...
@@ -394,6 +395,7 @@
     \@mkboth{\uppercase{\listtablename}}{\uppercase{\listtablename}}}%
   %\vspace*{-0.375in}
   \hbox to \textwidth{{} \hspace*{0mm}{Table \ \hfill Page}}
+  \vspace*{-12pt} % vertical where the contents of TOC start
   \singlespacing\setlength{\parskip}{12pt}
   \@starttoc{lot}%
   \if@restonecol\twocolumn\fi

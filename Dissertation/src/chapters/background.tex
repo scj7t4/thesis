@@ -123,7 +123,7 @@ An eventual weak failure (weak completeness and eventual weak accuracy) detector
 
 An omission fault\cite{OMISSIONFAILURES} occurs when a message is never received by the intended recipient.
 Omission faults can occur when the communication medium is unavailable or when the latency of message exceeds a timeout for its expected delivery.
-Protocols like TCP do not allow omission failures: a packet is resent until it is acknowledged by the receiver.
+Protocols like TCP do not allow omission faults to propagate beyond the transport layer: a packet is resent until it is acknowledged by the receiver\cite{computer-networking}.
 If the acknowledgment never comes, the connection is closed.
 As a contrast, UDP assumes that any datagram could be lost, and it is the responsibility of the programmer to handle missing datagrams appropriately.
 An omission failure can have the same observable effects as a napping failure\cite{DISTRIBUTED}.
@@ -293,7 +293,7 @@ This relationship is pictured in Figure \ref{fig:hmm-2}.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.75\textwidth]{hiddenmarkovmodel-2.pdf}
-	\caption[Observable output of a hidden Markov model.]{Observable output of a Hidden Markov Model. Each hidden state ($x_i$) has a corresponding probability distribution ($B_i$) for the observable outputs ($y_j$).}
+	\caption[Observable output of a hidden Markov model.]{Observable output of a hidden Markov model. Each hidden state ($x_i$) has a corresponding probability distribution ($B_i$) for the observable outputs ($y_j$).}
 	\label{fig:hmm-2}
 \end{figure}
 
@@ -525,7 +525,7 @@ This interaction is illustrated in Figure \ref{fig:REALTIMESCHEDULER}.
 \centering
 \includegraphics[width=1.0\textwidth]{RealTimeScheduler.pdf}
 \captionsetup{singlelinecheck=off}
-\caption[Real time scheduler]{The real time scheduler used a round robin approach to allot execution time to modules.
+\caption[Real time scheduler.]{Real time scheduler. The real time scheduler used a round robin approach to allot execution time to modules.
 \raisebox{.5pt}{\textcircled{\raisebox{-.9pt} {1}}} Modules requested a task be executed by specifying a time in the future to execute the task.
 \raisebox{.5pt}{\textcircled{\raisebox{-.9pt} {2}}} A timer was set to count down to the specified moment. 
 Modules could place tasks immediately into the ready queue if the task could be executed immediately.
