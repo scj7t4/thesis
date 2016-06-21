@@ -19,12 +19,6 @@ Once a timeout expires, the coordinator will send a ``ready'' message with a lis
 The invited processes have timeouts for when they expect the ready message to arrive.
 If the message does not arrive in time, the process will enter the recovery state where it resets to a group with itself as the only member.
 
-\begin{figure*}[!t]
-\includegraphics[width=\linewidth]{MaintainStateDiagram.pdf}
-\caption[State machine for maintaining a group.]{State machine for maintaining a group. The \ac{AYC} messages are the same as those in Figure \ref{fig:statemachine}. \ac{AYC} and \ac{AYT} are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
-\label{fig:statemachine2}
-\end{figure*}
-
 Once a group is formed it must be maintained.
 To do this, processes occasionally exchange messages to verify the other is still reachable.
 The interaction is shown in Figure \ref{fig:statemachine2}.
@@ -32,6 +26,12 @@ Coordinators send ``Are You Coordinator'' messages to members of its group to ch
 Group members send ``Are You There'' messages to the coordinator to verify they haven't been removed from the group and to ensure the coordinator is still alive.
 If processes fail to reply to a received message before a timeout, they will leave the group.
 Leaving the group can initiated by the coordinator removing the process, or the process can enter a recovery state and leave the group, forming a new group with itself as the only member.
+
+\begin{figure}[htbp]
+\includegraphics[width=\linewidth]{MaintainStateDiagram.pdf}
+\caption[State machine for maintaining a group.]{State machine for maintaining a group. The \ac{AYC} messages are the same as those in Figure \ref{fig:statemachine}. \ac{AYC} and \ac{AYT} are periodically sent by processes, and responses to those messages are immediately sent by the receiving process. In the modified algorithm, the member does not enter the recovery state if they do not receive an AYT response before the timeout expires.}
+\label{fig:statemachine2}
+\end{figure}
 
 \section{EXECUTION ENVIRONMENT}
 
@@ -62,9 +62,11 @@ A similar relationship to Equation \ref{eq:prob-consistent-1} must exist for thi
 \label{eq:prob-consistent-2}
 \end{equation}
 A leader process $j$ can construct a Markov chain iff, for every $i$ that can join $j$'s group:
+\vspace{20pt}
 \begin{equation}
 \Pr(i \rightarrow j | i \in k) = \Pr(i \rightarrow j), i \neq j \neq k
 \label{eq:mod-req-a}
+\vspace{12pt}
 \end{equation}
 where $i \in k$ is a state where $i$ is in $k$'s group.
 Therefore, the probability of $i$ joining $j$'s group must be independent of $i$'s membership at the start of the election.
@@ -73,6 +75,7 @@ From Equations \ref{eq:prob-consistent-1} and \ref{eq:prob-consistent-2}:
 \begin{equation}
 \sum_{n \neq j} \Pr(i \rightarrow n | i \in k) = \sum_{n\neq j} \Pr(i \rightarrow n).
 \label{eq:mod-req-b}
+\vspace{12pt}
 \end{equation}
 
 If more than one process can create a Markov chain, an algorithm which allows for that circumstance will have undesirable behavior.
@@ -181,12 +184,6 @@ As a result, the processes will always seek highest priority, regardless of thei
 More importantly, this releases the process from obligations on its next state from the state of other processes in the system.
 A process will only accept a received invitation if it has determined the sending process is the highest priority process.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\linewidth]{ElectionMessages}
-\caption[Diagram of message exchanges for an election.]{Diagram of message exchanges for an election. Process 2 almost completed the previous election and considers itself a part of process 1's group, but process 1 does not. Process 3 does not consider itself a part of process 1's group before the election begins. Both process 2 and process 3 need to successfully exchange the same number of messages to successfully complete the election.}
-\label{fig:electionmessages}
-\end{figure}
 % Stage 3:
 % Show that ready only depends on the sucessful delivery of ready
 % & Ready ack.
@@ -195,6 +192,13 @@ In Figure \ref{fig:electionmessages}, we diagram the sequence of message exchang
 In the first state, the process nearly completed an election the previous round, but the ready acknowledgement message was not delivered in time, resulting in the process being in the $M_i$ set.
 In the second state, the process is not in the leader's group.
 Both cases require the same number of messages to be delivered for the process to be considered a part of the group.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\linewidth]{ElectionMessages}
+\caption[Diagram of message exchanges for an election.]{Diagram of message exchanges for an election. Process 2 almost completed the previous election and considers itself a part of process 1's group, but process 1 does not. Process 3 does not consider itself a part of process 1's group before the election begins. Both process 2 and process 3 need to successfully exchange the same number of messages to successfully complete the election.}
+\label{fig:electionmessages}
+\end{figure}
 
 Therefore, regardless of the hidden state of the system, the highest priority process' observations will produce a Markov chain.
 The probability of transitioning to the next state is not influenced by the interactions of the other processes: it only depends on the combinations of outcomes based on the current observable state.
@@ -231,9 +235,10 @@ Furthermore, based on the observations of the ungrouped process:
 O(D_0, x_i) = O(D_0, x_j) = b, \forall x_i \in X_G, \forall x_j \in X_U.
 \end{equation}
 The equation indicates every observation of a state in $X_G$ and $X_U$ looks identical to $P_0$.
-With this restriction:
+With this restriction, where $v=\{x_{i} | O(D_0, x_{i}) = a\}$:
 \begin{equation}
-    \Pr(Y_{k+1}=a | Y_{k}=b) = \sum_{\{x_{i} | O(D_0, x_{i}) = a\}} \Pr(X_{k+1}=x_i | X_{k}=x_j), \forall x_j \in \{x_j | x_j \in X_U \cup X_G\}.
+    \Pr(Y_{k+1}=a | Y_{k}=b) = \sum_{v} \Pr(X_{k+1}=x_i | X_{k}=x_j), \forall x_j \in \{x_j | x_j \in X_U \cup X_G\}.
+    \vspace{6pt}
 \end{equation}
 Where $X_U \cup X_G$ is the complete set of states for processes not in $P_0$'s group.
 
@@ -253,6 +258,7 @@ The states of the Markov chain are the cardinality of the highest priority proce
 In each round, the behavior is described by two components: maintaining a group and inviting other processes into the group.
 The coordinator will exchange an ``Are You Coordinator'' message and the peer will respond to verify it is still available.
 To maintain a group of $m$ other processes, the probability is defined as a random variable with the following \ac{pdf}:
+\vspace{12pt}
 \begin{equation}
  \Pr_{M}(Y=k; m) =
    \begin{cases}
@@ -266,12 +272,14 @@ A process will leave a group if, from the considered process' perspective, they 
 To invite other processes to the group, the two processes ultimately exchange up to 8 messages.
 In a round, a single process can invite many other processes to its group.
 From a selection of $n$ other coordinators, the probability distribution for joining a new group with $k$ of the $n$ processes is:
+\vspace{12pt}
 \begin{equation}
     \Pr_{I}(Y=k; n) =
     \begin{cases}
         \binom{n}{k} p^{8k}(1-p^8)^{n-k}, & \text{if } 0 \leq k \leq n \\
         0,                                & \text{otherwise.} \\
     \end{cases}
+\vspace{12pt}
 \end{equation}
 In the profile chain, in a state $s$ that describes the number of processes in a group, the probability of transitioning from $s$ to $s'$ with $n$ total processes (including the considered process) is:
 \begin{align} \Pr_{T}(Z=s'; n; s) = \sum_{i=0}^{s-1} &\Pr_{M}(X=i; s-1) *
@@ -297,7 +305,10 @@ With an alternative hypothesis that the two chains are not equivalent:
 The $\chi^2$ test measures the goodness-of-fit for a complete chain by combining the measurements of goodness of fit for the transitions away from each state.
 Therefore, the goodness of fit test for the chain is a summation of tests for each state:\cite{MARKOV3}
 
-\begin{equation} \chi^2 = \sum_{i}^{m} \sum_{j}^{m} = \frac{n_{i}(P_{ij}-T_{ij})^2}{P_{ij}} \end{equation}%
+\begin{equation}
+    \chi^2 = \sum_{i}^{m} \sum_{j}^{m} = \frac{n_{i}(P_{ij}-T_{ij})^2}{P_{ij}}
+    \vspace{12pt}
+\end{equation}%
 where $n_{i}$ is the number of times the state $i$ was observed in the input sequence used to construct the test chain $T$.
 The summation is distributed as $\chi^2$ with $m(m-1)$ \ac{DF} if all entries in $P_{ij}$ are non-zero.
 In this work, all transitions in the profile Markov chain $P$ are non-zero when $0<p<1.0$.
@@ -315,7 +326,7 @@ Table \ref{tab:chisummary} shows the measured error and p-value for the worst ob
 Since the measured error is less than the critical value and the p-value is greater than 0.05, we cannot reject $H_0$. 
 As a consequence, the profile chains ($P$) are representative of the behavior of the algorithm.
 
-\begin{table*}[!t]
+\begin{table}
 \centering
 \caption{Summary of $\chi^2$ tests performed.}
 \begin{tabular}{ c | c c c c c}
@@ -328,7 +339,7 @@ As a consequence, the profile chains ($P$) are representative of the behavior of
 \end{tabular}
 
 \label{tab:chisummary}
-\end{table*}
+\end{table}
 
 \subsection{Profile Chain Analysis}
 
@@ -339,41 +350,48 @@ Therefore, the amount of time the DGI will spend coordinating with another proce
 In this work, we define \ac{IGT} based on the steady state of the profile chain.
 Let $\pi=Steady(P)$ for some profile chain.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\linewidth]{ss-3process.pdf}
-    \caption{Steady state distribution for 3 processes as well as the \ac{AGS} as a fraction of total processes.}
-    \label{fig:ss-3process}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\linewidth]{ss-4process.pdf}
-    \caption{Steady state distribution for 4 processes as well as the \ac{AGS} as a fraction of total processes.}
-    \label{fig:ss-4process}
-\end{figure}
 
 The \ac{IGT} is the sum of all states in $\pi$, save the first state where the process is alone:
-\begin{equation} IGT = \sum_{i=2}^{m} \pi_i \end{equation}
+\vspace{24pt}
+\begin{equation} IGT = \sum_{i=2}^{m} \pi_i
+    \vspace{24pt}
+\end{equation}
 The \ac{IGT} is a number between 0 and 1.
 It represents the probability a random observation sees a group of at least two members.
 The steady state distributions are presented as stacked bar graphs in Figures \ref{fig:ss-3process}, \ref{fig:ss-4process}, \ref{fig:ss-5process} and \ref{fig:ss-6process}.
 Each complete bar in the graph indicates the \ac{IGT}.
 Additionally, these figures contain the average group size (AGS) when the system has reached the steady-state plotted as a fraction of the total number of processes.
 Let $P$ be the steady-state distribution vector for some number of processes, $n$, and a given probability of delivery rate:
-\begin{equation} y = \frac{\sum_{i=1}^{n} P_{i}*i}{n} \label{eq:ss-means} \end{equation}
+\vspace{12pt}
+\begin{equation} y = \frac{\sum_{i=1}^{n} P_{i}*i}{n} \label{eq:ss-means}
+    \vspace{12pt}
+\end{equation}
 where $y$ is the plotted \ac{AGS} as a fraction.
 The components of each bar represent the probability the system is in a specific state for a random observation of the system.
 The height of the component represents the relative probability of observing that state when in a group.
 
-\begin{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{ss-3process.pdf}
+    \caption{Steady state distribution for 3 processes as well as the \ac{AGS} as a fraction of total processes.}
+    \label{fig:ss-3process}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{ss-4process.pdf}
+    \caption{Steady state distribution for 4 processes as well as the \ac{AGS} as a fraction of total processes.}
+    \label{fig:ss-4process}
+\end{figure}
+
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\linewidth]{ss-5process.pdf}
     \caption{Steady state distribution for 5 processes as well as the \ac{AGS} as a fraction of total processes.}
     \label{fig:ss-5process}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\linewidth]{ss-6process.pdf}
     \caption{Steady state distribution for 6 processes as well as the \ac{AGS} as a fraction of total processes.}
@@ -390,7 +408,7 @@ To compare the produced steady states, the weighted average is plotted as a perc
 Values in Figure \ref{fig:ss-means} are plotted using Equation \ref{eq:ss-means}.
 Therefore, Figure \ref{fig:ss-means} shows the average percentage of total processes that will be in the group in a steady-state system.
 
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\linewidth]{ss-means.pdf}
     \caption{Average group size as a percentage of all processes in the system for larger systems.}

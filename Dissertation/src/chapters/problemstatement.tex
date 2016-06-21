@@ -51,19 +51,6 @@ These graphs first appeared in \cite{CRITIS2012}.
 
 \subsection{Sequenced Reliable Connection, Two Process Case}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{2NODE-SRC-100-GROUP.pdf}
-    \caption{\ac{IGT} over a 10 minute run for a two process system with a 100ms resend time.}
-    \label{fig:IGT-SRC-2NODE-100}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{2NODE-SRC-200-GROUP.pdf}
-    \caption{\ac{IGT} over a 10 minute run for a two process system with a 200ms resend time.}
-    \label{fig:IGT-SRC-2NODE-200}
-\end{figure}
 
 The 100ms resend SRC test with two processes was considered a type of control in this study.
 These tests, pictured in Figure \ref{fig:IGT-SRC-2NODE-100}, highlighted the availability of the DGI with the SRC protocol.
@@ -73,20 +60,22 @@ Figure \ref{fig:IGT-SRC-2NODE-200} demonstrates that as the rate at which lost d
 This behavior was expected.
 Each exchange had a time limit for each message to arrive and the number of attempts was reduced by increasing the resend time.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{2NODE-SRC-100-GROUP.pdf}
+    \caption{\ac{IGT} over a 10 minute run for a two process system with a 100ms resend time.}
+    \label{fig:IGT-SRC-2NODE-100}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{2NODE-SRC-200-GROUP.pdf}
+    \caption{\ac{IGT} over a 10 minute run for a two process system with a 200ms resend time.}
+    \label{fig:IGT-SRC-2NODE-200}
+\end{figure}
+
 \subsection{Sequenced Reliable Connection, Transient Partition Case}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{TRANS-SRC-100-SIZE.pdf}
-    \caption{Average size of formed groups for the transient partition case with a 100ms resend time.}
-    \label{fig:MGS-SRC-TRANS-100}
-\end{figure}%
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{TRANS-SRC-100-GROUP.pdf}
-    \caption{\ac{IGT} over a 10 minute run for the transient partition case with a 100ms resend time.}
-    \label{fig:IGT-SRC-TRANS-100}
-\end{figure}
 
 The transient partition case was a simple example in which a network partition separates two groups of DGI processes.
 In the simplest case, where the opposite side of the partition was unreachable, processes formed a group with the other processes on the same side of the partition.
@@ -98,24 +87,36 @@ As packets began to cross the partition (as the omission probability decreased),
 During this time, however, the mean group size continued to increase.
 Thus, while the elections were decreasing the amount of time that the module spent in a state where it can actively do work, it typically did not fall into a state where it was in a group by itself. 
 As result, most of the lost \ac{IGT} came from elections.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{TRANS-SRC-100-SIZE.pdf}
+    \caption{Average size of formed groups for the transient partition case with a 100ms resend time.}
+    \label{fig:MGS-SRC-TRANS-100}
+\end{figure}%
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{TRANS-SRC-100-GROUP.pdf}
+    \caption{\ac{IGT} over a 10 minute run for the transient partition case with a 100ms resend time.}
+    \label{fig:IGT-SRC-TRANS-100}
+\end{figure}
 
-\begin{figure}
+The 200ms case (illustrated in Figures \ref{fig:MGS-SRC-TRANS-200} and \ref{fig:IGT-SRC-TRANS-200}) suggests a similar behavior to Figures \ref{fig:MGS-SRC-TRANS-100} and \ref{fig:IGT-SRC-TRANS-100}, with a wider valley produced by the reduced number of datagrams.
+The mean group size dipped below two in Figure \ref{fig:MGS-SRC-TRANS-200}, possibly because longer resend times allowed for a greater number race conditions between potential leaders.
+The race conditions are discussed during the SUC section since it was more prevalent in those experiments.
+
+\begin{figure}[htbp]
 \centering
     \centering
     \includegraphics[width=0.75\textwidth]{TRANS-SRC-200-SIZE.pdf}
     \caption{Average size of formed groups for the transient partition case with a 200ms resend time.}
     \label{fig:MGS-SRC-TRANS-200}
 \end{figure}
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\textwidth]{TRANS-SRC-200-GROUP.pdf}
     \caption{\ac{IGT} over a 10 minute run for the transient partition case with a 200ms resend time.}
     \label{fig:IGT-SRC-TRANS-200}
 \end{figure}
-
-The 200ms case (illustrated in Figures \ref{fig:MGS-SRC-TRANS-200} and \ref{fig:IGT-SRC-TRANS-200}) suggests a similar behavior to Figures \ref{fig:MGS-SRC-TRANS-100} and \ref{fig:IGT-SRC-TRANS-100}, with a wider valley produced by the reduced number of datagrams.
-The mean group size dipped below two in Figure \ref{fig:MGS-SRC-TRANS-200}, possibly because longer resend times allowed for a greater number race conditions between potential leaders.
-The race conditions are discussed during the SUC section since it was more prevalent in those experiments.
 
 \subsection{Sequenced Unreliable Connection, Two Process Case}
 
@@ -123,23 +124,23 @@ The SUC protocol's experimental tests revealed an immediate problem.
 There was a general increasing trend for the amount of \ac{IGT}, shown in Figure \ref{fig:IGT-SUC-2NODE-100}.
 However, there was a high amount of variance for every trial.
 
-\begin{figure}
+In the 200ms resend case (illustrated in Figure \ref{fig:IGT-SUC-2NODE-200}), a greater growth rate occurred in the \ac{IGT} as the omission probability decreased.
+When an average was taken across all of the collected data points from the experiment, the average \ac{IGT} is higher for the 200ms case than it was for the 100ms case (6.86 minutes vs 6.09 minutes).
+There was a large amount of variance in the collected \ac{IGT}, however.
+As a result, it is not possible to state with confidence that the there is a significant difference between the two cases.
+
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\textwidth]{2NODE-SUC-100-GROUP.pdf}
     \caption{\ac{IGT} over a 10 minute run for two process system with 100ms resend time.}
     \label{fig:IGT-SUC-2NODE-100}
 \end{figure}%
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\textwidth]{2NODE-SUC-200-GROUP.pdf}
     \caption{\ac{IGT} over a 10 minute run for two process system with 200ms resend time.}
     \label{fig:IGT-SUC-2NODE-200}
 \end{figure}
-
-In the 200ms resend case (illustrated in Figure \ref{fig:IGT-SUC-2NODE-200}), a greater growth rate occurred in the \ac{IGT} as the omission probability decreased.
-When an average was taken across all of the collected data points from the experiment, the average \ac{IGT} is higher for the 200ms case than it was for the 100ms case (6.86 minutes vs 6.09 minutes).
-There was a large amount of variance in the collected \ac{IGT}, however.
-As a result, it is not possible to state with confidence that the there is a significant difference between the two cases.
 
 \section{MARKOV MODELS}
 
@@ -158,13 +159,13 @@ SharpE measured the reward collected in 600 seconds, minus the reward that was c
 Discarding the reward from the first 60 seconds emulated the 60 seconds that were discarded in the experimental runs.
 The SharpE results are plotted along with the experimental results in Figures \ref{fig:COMPARE-SUC-2NODE-100} and \ref{fig:COMPARE-SUC-2NODE-200}.
 
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\textwidth]{2NODE-SUC-100-COMPARE.pdf}
     \caption{Comparison of in-group time as collected from the experimental platform and the simulator (1 tick offset between processes).}
     \label{fig:COMPARE-SUC-2NODE-100}
 \end{figure}%
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\textwidth]{2NODE-SUC-200-COMPARE.pdf}
     \caption{Comparison of in-group time as collected from the experimental platform and the simulator (2 tick offset between processes).}
@@ -178,25 +179,26 @@ The exchange of messages, particularly during an election, had a tendency to syn
 Processes could synchronize even if they did not initially begin in a synchronized state. 
 The simulation results aligned best for the 100ms resend case with 1 tick (approximately 100ms difference in synchronization between processes) and 2 ticks (approximately 400ms) in the 200ms resend case.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{TRANS-RT-SUC-128-COMPARE.pdf}
-    \caption{Comparison of in-group time as collected from the experimental platform and the in-group time from the equivalent Markov chain (128ms between resends).}
-    \label{fig:COMPARE-SUC-TRANS-RT-128}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{TRANS-RT-SUC-64-COMPARE.pdf}
-    \caption{Comparison of in-group time as collected from the experimental platform and the in-group time from the equivalent Markov chain (64ms between resends).}
-    \label{fig:COMPARE-SUC-TRANS-RT-64}
-\end{figure}
 
 The structure of the Markov Chain assumed that processes enter the election state simultaneously.
 This was an appropriate assumption for the real-time system, since the round-robin scheduler synchronized when processes ran their group management modules.
 The simulator was set to assume that the synchronization between processes was very tight.
 New experimental data was collected for the 4 process, transient partition case.
 The collected data is overlaid with the results from the random walker in Figures \ref{fig:COMPARE-SUC-TRANS-RT-128} and \ref{fig:COMPARE-SUC-TRANS-RT-64}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{TRANS-RT-SUC-128-COMPARE.pdf}
+    \caption{Comparison of in-group time as collected from the experimental platform and the in-group time from the equivalent Markov chain (128ms between resends).}
+    \label{fig:COMPARE-SUC-TRANS-RT-128}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{TRANS-RT-SUC-64-COMPARE.pdf}
+    \caption{Comparison of in-group time as collected from the experimental platform and the in-group time from the equivalent Markov chain (64ms between resends).}
+    \label{fig:COMPARE-SUC-TRANS-RT-64}
+\end{figure}
 
 As a measure of the strength of the model, the correlation between the predicted value was compared.
 The average error was also computed for each of the samples taken.
@@ -206,7 +208,7 @@ As a result, we sought to refine the analysis of the model in order to get an ac
 
 \begin{table}
 % increase table row spacing, adjust to taste
-\caption{Error and Correlation of Collected Data Compared to Markov Chain}
+\caption{Comparison of collected data compared to Markov chain.}
 \label{tab:STAT-DATA}
 \centering
 % Some packages, such as MDW tools, offer better commands for making tables

@@ -149,6 +149,7 @@ Algorithm \ref{alg:coinflip} may not terminate correctly unless there is detecta
 \end{thm}
 \begin{prooftight}
 Let $i$ be the agent that would correctly terminate as the leader. Let $j$ be a process that has selected $\varphi_j = F$.
+\newpage
 \begin{msdndproof}
 1. & $\varphi_i = T, \varphi_j = F$ & Initial conditions. \\
 2a.& $I_{j,i} \varphi_i$ & $i$ sends $\varphi_i$ to $j$. \\
@@ -164,13 +165,16 @@ Therefore, $i$ will terminate before $j$ decides to go passive.
 This result agrees with results from similar analysis\cite{anon-omission}.
 \end{prooftight}
 %As it was with the two armies problem, the MSDND security of the other processes' states is an important consideration for the correctness of a distributed algorithm.
-\begin{algorithm}[t]
+
+\vspace{12pt}
+\begin{algorithm}[h!]
 \caption{Anonymous Coin Flipping Leader Election Expressed in BIT logic}
 \label{alg:coinflip}
 \begin{algorithmic}[1]
 \small
 \State $\varphi_i \gets random(T,F)$
 \State $\psi_i \gets F$
+\State $\gamma_i \gets F$
 \State Send $\varphi_i$ to every active neighbor ($\forall j \neq i\ : I_j,i \varphi_i$)
 \State Receive $\varphi_j$ from every active neighbor 
 \If {$\varphi_i \wedge (\forall j \neq i, w \vDash V_{\varphi_j}^i(w) : \neg \varphi_j)$}
@@ -189,7 +193,6 @@ This result agrees with results from similar analysis\cite{anon-omission}.
 Suppose for the two armies problem, A and B wish determine their chance of success.
 If neither A nor B have any idea of the probability their messenger is captured, they have no way of assessing their chances of a successful attack.
 However, what can be determined if the two generals share some knowledge about the world?
-
 Suppose that both generals know their messenger has the probability $q=(1-p)$ of being captured in transit.
 When A sends a messenger to B, A will know there is a probability $p$ that the messenger arrives at B.
 If the messenger does indeed arrive at B, B knows that A knows there is a $p$ chance their attack will succeed.
@@ -209,12 +212,14 @@ Therefore, for a Kripke-Markov model $P_{ij} = f_R(w,w')$ where $i=f_W(w)$ and $
 For a process $i$, information about the system state is restricted to those \ac{AP}s in its domain, $D_i$.
 Let $O : D \times X \rightarrow Y$ be a surjective mapping from the complete, hidden system state to an observable state for a domain.
 With $O$, one can construct $B$, the observation probability distribution matrix for a \ac{HMM}:
+\vspace{6pt}
 \begin{equation}
  B_{ij} =
    \begin{cases}
     1, & \text{if } O(D_i, x_i) = y_j\\
     0, & \text{otherwise.} \\
   \end{cases}
+  \vspace{12pt}
 \end{equation}
 
 Intuitively, one or more worlds will look identical to a process $i$, since the information necessary to differentiate them is not in $D_i$.

@@ -26,7 +26,8 @@ However, by reducing the group size, the number of messages sent by load balanci
 The outcome of an election had a direct effect on how effectively the DGI can manage resources.
 %Interestingly, the average group size as percentage of the total processes seems to be converging asymptotically, to a fixed value for each plotted probability as the number of processes increases.
 
-\begin{figure}
+    \vspace{-24pt}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\linewidth]{schedule.pdf}
     \caption[Example DGI schedule.]{Example DGI schedule. Normal operation accounts for a fixed number of migrations each time the load balancing module runs. Message delays reduce the number of migrations that can be completed each round. However, reducing the group size allows more migrations to be completed (because fewer messages are being exchanged) at the cost of flexibility for how those migrations are completed.}
@@ -75,7 +76,7 @@ At a critical threshold, the queue does not empty completely before the next bur
 If the level of other traffic is sufficiently high, the queue completely fills, and no messages can be distributed.
 The \ac{RED} algorithm and \ac{ECN} are used to delay or prevent the queue from reaching this critical threshold.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.4\linewidth]{QueueStacked}
 \caption[
@@ -108,16 +109,17 @@ It is therefore desirable when this level of traffic is reached to split the gro
 Splitting the group reduces the number of messages sent across the router for modules with $O(n^2)$ (where $n$ is the number of processes in the original group) message complexity.
 For larger groups, splitting them provides significant savings in the number of messages that must be queued by the router, especially since the traffic occurs in bursts.
 
-\begin{figure}
-\centering
-\includegraphics[width=0.35\textwidth]{NetworkLayout}
-\caption[Example of process organization.]{Example of process organization. Two groups of processes are connected by a router.} \label{fig:network-layout}
-\end{figure}
 
 Consider a network like one depicted in Figure \ref{fig:network-layout}, where processes are divided by a router.
 Here, there are $n$ processes on one side of the network and $m$ on the other.
 In normal operation, the omission-modelable algorithm has an $O(n^2)$ message complexity.
 In Soft \ac{ECN} maintenance mode, the reduced number of messages reduces the complexity to $O(n)$ by disabling elections.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.35\textwidth]{NetworkLayout}
+\caption[Example of process organization.]{Example of process organization. Two groups of processes are connected by a router.} \label{fig:network-layout}
+\end{figure}
 
 During elections (and with each group update) the leader distributes a fallback configuration that will coordinate the division of the groups during intense congestion.
 When the \ac{ECN} notification is received, the processes will halt all current group management operations and enter a splitting mode where they switch to the fallback configuration.
@@ -164,8 +166,10 @@ The number of messages sent across the router for the undivided group is of the 
 Let $i_{1}$ and $j_{1}$ be the number of processes from side A and side B (respectively) in the first group created by the partition.
 Let $i_{2}$ and $j_{2}$ be the number of processes in the second group created by the partition under the same circumstances of $i_1$ and $j_1$.
 The number of messages sent that pass through the router, is then: 
+\vspace{24pt}
 \begin{equation}
 2 i_{1} j_{1} + 2 i_{2} j_{2}.
+\vspace{12pt}
 \end{equation}
 For an arbitrary group division, the following can be observed.
 Suppose $i_{1}$ and $j_{2}$ are the cardinality of two arbitrarily chosen sets of processes from side A and side B respectively.
@@ -178,8 +182,10 @@ The number of messages that must pass through the router for this cut is:
 2 i_{1} j_{1} + 2 (n-i_{1}) (m-j_{1}).
 \end{equation}
 The benefits of the cut are minimized when $i_1$ and $j_1$ are $\frac{n}{2}$ and $\frac{m}{2}$:
+\vspace{6pt}
 \begin{equation}
 2( 2 \frac{mn}{4} + mn - \frac{mn}{2} - \frac{mn}{2}) = mn
+\vspace{10pt}
 \end{equation}%
 which is a reduction of half as many messages.
 For systems with many participating processes, a significant reduction in the number of messages sent across the router is achieved.
@@ -208,10 +214,13 @@ Qsize = Burst + Obligations
 \end{equation}%
 where $Burst$ takes the form of the \ac{CDF} for the normal distribution:
 \begin{equation}Burst = init_m * F(x)\end{equation}and
+    \vspace{24pt}
 \begin{equation}
 Obligations = c * \Delta t + init_q + resp.
+\vspace{12pt}
 \end{equation}
 From this we can derive the equation:
+\vspace{12pt}
 \begin{equation}
 F(x) \geq \frac{DequeueRate * \Delta t - c * \Delta t - init_q - resp}{init_m}
 \label{eq:prob-est}
@@ -264,7 +273,7 @@ Additionally, the real-time schedules used by the \ac{DGI} were adjusted to remo
 The schedule used is depicted in Figure \ref{fig:execution-schedule}.
 Each burst of messages was allotted one second for those messages and their replies to propagate. During the load balancing execution period, ten migrations are performed on the normal schedule. Soft ECN increased the message propagation time for the load balancing module to 1.5 seconds and reduced the number of migrations each round to six.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{ExecutionSchedule}
 \caption{Execution schedule used in experiments. }
@@ -297,7 +306,7 @@ Based on the traffic parameters in Table \ref{tab:red-parameters}, $263.0$ packe
 From the polynomial estimate in Figure \ref{fig:plotm}, the maximum average queue size for that level of traffic was $94.715$, estimated as $90$ for the \ac{RED} Min Threshold in Table \ref{tab:red-parameters}.
 RED Max Threshold is computed using a similar technique, but using the message complexity for the load balancing algorithm, since it maintained its complexity during Soft ECN mode.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.65\linewidth]{m-max-average-queue.pdf}
 \caption[Plot of the maximum observed average queue size as a function of the overall background traffic.]{Plot of the maximum observed average queue size as a function of the overall background traffic. The polynomial estimate is $y=22.70x^2-44.74x+85.72$}
@@ -319,21 +328,6 @@ RED Link Speed & 100Mbps & RED Link Delay & 0.5 ms   \\ \hline
 \end{tabular}
 \end{table}
 
-\begin{table}
-\centering
-\caption{Summary of Test Configurations}
-\begin{tabular}{| c | c | c | c |}
-    \hline
-    Test & Traffic & Notifications & Attempted Migrations \\ \hline
-    A & None & N/A & 1171 \\ \hline
-    B & 2Mbps & N/A & 1171 \\ \hline
-    C & 4Mbps & None & 1114  \\ \hline
-    D & 4Mbps & Soft & 888 \\ \hline
-    E & 6.4Mbps & Soft & 861 \\ \hline
-    F & 6.4Mbps & All & 888 \\ \hline
-\end{tabular}
-\label{tab:scenarios}
-\end{table}
 
 To introduce traffic, processes attached to each of the switches attempted to send a high volume of messages to each other across the router.
 The number of packets sent per second was a function of the data rate and the size of the packets sent.
@@ -351,7 +345,23 @@ Similarly, if the process is attempting to communicate over a congested link, it
 Figure \ref{fig:groupstatedistro} shows the distribution of group sizes observed by the highest priority process in each scenario.
 The height of each colored segment indicates the portion of the simulation where process 0 was in the given configuration.
 
-\begin{figure}
+\begin{table}[htpb]
+\centering
+\caption{Summary of test configurations.}
+\begin{tabular}{| c | c | c | c |}
+    \hline
+    Test & Traffic & Notifications & Attempted Migrations \\ \hline
+    A & None & N/A & 1171 \\ \hline
+    B & 2Mbps & N/A & 1171 \\ \hline
+    C & 4Mbps & None & 1114  \\ \hline
+    D & 4Mbps & Soft & 888 \\ \hline
+    E & 6.4Mbps & Soft & 861 \\ \hline
+    F & 6.4Mbps & All & 888 \\ \hline
+\end{tabular}
+\label{tab:scenarios}
+\end{table}
+
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.90\textwidth]{groupstatedistribution.pdf}
 \caption{Distribution of group sizes for process 0 in each scenario.}
@@ -374,26 +384,19 @@ As a consequence, the average queue size is slightly misleading in scenarios whe
 In scenarios A and B, the traffic is not sufficient to disrupt the operation of the DGI.
 As a result, in Figure \ref{fig:groupstatedistro}, process 0 has an uninterrupted observation of a group size of 30 throughout the two scenarios.
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.75\textwidth]{a-qsizeot-notraffic-all.pdf}
+\includegraphics[width=0.85\textwidth]{a-qsizeot-notraffic-all.pdf}
 \caption{Test configuration A. Plot of the queue size for a queue from switch A to the router when only the DGI generates traffic.}
 \label{fig:plota}
 \end{figure}
-
-\begin{figure}
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.75\textwidth]{b-qsizeot-notraffic-120s-130s.pdf}
+\includegraphics[width=0.85\textwidth]{b-qsizeot-notraffic-120s-130s.pdf}
 \caption{Test configuration A. Detailed view of Figure \ref{fig:plota}.}
 \label{fig:plotb}
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.75\textwidth]{e-qsizeot-nonotifications-2mbpstraffic-120s-130s.pdf}
-\caption{Test configuration B. Detailed view of the effect on queue size as other network traffic is introduced.}
-\label{fig:plote}
-\end{figure}
 
 
 From scenario A and B we establish the $min_{th}$ value used as a \ac{RED} queue parameter.
@@ -403,6 +406,12 @@ Like \cite{HILTESTBED}, the level of power at a process is the net sum of its po
 As power is shared on the network, processes with excess generation, converge toward zero net power.
 Demand processes also converge toward zero net power.
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{e-qsizeot-nonotifications-2mbpstraffic-120s-130s.pdf}
+\caption{Test configuration B. Detailed view of the effect on queue size as other network traffic is introduced.}
+\label{fig:plote}
+\end{figure}
 
 Figure \ref{fig:plote} shows the queue size as the network traffic begins to increase.
 The \ac{DGI} in these experiments used a schedule that allowed for some congestion to occur before processes are disrupted.
@@ -422,15 +431,16 @@ Power migrations are affected by congestion: migrations fail, or the supply proc
 Figure \ref{fig:plotg} plots the count of failed migrations over time.
 The number of failed migrations relative to the number attempted is quite low, because processes on the same switch as process 0 can still attempt migrations.
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.75\textwidth]{f-qsizeot-nonotifications-4mbpstraffic-120s-130s.pdf}
+\includegraphics[width=0.85\textwidth]{f-qsizeot-nonotifications-4mbpstraffic-120s-130s.pdf}
 \caption{Test configuration C.
 Detailed view of the effect on queue size as network traffic is introduced without notifications.}
 \label{fig:plotf}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h!]
+\vspace{66pt}
 \centering
 \includegraphics[width=0.95\textwidth]{failedmigrations.pdf}
 \caption{Count of lost migrations from all processes over time.}
@@ -451,9 +461,9 @@ However, the reduced schedule is sufficient to prevent lost migrations.
 In \cite{ecn-cloudhari}, when the number of migrations are reduced, the size of each migration is increased.
 Despite fewer migrations being attempted, the same amount of power can be managed by the \ac{DGI}, and the number lost migrations is reduced by the changed schedule.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.75\textwidth]{i-qsizeot-softnotifications-4mbpstraffic-120s-130s.pdf}
+\includegraphics[width=0.85\textwidth]{i-qsizeot-softnotifications-4mbpstraffic-120s-130s.pdf}
 \caption{
     Test configuration D.
 Detailed view of the effect on queue size as network traffic is introduced with soft \ac{ECN} notifications.
@@ -462,7 +472,7 @@ Detailed view of the effect on queue size as network traffic is introduced with 
 \end{figure}
 
 Figures \ref{fig:plotk} (Scenario E) and \ref{fig:plotl} (Scenario F) show an example of a more extreme congestion scenario.
-In Figure\ref{fig:plotk}, group management enters a maintenance mode when it receives the soft \ac{ECN} notification, but it is not sufficient to maintain groups; processes leave the group randomly.
+In Figure \ref{fig:plotk}, group management enters a maintenance mode when it receives the soft \ac{ECN} notification, but it is not sufficient to maintain groups; processes leave the group randomly.
 The system decreased the number of migrations per round, as it had done in Figure \ref{fig:ploti}.
 However, migrations were lost.
 
@@ -472,9 +482,9 @@ Without this fallback configuration behavior, the system is greatly affected by 
 The group management module produced more traffic than in Figure \ref{fig:plotk}, but, no DGI left the fallback groups.
 The smaller group size allowed the amount of traffic from the load balancing module to be reduced and prevented lost migrations.
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.75\textwidth]{k-qsizeot-softnotificationsonly-64mbpstraffic-120s-130s.pdf}
+\includegraphics[width=0.85\textwidth]{k-qsizeot-softnotificationsonly-64mbpstraffic-120s-130s.pdf}
 \caption{
     Test configuration E.
 Detailed view of the effect on queue size as a large amount network traffic is introduced with only soft notifications enabled.
@@ -483,9 +493,9 @@ Detailed view of the effect on queue size as a large amount network traffic is i
 \centering
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.75\textwidth]{l-qsizeot-allnotifications-64mbpstraffic-120s-130s.pdf}
+\includegraphics[width=0.85\textwidth]{l-qsizeot-allnotifications-64mbpstraffic-120s-130s.pdf}
 \caption{Test configuration F. Effect on queue size as a large amount of network traffic is introduced with hard notifications enabled.}
 \label{fig:plotl}
 \end{figure}
